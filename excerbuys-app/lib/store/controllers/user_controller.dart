@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:excerbuys/store/controllers/app_controller.dart';
-import 'package:excerbuys/store/persistance/storage_controller.dart';
+import 'package:excerbuys/store/persistence/storage_controller.dart';
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/constants.dart';
