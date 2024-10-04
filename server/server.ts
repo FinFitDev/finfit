@@ -1,0 +1,26 @@
+import express, { Express } from "express";
+import "dotenv/config";
+import bodyParser from "body-parser";
+import cors from "cors";
+import authRouter from "./routes/auth/authRouter";
+import apiRouter from "./routes/api/apiRouter";
+import { middleware } from "./routes/api/middleware";
+
+const app: Express = express();
+app.use(cors());
+
+// const pool = require("./utils/db");
+
+const port = process.env.PORT || "5000";
+
+// console.log(crypto.randomBytes(64).toString("hex"));
+
+app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
+app.use(bodyParser.json({ limit: "50mb" }));
+
+app.use("/auth", authRouter);
+app.use("/api/v1", middleware, apiRouter);
+
+app.listen(port, () => {
+  console.log("App running on port 5000");
+});
