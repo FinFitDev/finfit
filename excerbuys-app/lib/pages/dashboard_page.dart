@@ -1,4 +1,5 @@
 import 'package:excerbuys/store/controllers/auth_controller.dart';
+import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
@@ -70,6 +71,14 @@ class _DashboardPageState extends State<DashboardPage> {
   Future<void> installHealthConnect() async {
     if (_healthConnectStatus != HealthConnectSdkStatus.sdkAvailable) {
       await Health().installHealthConnect();
+    }
+  }
+
+  Future<void> logOut() async {
+    final bool res = await authController.logOut();
+
+    if (res) {
+      GeneralUtils.navigateWithClear(route: '/login');
     }
   }
 
@@ -148,24 +157,6 @@ class _DashboardPageState extends State<DashboardPage> {
       _stepsTotal = _stepsTotal + newSteps;
     });
   }
-
-  Widget get _loginBox => Column(children: [
-        TextField(
-          onChanged: (value) => setState(() {
-            _login = value;
-          }),
-          decoration: const InputDecoration(
-              labelText: 'Username', hintText: 'Enter Your Username'),
-        ),
-        TextField(
-          onChanged: (value) => setState(() {
-            _password = value;
-          }),
-          obscureText: true,
-          decoration: const InputDecoration(
-              labelText: 'Password', hintText: 'Enter Your Password'),
-        ),
-      ]);
 
   Widget get _contentFetchingData => Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -252,7 +243,6 @@ class _DashboardPageState extends State<DashboardPage> {
       body: Column(
         children: [
           AnimatedBalance(balance: _balance),
-          _loginBox,
           Wrap(
             spacing: 10,
             children: [
@@ -280,6 +270,12 @@ class _DashboardPageState extends State<DashboardPage> {
                   style: const ButtonStyle(
                       backgroundColor: MaterialStatePropertyAll(Colors.blue)),
                   child: const Text("Fetch Data",
+                      style: TextStyle(color: Colors.white))),
+              TextButton(
+                  onPressed: logOut,
+                  style: const ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(Colors.blue)),
+                  child: const Text("Log out",
                       style: TextStyle(color: Colors.white))),
               TextButton(
                   onPressed: () {

@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:excerbuys/containers/auth_page/login_container.dart';
+import 'package:excerbuys/containers/auth_page/signup_container.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
-import 'package:excerbuys/store/persistance/storage_controller.dart';
+import 'package:excerbuys/store/persistence/storage_controller.dart';
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/constants.dart';
@@ -93,6 +94,60 @@ class AuthController {
     } catch (error) {
       print(error);
       rethrow;
+    }
+  }
+
+  Future<Map<SIGNUP_FIELD_TYPE, String?>?> signUp(
+      String username, String email, String password) async {
+    try {
+      dynamic res = await BackendUtils.handleBackendRequests(
+          method: HTTP_METHOD.POST,
+          endpoint: 'auth/signup',
+          body: {"username": username, "password": password, "email": email});
+
+      if (res['error'] != null) {
+        if (res['type'] == 'username') {
+          return {SIGNUP_FIELD_TYPE.USERNAME: res['error']};
+        }
+        if (res['type'] == 'email') {
+          return {SIGNUP_FIELD_TYPE.EMAIL: res['error']};
+        }
+        // should not reach here
+        throw Exception(res['message']);
+      }
+
+      if (res['message'] == "Sign up successful") {
+        await logIn(username, password);
+      }
+      return null;
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
+  }
+
+  Future<bool> logOut() async {
+    try {
+      final String refreshToken = authController.refreshToken;
+      dynamic res = await BackendUtils.handleBackendRequests(
+          method: HTTP_METHOD.POST,
+          endpoint: 'auth/logout',
+          body: {"refresh_token": refreshToken});
+
+      if (res['error'] != null) {
+        throw Exception(res['error']);
+      }
+
+      if (res['message'] == 'Logout successful') {
+        authController.setAccessToken('');
+        authController.setRefreshToken('');
+        userController.setCurrentUser(null);
+      }
+
+      return true;
+    } catch (err) {
+      print(err);
+      return false;
     }
   }
 }

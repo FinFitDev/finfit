@@ -51,7 +51,9 @@ class _AuthPageState extends State<AuthPage> {
                                             LoginContainer(
                                               logIn: authController.logIn,
                                             ),
-                                            SignupContainer()
+                                            SignupContainer(
+                                              signUp: authController.signUp,
+                                            )
                                           ]);
                                     }))
                           ])),

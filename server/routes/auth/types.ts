@@ -12,7 +12,6 @@ export interface ILoginResponse {
 }
 
 export interface ISignupPayload {
-  login: string;
   password: string;
   email: string;
   username: string;

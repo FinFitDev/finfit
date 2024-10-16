@@ -27,28 +27,28 @@ class _LoginContainerState extends State<LoginContainer> {
 
   bool _loading = false;
 
+  void setErrors() {
+    setState(() {
+      final String login = _formFieldsState[LOGIN_FIELD_TYPE.LOGIN]!;
+      final String password = _formFieldsState[LOGIN_FIELD_TYPE.PASSWORD]!;
+      _formErrorsState = {
+        LOGIN_FIELD_TYPE.LOGIN: login.isEmpty ? 'Login is required' : null,
+        LOGIN_FIELD_TYPE.PASSWORD:
+            password.isEmpty ? 'Password is required' : null
+      };
+    });
+  }
+
   void submitForm(BuildContext context) async {
     try {
       if (_loading) {
         return; // Don't submit if we are loading
       }
-      setState(() {
-        _formErrorsState = {
-          LOGIN_FIELD_TYPE.LOGIN:
-              _formFieldsState[LOGIN_FIELD_TYPE.LOGIN]!.isEmpty
-                  ? 'Login is required'
-                  : null,
-          LOGIN_FIELD_TYPE.PASSWORD:
-              _formFieldsState[LOGIN_FIELD_TYPE.PASSWORD]!.isEmpty
-                  ? 'Password is required'
-                  : null
-        };
-      });
+      setErrors();
 
       if (_formErrorsState.values.any((error) => error != null)) {
         return; // Don't submit if there are errors
       }
-
       setState(() {
         _loading = true;
       });
@@ -81,14 +81,8 @@ class _LoginContainerState extends State<LoginContainer> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
-    final bool isLoginError =
-        _formErrorsState[LOGIN_FIELD_TYPE.LOGIN] != null &&
-            _formErrorsState[LOGIN_FIELD_TYPE.LOGIN]!.isNotEmpty;
-    final bool isPasswordError =
-        _formErrorsState[LOGIN_FIELD_TYPE.PASSWORD] != null &&
-            _formErrorsState[LOGIN_FIELD_TYPE.PASSWORD]!.isNotEmpty;
-    final bool isButtonDisabled = isPasswordError ||
-        isLoginError ||
+    final bool isButtonDisabled = _formErrorsState.values
+            .any((value) => value != null && value.isNotEmpty) ||
         _formFieldsState.values.any((value) => value.isEmpty);
 
     return Column(
