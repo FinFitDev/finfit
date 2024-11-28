@@ -28,7 +28,8 @@ class _AuthPageState extends State<AuthPage> {
                 constraints: BoxConstraints(minHeight: height),
                 child: IntrinsicHeight(
                   child: Padding(
-                      padding: EdgeInsets.all(35),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 35, horizontal: 20),
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -50,6 +51,8 @@ class _AuthPageState extends State<AuthPage> {
                                           children: [
                                             LoginContainer(
                                               logIn: authController.logIn,
+                                              useGoogleAuth:
+                                                  authController.useGoogleAuth,
                                             ),
                                             SignupContainer(
                                               signUp: authController.signUp,

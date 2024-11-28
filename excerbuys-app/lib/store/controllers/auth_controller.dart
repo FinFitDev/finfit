@@ -150,6 +150,40 @@ class AuthController {
       return false;
     }
   }
+
+  Future<String?> useGoogleAuth(String id_token) async {
+    try {
+      dynamic res = await BackendUtils.handleBackendRequests(
+          method: HTTP_METHOD.POST,
+          endpoint: 'auth/googleAuth',
+          body: {"id_token": id_token});
+
+      if (res['error'] != null) {
+        // should not reach here
+        throw Exception(res['message']);
+      }
+
+      print(res);
+
+      final {
+        'access_token': accessToken,
+        'refresh_token': refreshToken,
+        'user_id': userId
+      } = res['content'];
+
+      if (accessToken.isNotEmpty) {
+        setAccessToken(accessToken);
+        await userController.fetchCurrentUser(userId);
+      }
+      if (refreshToken.isNotEmpty) {
+        setRefreshToken(refreshToken);
+      }
+      return null;
+    } catch (error) {
+      print(error);
+      rethrow;
+    }
+  }
 }
 
 AuthController authController = AuthController();

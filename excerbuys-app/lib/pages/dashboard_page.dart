@@ -55,7 +55,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   void initState() {
-    Health().configure(useHealthConnectIfAvailable: true);
+    Health().configure();
     checkSdk();
     super.initState();
   }

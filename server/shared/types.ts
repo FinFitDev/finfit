@@ -7,7 +7,8 @@ export interface IUser {
   id: number;
   email: string;
   username: string;
-  password: string;
+  password?: string;
+  google_id?: string;
   created_at: string;
   updated_at: string;
   points: number;

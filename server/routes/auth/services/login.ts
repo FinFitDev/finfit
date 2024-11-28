@@ -6,17 +6,18 @@ import {
   generateRefreshToken,
   insertRefreshToken,
 } from "../../../models/tokenModel";
-import { ILoginPayload, ILoginResponse } from "../types";
-import { IUser, IUserNoPassword } from "../../../shared/types";
+import { IGoogleLoginPayload, ILoginPayload, ILoginResponse } from "../types";
+import { IUser } from "../../../shared/types";
+import { isUserGoogleLogin } from "../../../shared/utils";
 
 export const logInUser = async (
-  user: ILoginPayload
+  user: ILoginPayload | IGoogleLoginPayload
 ): Promise<ILoginResponse> => {
   if (!user) throw new ErrorWithCode("User data invalid", 400);
 
-  const { login, password } = user;
+  const { login } = user;
 
-  if (!login || !password)
+  if (!login || (isUserGoogleLogin(user) ? !user.google_id : !user.password))
     throw new ErrorWithCode("Missing user credentials", 400);
 
   const foundUser = await fetchUserByUsernameOrEmail(login);
@@ -26,12 +27,19 @@ export const logInUser = async (
 
   const foundUserData: IUser = foundUser.rows[0];
 
-  const hashed_password = foundUserData.password;
+  if (isUserGoogleLogin(user)) {
+    const googleId = foundUserData.google_id;
+    const validGoogleId = googleId === user.google_id;
 
-  const validPassword = await bcrypt.compare(password, hashed_password);
+    if (!validGoogleId) throw new ErrorWithCode("Invalid google id", 400);
+  } else {
+    const hashedPassword = foundUserData.password;
 
-  if (!validPassword)
-    throw new ErrorWithCode("Invalid password", 400, "password");
+    const validPassword = await bcrypt.compare(user.password, hashedPassword!);
+
+    if (!validPassword)
+      throw new ErrorWithCode("Invalid password", 400, "password");
+  }
 
   const access_token = generateAccessToken(foundUserData.id);
   const refresh_token = generateRefreshToken(foundUserData.id);

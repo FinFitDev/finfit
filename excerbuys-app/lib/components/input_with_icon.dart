@@ -8,6 +8,7 @@ class InputWithIcon extends StatefulWidget {
   final String placeholder;
   final String? error;
   final bool? isPassword;
+  final bool? disabled;
 
   const InputWithIcon(
       {super.key,
@@ -15,7 +16,8 @@ class InputWithIcon extends StatefulWidget {
       required this.placeholder,
       required this.onChange,
       this.error,
-      this.isPassword});
+      this.isPassword,
+      this.disabled});
 
   @override
   State<InputWithIcon> createState() => _InputWithIconState();
@@ -46,6 +48,7 @@ class _InputWithIconState extends State<InputWithIcon> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextField(
+              // enabled: !(widget.disabled ?? false),
               obscureText: isPassword && _obscureText,
               enableSuggestions: !isPassword,
               onChanged: (String val) {

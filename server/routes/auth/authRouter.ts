@@ -5,7 +5,7 @@ import { regenerateAccessTokenFromRefreshToken } from "./services/refresh";
 import { logOut } from "./services/logout";
 import { RequestWithPayload } from "../../shared/types";
 import { ILoginPayload, ISignupPayload } from "./types";
-import { verifyAccessToken } from "./services/verify";
+import { verifyAccessToken, verifyGoogleAuth } from "./services/verify";
 
 const authRouter: Router = express.Router();
 
@@ -98,6 +98,25 @@ authRouter.post(
       res.status(500).json({
         message: "Token verification failed",
         valid_token: false,
+      });
+    }
+  }
+);
+
+authRouter.post(
+  "/googleAuth",
+  async (req: RequestWithPayload<{ id_token: string }>, res: Response) => {
+    try {
+      const { id_token } = req.body;
+      const response = await verifyGoogleAuth(id_token);
+      res
+        .status(200)
+        .json({ message: "Google auth successful", content: response });
+    } catch (error: any) {
+      res.status(500).json({
+        message: "Google auth failed",
+        error: error.message,
+        type: error.type,
       });
     }
   }

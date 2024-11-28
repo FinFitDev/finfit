@@ -1,15 +1,20 @@
 import 'package:excerbuys/components/input_with_icon.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
+import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 enum LOGIN_FIELD_TYPE { LOGIN, PASSWORD }
 
 class LoginContainer extends StatefulWidget {
   final Future<Map<LOGIN_FIELD_TYPE, String?>?> Function(String, String) logIn;
-  const LoginContainer({super.key, required this.logIn});
+  final Future<String?> Function(String) useGoogleAuth;
+
+  const LoginContainer(
+      {super.key, required this.logIn, required this.useGoogleAuth});
 
   @override
   State<LoginContainer> createState() => _LoginContainerState();
@@ -24,8 +29,10 @@ class _LoginContainerState extends State<LoginContainer> {
     LOGIN_FIELD_TYPE.LOGIN: null,
     LOGIN_FIELD_TYPE.PASSWORD: null
   };
-
   bool _loading = false;
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+      clientId: GeneralConstants.WEB_CLIENT_GOOGLE_ID,
+      scopes: ['email', 'profile', 'openid']);
 
   void setErrors() {
     setState(() {
@@ -39,7 +46,7 @@ class _LoginContainerState extends State<LoginContainer> {
     });
   }
 
-  void submitForm(BuildContext context) async {
+  Future<void> submitForm(BuildContext context) async {
     try {
       if (_loading) {
         return; // Don't submit if we are loading
@@ -78,6 +85,37 @@ class _LoginContainerState extends State<LoginContainer> {
     }
   }
 
+  Future<void> signInWithGoogle() async {
+    try {
+      if (_loading) {
+        return; // Don't submit if we are loading
+      }
+      setState(() {
+        _loading = true;
+      });
+      await _googleSignIn.signOut();
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser != null) {
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
+        print(googleUser);
+        String id_token = googleAuth.idToken!;
+
+        final String? serverResponse = await widget.useGoogleAuth(id_token);
+
+        if (context.mounted) {
+          GeneralUtils.navigateWithClear(route: '/');
+        }
+      }
+    } catch (error) {
+      print('Error signing in with Google: $error');
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
@@ -100,6 +138,7 @@ class _LoginContainerState extends State<LoginContainer> {
                 });
               },
               error: _formErrorsState[LOGIN_FIELD_TYPE.LOGIN],
+              disabled: _loading,
             ),
             InputWithIcon(
               leftIcon: 'assets/svg/padlock.svg',
@@ -112,6 +151,7 @@ class _LoginContainerState extends State<LoginContainer> {
               },
               error: _formErrorsState[LOGIN_FIELD_TYPE.PASSWORD],
               isPassword: true,
+              disabled: _loading,
             ),
             loginOptions(colors),
           ]),
@@ -158,7 +198,7 @@ class _LoginContainerState extends State<LoginContainer> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
                   ),
-                  onPressed: () {},
+                  onPressed: signInWithGoogle,
                   label: Text(
                     'Google',
                     style: TextStyle(

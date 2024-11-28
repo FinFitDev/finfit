@@ -48,8 +48,8 @@ class ButtonSwitch extends StatelessWidget {
                     curve: Curves.decelerate,
                     left:
                         snapshot.hasData && snapshot.data == AUTH_METHOD.SIGNUP
-                            ? width / 2 - 20
-                            : 15,
+                            ? width / 2
+                            : 22,
                     bottom: 0,
                     child: Container(
                       decoration: BoxDecoration(

@@ -44,6 +44,20 @@ export const insertUser = async (
   return response;
 };
 
+export const insertGoogleAuthUser = async (
+  username: string,
+  email: string,
+  google_id: string,
+  image?: string
+) => {
+  const response = await pool.query(
+    "INSERT INTO users (username, email, google_id, image) VALUES ($1, $2, $3, $4)",
+    [username, email, google_id, image]
+  );
+
+  return response;
+};
+
 export const fetchUserByUsername = async (username: string) => {
   const response = await pool.query(
     "SELECT * FROM users WHERE users.username = $1",
