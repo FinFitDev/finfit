@@ -1,16 +1,10 @@
-import 'dart:convert';
-
 import 'package:excerbuys/containers/auth_page/login_container.dart';
 import 'package:excerbuys/containers/auth_page/signup_container.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/store/persistence/storage_controller.dart';
-import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/backend/utils.dart';
-import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
-import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:http/http.dart';
 
 enum AUTH_METHOD { LOGIN, SIGNUP }
 

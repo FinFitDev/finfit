@@ -2,9 +2,7 @@ import 'package:excerbuys/components/input_with_icon.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
-import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 enum SIGNUP_FIELD_TYPE { USERNAME, EMAIL, PASSWORD, PASSWORD_REPEAT }
 
@@ -170,7 +168,7 @@ class _SignupContainerState extends State<SignupContainer> {
         MainButton(
             label: 'Sign up',
             backgroundColor: colors.secondary,
-            textColor: colors.primary,
+            textColor: colors.tertiary,
             isDisabled: isButtonDisabled,
             loading: _loading,
             onPressed: () {

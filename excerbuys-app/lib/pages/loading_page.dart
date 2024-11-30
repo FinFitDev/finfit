@@ -3,7 +3,6 @@ import 'package:excerbuys/store/controllers/auth_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/types/user.dart';
-import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +22,7 @@ class _LoadingPageState extends State<LoadingPage> {
     if (refreshToken.isNotEmpty && currentUser != null) {
       GeneralUtils.navigateWithClear(route: '/');
     } else {
-      GeneralUtils.navigateWithClear(route: '/login');
+      GeneralUtils.navigateWithClear(route: '/');
     }
   }
 

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:excerbuys/store/controllers/app_controller.dart';
 import 'package:excerbuys/store/persistence/storage_controller.dart';
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/backend/utils.dart';
@@ -44,7 +43,6 @@ class UserController {
         throw 'No data';
       }
 
-      print(content);
       final User user = User(
           id: int.parse(content['id']),
           email: content['email'],
@@ -58,12 +56,12 @@ class UserController {
       return user;
     } catch (err) {
       print(err);
+      return null;
     }
   }
 
   Future<bool> updatePointsScore(String accessToken, String userId, int points,
       DateTime updated_at) async {
-    print('$points totlllll');
     try {
       if (accessToken.isEmpty) {
         throw 'Not authorized';

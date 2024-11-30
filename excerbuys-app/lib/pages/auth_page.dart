@@ -1,14 +1,10 @@
 import 'package:excerbuys/components/auth_page/buttons_switch.dart';
 import 'package:excerbuys/components/auth_page/logo.dart';
-import 'package:excerbuys/components/input_with_icon.dart';
-import 'package:excerbuys/components/shared/buttons/text_button.dart';
 import 'package:excerbuys/containers/auth_page/login_container.dart';
 import 'package:excerbuys/containers/auth_page/signup_container.dart';
 import 'package:excerbuys/store/controllers/auth_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
-import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});

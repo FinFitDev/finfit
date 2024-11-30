@@ -1,10 +1,9 @@
-import 'package:excerbuys/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageController {
   SharedPreferences? instance;
 
-  // get instance (singelton pattern)
+  // get instance (singleton pattern)
   Future<SharedPreferences> getInstance() async {
     instance ??= await SharedPreferences.getInstance();
     return instance!;

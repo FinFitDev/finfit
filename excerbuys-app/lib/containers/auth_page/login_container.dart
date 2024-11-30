@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:excerbuys/components/input_with_icon.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/utils/constants.dart';
@@ -101,7 +103,7 @@ class _LoginContainerState extends State<LoginContainer> {
         print(googleUser);
         String id_token = googleAuth.idToken!;
 
-        final String? serverResponse = await widget.useGoogleAuth(id_token);
+        await widget.useGoogleAuth(id_token);
 
         if (context.mounted) {
           GeneralUtils.navigateWithClear(route: '/');
@@ -172,7 +174,7 @@ class _LoginContainerState extends State<LoginContainer> {
               MainButton(
                 label: 'Log in',
                 backgroundColor: colors.secondary,
-                textColor: colors.primary,
+                textColor: colors.tertiary,
                 onPressed: () {
                   submitForm(context);
                 },
@@ -191,7 +193,7 @@ class _LoginContainerState extends State<LoginContainer> {
             Expanded(
               child: Container(
                 height: 60,
-                padding: const EdgeInsets.only(right: 12),
+                margin: EdgeInsets.only(right: Platform.isIOS ? 12 : 0),
                 child: TextButton.icon(
                   style: TextButton.styleFrom(
                     backgroundColor: colors.tertiary,
@@ -210,28 +212,30 @@ class _LoginContainerState extends State<LoginContainer> {
                 ),
               ),
             ),
-            Expanded(
-              child: Container(
-                height: 60,
-                padding: const EdgeInsets.only(left: 12),
-                child: TextButton.icon(
-                  style: TextButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      padding: const EdgeInsets.only(right: 15)),
-                  onPressed: () {},
-                  label: Text(
-                    'Apple',
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: colors.tertiary,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  icon: SvgPicture.asset('assets/svg/apple.svg'),
-                ),
-              ),
-            )
+            Platform.isIOS
+                ? Expanded(
+                    child: Container(
+                      height: 60,
+                      padding: const EdgeInsets.only(left: 12),
+                      child: TextButton.icon(
+                        style: TextButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            padding: const EdgeInsets.only(right: 15)),
+                        onPressed: () {},
+                        label: Text(
+                          'Apple',
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: colors.tertiary,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        icon: SvgPicture.asset('assets/svg/apple.svg'),
+                      ),
+                    ),
+                  )
+                : SizedBox.shrink()
           ],
         ),
       );

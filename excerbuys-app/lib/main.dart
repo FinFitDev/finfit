@@ -23,14 +23,14 @@ class _HealthAppState extends State<HealthApp> {
         navigatorKey: GeneralConstants.NAVIGATOR_KEY,
         title: GeneralConstants.APP_TITLE,
         theme: ThemeData(
-            scaffoldBackgroundColor: Color(0xFF353535),
+            scaffoldBackgroundColor: Color.fromARGB(0, 0, 0, 0),
             colorScheme: ColorScheme.fromSeed(
                 seedColor: Color(0xFF353535),
                 primary: Color(0xFF353535),
-                primaryContainer: Color(0xFF464646),
-                secondary: Color(0xFF33F8BD),
+                primaryContainer: Color.fromARGB(255, 0, 0, 0),
+                secondary: Color(0xFF6BBCFF),
                 tertiary: Colors.white,
-                tertiaryContainer: Color(0xFF808080),
+                tertiaryContainer: Color.fromARGB(255, 168, 168, 168),
                 error: Color(0xFFFA6161)),
             useMaterial3: true,
             fontFamily: 'Poppins'),
