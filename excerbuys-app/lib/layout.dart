@@ -6,6 +6,8 @@ class Layout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DashboardPage();
+    return DashboardPage(
+      key: GlobalKey(debugLabel: "dashboard"),
+    );
   }
 }

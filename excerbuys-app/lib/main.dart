@@ -27,6 +27,7 @@ class _HealthAppState extends State<HealthApp> {
             colorScheme: ColorScheme.fromSeed(
                 seedColor: Color(0xFF353535),
                 primary: Color(0xFF353535),
+                primaryFixed: Color(0xFFBBBBBB),
                 primaryContainer: Color.fromARGB(255, 0, 0, 0),
                 secondary: Color(0xFF6BBCFF),
                 tertiary: Colors.white,

@@ -1,5 +1,9 @@
 import 'package:excerbuys/components/dashboard_page/main_header.dart';
+import 'package:excerbuys/containers/dashboard_page/home_page/balance_container.dart';
+import 'package:excerbuys/pages/sub/home_page.dart';
+import 'package:excerbuys/store/controllers/activity_controller.dart';
 import 'package:excerbuys/store/controllers/auth_controller.dart';
+import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -28,46 +32,25 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  // List<HealthDataPoint> _healthDataList = [];
-  // AppState _state = AppState.DATA_NOT_FETCHED;
-  // HealthConnectSdkStatus _healthConnectStatus =
-  //     HealthConnectSdkStatus.sdkUnavailable;
-
-  // num _stepsTotal = 0;
   // int _balance = 132992;
 
-  // /// All the data types that are available on Android and iOS.
-  // /* List<HealthDataType> get types => (Platform.isAndroid)
+  /// All the data types that are available on Android and iOS.
+  // List<HealthDataType> get types => (Platform.isAndroid)
   //     ? dataTypeKeysAndroid
   //     : (Platform.isIOS)
   //         ? dataTypeKeysIOS
-  //         : []; */
+  //         : [];
 
-  // static final types = [HealthDataType.STEPS];
+  // List<HealthDataAccess> get permissions => GeneralConstants.HEALTH_DATA_TYPES
+  //     .map((e) => HealthDataAccess.READ)
+  //     .toList();
 
-  // List<HealthDataAccess> get permissions =>
-  //     types.map((e) => HealthDataAccess.READ_WRITE).toList();
-
-  // @override
-  // void initState() {
-  //   Health().configure();
-  //   checkSdk();
-  //   super.initState();
-  // }
-
-  // Future<void> checkSdk() async {
-  //   final status = await Health().getHealthConnectSdkStatus();
-  //   setState(() {
-  //     _healthConnectStatus = status!;
-  //   });
-  // }
-
-  // /// Install Google Health Connect on this phone.
-  // Future<void> installHealthConnect() async {
-  //   if (_healthConnectStatus != HealthConnectSdkStatus.sdkAvailable) {
-  //     await Health().installHealthConnect();
-  //   }
-  // }
+  Future<void> fetchActivity() async {
+    Health().configure();
+    await activityController.authorize();
+    await activityController.checkHealthSdk();
+    await activityController.fetchData();
+  }
 
   // Future<void> logOut() async {
   //   final bool res = await authController.logOut();
@@ -75,29 +58,6 @@ class _DashboardPageState extends State<DashboardPage> {
   //   if (res) {
   //     GeneralUtils.navigateWithClear(route: '/login');
   //   }
-  // }
-
-  // Future<void> authorize() async {
-  //   await Permission.activityRecognition.request();
-  //   await Permission.location.request();
-
-  //   bool? hasPermissions =
-  //       await Health().hasPermissions(types, permissions: permissions);
-  //   print(hasPermissions);
-  //   print('perm');
-  //   hasPermissions = false;
-  //   bool authorized = false;
-  //   if (!hasPermissions) {
-  //     try {
-  //       authorized = await Health()
-  //           .requestAuthorization(types, permissions: permissions);
-  //       print(authorized);
-  //     } catch (error) {
-  //       debugPrint("Exception in authorize: $error");
-  //     }
-  //   }
-  //   setState(() => _state =
-  //       (authorized) ? AppState.AUTHORIZED : AppState.AUTH_NOT_GRANTED);
   // }
 
   // Future<void> updatePoints() async {
@@ -109,48 +69,6 @@ class _DashboardPageState extends State<DashboardPage> {
   //       userController.currentUser!.id.toString(),
   //       _stepsTotal.round(),
   //       DateTime.now());
-  // }
-
-  // Future<void> fetchData() async {
-  //   print(_state);
-  //   // if (_state != AppState.AUTHORIZED) {
-  //   //   return;
-  //   // }
-  //   setState(() => _state = AppState.FETCHING_DATA);
-
-  //   final lastUpdated = userController.currentUser?.updatedAt;
-  //   final now = DateTime.now();
-  //   final Duration difference = now.difference(lastUpdated!);
-
-  //   final yesterday = now.subtract(difference);
-  //   _healthDataList.clear();
-
-  //   try {
-  //     List<HealthDataPoint> healthData = await Health().getHealthDataFromTypes(
-  //       types: types,
-  //       startTime: yesterday,
-  //       endTime: now,
-  //     );
-  //     // print(healthData);
-
-  //     _healthDataList.addAll(
-  //         (healthData.length < 100) ? healthData : healthData.sublist(0, 100));
-  //   } catch (error) {
-  //     debugPrint("Exception in getHealthDataFromTypes: $error");
-  //   }
-  //   _healthDataList = Health().removeDuplicates(_healthDataList);
-  //   num newSteps = 0;
-  //   for (var data in _healthDataList) {
-  //     final steps = (data.value as NumericHealthValue).numericValue;
-  //     newSteps += steps;
-  //     // debugPrint(toJsonString(data));
-  //   }
-  //   setState(() {
-  //     _state = _healthDataList.isEmpty ? AppState.NO_DATA : AppState.DATA_READY;
-  //     print(_stepsTotal);
-  //     print(newSteps);
-  //     _stepsTotal = _stepsTotal + newSteps;
-  //   });
   // }
 
   // Widget get _contentFetchingData => Column(
@@ -229,14 +147,14 @@ class _DashboardPageState extends State<DashboardPage> {
   //       AppState.AUTHORIZED => _authorized,
   //       AppState.AUTH_NOT_GRANTED => _authorizationNotGranted,
   //     };
-  // @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [MainHeader()],
-        ),
+      body: Stack(
+        children: [
+          HomePage(fetchActivity: fetchActivity),
+          Positioned(child: MainHeader()),
+        ],
       ),
       // appBar: AppBar(
       //   title: const Text('Health Example'),

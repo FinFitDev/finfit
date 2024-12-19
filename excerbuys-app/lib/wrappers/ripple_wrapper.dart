@@ -37,7 +37,7 @@ class _RippleWrapperState extends State<RippleWrapper> {
       },
       onTapUp: ((details) {
         widget.onPressed();
-        Future.delayed(const Duration(milliseconds: 250), () {
+        Future.delayed(const Duration(milliseconds: 200), () {
           setState(() {
             isPressed = false;
           });
@@ -47,7 +47,7 @@ class _RippleWrapperState extends State<RippleWrapper> {
         padding: widget.padding,
         child: AnimatedOpacity(
           duration: const Duration(milliseconds: 90),
-          curve: Curves.decelerate,
+          curve: Curves.ease,
           opacity: isPressed ? (widget.customOpacity ?? 0.8) : 1,
           child: widget.child,
         ),
