@@ -34,7 +34,7 @@ class UserController {
 
   Future<User?> fetchCurrentUser(String userId) async {
     try {
-      dynamic res = await BackendUtils.handleBackendRequests(
+      dynamic res = await handleBackendRequests(
           method: HTTP_METHOD.GET, endpoint: 'api/v1/users/$userId');
 
       final content = res['content'];
@@ -67,7 +67,7 @@ class UserController {
         throw 'Not authorized';
       }
       Response res = await post(
-          Uri.parse('${GeneralConstants.BACKEND_BASE_URL}api/v1/users/$userId'),
+          Uri.parse('${BACKEND_BASE_URL}api/v1/users/$userId'),
           body: {
             "points": points.toString(),
             "updated_at": updated_at.toString()

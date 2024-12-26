@@ -37,7 +37,7 @@ class _BalanceContainerState extends State<BalanceContainer> {
             children: [
               AnimatedBalance(balance: _balance),
               Text(
-                'fittness points',
+                'fitness points',
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.primaryFixed,
                   fontWeight: FontWeight.w600,

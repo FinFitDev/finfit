@@ -24,8 +24,11 @@ class _AuthPageState extends State<AuthPage> {
                 constraints: BoxConstraints(minHeight: height),
                 child: IntrinsicHeight(
                   child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 35, horizontal: 20),
+                      padding: EdgeInsets.only(
+                          top: 35 + layoutController.statusBarHeight,
+                          bottom: 35 + layoutController.bottomPadding,
+                          left: 16,
+                          right: 16),
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -55,7 +55,7 @@ class AuthController {
   Future<Map<LOGIN_FIELD_TYPE, String?>?> logIn(
       String login, String password) async {
     try {
-      dynamic res = await BackendUtils.handleBackendRequests(
+      dynamic res = await handleBackendRequests(
           method: HTTP_METHOD.POST,
           endpoint: 'auth/login',
           body: {"login": login, "password": password});
@@ -94,7 +94,7 @@ class AuthController {
   Future<Map<SIGNUP_FIELD_TYPE, String?>?> signUp(
       String username, String email, String password) async {
     try {
-      dynamic res = await BackendUtils.handleBackendRequests(
+      dynamic res = await handleBackendRequests(
           method: HTTP_METHOD.POST,
           endpoint: 'auth/signup',
           body: {"username": username, "password": password, "email": email});
@@ -123,7 +123,7 @@ class AuthController {
   Future<bool> logOut() async {
     try {
       final String refreshToken = authController.refreshToken;
-      dynamic res = await BackendUtils.handleBackendRequests(
+      dynamic res = await handleBackendRequests(
           method: HTTP_METHOD.POST,
           endpoint: 'auth/logout',
           body: {"refresh_token": refreshToken});
@@ -147,7 +147,7 @@ class AuthController {
 
   Future<String?> useGoogleAuth(String id_token) async {
     try {
-      dynamic res = await BackendUtils.handleBackendRequests(
+      dynamic res = await handleBackendRequests(
           method: HTTP_METHOD.POST,
           endpoint: 'auth/googleAuth',
           body: {"id_token": id_token});

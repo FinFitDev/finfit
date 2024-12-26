@@ -24,6 +24,8 @@ class _LayoutWrapperState extends State<LayoutWrapper>
   @override
   void initState() {
     super.initState();
+    layoutController.setBottomPadding(Platform.isIOS ? 25 : 0);
+
     _gradientController =
         AnimationController(vsync: this, duration: const Duration(seconds: 12));
 
@@ -87,22 +89,17 @@ class _LayoutWrapperState extends State<LayoutWrapper>
 
   @override
   Widget build(BuildContext context) {
-    final double bottomPadding = Platform.isIOS ? 25 : 0;
     final double statusBarHeight = layoutController.statusBarHeight;
 
     // set content height for the inner application taking into account the padding
-    layoutController.setRelativeConetntHeight(
-        MediaQuery.sizeOf(context).height -
-            bottomPadding -
-            layoutController.statusBarHeight);
+    layoutController
+        .setRelativeConetntHeight(MediaQuery.sizeOf(context).height);
 
     return AnimatedBuilder(
         animation: _gradientController,
         builder: (context, _) {
           return Container(
             height: MediaQuery.sizeOf(context).height,
-            padding:
-                EdgeInsets.only(top: statusBarHeight, bottom: bottomPadding),
             decoration: BoxDecoration(
                 gradient: LinearGradient(
               colors: [

@@ -1,8 +1,14 @@
+import 'package:excerbuys/components/dashboard_page/bottom_appbar.dart';
 import 'package:excerbuys/components/dashboard_page/main_header.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/balance_container.dart';
 import 'package:excerbuys/pages/sub/home_page.dart';
+import 'package:excerbuys/pages/sub/profile_page.dart';
+import 'package:excerbuys/pages/sub/search_page.dart';
+import 'package:excerbuys/pages/sub/shop_page.dart';
 import 'package:excerbuys/store/controllers/activity_controller.dart';
 import 'package:excerbuys/store/controllers/auth_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +54,9 @@ class _DashboardPageState extends State<DashboardPage> {
   Future<void> fetchActivity() async {
     Health().configure();
     await activityController.authorize();
-    await activityController.checkHealthSdk();
+    if (Platform.isAndroid) {
+      await activityController.checkHealthConnectSdk();
+    }
     await activityController.fetchData();
   }
 
@@ -150,11 +158,45 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          HomePage(fetchActivity: fetchActivity),
-          Positioned(child: MainHeader()),
-        ],
+      body: Container(
+        height: layoutController.relativeContentHeight,
+        child: Stack(
+          children: [
+            NotificationListener<ScrollNotification>(
+              onNotification: (scrollNotification) {
+                // ensure the notification only listens to vertical scroll
+                if (scrollNotification.metrics.axis == Axis.vertical) {
+                  dashboardController
+                      .setScrollDistance(scrollNotification.metrics.pixels);
+                  return true;
+                }
+                return false;
+              },
+              child: SingleChildScrollView(
+                child: StreamBuilder<int>(
+                    stream: dashboardController.activePageStream,
+                    builder: (context, snapshot) {
+                      return IndexedStack(
+                        index: snapshot.data,
+                        children: [
+                          HomePage(fetchActivity: fetchActivity),
+                          SearchPage(),
+                          ShopPage(),
+                          ProfilePage()
+                        ],
+                      );
+                    }),
+              ),
+            ),
+            Positioned(child: MainHeader()),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              width: MediaQuery.sizeOf(context).width,
+              child: BottomBar(),
+            )
+          ],
+        ),
       ),
       // appBar: AppBar(
       //   title: const Text('Health Example'),

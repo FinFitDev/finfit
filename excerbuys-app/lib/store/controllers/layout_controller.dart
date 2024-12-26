@@ -8,6 +8,13 @@ class LayoutController {
     _statusBarHeight.add(val);
   }
 
+  final BehaviorSubject<double> _bottomPadding = BehaviorSubject.seeded(0.0);
+  Stream<double> get bottomPaddingStream => _bottomPadding.stream;
+  double get bottomPadding => _bottomPadding.value;
+  setBottomPadding(double val) {
+    _bottomPadding.add(val);
+  }
+
   final BehaviorSubject<double> _relativeContentHeight =
       BehaviorSubject.seeded(0.0);
   Stream<double> get relativeContentHeightStream =>

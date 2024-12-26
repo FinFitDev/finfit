@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:excerbuys/utils/activity/utils.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
@@ -22,9 +24,9 @@ class ActivityController {
     if (await Permission.location.status.isDenied) {
       await Permission.location.request();
     }
-    final List<HealthDataType> types = GeneralConstants.HEALTH_DATA_TYPES;
-    final List<HealthDataAccess> permissions =
-        GeneralConstants.HEALTH_DATA_PERMISSIONS;
+    final List<HealthDataType> types = HEALTH_DATA_TYPES;
+
+    final List<HealthDataAccess> permissions = HEALTH_DATA_PERMISSIONS;
 
     bool? hasPermissions =
         await Health().hasPermissions(types, permissions: permissions);
@@ -33,7 +35,6 @@ class ActivityController {
       try {
         final bool authorized = await Health()
             .requestAuthorization(types, permissions: permissions);
-        print(authorized);
         setHealthAuth(authorized);
       } catch (error) {
         debugPrint("Couldn't authorize health: $error");
@@ -53,7 +54,7 @@ class ActivityController {
     __healthSdkStatus.add(status);
   }
 
-  Future<void> checkHealthSdk() async {
+  Future<void> checkHealthConnectSdk() async {
     HealthConnectSdkStatus? status = await Health().getHealthConnectSdkStatus();
     if (status != HealthConnectSdkStatus.sdkAvailable) {
       await Health().installHealthConnect();
@@ -80,8 +81,14 @@ class ActivityController {
   }
 
   Future<void> fetchData() async {
-    if (!healthAuthorized ||
+    if (!healthAuthorized) {
+      print('Health unauthorized');
+      return;
+    }
+
+    if (Platform.isAndroid &&
         healthSdkStatus != HealthConnectSdkStatus.sdkAvailable) {
+      print('Health connect unauthorized');
       return;
     }
 
@@ -93,10 +100,11 @@ class ActivityController {
 
     try {
       List<HealthDataPoint> healthData = await Health().getHealthDataFromTypes(
-        types: GeneralConstants.HEALTH_DATA_TYPES,
+        types: HEALTH_DATA_TYPES,
         startTime: yesterday,
         endTime: now,
       );
+      print('$healthData health data');
 
       healthData = Health().removeDuplicates(healthData);
       Map<String, HealthDataPoint> values = {

@@ -1,8 +1,10 @@
 import 'dart:math';
 
+import 'package:excerbuys/containers/dashboard_page/home_page/available_offers.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/balance_container.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/recent_activity_container.dart';
 import 'package:excerbuys/store/controllers/activity_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 
@@ -23,29 +25,29 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 80.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            BalanceContainer(
-              balance: 3222,
-            ),
-            StreamBuilder<Map<String, HealthDataPoint>>(
-                stream: activityController.userActivityStream,
-                builder: (context, snapshot) {
-                  return snapshot.hasData && snapshot.data!.length > 0
-                      ? RecentActivityContainer(
-                          recentActivity: Map.fromEntries(snapshot.data!.entries
-                              .toList()
-                              .sublist(
-                                  0, min(snapshot.data!.values.length, 4))),
-                        )
-                      : SizedBox.shrink();
-                })
-          ],
-        ),
+    return Padding(
+      padding: EdgeInsets.only(
+          top: 80.0 + layoutController.statusBarHeight,
+          bottom: 2000 + layoutController.bottomPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          BalanceContainer(
+            balance: 0,
+          ),
+          StreamBuilder<Map<String, HealthDataPoint>>(
+              stream: activityController.userActivityStream,
+              builder: (context, snapshot) {
+                return RecentActivityContainer(
+                  recentActivity: snapshot.hasData
+                      ? Map.fromEntries(snapshot.data!.entries
+                          .toList()
+                          .sublist(0, min(snapshot.data!.values.length, 4)))
+                      : {},
+                );
+              }),
+          AvailableOffers()
+        ],
       ),
     );
   }

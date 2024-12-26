@@ -44,7 +44,7 @@ class ButtonSwitch extends StatelessWidget {
                   ),
                 ),
                 AnimatedPositioned(
-                    duration: const Duration(milliseconds: 350),
+                    duration: const Duration(milliseconds: 200),
                     curve: Curves.decelerate,
                     left:
                         snapshot.hasData && snapshot.data == AUTH_METHOD.SIGNUP

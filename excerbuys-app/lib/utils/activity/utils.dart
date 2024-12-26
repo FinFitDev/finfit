@@ -28,26 +28,6 @@ Map<String, HealthDataPoint> checkActivityData(
   return sortedActivity;
 }
 
-String padTimeString(String value) {
-  return value.padLeft(2, '0');
-}
-
-String parseDate(DateTime date) {
-  final DateTime now = DateTime.now();
-
-  if (date.year == now.year && date.month == now.month) {
-    if (date.day == now.day) {
-      return "Today ${padTimeString(date.hour.toString())}:${padTimeString(date.minute.toString())}";
-    }
-
-    if (date.day == now.day - 1) {
-      return "Yesterday ${padTimeString(date.hour.toString())}:${padTimeString(date.minute.toString())}";
-    }
-  }
-
-  return "${padTimeString(date.day.toString())} ${DateFormat('MMM').format(date)} ${padTimeString(date.hour.toString())}:${padTimeString(date.minute.toString())}";
-}
-
 bool areDatesEqualRespectToMinutes(DateTime date1, DateTime date2) {
   return date1.year == date2.year &&
       date1.month == date2.month &&

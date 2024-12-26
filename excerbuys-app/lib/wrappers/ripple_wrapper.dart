@@ -20,28 +20,44 @@ class RippleWrapper extends StatefulWidget {
 
 class _RippleWrapperState extends State<RippleWrapper> {
   bool isPressed = false;
+  bool isLongPress = false;
+
+  void pressEndCallback() {
+    Future.delayed(const Duration(milliseconds: 200), () {
+      if (!isLongPress) {
+        setState(() {
+          isPressed = false;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTapCancel: () {
+        pressEndCallback();
+      },
       onTapDown: (details) {
         setState(() {
           isPressed = true;
         });
       },
+      onLongPressStart: (details) {
+        setState(() {
+          isLongPress = true;
+        });
+      },
       onLongPressEnd: (details) {
         setState(() {
           isPressed = false;
+          isLongPress = false;
         });
         widget.onPressed();
       },
       onTapUp: ((details) {
+        pressEndCallback();
         widget.onPressed();
-        Future.delayed(const Duration(milliseconds: 200), () {
-          setState(() {
-            isPressed = false;
-          });
-        });
       }),
       child: Container(
         padding: widget.padding,

@@ -20,8 +20,8 @@ class _HealthAppState extends State<HealthApp> {
         FocusScope.of(context).requestFocus(FocusNode());
       },
       child: MaterialApp(
-        navigatorKey: GeneralConstants.NAVIGATOR_KEY,
-        title: GeneralConstants.APP_TITLE,
+        navigatorKey: NAVIGATOR_KEY,
+        title: APP_TITLE,
         theme: ThemeData(
             scaffoldBackgroundColor: Color.fromARGB(0, 0, 0, 0),
             colorScheme: ColorScheme.fromSeed(

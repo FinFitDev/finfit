@@ -33,8 +33,7 @@ class _LoginContainerState extends State<LoginContainer> {
   };
   bool _loading = false;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
-      clientId: GeneralConstants.WEB_CLIENT_GOOGLE_ID,
-      scopes: ['email', 'profile', 'openid']);
+      clientId: WEB_CLIENT_GOOGLE_ID, scopes: ['email', 'profile', 'openid']);
 
   void setErrors() {
     setState(() {
@@ -76,7 +75,7 @@ class _LoginContainerState extends State<LoginContainer> {
       }
 
       if (context.mounted) {
-        GeneralUtils.navigateWithClear(route: '/', context: context);
+        navigateWithClear(route: '/', context: context);
       }
     } catch (error) {
       return;
@@ -106,7 +105,7 @@ class _LoginContainerState extends State<LoginContainer> {
         await widget.useGoogleAuth(id_token);
 
         if (context.mounted) {
-          GeneralUtils.navigateWithClear(route: '/');
+          navigateWithClear(route: '/');
         }
       }
     } catch (error) {

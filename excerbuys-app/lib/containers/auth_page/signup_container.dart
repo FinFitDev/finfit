@@ -48,7 +48,7 @@ class _SignupContainerState extends State<SignupContainer> {
                 : null,
         SIGNUP_FIELD_TYPE.EMAIL: email.isEmpty
             ? 'Email is required'
-            : !GeneralConstants.EMAIL_REGEX.hasMatch(email)
+            : !EMAIL_REGEX.hasMatch(email)
                 ? 'Email invalid'
                 : null,
         SIGNUP_FIELD_TYPE.PASSWORD: password.isEmpty
@@ -94,7 +94,7 @@ class _SignupContainerState extends State<SignupContainer> {
       }
 
       if (context.mounted) {
-        GeneralUtils.navigateWithClear(route: '/', context: context);
+        navigateWithClear(route: '/', context: context);
       }
     } catch (error) {
       return;

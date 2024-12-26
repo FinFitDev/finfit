@@ -17,6 +17,7 @@ class CustomTextButton extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
+        color: Colors.transparent,
         height: 60,
         child: Center(
           child: Text(

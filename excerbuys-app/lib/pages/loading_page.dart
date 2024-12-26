@@ -20,9 +20,9 @@ class _LoadingPageState extends State<LoadingPage> {
     final User? currentUser = userController.currentUser;
 
     if (refreshToken.isNotEmpty && currentUser != null) {
-      GeneralUtils.navigateWithClear(route: '/');
+      navigateWithClear(route: '/');
     } else {
-      GeneralUtils.navigateWithClear(route: '/');
+      navigateWithClear(route: '/');
     }
   }
 
