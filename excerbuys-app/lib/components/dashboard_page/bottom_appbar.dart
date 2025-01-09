@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:excerbuys/components/shared/buttons/appbar_icon_button.dart';
-import 'package:excerbuys/pages/sub/home_page.dart';
+import 'package:excerbuys/pages/dashboard_subpages/home_page.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +17,8 @@ class BottomBar extends StatefulWidget {
 class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
     return ClipRRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
@@ -27,28 +29,30 @@ class _BottomBarState extends State<BottomBar> {
               right: 24,
               bottom: layoutController.bottomPadding,
               top: 16),
-          color: Colors.black.withAlpha(200),
+          decoration: BoxDecoration(
+            color: colors.primary.withAlpha(150),
+          ),
           child: StreamBuilder<int>(
               stream: dashboardController.activePageStream,
               builder: (context, snapshot) {
                 return Stack(
                   children: [
-                    AnimatedPositioned(
-                        duration: const Duration(milliseconds: 650),
-                        curve: Curves.elasticOut,
-                        left: MediaQuery.sizeOf(context).width / 2 -
-                            24 - // padding
-                            145 +
-                            ((snapshot.data ?? 0) * 80),
-                        top: 5,
-                        child: Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                        )),
+                    // AnimatedPositioned(
+                    //     duration: const Duration(milliseconds: 250),
+                    //     curve: Curves.decelerate,
+                    //     left: MediaQuery.sizeOf(context).width / 2 -
+                    //         24 - // padding
+                    //         145 +
+                    //         ((snapshot.data ?? 0) * 80),
+                    //     top: 5,
+                    //     child: Container(
+                    //       width: 50,
+                    //       height: 50,
+                    //       decoration: BoxDecoration(
+                    //         borderRadius: BorderRadius.circular(10),
+                    //         color: Theme.of(context).colorScheme.secondary,
+                    //       ),
+                    //     )),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

@@ -1,5 +1,12 @@
-import 'package:excerbuys/components/dashboard_page/home_page/activity_card.dart';
+import 'package:excerbuys/components/dashboard_page/home_page/activity_card/activity_card.dart';
+import 'package:excerbuys/components/dashboard_page/home_page/activity_card/recent_training_section.dart';
+import 'package:excerbuys/components/dashboard_page/home_page/activity_card/steps_activity_card.dart';
+import 'package:excerbuys/components/loaders/universal_loader_box.dart';
+import 'package:excerbuys/store/controllers/layout_controller.dart';
+import 'package:excerbuys/types/activity.dart';
+import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/activity/utils.dart';
+import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/home/utils.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
@@ -8,8 +15,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:health/health.dart';
 
 class RecentActivityContainer extends StatefulWidget {
-  final Map<String, HealthDataPoint> recentActivity;
-  const RecentActivityContainer({super.key, required this.recentActivity});
+  final Map<String, ITrainingEntry> recentTraining;
+  final Map<int, int> todaysSteps;
+  final bool? isLoading;
+
+  const RecentActivityContainer(
+      {super.key,
+      required this.recentTraining,
+      this.isLoading,
+      required this.todaysSteps});
 
   @override
   State<RecentActivityContainer> createState() =>
@@ -17,82 +31,131 @@ class RecentActivityContainer extends StatefulWidget {
 }
 
 class _RecentActivityContainerState extends State<RecentActivityContainer> {
+  final Widget loadingContainer =
+      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    Padding(
+      padding: const EdgeInsets.only(top: 0),
+      child: UniversalLoaderBox(height: 25, width: 100),
+    ),
+    Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: UniversalLoaderBox(
+          height: 200, width: layoutController.relativeContentWidth),
+    ),
+    Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: UniversalLoaderBox(height: 25, width: 100),
+    ),
+    Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: UniversalLoaderBox(
+          height: 50, width: layoutController.relativeContentWidth),
+    ),
+    Padding(
+      padding: const EdgeInsets.only(top: 5),
+      child: UniversalLoaderBox(
+          height: 50, width: layoutController.relativeContentWidth),
+    ),
+    Padding(
+      padding: const EdgeInsets.only(top: 5),
+      child: UniversalLoaderBox(
+          height: 50, width: layoutController.relativeContentWidth),
+    ),
+  ]);
+
+  final Widget emptyActivity = Builder(builder: (BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
+    return Container(
+      margin: EdgeInsets.only(top: 30),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            margin: EdgeInsets.only(bottom: 12),
+            child: Text(
+              'No activity yet',
+              style: TextStyle(color: colors.tertiary, fontSize: 16),
+            ),
+          ),
+          Text(
+            textAlign: TextAlign.center,
+            'Start working out to earn fitness points and claim your discounts in the shop!',
+            style: TextStyle(
+              color: colors.tertiaryContainer,
+            ),
+          ),
+        ],
+      ),
+    );
+  });
+
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     return Container(
-      padding: EdgeInsets.only(left: 16, right: 16, top: 30, bottom: 16),
+      padding: EdgeInsets.only(
+          left: HORIZOTAL_PADDING,
+          right: HORIZOTAL_PADDING,
+          top: 30,
+          bottom: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Builder(builder: (BuildContext context) {
+            if (widget.isLoading == true) {
+              return loadingContainer;
+            }
+
+            if (widget.recentTraining.isEmpty && widget.todaysSteps.isEmpty) {
+              return emptyActivity;
+            }
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                widget.todaysSteps.isNotEmpty
+                    ? StepsActivityCard(
+                        points: 1203,
+                        stepsData: widget.todaysSteps,
+                      )
+                    : SizedBox.shrink(),
+                widget.recentTraining.isNotEmpty
+                    ? RecentTrainingSection(
+                        recentTraining: widget.recentTraining)
+                    : SizedBox.shrink()
+              ],
+            );
+          }),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(
-                  child: Container(
-                height: 1,
-                color: colors.tertiaryContainer,
-                margin: EdgeInsets.only(right: 16),
-              )),
-              RippleWrapper(
-                  onPressed: () {},
-                  child: SvgPicture.asset('assets/svg/launch.svg'))
+              SizedBox(
+                height: 16,
+              ),
+              Text(
+                'Purchase history',
+                style: TextStyle(
+                    fontSize: 14,
+                    color: Theme.of(context).colorScheme.tertiary),
+                textAlign: TextAlign.left,
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              ActivityCard(
+                  activityType: ACTIVITY_TYPE.BIKE_RIDING,
+                  date: 'Today 11:10',
+                  points: -254,
+                  isPurchase: true),
+              ActivityCard(
+                activityType: ACTIVITY_TYPE.BIKE_RIDING,
+                date: 'Today 11:10',
+                points: -254,
+                isPurchase: true,
+              ),
             ],
           ),
-          widget.recentActivity.isEmpty
-              ? Container(
-                  margin: EdgeInsets.only(top: 30),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(bottom: 12),
-                        child: Text(
-                          'No activity yet',
-                          style:
-                              TextStyle(color: colors.tertiary, fontSize: 16),
-                        ),
-                      ),
-                      Text(
-                        textAlign: TextAlign.center,
-                        'Start working out to earn fitness points and claim your discounts in the shop!',
-                        style: TextStyle(
-                          color: colors.tertiaryContainer,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              : Column(
-                  children: [
-                    ...widget.recentActivity.values
-                        .toList()
-                        .asMap()
-                        .entries
-                        .map((entry) {
-                      int index = entry.key;
-                      HealthDataPoint healthData = entry.value;
-
-                      return ActivityCard(
-                        isFirst: index == 0,
-                        activityType: parseActivityType(
-                            healthData.value is WorkoutHealthValue
-                                ? (healthData.value as WorkoutHealthValue)
-                                    .workoutActivityType
-                                : null),
-                        points: healthData.value is NumericHealthValue
-                            ? (healthData.value as NumericHealthValue)
-                                .numericValue
-                                .round()
-                            : (healthData.value as WorkoutHealthValue)
-                                .totalEnergyBurned!
-                                .round(),
-                        date: parseDate(healthData.dateTo),
-                      );
-                    })
-                  ],
-                )
         ],
       ),
     );

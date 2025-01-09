@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedBalance extends StatefulWidget {
@@ -83,7 +84,7 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
     setState(() {
       _isStopAnimating = true;
       if (oldWidget.balance < widget.balance) {
-        _textColor = Color(0xFF6BBCFF);
+        _textColor = Theme.of(context).colorScheme.secondary;
       }
 
       if (oldWidget.balance > widget.balance) {
@@ -207,28 +208,40 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
             })
             .values
             .toList(),
-        Container(
-          width: _newBalanceChars.length * letterWidth,
-          height: 0,
-          decoration: BoxDecoration(boxShadow: [
-            BoxShadow(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                blurRadius: 10,
-                spreadRadius: 10)
-          ]),
-        ),
+        StreamBuilder<double>(
+            stream: dashboardController.scrollDistanceStream,
+            builder: (context, snapshot) {
+              return Container(
+                width: _newBalanceChars.length * letterWidth,
+                height: 0,
+                decoration: snapshot.hasData && snapshot.data! > -20
+                    ? BoxDecoration(boxShadow: [
+                        BoxShadow(
+                            color: Theme.of(context).colorScheme.primary,
+                            blurRadius: 10,
+                            spreadRadius: 10)
+                      ])
+                    : null,
+              );
+            }),
         Positioned(
           bottom: -1,
-          child: Container(
-            width: _newBalanceChars.length * letterWidth,
-            height: 0,
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  blurRadius: 10,
-                  spreadRadius: 10)
-            ]),
-          ),
+          child: StreamBuilder<double>(
+              stream: dashboardController.scrollDistanceStream,
+              builder: (context, snapshot) {
+                return Container(
+                  width: _newBalanceChars.length * letterWidth,
+                  height: 0,
+                  decoration: snapshot.hasData && snapshot.data! > -20
+                      ? BoxDecoration(boxShadow: [
+                          BoxShadow(
+                              color: Theme.of(context).colorScheme.primary,
+                              blurRadius: 10,
+                              spreadRadius: 10)
+                        ])
+                      : null,
+                );
+              }),
         )
       ]),
     );

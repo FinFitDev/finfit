@@ -36,3 +36,7 @@ String padPriceDecimals(double price) {
     return main;
   }
 }
+
+int parseInt(dynamic value) {
+  return value is String ? int.parse(value) : value;
+}

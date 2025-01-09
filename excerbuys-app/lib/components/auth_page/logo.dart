@@ -11,7 +11,7 @@ class Logo extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            'excerbuys',
+            'Fitne\$\$ app',
             style: TextStyle(
                 fontFamily: 'Blinker',
                 fontSize: 48,

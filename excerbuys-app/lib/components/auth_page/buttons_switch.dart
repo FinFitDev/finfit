@@ -25,6 +25,7 @@ class ButtonSwitch extends StatelessWidget {
                             onPressed: () {
                               authController
                                   .setActiveAuthMethod(AUTH_METHOD.LOGIN);
+                              FocusScope.of(context).unfocus();
                             },
                             isActive: snapshot.hasData &&
                                 snapshot.data == AUTH_METHOD.LOGIN,
@@ -35,6 +36,7 @@ class ButtonSwitch extends StatelessWidget {
                             onPressed: () {
                               authController
                                   .setActiveAuthMethod(AUTH_METHOD.SIGNUP);
+                              FocusScope.of(context).unfocus();
                             },
                             isActive: snapshot.hasData &&
                                 snapshot.data == AUTH_METHOD.SIGNUP,

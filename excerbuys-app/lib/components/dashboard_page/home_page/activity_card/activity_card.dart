@@ -1,3 +1,5 @@
+import 'package:excerbuys/components/dashboard_page/home_page/activity_card/activity_card_details.dart';
+import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/home/utils.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
@@ -8,14 +10,15 @@ class ActivityCard extends StatefulWidget {
   final ACTIVITY_TYPE activityType;
   final int points;
   final String date;
-  final bool? isFirst;
+  final bool? isPurchase;
 
-  const ActivityCard(
-      {super.key,
-      required this.activityType,
-      required this.date,
-      required this.points,
-      this.isFirst});
+  const ActivityCard({
+    super.key,
+    required this.activityType,
+    required this.date,
+    required this.points,
+    this.isPurchase,
+  });
 
   @override
   State<ActivityCard> createState() => _ActivityCardState();
@@ -40,24 +43,34 @@ class _ActivityCardState extends State<ActivityCard> {
             });
           },
           child: Container(
-            margin: EdgeInsets.only(top: widget.isFirst == true ? 12 : 3),
+            margin: EdgeInsets.only(top: 5),
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(
-                color: colors.primaryContainer,
-                borderRadius: BorderRadius.circular(10)),
+              color: colors.primaryContainer,
+              borderRadius: BorderRadius.circular(10),
+            ),
             child: Row(
               children: [
-                SizedBox(
-                  width: 24,
-                  child: SvgPicture.asset(activityMetadata.icon,
-                      colorFilter: ColorFilter.mode(color, BlendMode.srcIn)),
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 8, right: 12),
-                  height: 36,
-                  width: 1,
-                  color: color,
-                ),
+                widget.isPurchase == true
+                    ? SizedBox(
+                        height: 36,
+                      )
+                    : Row(
+                        children: [
+                          SizedBox(
+                            width: 24,
+                            child: SvgPicture.asset(activityMetadata.icon,
+                                colorFilter:
+                                    ColorFilter.mode(color, BlendMode.srcIn)),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 8, right: 12),
+                            height: 36,
+                            width: 1,
+                            color: color,
+                          ),
+                        ],
+                      ),
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -68,13 +81,16 @@ class _ActivityCardState extends State<ActivityCard> {
                             margin: EdgeInsets.only(right: 6),
                             child: Text(
                               widget.points.abs().toString(),
-                              style: TextStyle(color: color, fontSize: 15),
+                              style: TextStyle(
+                                  color: color,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
                           Text(
                             '(${widget.date})',
                             style: TextStyle(
-                                color: colors.tertiaryContainer, fontSize: 11),
+                                color: colors.tertiaryContainer, fontSize: 12),
                           )
                         ],
                       ),
@@ -85,7 +101,9 @@ class _ActivityCardState extends State<ActivityCard> {
                             child: Text(
                               activityMetadata.name,
                               style: TextStyle(
-                                  color: colors.tertiary, fontSize: 11),
+                                color: colors.tertiary,
+                                fontSize: 12,
+                              ),
                             ),
                           ),
                           RotatedBox(
@@ -103,16 +121,9 @@ class _ActivityCardState extends State<ActivityCard> {
             ),
           ),
         ),
-        AnimatedContainer(
-          margin: EdgeInsets.symmetric(horizontal: 8),
-          curve: Curves.decelerate,
-          duration: Duration(milliseconds: 200),
-          height: _detailsOpen ? 150 : 0,
-          decoration: BoxDecoration(
-              color: colors.primaryContainer.withOpacity(0.5),
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10))),
+        ActivityCardDetails(
+          open: _detailsOpen,
+          isPurchase: widget.isPurchase,
         )
       ],
     );

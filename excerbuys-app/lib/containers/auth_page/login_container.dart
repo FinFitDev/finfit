@@ -33,7 +33,8 @@ class _LoginContainerState extends State<LoginContainer> {
   };
   bool _loading = false;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
-      clientId: WEB_CLIENT_GOOGLE_ID, scopes: ['email', 'profile', 'openid']);
+      clientId: Platform.isIOS ? null : WEB_CLIENT_GOOGLE_ID,
+      scopes: ['email', 'profile', 'openid']);
 
   void setErrors() {
     setState(() {
@@ -100,6 +101,7 @@ class _LoginContainerState extends State<LoginContainer> {
         final GoogleSignInAuthentication googleAuth =
             await googleUser.authentication;
         print(googleUser);
+        print('google user');
         String id_token = googleAuth.idToken!;
 
         await widget.useGoogleAuth(id_token);

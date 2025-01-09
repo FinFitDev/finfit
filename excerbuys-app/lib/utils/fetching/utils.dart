@@ -31,6 +31,5 @@ Future<dynamic> httpHandler(
       response = await get(parsedUrl, headers: headers);
       break;
   }
-  print(response.body);
   return jsonDecode(response.body);
 }

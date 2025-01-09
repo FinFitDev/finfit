@@ -1,11 +1,11 @@
 import 'package:excerbuys/components/dashboard_page/bottom_appbar.dart';
 import 'package:excerbuys/components/dashboard_page/main_header.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/balance_container.dart';
-import 'package:excerbuys/pages/sub/home_page.dart';
-import 'package:excerbuys/pages/sub/profile_page.dart';
-import 'package:excerbuys/pages/sub/search_page.dart';
-import 'package:excerbuys/pages/sub/shop_page.dart';
-import 'package:excerbuys/store/controllers/activity_controller.dart';
+import 'package:excerbuys/pages/dashboard_subpages/home_page.dart';
+import 'package:excerbuys/pages/dashboard_subpages/profile_page.dart';
+import 'package:excerbuys/pages/dashboard_subpages/search_page.dart';
+import 'package:excerbuys/pages/dashboard_subpages/shop_page.dart';
+import 'package:excerbuys/store/controllers/activity/activity_controller.dart';
 import 'package:excerbuys/store/controllers/auth_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
@@ -57,7 +57,7 @@ class _DashboardPageState extends State<DashboardPage> {
     if (Platform.isAndroid) {
       await activityController.checkHealthConnectSdk();
     }
-    await activityController.fetchData();
+    await activityController.fetchActivity();
   }
 
   // Future<void> logOut() async {
@@ -162,32 +162,19 @@ class _DashboardPageState extends State<DashboardPage> {
         height: layoutController.relativeContentHeight,
         child: Stack(
           children: [
-            NotificationListener<ScrollNotification>(
-              onNotification: (scrollNotification) {
-                // ensure the notification only listens to vertical scroll
-                if (scrollNotification.metrics.axis == Axis.vertical) {
-                  dashboardController
-                      .setScrollDistance(scrollNotification.metrics.pixels);
-                  return true;
-                }
-                return false;
-              },
-              child: SingleChildScrollView(
-                child: StreamBuilder<int>(
-                    stream: dashboardController.activePageStream,
-                    builder: (context, snapshot) {
-                      return IndexedStack(
-                        index: snapshot.data,
-                        children: [
-                          HomePage(fetchActivity: fetchActivity),
-                          SearchPage(),
-                          ShopPage(),
-                          ProfilePage()
-                        ],
-                      );
-                    }),
-              ),
-            ),
+            StreamBuilder<int>(
+                stream: dashboardController.activePageStream,
+                builder: (context, snapshot) {
+                  return IndexedStack(
+                    index: snapshot.data,
+                    children: [
+                      HomePage(fetchActivity: fetchActivity),
+                      SearchPage(),
+                      ShopPage(),
+                      ProfilePage()
+                    ],
+                  );
+                }),
             Positioned(child: MainHeader()),
             Positioned(
               bottom: 0,

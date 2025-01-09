@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
+import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,6 +12,7 @@ class MainHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return ClipRRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
@@ -18,9 +20,13 @@ class MainHeader extends StatelessWidget {
           children: [
             Container(
               padding: EdgeInsets.only(
-                  left: 20, right: 20, top: layoutController.statusBarHeight),
+                  left: HORIZOTAL_PADDING,
+                  right: HORIZOTAL_PADDING,
+                  top: layoutController.statusBarHeight),
               width: MediaQuery.sizeOf(context).width,
-              color: Colors.black.withAlpha(200),
+              decoration: BoxDecoration(
+                color: colors.primary.withAlpha(150),
+              ),
               height: 80 + layoutController.statusBarHeight,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

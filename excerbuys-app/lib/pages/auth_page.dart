@@ -4,6 +4,7 @@ import 'package:excerbuys/containers/auth_page/login_container.dart';
 import 'package:excerbuys/containers/auth_page/signup_container.dart';
 import 'package:excerbuys/store/controllers/auth_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
+import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class AuthPage extends StatefulWidget {
@@ -27,8 +28,8 @@ class _AuthPageState extends State<AuthPage> {
                       padding: EdgeInsets.only(
                           top: 35 + layoutController.statusBarHeight,
                           bottom: 35 + layoutController.bottomPadding,
-                          left: 16,
-                          right: 16),
+                          left: HORIZOTAL_PADDING,
+                          right: HORIZOTAL_PADDING),
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

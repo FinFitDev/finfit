@@ -1,8 +1,6 @@
-enum ACTIVITY_TYPE { WALKING, RUNNING, BIKE_RIDING, SWIMMING }
+class ContentWithLoading<T> {
+  final T content;
+  bool isLoading = true;
 
-class ActivityMetadata {
-  final String icon;
-  final String name;
-
-  const ActivityMetadata({required this.icon, required this.name});
+  ContentWithLoading({required this.content});
 }

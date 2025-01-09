@@ -28,7 +28,11 @@ class AppbarIconButton extends StatelessWidget {
         padding: EdgeInsets.all(padding ?? 18),
         child: SvgPicture.asset(
           icon,
-          colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+          colorFilter: ColorFilter.mode(
+              isActive == true
+                  ? Theme.of(context).colorScheme.secondary
+                  : Theme.of(context).colorScheme.tertiary,
+              BlendMode.srcIn),
         ),
       ),
     );

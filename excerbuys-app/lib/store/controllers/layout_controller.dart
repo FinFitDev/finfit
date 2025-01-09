@@ -23,6 +23,14 @@ class LayoutController {
   setRelativeConetntHeight(double val) {
     _relativeContentHeight.add(val);
   }
+
+  final BehaviorSubject<double> _relativeContentWidth =
+      BehaviorSubject.seeded(0.0);
+  Stream<double> get relativeContentWidthStream => _relativeContentWidth.stream;
+  double get relativeContentWidth => _relativeContentWidth.value;
+  setRelativeConetntWidth(double val) {
+    _relativeContentWidth.add(val);
+  }
 }
 
 LayoutController layoutController = LayoutController();

@@ -11,7 +11,7 @@ app.use(cors());
 
 // const pool = require("./utils/db");
 
-const port = process.env.PORT || "5000";
+const port = process.env.PORT || "3000";
 
 // console.log(crypto.randomBytes(64).toString("hex"));
 
@@ -22,5 +22,5 @@ app.use("/auth", authRouter);
 app.use("/api/v1", middleware, apiRouter);
 
 app.listen(port, () => {
-  console.log("App running on port 5000");
+  console.log("App running on port 3000");
 });

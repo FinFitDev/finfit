@@ -22,3 +22,18 @@ export const isUserGoogleSignup = (
   }
   return false;
 };
+
+// export function convertObjectToDBTuple<T extends Record<string, any>>(data:T[]){
+//   return data.reduce((acc, obj) => {
+//     const sortedObj = Object.keys(obj)
+//     .sort() 
+//     .reduce((result: Record<string, any>, key) => {
+//       result[key] = obj[key];
+//       return result;
+//     }, {});
+
+//     acc += `(${Object.values(sortedObj).join(', ')}),`
+//     return acc
+//   },'')
+ 
+// } 

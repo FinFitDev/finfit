@@ -1,7 +1,16 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:excerbuys/store/controllers/activity/trainings_controller.dart';
+import 'package:excerbuys/store/controllers/auth_controller.dart';
+import 'package:excerbuys/store/controllers/user_controller.dart';
+import 'package:excerbuys/types/activity.dart';
+import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/activity/utils.dart';
+import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/utils/fetching/utils.dart';
+import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
@@ -63,24 +72,29 @@ class ActivityController {
     setHealthSdkStatus(status ?? HealthConnectSdkStatus.sdkUnavailable);
   }
 
-  // values
-  final BehaviorSubject<Map<String, HealthDataPoint>> _userActivity =
-      BehaviorSubject.seeded({});
-
-  Stream<Map<String, HealthDataPoint>> get userActivityStream =>
-      _userActivity.stream.map(checkActivityData);
-
-  Map<String, HealthDataPoint> get userActivity => _userActivity.value;
-
-  addUserActivity(Map<String, HealthDataPoint> activity) {
-    // Merging new activity into the existing one
-    Map<String, HealthDataPoint> newActivity = {...userActivity, ...activity};
-
-    // Emit the updated activity into the BehaviorSubject
-    _userActivity.add(newActivity);
+  final BehaviorSubject<ContentWithLoading<Map<String, ITrainingEntry>>>
+      _userActivity = BehaviorSubject.seeded(ContentWithLoading(content: {}));
+  Stream<ContentWithLoading<Map<String, ITrainingEntry>>>
+      get userActivityStream => _userActivity.stream;
+  ContentWithLoading<Map<String, ITrainingEntry>> get userActivity =>
+      _userActivity.value;
+  addUserActivity(Map<String, ITrainingEntry> activity) {
+    Map<String, ITrainingEntry> newActivity = {
+      ...userActivity.content,
+      ...activity
+    };
+    _userActivity.add(ContentWithLoading(content: newActivity));
   }
 
-  Future<void> fetchData() async {
+  setUserActivityLoading(bool loading) {
+    userActivity.isLoading = loading;
+    _userActivity.add(userActivity);
+  }
+
+  // Stream<Map<int, int>> get userStepsStream =>
+  //     _userActivity.stream.map();
+
+  Future<void> fetchActivity() async {
     if (!healthAuthorized) {
       print('Health unauthorized');
       return;
@@ -92,29 +106,8 @@ class ActivityController {
       return;
     }
 
-    // final lastUpdated = userController.currentUser?.updatedAt;
-    final now = DateTime.now();
-    // final Duration difference = now.difference(lastUpdated!);
-
-    final yesterday = now.subtract(Duration(hours: 24));
-
-    try {
-      List<HealthDataPoint> healthData = await Health().getHealthDataFromTypes(
-        types: HEALTH_DATA_TYPES,
-        startTime: yesterday,
-        endTime: now,
-      );
-      print('$healthData health data');
-
-      healthData = Health().removeDuplicates(healthData);
-      Map<String, HealthDataPoint> values = {
-        for (var el in healthData) el.uuid: el,
-      };
-
-      addUserActivity(values);
-    } catch (error) {
-      debugPrint("Exception in getHealthDataFromTypes: $error");
-    }
+    await trainingsController.fetchTrainings();
+    setUserActivityLoading(false);
   }
 }
 
