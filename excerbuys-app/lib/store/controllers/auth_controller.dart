@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:excerbuys/containers/auth_page/login_container.dart';
 import 'package:excerbuys/containers/auth_page/signup_container.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
@@ -150,7 +152,12 @@ class AuthController {
       dynamic res = await handleBackendRequests(
           method: HTTP_METHOD.POST,
           endpoint: 'auth/googleAuth',
-          body: {"id_token": id_token});
+          body: {
+            "id_token": id_token,
+            "platform": Platform.isIOS
+                ? 'ios'
+                : 'android' // different backend token for platforms
+          });
 
       if (res['error'] != null) {
         // should not reach here

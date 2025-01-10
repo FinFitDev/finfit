@@ -100,8 +100,6 @@ class _LoginContainerState extends State<LoginContainer> {
       if (googleUser != null) {
         final GoogleSignInAuthentication googleAuth =
             await googleUser.authentication;
-        print(googleUser);
-        print('google user');
         String id_token = googleAuth.idToken!;
 
         await widget.useGoogleAuth(id_token);

@@ -13,8 +13,8 @@ export const verifyAccessToken = (access_token: string) => {
   });
 };
 
-export const verifyGoogleAuth = async (id_token: string) => {
-  const payload = await getDataFromIdToken(id_token);
+export const verifyGoogleAuth = async (id_token: string, platform: string) => {
+  const payload = await getDataFromIdToken(id_token, platform);
 
   if (!payload?.email) throw new Error("Error veryfing user data");
 

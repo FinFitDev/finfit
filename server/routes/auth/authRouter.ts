@@ -105,10 +105,10 @@ authRouter.post(
 
 authRouter.post(
   "/googleAuth",
-  async (req: RequestWithPayload<{ id_token: string }>, res: Response) => {
+  async (req: RequestWithPayload<{ id_token: string, platform: string }>, res: Response) => {
     try {
-      const { id_token } = req.body;
-      const response = await verifyGoogleAuth(id_token);
+      const { id_token, platform } = req.body;
+      const response = await verifyGoogleAuth(id_token, platform);
       res
         .status(200)
         .json({ message: "Google auth successful", content: response });
