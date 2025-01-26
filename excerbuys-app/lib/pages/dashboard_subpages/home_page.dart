@@ -6,6 +6,7 @@ import 'package:excerbuys/containers/dashboard_page/home_page/balance_container.
 import 'package:excerbuys/containers/dashboard_page/home_page/goals_container.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/recent_activity_container.dart';
 import 'package:excerbuys/store/controllers/activity/activity_controller.dart';
+import 'package:excerbuys/store/controllers/activity/steps_controller.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
@@ -56,10 +57,11 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       StreamBuilder<
                               ContentWithLoading<Map<String, ITrainingEntry>>>(
-                          stream: trainingsController.userTrainingStream,
+                          stream: trainingsController.usetTrainingsStream,
                           builder: (context, snapshot) {
-                            return StreamBuilder<Map<int, int>>(
-                                stream: null,
+                            return StreamBuilder<
+                                    ContentWithLoading<Map<int, int>>>(
+                                stream: stepsController.userStepsStream,
                                 builder: (context, stepsSnapshot) {
                                   return RecentActivityContainer(
                                     recentTraining: snapshot.hasData
@@ -74,7 +76,7 @@ class _HomePageState extends State<HomePage> {
                                                     4)))
                                         : {},
                                     todaysSteps: stepsSnapshot.hasData
-                                        ? stepsSnapshot.data!
+                                        ? stepsSnapshot.data!.content
                                         : {},
                                     isLoading: snapshot.hasData
                                         ? snapshot.data!.isLoading

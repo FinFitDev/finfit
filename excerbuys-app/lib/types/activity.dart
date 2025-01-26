@@ -1,5 +1,9 @@
 import 'package:excerbuys/types/general.dart';
 
+enum STEPS_AGGREGATION_TYPE { HOURLY, DAILY, MONTHLY }
+
+enum STEPS_AGGREGATION_VALUE { TOTAL, MEAN }
+
 enum ACTIVITY_TYPE { WALKING, RUNNING, BIKE_RIDING, SWIMMING }
 
 class ActivityMetadata {
@@ -39,6 +43,28 @@ class ITrainingEntry {
         "calories":"${this.calories}",
         "distance":"${this.distance}",
         "created_at":"${this.createdAt}"
+      }""";
+  }
+}
+
+class IHourlyStepsEntry {
+  final int total;
+  final int userId;
+  final DateTime timestamp;
+  final String uuid;
+
+  const IHourlyStepsEntry(
+      {required this.uuid,
+      required this.total,
+      required this.userId,
+      required this.timestamp});
+
+  String toJson() {
+    return """{
+        "uuid":"$uuid",
+        "timestamp":"$timestamp",
+        "user_id":"$userId",
+        "total":"$total"
       }""";
   }
 }

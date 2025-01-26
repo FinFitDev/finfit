@@ -1,17 +1,9 @@
-import 'dart:convert';
 import 'dart:io';
-
+import 'package:excerbuys/store/controllers/activity/steps_controller.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller.dart';
-import 'package:excerbuys/store/controllers/auth_controller.dart';
-import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
-import 'package:excerbuys/utils/activity/utils.dart';
-import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/utils/fetching/utils.dart';
-import 'package:excerbuys/utils/parsers/parsers.dart';
-import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -26,6 +18,7 @@ class ActivityController {
     _healthAuthorized.add(isAuth);
   }
 
+// authorizing all neccessary libs
   Future<void> authorize() async {
     if (await Permission.activityRecognition.status.isDenied) {
       await Permission.activityRecognition.request();
@@ -72,25 +65,6 @@ class ActivityController {
     setHealthSdkStatus(status ?? HealthConnectSdkStatus.sdkUnavailable);
   }
 
-  final BehaviorSubject<ContentWithLoading<Map<String, ITrainingEntry>>>
-      _userActivity = BehaviorSubject.seeded(ContentWithLoading(content: {}));
-  Stream<ContentWithLoading<Map<String, ITrainingEntry>>>
-      get userActivityStream => _userActivity.stream;
-  ContentWithLoading<Map<String, ITrainingEntry>> get userActivity =>
-      _userActivity.value;
-  addUserActivity(Map<String, ITrainingEntry> activity) {
-    Map<String, ITrainingEntry> newActivity = {
-      ...userActivity.content,
-      ...activity
-    };
-    _userActivity.add(ContentWithLoading(content: newActivity));
-  }
-
-  setUserActivityLoading(bool loading) {
-    userActivity.isLoading = loading;
-    _userActivity.add(userActivity);
-  }
-
   // Stream<Map<int, int>> get userStepsStream =>
   //     _userActivity.stream.map();
 
@@ -107,7 +81,7 @@ class ActivityController {
     }
 
     await trainingsController.fetchTrainings();
-    setUserActivityLoading(false);
+    await stepsController.fetchsSteps();
   }
 }
 

@@ -4,15 +4,8 @@ import 'package:excerbuys/components/dashboard_page/home_page/activity_card/step
 import 'package:excerbuys/components/loaders/universal_loader_box.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/types/activity.dart';
-import 'package:excerbuys/types/general.dart';
-import 'package:excerbuys/utils/activity/utils.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/utils/home/utils.dart';
-import 'package:excerbuys/utils/parsers/parsers.dart';
-import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:health/health.dart';
 
 class RecentActivityContainer extends StatefulWidget {
   final Map<String, ITrainingEntry> recentTraining;
