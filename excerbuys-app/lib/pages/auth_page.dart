@@ -6,6 +6,7 @@ import 'package:excerbuys/store/controllers/auth_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -26,17 +27,33 @@ class _AuthPageState extends State<AuthPage> {
                 child: IntrinsicHeight(
                   child: Padding(
                       padding: EdgeInsets.only(
-                          top: 35 + layoutController.statusBarHeight,
-                          bottom: 35 + layoutController.bottomPadding,
+                          top: 15 + layoutController.statusBarHeight,
+                          bottom: 15 + layoutController.bottomPadding,
                           left: HORIZOTAL_PADDING,
                           right: HORIZOTAL_PADDING),
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Column(
-                              children: [Logo(), ButtonSwitch()],
-                            ),
+                            Row(children: [
+                              IconButton(
+                                  onPressed: () {
+                                    if (Navigator.canPop(context)) {
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                  icon: SvgPicture.asset(
+                                      'assets/svg/arrowBack.svg',
+                                      height: 30,
+                                      colorFilter: ColorFilter.mode(
+                                          Theme.of(context)
+                                              .colorScheme
+                                              .tertiary,
+                                          BlendMode.srcIn))),
+                            ]),
+                            Container(
+                                margin: EdgeInsets.symmetric(vertical: 60),
+                                child: Logo()),
                             Expanded(
                                 child: StreamBuilder<Object>(
                                     stream:

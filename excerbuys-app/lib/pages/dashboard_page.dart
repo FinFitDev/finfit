@@ -160,6 +160,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return Scaffold(
       body: Container(
         height: layoutController.relativeContentHeight,
+        color: Theme.of(context).colorScheme.primary,
         child: Stack(
           children: [
             StreamBuilder<int>(

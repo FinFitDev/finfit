@@ -1,12 +1,11 @@
 import express, { Request, Response, Router } from "express";
 import { getUserById, updateUserPointsScore } from "./services/userService";
-import { ITrainingEntry, RequestWithPayload } from "../../shared/types";
+import { RequestWithPayload } from "../../shared/types";
 import {
   addStepsData,
   addTrainings,
   getUserRecentTrainings,
 } from "./services/activityService";
-import { off } from "process";
 
 const apiRouter: Router = express.Router();
 

@@ -198,6 +198,7 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
                         return Text(
                           item,
                           style: TextStyle(
+                              fontFamily: 'Quicksand',
                               fontSize: 54,
                               color:
                                   difference != 0 ? _textColor : Colors.white),
@@ -208,41 +209,6 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
             })
             .values
             .toList(),
-        StreamBuilder<double>(
-            stream: dashboardController.scrollDistanceStream,
-            builder: (context, snapshot) {
-              return Container(
-                width: _newBalanceChars.length * letterWidth,
-                height: 0,
-                decoration: snapshot.hasData && snapshot.data! > -20
-                    ? BoxDecoration(boxShadow: [
-                        BoxShadow(
-                            color: Theme.of(context).colorScheme.primary,
-                            blurRadius: 10,
-                            spreadRadius: 10)
-                      ])
-                    : null,
-              );
-            }),
-        Positioned(
-          bottom: -1,
-          child: StreamBuilder<double>(
-              stream: dashboardController.scrollDistanceStream,
-              builder: (context, snapshot) {
-                return Container(
-                  width: _newBalanceChars.length * letterWidth,
-                  height: 0,
-                  decoration: snapshot.hasData && snapshot.data! > -20
-                      ? BoxDecoration(boxShadow: [
-                          BoxShadow(
-                              color: Theme.of(context).colorScheme.primary,
-                              blurRadius: 10,
-                              spreadRadius: 10)
-                        ])
-                      : null,
-                );
-              }),
-        )
       ]),
     );
   }

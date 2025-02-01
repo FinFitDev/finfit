@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
@@ -13,138 +14,128 @@ class MainHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    return ClipRRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
-        child: Stack(
-          children: [
-            Container(
-              padding: EdgeInsets.only(
-                  left: HORIZOTAL_PADDING,
-                  right: HORIZOTAL_PADDING,
-                  top: layoutController.statusBarHeight),
-              width: MediaQuery.sizeOf(context).width,
-              decoration: BoxDecoration(
-                color: colors.primary.withAlpha(150),
-              ),
-              height: 80 + layoutController.statusBarHeight,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  RippleWrapper(
-                    onPressed: () {},
-                    child: Container(
-                      child: SvgPicture.asset(
-                        'assets/svg/menu.svg',
-                        height: 35,
-                        colorFilter: ColorFilter.mode(
-                            Theme.of(context).colorScheme.tertiary,
-                            BlendMode.srcIn),
+    return StreamBuilder<double>(
+        stream: dashboardController.scrollDistanceStream,
+        builder: (context, snapshot) {
+          return StreamBuilder(
+              stream: dashboardController.activePageStream,
+              builder: (context, pageSnapshot) {
+                final bool isActive =
+                    snapshot.hasData && snapshot.data! > 275 ||
+                        pageSnapshot.data != 0;
+
+                return Stack(
+                  children: [
+                    AnimatedContainer(
+                      duration: Duration(milliseconds: 150),
+                      curve: Curves.decelerate,
+                      padding: EdgeInsets.only(
+                          left: HORIZOTAL_PADDING * 2,
+                          right: HORIZOTAL_PADDING * 2,
+                          top: layoutController.statusBarHeight),
+                      width: MediaQuery.sizeOf(context).width,
+                      decoration: BoxDecoration(
+                        color: colors.primary.withAlpha(isActive ? 255 : 0),
                       ),
-                    ),
-                  ),
-                  Row(children: [
-                    RippleWrapper(
-                      onPressed: () {},
-                      child: Stack(
+                      height: 80 + layoutController.statusBarHeight,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 7),
-                            child: SvgPicture.asset(
-                              'assets/svg/shopping-basket.svg',
-                              height: 28,
-                              colorFilter: ColorFilter.mode(
-                                  Theme.of(context).colorScheme.tertiary,
-                                  BlendMode.srcIn),
-                            ),
-                          ),
-                          Positioned(
-                              left: 5,
-                              top: 9,
-                              child: Container(
-                                width: 12,
-                                height: 12,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100),
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondary),
-                              )),
-                        ],
-                      ),
-                    ),
-                    RippleWrapper(
-                      onPressed: () {},
-                      child: Stack(
-                        children: [
-                          Container(
-                            padding:
-                                EdgeInsets.only(top: 10, bottom: 10, left: 7),
-                            child: SvgPicture.asset(
-                              'assets/svg/bell.svg',
-                              height: 25,
-                              colorFilter: ColorFilter.mode(
-                                  Theme.of(context).colorScheme.tertiary,
-                                  BlendMode.srcIn),
-                            ),
-                          ),
-                          Positioned(
-                              left: 8,
-                              top: 7,
-                              child: Container(
-                                width: 12,
-                                height: 12,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100),
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondary),
-                              )),
-                        ],
-                      ),
-                    ),
-                  ])
-                ],
-              ),
-            ),
-            StreamBuilder<double>(
-                stream: dashboardController.scrollDistanceStream,
-                builder: (context, snapshot) {
-                  return StreamBuilder(
-                      stream: dashboardController.activePageStream,
-                      builder: (context, pageSnapshot) {
-                        final bool isActive =
-                            snapshot.hasData && snapshot.data! > 100 ||
-                                pageSnapshot.data != 0;
-                        return AnimatedPositioned(
-                          curve: Curves.decelerate,
-                          duration: const Duration(milliseconds: 250),
-                          top: isActive
-                              ? 28 + layoutController.statusBarHeight
-                              : 80 + layoutController.statusBarHeight,
-                          left: 60,
-                          child: AnimatedOpacity(
-                            duration: const Duration(milliseconds: 100),
-                            opacity: isActive ? 1 : 0,
+                          RippleWrapper(
+                            onPressed: () {},
                             child: Container(
-                                margin: EdgeInsets.only(left: 16),
-                                child: Text(
-                                  '13909 points',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .tertiaryContainer),
-                                )),
+                              child: SvgPicture.asset(
+                                'assets/svg/menu.svg',
+                                height: 35,
+                                colorFilter: ColorFilter.mode(
+                                    isActive ? colors.tertiary : colors.primary,
+                                    BlendMode.srcIn),
+                              ),
+                            ),
                           ),
-                        );
-                      });
-                })
-          ],
-        ),
-      ),
-    );
+                          // Row(children: [
+                          //   RippleWrapper(
+                          //     onPressed: () {},
+                          //     child: Stack(
+                          //       children: [
+                          //         Container(
+                          //           padding: EdgeInsets.symmetric(
+                          //               vertical: 10, horizontal: 7),
+                          //           child: SvgPicture.asset(
+                          //             'assets/svg/shopping-basket.svg',
+                          //             height: 28,
+                          //             colorFilter: ColorFilter.mode(
+                          //                 Theme.of(context).colorScheme.tertiary,
+                          //                 BlendMode.srcIn),
+                          //           ),
+                          //         ),
+                          //         Positioned(
+                          //             left: 5,
+                          //             top: 9,
+                          //             child: Container(
+                          //               width: 12,
+                          //               height: 12,
+                          //               decoration: BoxDecoration(
+                          //                   borderRadius: BorderRadius.circular(100),
+                          //                   color: Theme.of(context)
+                          //                       .colorScheme
+                          //                       .secondary),
+                          //             )),
+                          //       ],
+                          //     ),
+                          //   ),
+                          //   RippleWrapper(
+                          //     onPressed: () {},
+                          //     child: Stack(
+                          //       children: [
+                          //         Container(
+                          //           padding:
+                          //               EdgeInsets.only(top: 10, bottom: 10, left: 7),
+                          //           child: SvgPicture.asset(
+                          //             'assets/svg/bell.svg',
+                          //             height: 25,
+                          //             colorFilter: ColorFilter.mode(
+                          //                 Theme.of(context).colorScheme.tertiary,
+                          //                 BlendMode.srcIn),
+                          //           ),
+                          //         ),
+                          //         Positioned(
+                          //             left: 8,
+                          //             top: 7,
+                          //             child: Container(
+                          //               width: 12,
+                          //               height: 12,
+                          //               decoration: BoxDecoration(
+                          //                   borderRadius: BorderRadius.circular(100),
+                          //                   color: Theme.of(context)
+                          //                       .colorScheme
+                          //                       .secondary),
+                          //             )),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ])
+                        ],
+                      ),
+                    ),
+                    Positioned(
+                      top: isActive
+                          ? 28 + layoutController.statusBarHeight
+                          : 80 + layoutController.statusBarHeight,
+                      right: 24,
+                      child: Container(
+                          margin: EdgeInsets.only(left: 16),
+                          child: Text(
+                            '13909 points',
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                color: Theme.of(context).colorScheme.tertiary),
+                          )),
+                    )
+                  ],
+                );
+              });
+        });
   }
 }

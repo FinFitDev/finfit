@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:excerbuys/components/animated_balance.dart';
@@ -6,6 +7,7 @@ import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rive/rive.dart';
 
 class BalanceContainer extends StatefulWidget {
   final int balance;
@@ -16,10 +18,21 @@ class BalanceContainer extends StatefulWidget {
 }
 
 class _BalanceContainerState extends State<BalanceContainer> {
-  int _balance = 0;
+  int _balance = 200;
+  Timer? _timer; // Store the reference to the Timer
+
+  void startInterval() {
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      setState(() {
+        Random random = Random();
+        _balance = max(_balance + random.nextInt(1000) - 400, 0);
+      });
+    });
+  }
 
   @override
   void initState() {
+    startInterval();
     setState(() {
       _balance = widget.balance;
     });
@@ -27,82 +40,49 @@ class _BalanceContainerState extends State<BalanceContainer> {
   }
 
   @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
-    return Stack(
-      children: [
-        Positioned(
-          left: -270,
-          top: -70,
-          child: CustomPaint(
-            size: Size(800, 310),
-            painter: EllipsePainter(color: colors.secondary.withAlpha(100)),
-          ),
-        ),
-        Positioned(
-          left: -300,
-          top: -100,
-          child: CustomPaint(
-            size: Size(800, 310),
-            painter: EllipsePainter(color: colors.secondary.withAlpha(100)),
-          ),
-        ),
-        Positioned(
-          left: -200,
-          top: -100,
-          child: CustomPaint(
-            size: Size(700, 290),
-            painter: EllipsePainter(color: colors.primary),
-          ),
-        ),
-        Container(
-          height: 250,
-          padding: EdgeInsets.symmetric(
-              horizontal: HORIZOTAL_PADDING * 2, vertical: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AnimatedBalance(balance: _balance),
-                    Text(
-                      'fitness points',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.tertiary,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15,
-                      ),
-                    )
-                  ],
+    return Container(
+      width: MediaQuery.sizeOf(context).width,
+      height: MediaQuery.sizeOf(context).height - 100,
+      color: colors.primaryFixed,
+      child: Stack(
+        children: [
+          Positioned(child: RiveAnimation.asset('assets/rive/blobs.riv')),
+          Container(
+            width: MediaQuery.sizeOf(context).width,
+            padding: EdgeInsets.only(
+                left: HORIZOTAL_PADDING * 2,
+                right: HORIZOTAL_PADDING * 2,
+                top: 160),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                AnimatedBalance(balance: _balance),
+                SizedBox(
+                  height: 10,
                 ),
-              ),
-              RippleWrapper(
-                onPressed: () {
-                  setState(() {
-                    Random random = Random();
-                    _balance = max(_balance + random.nextInt(1000) - 500, 0);
-                  });
-                },
-                child: Container(
-                  margin: EdgeInsets.only(top: 60),
-                  child: SvgPicture.asset(
-                    'assets/svg/info.svg',
-                    height: 20,
-                    colorFilter: ColorFilter.mode(
-                        Theme.of(context).colorScheme.tertiary,
-                        BlendMode.srcIn),
-                  ),
+                Text(
+                  'fitness points',
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      fontFamily: 'Quicksand'),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

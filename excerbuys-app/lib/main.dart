@@ -1,6 +1,7 @@
 import 'package:excerbuys/layout.dart';
 import 'package:excerbuys/pages/auth_page.dart';
 import 'package:excerbuys/pages/loading_page.dart';
+import 'package:excerbuys/pages/welcome_page.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/layout_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -23,24 +24,25 @@ class _HealthAppState extends State<HealthApp> {
         navigatorKey: NAVIGATOR_KEY,
         title: APP_TITLE,
         theme: ThemeData(
-            scaffoldBackgroundColor: Color(0xFF1D2229),
+            scaffoldBackgroundColor: Color.fromARGB(255, 255, 255, 255),
             colorScheme: ColorScheme.fromSeed(
-                seedColor: Color(0xFF1D2229),
-                primary: Color(0xFF1D2229),
-                primaryFixed: Color(0xFFBBBBBB),
-                primaryContainer: Color(0xFF2A2E37),
-                primaryFixedDim: Colors.black,
-                secondary: Color.fromARGB(255, 85, 170, 187),
-                tertiary: Colors.white,
+                seedColor: Color.fromARGB(255, 255, 255, 255),
+                primary: Color.fromARGB(255, 255, 255, 255),
+                primaryFixed: Color(0xFF191D23),
+                primaryContainer: Color.fromARGB(255, 244, 244, 244),
+                primaryFixedDim: const Color(0xFF999191),
+                secondary: Color.fromARGB(255, 108, 180, 238),
+                tertiary: const Color.fromARGB(255, 0, 0, 0),
                 tertiaryContainer: Color.fromARGB(255, 168, 168, 168),
                 error: Color(0xFFFA6161)),
             useMaterial3: true,
-            fontFamily: 'Quicksand'),
+            fontFamily: 'Poppins'),
         initialRoute: "/loading",
         routes: {
           "/": (context) => LayoutWrapper(child: Layout()),
           "/login": (context) => LayoutWrapper(child: AuthPage()),
-          "/loading": (context) => LayoutWrapper(child: LoadingPage())
+          "/loading": (context) => LayoutWrapper(child: LoadingPage()),
+          "/welcome": (context) => LayoutWrapper(child: WelcomePage())
         },
       ),
     );

@@ -11,6 +11,7 @@ class ActivityCard extends StatefulWidget {
   final int points;
   final String date;
   final bool? isPurchase;
+  final int index;
 
   const ActivityCard({
     super.key,
@@ -18,6 +19,7 @@ class ActivityCard extends StatefulWidget {
     required this.date,
     required this.points,
     this.isPurchase,
+    required this.index,
   });
 
   @override
@@ -34,98 +36,130 @@ class _ActivityCardState extends State<ActivityCard> {
         getActivityMetadata(widget.activityType);
     final color = widget.points >= 0 ? colors.secondary : colors.error;
 
-    return Column(
-      children: [
-        RippleWrapper(
-          onPressed: () {
-            setState(() {
-              _detailsOpen = !_detailsOpen;
-            });
-          },
-          child: Container(
-            margin: EdgeInsets.only(top: 5),
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: colors.primaryContainer,
-              borderRadius: BorderRadius.circular(10),
+    return RippleWrapper(
+      onPressed: () {
+        setState(() {
+          _detailsOpen = !_detailsOpen;
+        });
+      },
+      child: Container(
+        height: 70,
+        padding: EdgeInsets.all(10),
+        margin: EdgeInsets.only(top: 8),
+        decoration: BoxDecoration(
+          color: colors.primaryContainer,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          children: [
+            widget.isPurchase == true
+                ? SizedBox(
+                    height: 36,
+                  )
+                : Container(
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Color.fromARGB(
+                            255,
+                            (colors.secondary.r *
+                                    255 /
+                                    (1 + widget.index * 0.1))
+                                .round(),
+                            (colors.secondary.g *
+                                    255 /
+                                    (1 + widget.index * 0.1))
+                                .round(),
+                            (colors.secondary.b *
+                                    255 /
+                                    (1 + widget.index * 0.1))
+                                .round())),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 26,
+                          child: SvgPicture.asset(activityMetadata.icon,
+                              colorFilter: ColorFilter.mode(
+                                  colors.primary, BlendMode.srcIn)),
+                        ),
+                        Text(
+                          activityMetadata.name,
+                          style: TextStyle(fontSize: 8, color: colors.primary),
+                        )
+                      ],
+                    ),
+                  ),
+            SizedBox(
+              width: 12,
             ),
-            child: Row(
-              children: [
-                widget.isPurchase == true
-                    ? SizedBox(
-                        height: 36,
-                      )
-                    : Row(
-                        children: [
-                          SizedBox(
-                            width: 24,
-                            child: SvgPicture.asset(activityMetadata.icon,
-                                colorFilter:
-                                    ColorFilter.mode(color, BlendMode.srcIn)),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(left: 8, right: 12),
-                            height: 36,
-                            width: 1,
-                            color: color,
-                          ),
-                        ],
-                      ),
-                Expanded(
-                  child: Row(
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(right: 6),
-                            child: Text(
-                              widget.points.abs().toString(),
-                              style: TextStyle(
-                                  color: color,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Text(
-                            '(${widget.date})',
-                            style: TextStyle(
-                                color: colors.tertiaryContainer, fontSize: 12),
-                          )
-                        ],
+                      Container(
+                        margin: EdgeInsets.only(right: 6),
+                        child: Text(
+                          '${widget.points.abs().toString()} fitness points',
+                          style: TextStyle(
+                              color: color,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
-                      Row(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(right: 6),
-                            child: Text(
-                              activityMetadata.name,
-                              style: TextStyle(
-                                color: colors.tertiary,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                          RotatedBox(
-                            quarterTurns: _detailsOpen ? 2 : 0,
-                            child: SvgPicture.asset('assets/svg/arrow-down.svg',
-                                colorFilter: ColorFilter.mode(
-                                    colors.tertiary, BlendMode.srcIn)),
-                          )
-                        ],
+                      Text(
+                        widget.date
+                            .split(' ')[widget.date.split(' ').length - 1],
+                        style: TextStyle(
+                            color: colors.tertiaryContainer, fontSize: 12),
                       )
                     ],
                   ),
-                )
-              ],
-            ),
-          ),
+                  Row(
+                    children: [
+                      Text(
+                        '25 minutes',
+                        style: TextStyle(
+                          color: colors.tertiaryContainer,
+                          fontSize: 13,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 4,
+                      ),
+                      SvgPicture.asset('assets/svg/clock.svg',
+                          colorFilter: ColorFilter.mode(
+                              colors.tertiaryContainer, BlendMode.srcIn)),
+                      SizedBox(
+                        width: 12,
+                      ),
+                      Text(
+                        '256 kcal',
+                        style: TextStyle(
+                          color: colors.tertiaryContainer,
+                          fontSize: 13,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 4,
+                      ),
+                      SvgPicture.asset('assets/svg/fire.svg',
+                          colorFilter: ColorFilter.mode(
+                              colors.tertiaryContainer.withAlpha(150),
+                              BlendMode.srcIn))
+                    ],
+                  )
+                ],
+              ),
+            )
+          ],
         ),
-        ActivityCardDetails(
-          open: _detailsOpen,
-          isPurchase: widget.isPurchase,
-        )
-      ],
+      ),
     );
   }
 }

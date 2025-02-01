@@ -22,7 +22,7 @@ class _LoadingPageState extends State<LoadingPage> {
     if (refreshToken.isNotEmpty && currentUser != null) {
       navigateWithClear(route: '/');
     } else {
-      navigateWithClear(route: '/login');
+      navigateWithClear(route: '/');
     }
   }
 

@@ -37,149 +37,65 @@ class _ShopItemCardState extends State<ShopItemCard> {
     return Container(
       width: MediaQuery.sizeOf(context).width,
       padding: EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING),
-      height: 230,
+      height: 180,
       child: RippleWrapper(
         onPressed: () {},
         child: Container(
           decoration: BoxDecoration(
-              color: colors.primaryContainer,
-              borderRadius: BorderRadius.circular(10)),
-          padding: EdgeInsets.all(8),
-          child: Row(
+              color: colors.secondary, borderRadius: BorderRadius.circular(20)),
+          padding: EdgeInsets.all(4),
+          child: Stack(
             children: [
-              Expanded(
-                flex: 3,
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                          image: NetworkImage(widget.image),
-                          fit: BoxFit.cover)),
-                ),
+              Container(
+                decoration: BoxDecoration(
+                    color: colors.primary,
+                    borderRadius: BorderRadius.circular(20),
+                    image: DecorationImage(
+                        image: NetworkImage(widget.image), fit: BoxFit.cover)),
               ),
-              Expanded(
-                flex: 4,
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(24, 8, 8, 8),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text(widget.name,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: colors.tertiary,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Quicksand')),
-                          Text(widget.seller,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: colors.tertiaryContainer,
-                              )),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("List price",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: colors.tertiaryContainer,
-                                  )),
-                              PriceTextWrapper(
-                                price: widget.originalPrice,
-                                fontSize: 12,
-                                color: colors.tertiary,
-                                currencySymbol: '\$',
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("Discount",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: colors.tertiaryContainer,
-                                  )),
-                              Text('${widget.discount} %',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: colors.tertiary,
-                                  )),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("Cost in points",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: colors.tertiaryContainer,
-                                  )),
-                              Text(widget.points.toString(),
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: colors.tertiary,
-                                  )),
-                            ],
-                          ),
-                          Container(
-                            height: 1,
-                            color: colors.tertiaryContainer,
-                            margin: EdgeInsets.symmetric(vertical: 16),
-                          ),
-                          RippleWrapper(
-                            onPressed: () {},
-                            child: Container(
-                              height: 30,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: colors.secondary,
-                              ),
-                              child: Center(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text("Buy for ",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: colors.primaryFixedDim,
-                                        )),
-                                    PriceTextWrapper(
-                                      price: widget.originalPrice *
-                                          (1 - widget.discount * 0.01),
-                                      fontSize: 12,
-                                      color: colors.primaryFixedDim,
-                                      currencySymbol: '\$',
-                                    ),
-                                  ],
-                                ),
-                              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(10),
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                    height: 40,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: colors.primaryContainer,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            widget.name,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: colors.tertiary,
                             ),
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            '15%',
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: colors.secondary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+                ],
               )
             ],
           ),

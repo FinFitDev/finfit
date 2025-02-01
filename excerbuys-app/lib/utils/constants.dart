@@ -16,4 +16,4 @@ final List<HealthDataType> HEALTH_DATA_TYPES = [
 final List<HealthDataAccess> HEALTH_DATA_PERMISSIONS =
     HEALTH_DATA_TYPES.map((e) => HealthDataAccess.READ).toList();
 
-const double HORIZOTAL_PADDING = 12;
+const double HORIZOTAL_PADDING = 16;

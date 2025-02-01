@@ -77,7 +77,7 @@ class _LayoutWrapperState extends State<LayoutWrapper>
 
   @override
   void dispose() {
-    // _gradientController.dispose();
+    _gradientController.dispose();
     // _gradientControllerSub.dispose();
     super.dispose();
   }

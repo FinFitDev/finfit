@@ -87,11 +87,7 @@ class _RecentActivityContainerState extends State<RecentActivityContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(
-          left: HORIZOTAL_PADDING,
-          right: HORIZOTAL_PADDING,
-          top: 30,
-          bottom: 16),
+      padding: EdgeInsets.only(top: 30, bottom: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -113,42 +109,42 @@ class _RecentActivityContainerState extends State<RecentActivityContainer> {
                         stepsData: widget.todaysSteps,
                       )
                     : SizedBox.shrink(),
-                widget.recentTraining.isNotEmpty
-                    ? RecentTrainingSection(
-                        recentTraining: widget.recentTraining)
-                    : SizedBox.shrink()
+                // widget.recentTraining.isNotEmpty
+                //     ?
+                RecentTrainingSection(recentTraining: widget.recentTraining)
+                // : SizedBox.shrink()
               ],
             );
           }),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(
-                height: 16,
-              ),
-              Text(
-                'Purchase history',
-                style: TextStyle(
-                    fontSize: 14,
-                    color: Theme.of(context).colorScheme.tertiary),
-                textAlign: TextAlign.left,
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              ActivityCard(
-                  activityType: ACTIVITY_TYPE.BIKE_RIDING,
-                  date: 'Today 11:10',
-                  points: -254,
-                  isPurchase: true),
-              ActivityCard(
-                activityType: ACTIVITY_TYPE.BIKE_RIDING,
-                date: 'Today 11:10',
-                points: -254,
-                isPurchase: true,
-              ),
-            ],
-          ),
+          // Column(
+          //   crossAxisAlignment: CrossAxisAlignment.stretch,
+          //   children: [
+          //     SizedBox(
+          //       height: 16,
+          //     ),
+          //     Text(
+          //       'Purchase history',
+          //       style: TextStyle(
+          //           fontSize: 14,
+          //           color: Theme.of(context).colorScheme.tertiary),
+          //       textAlign: TextAlign.left,
+          //     ),
+          //     SizedBox(
+          //       height: 8,
+          //     ),
+          //     ActivityCard(
+          //         activityType: ACTIVITY_TYPE.BIKE_RIDING,
+          //         date: 'Today 11:10',
+          //         points: -254,
+          //         isPurchase: true),
+          //     ActivityCard(
+          //       activityType: ACTIVITY_TYPE.BIKE_RIDING,
+          //       date: 'Today 11:10',
+          //       points: -254,
+          //       isPurchase: true,
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );

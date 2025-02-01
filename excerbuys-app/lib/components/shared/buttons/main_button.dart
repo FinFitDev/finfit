@@ -34,7 +34,7 @@ class _MainButtonState extends State<MainButton> with TickerProviderStateMixin {
               backgroundColor: widget.backgroundColor,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
-              disabledBackgroundColor: widget.backgroundColor.withOpacity(0.5)),
+              disabledBackgroundColor: widget.backgroundColor.withAlpha(155)),
           child: widget.loading != null && widget.loading!
               ? SpinKitCircle(
                   color: Theme.of(context).colorScheme.tertiary,
@@ -49,7 +49,7 @@ class _MainButtonState extends State<MainButton> with TickerProviderStateMixin {
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                       color: widget.isDisabled == true
-                          ? widget.textColor.withOpacity(0.5)
+                          ? widget.textColor.withAlpha(155)
                           : widget.textColor),
                 )),
     );

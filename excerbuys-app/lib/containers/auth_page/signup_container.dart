@@ -168,7 +168,7 @@ class _SignupContainerState extends State<SignupContainer> {
         MainButton(
             label: 'Sign up',
             backgroundColor: colors.secondary,
-            textColor: colors.tertiary,
+            textColor: colors.primary,
             isDisabled: isButtonDisabled,
             loading: _loading,
             onPressed: () {

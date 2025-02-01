@@ -57,7 +57,7 @@ class _AvailableOffersState extends State<AvailableOffers> {
     final colors = Theme.of(context).colorScheme;
 
     return Container(
-      padding: const EdgeInsets.only(top: 30),
+      padding: const EdgeInsets.symmetric(vertical: 2 * HORIZOTAL_PADDING),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -69,22 +69,11 @@ class _AvailableOffersState extends State<AvailableOffers> {
                 Text(
                   'Available now',
                   style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
                     color: colors.tertiary,
                   ),
                 ),
-                RippleWrapper(
-                  onPressed: () {},
-                  child: Text(
-                    'View in shop',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: colors.tertiaryContainer,
-                    ),
-                  ),
-                )
               ],
             ),
           ),
@@ -93,9 +82,9 @@ class _AvailableOffersState extends State<AvailableOffers> {
               : Column(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(top: 30),
+                      margin: EdgeInsets.only(top: 20),
                       child: SizedBox(
-                        height: 230,
+                        height: 180,
                         child: ListView.builder(
                           controller: _scrollController,
                           scrollDirection: Axis.horizontal,
@@ -147,7 +136,7 @@ class _AvailableOffersState extends State<AvailableOffers> {
       case 0:
         return ShopItemCard(
           image:
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNZsKSKtF2IU5UnPd2lZrBqHI2_LWgiR7Org&s',
+              'https://marketplace.canva.com/EAFxdcos7WU/1/0/1600w/canva-dark-blue-and-brown-illustrative-fitness-gym-logo-oqe3ybeEcQQ.jpg',
           points: 250000,
           originalPrice: 58,
           name: 'Chocolate protein',

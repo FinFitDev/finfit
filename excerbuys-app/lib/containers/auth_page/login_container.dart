@@ -173,7 +173,7 @@ class _LoginContainerState extends State<LoginContainer> {
               MainButton(
                 label: 'Log in',
                 backgroundColor: colors.secondary,
-                textColor: colors.tertiary,
+                textColor: colors.primary,
                 onPressed: () {
                   submitForm(context);
                 },
@@ -195,7 +195,7 @@ class _LoginContainerState extends State<LoginContainer> {
                 margin: EdgeInsets.only(right: Platform.isIOS ? 12 : 0),
                 child: TextButton.icon(
                   style: TextButton.styleFrom(
-                    backgroundColor: colors.tertiary,
+                    backgroundColor: colors.primaryContainer,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)),
                   ),
@@ -204,7 +204,7 @@ class _LoginContainerState extends State<LoginContainer> {
                     'Google',
                     style: TextStyle(
                         fontSize: 16,
-                        color: colors.primary,
+                        color: colors.tertiary,
                         fontWeight: FontWeight.w500),
                   ),
                   icon: SvgPicture.asset('assets/svg/google.svg'),
@@ -227,7 +227,7 @@ class _LoginContainerState extends State<LoginContainer> {
                           'Apple',
                           style: TextStyle(
                               fontSize: 16,
-                              color: colors.tertiary,
+                              color: colors.primaryContainer,
                               fontWeight: FontWeight.w500),
                         ),
                         icon: SvgPicture.asset('assets/svg/apple.svg'),
