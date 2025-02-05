@@ -5,6 +5,7 @@ import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
+import 'package:excerbuys/utils/utils.dart';
 import 'package:health/health.dart';
 
 List<IHourlyStepsEntry>? convertStepsToRequest(
@@ -47,6 +48,45 @@ List<IHourlyStepsEntry>? convertStepsToRequest(
   }
 }
 
+IStoreStepsData groupStepsData(Map<String, HealthDataPoint> stepsData) {
+  if (stepsData.isEmpty) {
+    return {};
+  }
+
+  final Map<DateTime, List<HealthDataPoint>> groupedByDays = {};
+  final IStoreStepsData finalData = {};
+
+  for (var el in stepsData.entries) {
+    final DateTime timestamp = constructDailyTimestamp(el.value.dateFrom);
+    groupedByDays.putIfAbsent(timestamp, () => []).add(el.value);
+  }
+
+  for (var el in groupedByDays.entries) {
+    finalData[el.key] = divideStepsIntoHours(el.value);
+  }
+
+  return finalData;
+}
+
+Map<int, int> divideStepsIntoHours(List<HealthDataPoint> data) {
+  // create a map of steps for each hour
+  Map<int, int> hourlySteps = {for (int i = 0; i < 24; i++) i: 0};
+
+  data.forEach((dataPoint) {
+    final int key = dataPoint.dateFrom.hour;
+    if (hourlySteps.containsKey(key)) {
+      hourlySteps[key] = (hourlySteps[key]! +
+              (dataPoint.value as NumericHealthValue).numericValue)
+          .round();
+    } else {
+      hourlySteps[key] =
+          (dataPoint.value as NumericHealthValue).numericValue.round();
+    }
+  });
+
+  return hourlySteps;
+}
+
 Map<String, HealthDataPoint> filterOverlappingSteps(
     Map<String, HealthDataPoint> stepsData,
     Map<String, ITrainingEntry> trainingsData) {
@@ -62,17 +102,6 @@ Map<String, HealthDataPoint> filterOverlappingSteps(
 
     return !isCorrespondingWorkout;
   }).toList());
-}
-
-DateTime constructHourlyTimestamp(DateTime timestamp) {
-  return DateTime(
-    timestamp.year,
-    timestamp.month,
-    timestamp.day,
-    timestamp.hour, // Keep the hour
-    0, // Set minutes to 0
-    0, // Set seconds to 0
-  );
 }
 
 bool areDatesEqualRespectToMinutes(DateTime date1, DateTime date2) {

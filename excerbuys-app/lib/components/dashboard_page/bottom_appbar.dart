@@ -31,9 +31,14 @@ class _BottomBarState extends State<BottomBar> {
                     right: 24,
                     bottom: layoutController.bottomPadding,
                     top: 16),
-                decoration: BoxDecoration(
-                  color: colors.primary,
-                ),
+                decoration: BoxDecoration(color: colors.primary, boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withAlpha(20),
+                    spreadRadius: 3,
+                    blurRadius: 3,
+                    offset: Offset(0, -3), // changes position of shadow
+                  ),
+                ]),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

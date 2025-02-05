@@ -1,9 +1,13 @@
 import 'dart:math';
 
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:excerbuys/components/dashboard_page/home_page/activity_card/activity_card_details.dart';
+import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/home/utils.dart';
+import 'package:excerbuys/utils/parsers/parsers.dart';
+import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,7 +15,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 class StepsActivityCard extends StatefulWidget {
   final int points;
-  final Map<int, int> stepsData;
+  final IStoreStepsData stepsData;
 
   const StepsActivityCard({
     super.key,
@@ -26,12 +30,24 @@ class StepsActivityCard extends StatefulWidget {
 class _StepsActivityCardState extends State<StepsActivityCard> {
   int _totalSteps = 0;
   int _daysAgo = 0;
+
+  void updateTotalSteps() {
+    setState(() {
+      final DateTime key = constructDailyTimestamp(
+          DateTime.now().subtract(Duration(days: _daysAgo)));
+      if (widget.stepsData.containsKey(key)) {
+        _totalSteps =
+            widget.stepsData[key]!.values.reduce((curr, next) => curr + next);
+      } else {
+        _totalSteps = 0;
+      }
+    });
+  }
+
   @override
   void didUpdateWidget(covariant StepsActivityCard oldWidget) {
+    updateTotalSteps();
     super.didUpdateWidget(oldWidget);
-    setState(() {
-      _totalSteps = widget.stepsData.values.reduce((curr, next) => curr + next);
-    });
   }
 
   @override
@@ -56,17 +72,20 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
                 setState(() {
                   _daysAgo = 0;
                 });
+                updateTotalSteps();
               }, 'Today'),
               daySelector(_daysAgo == 1, colors, () {
                 setState(() {
                   _daysAgo = 1;
                 });
+                updateTotalSteps();
               }, 'Yesterday'),
               daySelector(_daysAgo == 2, colors, () {
                 setState(() {
                   _daysAgo = 2;
                 });
-              }, 'Friday'),
+                updateTotalSteps();
+              }, getDayName(2)),
             ],
           ),
         ),
@@ -77,21 +96,35 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '12145 steps',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      color: colors.tertiary,
-                    ),
+                  AnimatedTextKit(
+                    key: ValueKey<String>(
+                        "steps${_daysAgo}"), // Unique key per widget
+                    isRepeatingAnimation: false,
+                    animatedTexts: [
+                      TyperAnimatedText(
+                        '$_totalSteps steps',
+                        textStyle: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: colors.tertiary,
+                        ),
+                      )
+                    ],
                   ),
-                  Text(
-                    '127 fitness points',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w300,
-                      color: colors.primaryFixed,
-                    ),
+                  AnimatedTextKit(
+                    key: ValueKey<String>(
+                        "points${_daysAgo}"), // Unique key per widget
+                    isRepeatingAnimation: false,
+                    animatedTexts: [
+                      TyperAnimatedText(
+                        '${_daysAgo * 17} fitness points',
+                        textStyle: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w300,
+                          color: colors.primaryFixed,
+                        ),
+                      )
+                    ],
                   ),
                 ],
               )
@@ -117,35 +150,33 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
                 color: Theme.of(context).colorScheme.tertiary,
                 format: 'Hour: point.x\nSteps: point.y',
               ),
+              markerSettings: TrackballMarkerSettings(
+                markerVisibility:
+                    TrackballVisibilityMode.visible, // Enable the dot
+                shape: DataMarkerType.circle, // Change marker shape to a dot
+                color: Theme.of(context).colorScheme.tertiary, // Dot color
+                borderWidth: 1,
+                height: 12,
+                width: 12,
+                borderColor: Theme.of(context)
+                    .colorScheme
+                    .primary, // Optional: Border color
+              ),
+              lineType: TrackballLineType.none,
             ),
             series: <SplineAreaSeries<MapEntry<int, int>, int>>[
               SplineAreaSeries<MapEntry<int, int>, int>(
-                dataSource: [
-                  MapEntry(0, 158),
-                  MapEntry(1, 160),
-                  MapEntry(2, 192),
-                  MapEntry(3, 162),
-                  MapEntry(4, 192),
-                  MapEntry(5, 135),
-                  MapEntry(6, 153),
-                  MapEntry(7, 142),
-                  MapEntry(8, 180),
-                  MapEntry(9, 150),
-                  MapEntry(10, 143),
-                  MapEntry(11, 147),
-                  MapEntry(12, 149),
-                  MapEntry(13, 140),
-                  MapEntry(14, 146),
-                  MapEntry(15, 148),
-                  MapEntry(16, 121),
-                  MapEntry(17, 186),
-                  MapEntry(18, 180),
-                  MapEntry(19, 162),
-                  MapEntry(20, 161),
-                  MapEntry(21, 150),
-                  MapEntry(22, 137),
-                  MapEntry(23, 178)
-                ],
+                dataSource: widget.stepsData[constructDailyTimestamp(
+                            DateTime.now()
+                                .subtract(Duration(days: _daysAgo)))] !=
+                        null
+                    ? widget
+                        .stepsData[constructDailyTimestamp(
+                            DateTime.now().subtract(Duration(days: _daysAgo)))]!
+                        .entries
+                        .toList()
+                    : [for (int i = 0; i < 24; i++) MapEntry(i, 0)],
+                animationDuration: 300,
                 xValueMapper: (MapEntry<int, int> data, _) => data.key,
                 yValueMapper: (MapEntry<int, int> data, _) => data.value,
                 gradient: LinearGradient(
@@ -155,7 +186,7 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
                 ),
                 borderWidth: 4,
                 borderColor: colors.secondary,
-                splineType: SplineType.cardinal,
+                splineType: SplineType.monotonic,
               ),
             ],
           ),

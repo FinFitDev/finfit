@@ -18,3 +18,25 @@ void navigateWithClear({required String route, BuildContext? context}) {
         ?.pushNamedAndRemoveUntil(route, (Route<dynamic> route) => false);
   }
 }
+
+DateTime constructHourlyTimestamp(DateTime timestamp) {
+  return DateTime(
+    timestamp.year,
+    timestamp.month,
+    timestamp.day,
+    timestamp.hour, // Keep the hour
+    0, // Set minutes to 0
+    0, // Set seconds to 0
+  );
+}
+
+DateTime constructDailyTimestamp(DateTime timestamp) {
+  return DateTime(
+    timestamp.year,
+    timestamp.month,
+    timestamp.day,
+    0, // Keep the hour
+    0, // Set minutes to 0
+    0, // Set seconds to 0
+  );
+}

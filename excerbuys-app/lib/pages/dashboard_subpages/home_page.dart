@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:excerbuys/components/dashboard_page/home_page/activity_card/recent_training_section.dart';
+import 'package:excerbuys/components/dashboard_page/home_page/activity_card/steps_activity_card.dart';
 import 'package:excerbuys/components/shared/indicators/ellipse/ellipse_painter.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/available_offers_container.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/balance_container.dart';
@@ -39,12 +41,10 @@ class _HomePageState extends State<HomePage> {
         StreamBuilder<double>(
             stream: dashboardController.scrollDistanceStream,
             builder: (context, snapshot) {
-              return Opacity(
-                opacity: (snapshot.data ?? 0) > 300 ? 0 : 1,
-                child: Positioned(
-                  child: BalanceContainer(
-                    balance: 0,
-                  ),
+              return Positioned(
+                top: -(max(0.0, snapshot.data ?? 0)) / 4,
+                child: BalanceContainer(
+                  balance: 0,
                 ),
               );
             }),
@@ -78,34 +78,37 @@ class _HomePageState extends State<HomePage> {
                       AvailableOffers(
                           // isLoading: true,
                           ),
+
+                      StreamBuilder<ContentWithLoading<IStoreStepsData>>(
+                          stream: stepsController.userStepsStream,
+                          builder: (context, stepsSnapshot) {
+                            final IStoreStepsData stepsData =
+                                stepsSnapshot.hasData
+                                    ? stepsSnapshot.data!.content
+                                    : {};
+                            return stepsData.isNotEmpty
+                                ? StepsActivityCard(
+                                    points: 1203,
+                                    stepsData: stepsData,
+                                  )
+                                : SizedBox.shrink();
+                          }),
                       StreamBuilder<
                               ContentWithLoading<Map<String, ITrainingEntry>>>(
                           stream: trainingsController.usetTrainingsStream,
                           builder: (context, snapshot) {
-                            return StreamBuilder<
-                                    ContentWithLoading<Map<int, int>>>(
-                                stream: stepsController.userStepsStream,
-                                builder: (context, stepsSnapshot) {
-                                  return RecentActivityContainer(
-                                    recentTraining: snapshot.hasData
-                                        ? Map.fromEntries(snapshot
-                                            .data!.content.entries
-                                            .toList()
-                                            .sublist(
-                                                0,
-                                                min(
-                                                    snapshot.data!.content
-                                                        .values.length,
-                                                    4)))
-                                        : {},
-                                    todaysSteps: stepsSnapshot.hasData
-                                        ? stepsSnapshot.data!.content
-                                        : {},
-                                    // isLoading: snapshot.hasData
-                                    //     ? snapshot.data!.isLoading
-                                    //     : null,
-                                  );
-                                });
+                            return RecentTrainingSection(
+                                recentTraining: snapshot.hasData
+                                    ? Map.fromEntries(snapshot
+                                        .data!.content.entries
+                                        .toList()
+                                        .sublist(
+                                            0,
+                                            min(
+                                                snapshot.data!.content.values
+                                                    .length,
+                                                4)))
+                                    : {});
                           }),
                       // GoalsContainer(
                       //     // isLoading: true,

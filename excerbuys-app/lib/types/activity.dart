@@ -68,3 +68,5 @@ class IHourlyStepsEntry {
       }""";
   }
 }
+
+typedef IStoreStepsData = Map<DateTime, Map<int, int>>;

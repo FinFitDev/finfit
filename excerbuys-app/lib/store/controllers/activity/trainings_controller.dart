@@ -27,11 +27,9 @@ class TrainingsController {
   }
 
   Future<void> fetchTrainings() async {
-    // final lastUpdated = userController.currentUser?.updatedAt;
     final now = DateTime.now();
-    // final Duration difference = now.difference(lastUpdated!);
 
-    final prev = now.subtract(Duration(days: 30));
+    final prev = now.subtract(Duration(days: 60));
 
     try {
       List<HealthDataPoint> healthData = await Health().getHealthDataFromTypes(
@@ -44,12 +42,11 @@ class TrainingsController {
       List<ITrainingEntry> parsedTrainingData =
           convertTrainingsToRequest(healthData) ?? [];
 
-      await saveTrainings(parsedTrainingData);
+      final res = await saveTrainings(parsedTrainingData);
 
-      if (parsedTrainingData.length < 5 &&
-          userController.currentUser?.id != null) {
+      if (userController.currentUser?.id != null) {
         parsedTrainingData =
-            await loadTrainings(userController.currentUser!.id, 3, 0) ?? [];
+            await loadTrainings(userController.currentUser!.id, 6, 0) ?? [];
       }
 
       Map<String, ITrainingEntry> values = {

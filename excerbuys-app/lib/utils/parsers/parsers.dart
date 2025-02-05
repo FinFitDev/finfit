@@ -2,6 +2,27 @@ import 'dart:ffi';
 
 import 'package:intl/intl.dart';
 
+String weekDayToName(int weekday) {
+  switch (weekday) {
+    case 1:
+      return 'Monday';
+    case 2:
+      return 'Tuesday';
+    case 3:
+      return 'Wednesday';
+    case 4:
+      return 'Thursday';
+    case 5:
+      return 'Friday';
+    case 6:
+      return 'Saturday';
+    case 7:
+      return 'Sunday';
+    default:
+      return 'Unknown';
+  }
+}
+
 String padTimeString(String value) {
   return value.padLeft(2, '0');
 }
@@ -39,4 +60,10 @@ String padPriceDecimals(double price) {
 
 int parseInt(dynamic value) {
   return value is String ? int.parse(value) : value;
+}
+
+String getDayName(int daysAgo) {
+  final DateTime now = DateTime.now();
+  final DateTime nDaysAgo = now.subtract(Duration(days: daysAgo));
+  return weekDayToName(nDaysAgo.weekday);
 }

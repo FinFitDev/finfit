@@ -61,7 +61,7 @@ class _BalanceContainerState extends State<BalanceContainer> {
             padding: EdgeInsets.only(
                 left: HORIZOTAL_PADDING * 2,
                 right: HORIZOTAL_PADDING * 2,
-                top: 160),
+                top: 180),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,

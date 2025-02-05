@@ -15,13 +15,13 @@ import 'package:health/health.dart';
 import 'package:rxdart/rxdart.dart';
 
 class StepsController {
-  final BehaviorSubject<ContentWithLoading<Map<String, int>>> _userSteps =
+  final BehaviorSubject<ContentWithLoading<IStoreStepsData>> _userSteps =
       BehaviorSubject.seeded(ContentWithLoading(content: {}));
-  Stream<ContentWithLoading<Map<int, int>>> get userStepsStream =>
-      _userSteps.stream.map(parseStepsChart);
-  ContentWithLoading<Map<String, int>> get userSteps => _userSteps.value;
-  addUserSteps(Map<String, int> activity) {
-    Map<String, int> newSteps = {...userSteps.content, ...activity};
+  Stream<ContentWithLoading<IStoreStepsData>> get userStepsStream =>
+      _userSteps.stream;
+  ContentWithLoading<IStoreStepsData> get userSteps => _userSteps.value;
+  addUserSteps(IStoreStepsData activity) {
+    IStoreStepsData newSteps = {...userSteps.content, ...activity};
     _userSteps.add(ContentWithLoading(content: newSteps));
   }
 
@@ -34,12 +34,12 @@ class StepsController {
     final lastUpdated = userController.currentUser?.updatedAt;
     final now = DateTime.now();
     final Duration difference = now.difference(lastUpdated!);
-    final Duration maxDifference = Duration(hours: 24);
+    final Duration maxDifference = Duration(days: 3);
 // Use the smaller of the two: the actual difference or 24 hours
     final Duration limitedDifference =
         difference > maxDifference ? maxDifference : difference;
 
-    final prev = now.subtract(limitedDifference);
+    final prev = now.subtract(maxDifference);
 
     try {
       List<HealthDataPoint> healthData = await Health().getHealthDataFromTypes(
@@ -54,20 +54,26 @@ class StepsController {
         healthDataMap[el.uuid] = el;
       }
 
-      final stepsData = convertStepsToRequest(
+      final filteredData = filterOverlappingSteps(
           healthDataMap, trainingsController.userTrainings.content);
+      final finalStepsDataInHours = groupStepsData(filteredData);
+      addUserSteps(finalStepsDataInHours);
+      setStepsLoading(false);
 
-      if (stepsData != null && stepsData.isNotEmpty) {
-        addUserSteps(Map.fromEntries(
-          getTodaysSteps(stepsData).map(
-              (element) => MapEntry("${element.timestamp}", element.total)),
-        ));
-        setStepsLoading(false);
+      // final stepsData = convertStepsToRequest(
+      //     healthDataMap, trainingsController.userTrainings.content);
 
-        saveStepsData(stepsData
-            .where((el) => el.timestamp.compareTo(lastUpdated) >= 0)
-            .toList());
-      }
+      // if (stepsData != null && stepsData.isNotEmpty) {
+      //   addUserSteps(Map.fromEntries(
+      //     getTodaysSteps(stepsData).map(
+      //         (element) => MapEntry("${element.timestamp}", element.total)),
+      //   ));
+      //   setStepsLoading(false);
+
+      //   saveStepsData(stepsData
+      //       .where((el) => el.timestamp.compareTo(lastUpdated) >= 0)
+      //       .toList());
+      // }
 
       // List<ITrainingEntry> parsedTrainingData =
       //     convertTrainingsToRequest(healthData) ?? [];

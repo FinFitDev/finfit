@@ -59,6 +59,7 @@ class _ActivityCardState extends State<ActivityCard> {
                 : Container(
                     height: 50,
                     width: 50,
+                    padding: EdgeInsets.all(4),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: Color.fromARGB(
@@ -80,14 +81,15 @@ class _ActivityCardState extends State<ActivityCard> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(
-                          width: 26,
+                          width: 24,
                           child: SvgPicture.asset(activityMetadata.icon,
                               colorFilter: ColorFilter.mode(
                                   colors.primary, BlendMode.srcIn)),
                         ),
                         Text(
                           activityMetadata.name,
-                          style: TextStyle(fontSize: 8, color: colors.primary),
+                          style: TextStyle(fontSize: 7, color: colors.primary),
+                          overflow: TextOverflow.ellipsis,
                         )
                       ],
                     ),

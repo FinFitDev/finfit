@@ -50,7 +50,7 @@ int calculateTrainingDuration(DateTime dateFrom, DateTime dateTo) {
   return dateTo.difference(dateFrom).inMilliseconds;
 }
 
-Future<void> saveTrainings(List<ITrainingEntry>? parsedTrainingData) async {
+Future<List?> saveTrainings(List<ITrainingEntry>? parsedTrainingData) async {
   try {
     if (parsedTrainingData != null) {
       final serializedData =
@@ -64,6 +64,8 @@ Future<void> saveTrainings(List<ITrainingEntry>? parsedTrainingData) async {
       if (res['error'] != null) {
         throw res['error'];
       }
+
+      return res['content'];
     }
   } catch (error) {
     print('Error saving trainings to database $error');

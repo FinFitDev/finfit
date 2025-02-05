@@ -6,10 +6,51 @@ import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 
-class RecentTrainingSection extends StatelessWidget {
+class RecentTrainingSection extends StatefulWidget {
   final Map<String, ITrainingEntry> recentTraining;
 
   const RecentTrainingSection({super.key, required this.recentTraining});
+
+  @override
+  State<RecentTrainingSection> createState() => _RecentTrainingSectionState();
+}
+
+class _RecentTrainingSectionState extends State<RecentTrainingSection> {
+  Map<String, List<ITrainingEntry>> _groupedTrainingsData = {};
+
+  void groupData() {
+    if (widget.recentTraining.isEmpty) {
+      return;
+    }
+
+    final Map<String, List<ITrainingEntry>> groupedData = {};
+    for (var el in widget.recentTraining.values) {
+      final List<String> splitParsedDate = parseDate(el.createdAt).split(' ');
+      final String dateKey = splitParsedDate.length == 3
+          ? '${splitParsedDate[0]} ${splitParsedDate[1]}'
+          : splitParsedDate[0];
+
+      groupedData.putIfAbsent(dateKey, () => []).add(el);
+    }
+
+    setState(() {
+      _groupedTrainingsData = groupedData;
+    });
+  }
+
+  @override
+  void initState() {
+    groupData();
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant RecentTrainingSection oldWidget) {
+    if (oldWidget.recentTraining != widget.recentTraining) {
+      groupData();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,65 +71,46 @@ class RecentTrainingSection extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(top: 12),
-            child: Row(
-              children: [
-                Text(
-                  parseDate(DateTime.now()).split(' ')[0],
-                  style: TextStyle(fontSize: 15, color: colors.primaryFixed),
-                ),
-                Expanded(
-                    child: Container(
-                  margin: EdgeInsets.only(left: 8),
-                  height: 1,
-                  color: colors.primaryFixed.withAlpha(100),
-                ))
-              ],
-            ),
-          ),
-          ActivityCard(
-            index: 0,
-            activityType: parseActivityType(HealthWorkoutActivityType.RUNNING),
-            points: 123,
-            date: parseDate(DateTime.now()),
-          ),
-          ActivityCard(
-            index: 1,
-            activityType: parseActivityType(HealthWorkoutActivityType.RUNNING),
-            points: 123,
-            date: parseDate(DateTime.now()),
-          ),
-          ActivityCard(
-            index: 2,
-            activityType: parseActivityType(HealthWorkoutActivityType.RUNNING),
-            points: 123,
-            date: parseDate(DateTime.now()),
-          ),
-          ActivityCard(
-            index: 3,
-            activityType: parseActivityType(HealthWorkoutActivityType.RUNNING),
-            points: 123,
-            date: parseDate(DateTime.now()),
-          ),
-          ActivityCard(
-            index: 4,
-            activityType: parseActivityType(HealthWorkoutActivityType.RUNNING),
-            points: 123,
-            date: parseDate(DateTime.now()),
-          ),
-          ...recentTraining.values.toList().asMap().entries.map((entry) {
-            ITrainingEntry healthData = entry.value;
-            final type = HealthWorkoutActivityType.values
-                .firstWhere((el) => el.name == healthData.type);
+          ..._groupedTrainingsData.entries.indexed.map((el) {
+            final index = el.$1;
+            final key = el.$2.key;
+            final values = el.$2.value;
 
-            return ActivityCard(
-              index: 1,
-              activityType: parseActivityType(type),
-              points: healthData.points,
-              date: parseDate(healthData.createdAt),
+            return Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 12, bottom: 4),
+                  child: Row(
+                    children: [
+                      Text(
+                        key,
+                        style: TextStyle(
+                            fontSize: 15, color: colors.tertiaryContainer),
+                      ),
+                      Expanded(
+                          child: Container(
+                        margin: EdgeInsets.only(left: 8),
+                        height: 1,
+                        color: colors.tertiaryContainer.withAlpha(100),
+                      ))
+                    ],
+                  ),
+                ),
+                ...values.toList().asMap().entries.map((entry) {
+                  ITrainingEntry healthData = entry.value;
+                  final type = HealthWorkoutActivityType.values
+                      .firstWhere((el) => el.name == healthData.type);
+
+                  return ActivityCard(
+                    index: 0,
+                    activityType: parseActivityType(type),
+                    points: healthData.points,
+                    date: parseDate(healthData.createdAt),
+                  );
+                })
+              ],
             );
-          })
+          }),
         ],
       ),
     );

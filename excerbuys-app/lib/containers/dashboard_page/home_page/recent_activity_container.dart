@@ -103,16 +103,16 @@ class _RecentActivityContainerState extends State<RecentActivityContainer> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                widget.todaysSteps.isNotEmpty
-                    ? StepsActivityCard(
-                        points: 1203,
-                        stepsData: widget.todaysSteps,
-                      )
-                    : SizedBox.shrink(),
-                // widget.recentTraining.isNotEmpty
-                //     ?
-                RecentTrainingSection(recentTraining: widget.recentTraining)
-                // : SizedBox.shrink()
+                // widget.todaysSteps.isNotEmpty
+                //     ? StepsActivityCard(
+                //         points: 1203,
+                //         stepsData: widget.todaysSteps,
+                //       )
+                //     : SizedBox.shrink(),
+                // // widget.recentTraining.isNotEmpty
+                // //     ?
+                // RecentTrainingSection(recentTraining: widget.recentTraining)
+                // // : SizedBox.shrink()
               ],
             );
           }),

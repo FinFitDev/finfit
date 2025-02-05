@@ -81,44 +81,46 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
 
   @override
   void didUpdateWidget(covariant AnimatedBalance oldWidget) {
-    setState(() {
-      _isStopAnimating = true;
-      if (oldWidget.balance < widget.balance) {
-        _textColor = Theme.of(context).colorScheme.secondary;
+    if (oldWidget.balance != widget.balance) {
+      setState(() {
+        _isStopAnimating = true;
+        if (oldWidget.balance < widget.balance) {
+          _textColor = Theme.of(context).colorScheme.secondary;
+        }
+
+        if (oldWidget.balance > widget.balance) {
+          _textColor = Color(0xFFFA6161);
+        }
+      });
+      final List<List<String?>> charPairs =
+          getCharsPairs(oldWidget.balance, widget.balance);
+
+      final List<int?> differences = getCharDifferencess(charPairs);
+      setState(() {
+        _charDifferences = differences;
+      });
+
+      if (timeouutId != null) {
+        timeouutId!.cancel();
       }
 
-      if (oldWidget.balance > widget.balance) {
-        _textColor = Color(0xFFFA6161);
-      }
-    });
-    final List<List<String?>> charPairs =
-        getCharsPairs(oldWidget.balance, widget.balance);
+      // animation handler
+      timeouutId = Timer(
+          Duration(
+              milliseconds:
+                  max(calculateMaxDuration(differences) * 120, 400) + 200), () {
+        setState(() {
+          _textColor = Colors.white;
+        });
+      });
 
-    final List<int?> differences = getCharDifferencess(charPairs);
-    setState(() {
-      _charDifferences = differences;
-    });
-
-    if (timeouutId != null) {
-      timeouutId!.cancel();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          // Re-enable animation for the next transition
+          _isStopAnimating = false;
+        });
+      });
     }
-
-    // animation handler
-    timeouutId = Timer(
-        Duration(
-            milliseconds:
-                max(calculateMaxDuration(differences) * 120, 400) + 200), () {
-      setState(() {
-        _textColor = Colors.white;
-      });
-    });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        // Re-enable animation for the next transition
-        _isStopAnimating = false;
-      });
-    });
 
     super.didUpdateWidget(oldWidget);
   }
