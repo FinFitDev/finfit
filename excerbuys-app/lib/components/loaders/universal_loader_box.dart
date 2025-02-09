@@ -5,8 +5,12 @@ import 'package:flutter/material.dart';
 class UniversalLoaderBox extends StatefulWidget {
   final double height;
   final double width;
+  final double? borderRadius;
   const UniversalLoaderBox(
-      {super.key, required this.height, required this.width});
+      {super.key,
+      required this.height,
+      required this.width,
+      this.borderRadius});
 
   @override
   State<UniversalLoaderBox> createState() => _UniversalLoaderBoxState();
@@ -23,13 +27,13 @@ class _UniversalLoaderBoxState extends State<UniversalLoaderBox>
     Random random = Random();
 
     _animationController = AnimationController(
-        vsync: this, duration: Duration(seconds: random.nextInt(3) + 2));
+        vsync: this, duration: Duration(seconds: random.nextInt(1) + 2));
 
     _stopsAnimation = TweenSequence<double>([
       TweenSequenceItem<double>(
-          tween: Tween<double>(begin: 0, end: 0.3), weight: 1),
+          tween: Tween<double>(begin: 0, end: 0.5), weight: 1),
       TweenSequenceItem<double>(
-          tween: Tween<double>(begin: 0.3, end: 0), weight: 1),
+          tween: Tween<double>(begin: 0.5, end: 0), weight: 1),
     ]).animate(_animationController);
 
     _animationController.repeat();
@@ -52,17 +56,18 @@ class _UniversalLoaderBoxState extends State<UniversalLoaderBox>
                 height: widget.height,
                 width: widget.width,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius:
+                        BorderRadius.circular(widget.borderRadius ?? 10),
                     gradient: LinearGradient(
                       colors: [
                         Theme.of(context)
                             .colorScheme
                             .tertiaryContainer
-                            .withAlpha(10),
+                            .withAlpha(20),
                         Theme.of(context)
                             .colorScheme
                             .tertiaryContainer
-                            .withAlpha(80),
+                            .withAlpha(100),
                       ],
                       stops: [_stopsAnimation.value, 1],
                       begin: Alignment.topLeft,

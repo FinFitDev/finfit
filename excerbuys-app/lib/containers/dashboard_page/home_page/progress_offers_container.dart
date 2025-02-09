@@ -8,15 +8,16 @@ import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 
-class AvailableOffers extends StatefulWidget {
+class ProgressOffersContainer extends StatefulWidget {
   final bool? isLoading;
-  const AvailableOffers({super.key, this.isLoading});
+  const ProgressOffersContainer({super.key, this.isLoading});
 
   @override
-  State<AvailableOffers> createState() => _AvailableOffersState();
+  State<ProgressOffersContainer> createState() =>
+      _ProgressOffersContainerState();
 }
 
-class _AvailableOffersState extends State<AvailableOffers> {
+class _ProgressOffersContainerState extends State<ProgressOffersContainer> {
   final ScrollController _scrollController = ScrollController();
   double _scrollPercent = 0;
 
@@ -57,7 +58,7 @@ class _AvailableOffersState extends State<AvailableOffers> {
     final colors = Theme.of(context).colorScheme;
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 2 * HORIZOTAL_PADDING),
+      padding: const EdgeInsets.only(bottom: 2 * HORIZOTAL_PADDING),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -67,7 +68,7 @@ class _AvailableOffersState extends State<AvailableOffers> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Start saving today',
+                  'Nearly there, keep going',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
@@ -84,7 +85,7 @@ class _AvailableOffersState extends State<AvailableOffers> {
                     Container(
                       margin: EdgeInsets.only(top: 20),
                       child: SizedBox(
-                        height: 220,
+                        height: 250,
                         child: ListView.builder(
                           controller: _scrollController,
                           scrollDirection: Axis.horizontal,
@@ -136,12 +137,13 @@ class _AvailableOffersState extends State<AvailableOffers> {
       case 0:
         return ShopItemCard(
           image:
-              'https://marketplace.canva.com/EAFxdcos7WU/1/0/1600w/canva-dark-blue-and-brown-illustrative-fitness-gym-logo-oqe3ybeEcQQ.jpg',
-          points: 250000,
+              'https://media.istockphoto.com/id/960293984/vector/cute-avocado-cartoon-character-doing-exercises-with-hula-hoop-vector-cartoon-flat.jpg?s=612x612&w=0&k=20&c=_Kbj2loiacXJy6T25gs9TLPLeeyfXVzwkeRFOzC7KEQ=',
+          points: 25000,
           originalPrice: 58,
-          name: 'Chocolate protein',
+          name: 'Avocado protein',
           seller: 'Producer AC',
           discount: 12,
+          progress: 90,
         );
       case 1:
         return ShopItemCard(
@@ -151,6 +153,7 @@ class _AvailableOffersState extends State<AvailableOffers> {
           points: 185000,
           name: 'Gym membership',
           seller: 'Just Gym',
+          progress: 30,
         );
       case 2:
         return ShopItemCard(
@@ -161,16 +164,18 @@ class _AvailableOffersState extends State<AvailableOffers> {
           points: 185000,
           name: 'Gym membership 1 month',
           seller: 'Platinum',
+          progress: 60,
         );
       case 3:
         return ShopItemCard(
           image:
-              'https://media.istockphoto.com/id/960293984/vector/cute-avocado-cartoon-character-doing-exercises-with-hula-hoop-vector-cartoon-flat.jpg?s=612x612&w=0&k=20&c=_Kbj2loiacXJy6T25gs9TLPLeeyfXVzwkeRFOzC7KEQ=',
+              'https://marketplace.canva.com/EAFxdcos7WU/1/0/1600w/canva-dark-blue-and-brown-illustrative-fitness-gym-logo-oqe3ybeEcQQ.jpg',
           points: 250000,
           originalPrice: 58,
           name: 'Chocolate protein',
           seller: 'Producer AC',
           discount: 12,
+          progress: 50,
         );
       case 4:
         return ShopItemCard(
@@ -180,6 +185,7 @@ class _AvailableOffersState extends State<AvailableOffers> {
           points: 185000,
           name: 'Gym membership',
           seller: 'Just Gym',
+          progress: 70,
         );
       case 5:
         return ShopItemCard(
@@ -191,6 +197,7 @@ class _AvailableOffersState extends State<AvailableOffers> {
           name: 'Gym membership 1 month',
           seller: 'Platinum',
           isLast: true,
+          progress: 70,
         );
       default:
         return const SizedBox.shrink();

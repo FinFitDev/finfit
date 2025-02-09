@@ -19,20 +19,9 @@ class BalanceContainer extends StatefulWidget {
 
 class _BalanceContainerState extends State<BalanceContainer> {
   int _balance = 200;
-  Timer? _timer; // Store the reference to the Timer
-
-  void startInterval() {
-    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
-      setState(() {
-        Random random = Random();
-        _balance = max(_balance + random.nextInt(1000) - 400, 0);
-      });
-    });
-  }
 
   @override
   void initState() {
-    startInterval();
     setState(() {
       _balance = widget.balance;
     });
@@ -40,9 +29,11 @@ class _BalanceContainerState extends State<BalanceContainer> {
   }
 
   @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
+  void didUpdateWidget(covariant BalanceContainer oldWidget) {
+    setState(() {
+      _balance = widget.balance;
+    });
+    super.didUpdateWidget(oldWidget);
   }
 
   @override

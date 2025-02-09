@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:excerbuys/store/controllers/activity/steps_controller.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller.dart';
+import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/constants.dart';
@@ -65,8 +66,16 @@ class ActivityController {
     setHealthSdkStatus(status ?? HealthConnectSdkStatus.sdkUnavailable);
   }
 
-  // Stream<Map<int, int>> get userStepsStream =>
-  //     _userActivity.stream.map();
+  final BehaviorSubject<double> _totalPointsToAdd = BehaviorSubject.seeded(0);
+  Stream<double> get totalPointsToAddStream => _totalPointsToAdd.stream;
+  double get totalPointsToAdd => _totalPointsToAdd.value;
+  compundPointsToAdd(double toAdd) {
+    _totalPointsToAdd.add(totalPointsToAdd + toAdd);
+  }
+
+  setPointsToAdd(double value) {
+    _totalPointsToAdd.add(value);
+  }
 
   Future<void> fetchActivity() async {
     if (!healthAuthorized) {
@@ -79,9 +88,11 @@ class ActivityController {
       print('Health connect unauthorized');
       return;
     }
-
+    // await userController.fetchCurrentUser('11');
     await trainingsController.fetchTrainings();
     await stepsController.fetchsSteps();
+    userController.addUserBalance(totalPointsToAdd);
+    setPointsToAdd(0);
   }
 }
 

@@ -67,3 +67,17 @@ String getDayName(int daysAgo) {
   final DateTime nDaysAgo = now.subtract(Duration(days: daysAgo));
   return weekDayToName(nDaysAgo.weekday);
 }
+
+String convertHourAmPm(int hour) {
+  if (hour < 12) {
+    return '${padTimeString(hour.toString())}:00 am';
+  } else if (hour == 12) {
+    return '$hour:00 pm';
+  } else {
+    return '${padTimeString((hour - 12).toString())}:00 pm';
+  }
+}
+
+double convertMillisecondsToMinutes(int milliseconds) {
+  return milliseconds / 1000 / 60;
+}

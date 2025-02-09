@@ -30,6 +30,9 @@ class StepsActivityCard extends StatefulWidget {
 class _StepsActivityCardState extends State<StepsActivityCard> {
   int _totalSteps = 0;
   int _daysAgo = 0;
+  final ValueNotifier<Map<String, int?>> trackballPositionNotifier =
+      ValueNotifier({});
+  bool isTrackballVisible = false;
 
   void updateTotalSteps() {
     setState(() {
@@ -42,6 +45,12 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
         _totalSteps = 0;
       }
     });
+  }
+
+  @override
+  void initState() {
+    updateTotalSteps();
+    super.initState();
   }
 
   @override
@@ -58,51 +67,56 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        // Container(
+        //   margin: EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING),
+        //   decoration: BoxDecoration(
+        //     borderRadius: BorderRadius.circular(10),
+        //     color: colors.primaryContainer.withAlpha(150),
+        //   ),
+        //   height: 45,
+        //   child: Row(
+        //     crossAxisAlignment: CrossAxisAlignment.stretch,
+        //     children: [
+        //       daySelector(_daysAgo == 0, colors, () {
+        //         setState(() {
+        //           _daysAgo = 0;
+        //         });
+        //         updateTotalSteps();
+        //       }, 'Today'),
+        //       daySelector(_daysAgo == 1, colors, () {
+        //         setState(() {
+        //           _daysAgo = 1;
+        //         });
+        //         updateTotalSteps();
+        //       }, 'Yesterday'),
+        //       daySelector(_daysAgo == 2, colors, () {
+        //         setState(() {
+        //           _daysAgo = 2;
+        //         });
+        //         updateTotalSteps();
+        //       }, getDayName(2)),
+        //     ],
+        //   ),
+        // ),
         Container(
-          margin: EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: colors.primaryContainer,
-          ),
-          height: 45,
+          height: 55,
+          margin: EdgeInsets.only(
+              left: HORIZOTAL_PADDING, right: HORIZOTAL_PADDING, bottom: 20),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              daySelector(_daysAgo == 0, colors, () {
-                setState(() {
-                  _daysAgo = 0;
-                });
-                updateTotalSteps();
-              }, 'Today'),
-              daySelector(_daysAgo == 1, colors, () {
-                setState(() {
-                  _daysAgo = 1;
-                });
-                updateTotalSteps();
-              }, 'Yesterday'),
-              daySelector(_daysAgo == 2, colors, () {
-                setState(() {
-                  _daysAgo = 2;
-                });
-                updateTotalSteps();
-              }, getDayName(2)),
-            ],
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.only(left: 3 * HORIZOTAL_PADDING, top: 30),
-          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
+                mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AnimatedTextKit(
                     key: ValueKey<String>(
-                        "steps${_daysAgo}"), // Unique key per widget
+                        "steps${_totalSteps}"), // Unique key per widget
                     isRepeatingAnimation: false,
                     animatedTexts: [
                       TyperAnimatedText(
-                        '$_totalSteps steps',
+                        '$_totalSteps steps today',
                         textStyle: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
@@ -113,11 +127,11 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
                   ),
                   AnimatedTextKit(
                     key: ValueKey<String>(
-                        "points${_daysAgo}"), // Unique key per widget
+                        "points${_totalSteps}"), // Unique key per widget
                     isRepeatingAnimation: false,
                     animatedTexts: [
                       TyperAnimatedText(
-                        '${_daysAgo * 17} fitness points',
+                        '${(_totalSteps * 0.2).round()} points',
                         textStyle: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w300,
@@ -127,45 +141,88 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
                     ],
                   ),
                 ],
-              )
+              ),
+              ValueListenableBuilder(
+                  valueListenable: trackballPositionNotifier,
+                  builder: (context, value, child) {
+                    return value['x'] != null &&
+                            value['y'] != null &&
+                            isTrackballVisible == true
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                '${value['y'].toString()} steps',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: colors.secondary),
+                              ),
+                              Text(
+                                convertHourAmPm(value['x']!),
+                                style: TextStyle(
+                                  color:
+                                      colors.tertiaryContainer.withAlpha(150),
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          )
+                        : SizedBox.shrink();
+                  })
             ],
           ),
         ),
         Container(
           height: 200,
+          margin: EdgeInsets.only(top: 10),
           child: SfCartesianChart(
             margin: EdgeInsets.all(0),
             plotAreaBorderWidth: 0,
             primaryXAxis: NumericAxis(
-              isVisible: false,
+              labelStyle: TextStyle(color: Colors.transparent),
             ),
             primaryYAxis: NumericAxis(
               majorGridLines: MajorGridLines(width: 0),
               isVisible: false,
             ),
+            onTrackballPositionChanging: (trackballArgs) {
+              final point = trackballArgs.chartPointInfo.chartPoint;
+              if (point != null) {
+                final position = {
+                  'x': point.x as int,
+                  'y': (point.y ?? 0) as int
+                };
+
+                if (trackballPositionNotifier.value != position) {
+                  trackballPositionNotifier.value = position;
+                }
+              }
+            },
+            onChartTouchInteractionDown: (tapArgs) {
+              setState(() {
+                isTrackballVisible = true;
+              });
+            },
+            onChartTouchInteractionUp: (tapArgs) {
+              setState(() {
+                isTrackballVisible = false;
+                trackballPositionNotifier.value = {'x': null, 'y': null};
+              });
+            },
             trackballBehavior: TrackballBehavior(
-              enable: true,
-              activationMode: ActivationMode.longPress,
-              tooltipSettings: InteractiveTooltip(
-                color: Theme.of(context).colorScheme.tertiary,
-                format: 'Hour: point.x\nSteps: point.y',
-              ),
-              markerSettings: TrackballMarkerSettings(
-                markerVisibility:
-                    TrackballVisibilityMode.visible, // Enable the dot
-                shape: DataMarkerType.circle, // Change marker shape to a dot
-                color: Theme.of(context).colorScheme.tertiary, // Dot color
-                borderWidth: 1,
-                height: 12,
-                width: 12,
-                borderColor: Theme.of(context)
-                    .colorScheme
-                    .primary, // Optional: Border color
-              ),
-              lineType: TrackballLineType.none,
-            ),
-            series: <SplineAreaSeries<MapEntry<int, int>, int>>[
-              SplineAreaSeries<MapEntry<int, int>, int>(
+                enable: true,
+                activationMode: ActivationMode.longPress,
+                tooltipSettings: InteractiveTooltip(
+                  enable: false,
+                ),
+                markerSettings: TrackballMarkerSettings(
+                  markerVisibility: TrackballVisibilityMode.hidden,
+                ),
+                lineType: TrackballLineType.vertical),
+            series: <ColumnSeries<MapEntry<int, int>, int>>[
+              ColumnSeries<MapEntry<int, int>, int>(
                 dataSource: widget.stepsData[constructDailyTimestamp(
                             DateTime.now()
                                 .subtract(Duration(days: _daysAgo)))] !=
@@ -179,14 +236,12 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
                 animationDuration: 300,
                 xValueMapper: (MapEntry<int, int> data, _) => data.key,
                 yValueMapper: (MapEntry<int, int> data, _) => data.value,
-                gradient: LinearGradient(
-                  colors: [colors.secondary, colors.primary],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-                borderWidth: 4,
+                color: colors.secondary,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(4), topRight: Radius.circular(4)),
+                width: 0.95,
+                borderWidth: 0,
                 borderColor: colors.secondary,
-                splineType: SplineType.monotonic,
               ),
             ],
           ),

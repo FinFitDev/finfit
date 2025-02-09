@@ -43,6 +43,7 @@ class _BottomBarState extends State<BottomBar> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     AppbarIconButton(
+                      name: 'Home',
                       icon: 'assets/svg/home.svg',
                       onPressed: () {
                         dashboardController.setActivePage(0);
@@ -50,20 +51,23 @@ class _BottomBarState extends State<BottomBar> {
                       isActive: snapshot.data == 0,
                     ),
                     AppbarIconButton(
-                      icon: 'assets/svg/search.svg',
+                      name: 'Offers',
+                      icon: 'assets/svg/dollar.svg',
                       onPressed: () {
                         dashboardController.setActivePage(1);
                       },
                       isActive: snapshot.data == 1,
                     ),
                     AppbarIconButton(
-                      icon: 'assets/svg/tag.svg',
+                      name: 'Recent',
+                      icon: 'assets/svg/clockBold.svg',
                       onPressed: () {
                         dashboardController.setActivePage(2);
                       },
                       isActive: snapshot.data == 2,
                     ),
                     AppbarIconButton(
+                      name: 'Profile',
                       icon: 'assets/svg/profile.svg',
                       onPressed: () {
                         dashboardController.setActivePage(3);
@@ -78,8 +82,8 @@ class _BottomBarState extends State<BottomBar> {
                   duration: const Duration(milliseconds: 150),
                   curve: Curves.decelerate,
                   left: MediaQuery.sizeOf(context).width / 2 -
-                      145 +
-                      ((snapshot.data ?? 0) * 80),
+                      152.5 +
+                      ((snapshot.data ?? 0) * 85),
                   top: 0,
                   child: Container(
                     width: 50,

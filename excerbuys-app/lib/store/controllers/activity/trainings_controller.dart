@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:excerbuys/store/controllers/activity/activity_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
@@ -28,8 +31,15 @@ class TrainingsController {
 
   Future<void> fetchTrainings() async {
     final now = DateTime.now();
+    final userCreated = userController.currentUser?.createdAt ?? now;
+    final Duration difference = now.difference(userCreated);
+    final Duration maxDifference = Duration(days: 90);
 
-    final prev = now.subtract(Duration(days: 60));
+    // Use the smaller of the two: the actual difference or 60 days (we only fetch max up to 3 months of tainings backwards)
+    final Duration limitedDifference =
+        difference > maxDifference ? maxDifference : difference;
+
+    final prev = now.subtract(limitedDifference);
 
     try {
       List<HealthDataPoint> healthData = await Health().getHealthDataFromTypes(
@@ -42,11 +52,20 @@ class TrainingsController {
       List<ITrainingEntry> parsedTrainingData =
           convertTrainingsToRequest(healthData) ?? [];
 
-      final res = await saveTrainings(parsedTrainingData);
+      final pointsAwardedResponse = await saveTrainings(parsedTrainingData);
+      if (pointsAwardedResponse != null) {
+        activityController
+            .compundPointsToAdd(double.parse(pointsAwardedResponse));
+      }
 
       if (userController.currentUser?.id != null) {
         parsedTrainingData =
             await loadTrainings(userController.currentUser!.id, 6, 0) ?? [];
+
+        Set<String> unique = {};
+        parsedTrainingData = parsedTrainingData
+            .where((element) => unique.add(element.uuid))
+            .toList();
       }
 
       Map<String, ITrainingEntry> values = {
@@ -56,7 +75,7 @@ class TrainingsController {
       addUserTrainings(values);
       setTrainingsLoading(false);
     } catch (error) {
-      debugPrint("Exception in getHealthDataFromTypes: $error");
+      debugPrint("Exception while extracting trainings data: $error");
     }
   }
 }

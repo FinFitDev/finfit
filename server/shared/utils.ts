@@ -58,6 +58,7 @@ export const aggregateDailyDataObject = (data: IHourlyStepEntry[]) => {
     return acc;
   }, {});
 };
+
 // export function convertObjectToDBTuple<T extends Record<string, any>>(data:T[]){
 //   return data.reduce((acc, obj) => {
 //     const sortedObj = Object.keys(obj)

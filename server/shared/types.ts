@@ -10,7 +10,7 @@ export interface IUser {
   password?: string;
   google_id?: string;
   created_at: string;
-  updated_at: string;
+  steps_updated_at: string;
   points: number;
   image?: string;
 }

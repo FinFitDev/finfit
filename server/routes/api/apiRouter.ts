@@ -1,5 +1,9 @@
 import express, { Request, Response, Router } from "express";
-import { getUserById, updateUserPointsScore } from "./services/userService";
+import {
+  getUserById,
+  updateUserPointsScore,
+  updateUserPointsScoreWithUpdateTimestamp,
+} from "./services/userService";
 import { RequestWithPayload } from "../../shared/types";
 import {
   addStepsData,
@@ -30,15 +34,26 @@ apiRouter.post(
   "/users/:id",
   async (
     req: RequestWithPayload<
-      { points: number; updated_at: string },
+      { points: number; steps_updated_at?: string },
       { id: number }
     >,
     res: Response
   ) => {
     try {
       const user_id = Number(req.params.id);
-      const { points, updated_at } = req.body;
-      const response = await updateUserPointsScore(user_id, points, updated_at);
+      const { points, steps_updated_at } = req.body;
+      let response;
+      if (steps_updated_at) {
+        // we only update the steps_updated_at when updating steps
+        response = await updateUserPointsScoreWithUpdateTimestamp(
+          user_id,
+          points,
+          steps_updated_at
+        );
+      } else {
+        // updating trainings or purchases
+        response = await updateUserPointsScore(user_id, points);
+      }
 
       res
         .status(200)

@@ -1,15 +1,9 @@
-import 'dart:convert';
-
 import 'package:excerbuys/store/controllers/activity/activity_controller.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
-import 'package:excerbuys/store/selectors/activity/steps.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/activity/steps.dart';
-import 'package:excerbuys/utils/backend/utils.dart';
-import 'package:excerbuys/utils/fetching/utils.dart';
-import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 import 'package:rxdart/rxdart.dart';
@@ -31,15 +25,16 @@ class StepsController {
   }
 
   Future<void> fetchsSteps() async {
-    final lastUpdated = userController.currentUser?.updatedAt;
     final now = DateTime.now();
-    final Duration difference = now.difference(lastUpdated!);
-    final Duration maxDifference = Duration(days: 3);
-// Use the smaller of the two: the actual difference or 24 hours
-    final Duration limitedDifference =
-        difference > maxDifference ? maxDifference : difference;
+    final lastUpdated = userController.currentUser?.stepsUpdatedAt ?? now;
+    final Duration difference = now.difference(lastUpdated);
+    final Duration minDifference = Duration(days: 3);
 
-    final prev = now.subtract(maxDifference);
+// Use the larger of the two: the actual difference or 3 days
+    final Duration limitedDifference =
+        difference < minDifference ? minDifference : difference;
+
+    final prev = now.subtract(limitedDifference);
 
     try {
       List<HealthDataPoint> healthData = await Health().getHealthDataFromTypes(
@@ -56,9 +51,32 @@ class StepsController {
 
       final filteredData = filterOverlappingSteps(
           healthDataMap, trainingsController.userTrainings.content);
+
+      // steps that are not awarded yet
+      final newSteps = filteredData.values
+          .where((entry) => entry.dateFrom.compareTo(lastUpdated) > 0)
+          .toList();
+
       final finalStepsDataInHours = groupStepsData(filteredData);
       addUserSteps(finalStepsDataInHours);
       setStepsLoading(false);
+
+      int pointsToAdd = newSteps.length > 0
+          ? newSteps
+              .map((point) =>
+                  ((point.value as NumericHealthValue).numericValue * 0.2)
+                      .round())
+              .reduce((accumulator, current) => accumulator + current)
+          : 0;
+
+      // update in db and then compund the points for one animation
+      if (pointsToAdd > 0) {
+        final bool updateResult =
+            await userController.updateUserPointsScoreAndTimestamp(pointsToAdd);
+        if (updateResult) {
+          activityController.compundPointsToAdd(pointsToAdd.toDouble());
+        }
+      }
 
       // final stepsData = convertStepsToRequest(
       //     healthDataMap, trainingsController.userTrainings.content);

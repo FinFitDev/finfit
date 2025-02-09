@@ -42,6 +42,81 @@ export const insertTraining = async ({
   return { [uuid]: (response.rowCount ?? 0) > 0 };
 };
 
+export const insertNewTrainingsPointsUpdateTransaction = async (
+  trainings: ITrainingEntry[],
+  userId: number
+) => {
+  const client = await pool.connect();
+
+  try {
+    // Start transaction
+    await client.query("BEGIN");
+
+    // Build the VALUES clause dynamically for bulk insert
+    const values: any[] = [];
+    const placeholders = trainings
+      .map((training, index) => {
+        const offset = index * 8; // Number of fields in the row
+        values.push(
+          training.type,
+          training.points,
+          training.duration,
+          training.calories,
+          training.distance,
+          userId,
+          training.uuid,
+          training.created_at
+        );
+        return `($${offset + 1}, $${offset + 2}, $${offset + 3}, $${
+          offset + 4
+        }, $${offset + 5}, $${offset + 6}, $${offset + 7}, $${offset + 8})`;
+      })
+      .join(", ");
+
+    // Insert trainings and retrieve the points of successfully inserted rows
+    const insertResult = await client.query(
+      `
+      WITH inserted_rows AS (
+        INSERT INTO trainings (type, points, duration, calories, distance, user_id, uuid, created_at)
+        VALUES ${placeholders}
+        ON CONFLICT (uuid) DO NOTHING
+        RETURNING points
+      )
+      SELECT COALESCE(SUM(points), 0) AS total_added_points FROM inserted_rows;
+    `,
+      values
+    );
+
+    const totalAddedPoints = insertResult.rows[0].total_added_points;
+
+    // Update the user's points
+    await client.query(
+      `
+      UPDATE users
+      SET points = points + $1
+      WHERE id = $2;
+    `,
+      [totalAddedPoints, userId]
+    );
+
+    // Commit the transaction
+    await client.query("COMMIT");
+
+    // Return the total added points
+    return totalAddedPoints;
+  } catch (err) {
+    // Rollback the transaction on error
+    await client.query("ROLLBACK");
+    console.error("Error adding trainings and updating user:", err);
+    throw err;
+  } finally {
+    // Release the client back to the pool
+    client.release();
+  }
+};
+
+// --------------------------------------- DEPRECATED --------------------------------------- //
+
 export const insertHourlySteps = async ({
   uuid,
   user_id,

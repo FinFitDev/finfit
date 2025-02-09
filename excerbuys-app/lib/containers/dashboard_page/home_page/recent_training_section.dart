@@ -61,14 +61,12 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            child: Text(
-              'Recent training sessions',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: colors.tertiary,
-              ),
+          Text(
+            'Recent workouts',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: colors.tertiary,
             ),
           ),
           ..._groupedTrainingsData.entries.indexed.map((el) {
@@ -79,7 +77,7 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
             return Column(
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: 12, bottom: 4),
+                  margin: EdgeInsets.only(top: 24, bottom: 4),
                   child: Row(
                     children: [
                       Text(
@@ -106,6 +104,8 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
                     activityType: parseActivityType(type),
                     points: healthData.points,
                     date: parseDate(healthData.createdAt),
+                    duration: healthData.duration,
+                    calories: healthData.calories,
                   );
                 })
               ],

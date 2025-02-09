@@ -13,16 +13,6 @@ class NewsContainer extends StatefulWidget {
 }
 
 class _NewsContainerState extends State<NewsContainer> {
-  Widget get loadingContainer {
-    return Container(
-      margin: EdgeInsets.only(top: 30),
-      padding: const EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING),
-      child: UniversalLoaderBox(
-          height: 230,
-          width: MediaQuery.sizeOf(context).width - 2 * HORIZOTAL_PADDING),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -38,7 +28,7 @@ class _NewsContainerState extends State<NewsContainer> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'News',
+                  'Good day',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
@@ -48,27 +38,16 @@ class _NewsContainerState extends State<NewsContainer> {
               ],
             ),
           ),
-          widget.isLoading == true
-              ? loadingContainer
-              : SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: 6,
-                      ),
-                      newsCard(1, colors, 'Updates', () {}),
-                      newsCard(2, colors, 'Collabs', () {}),
-                      newsCard(3, colors, 'Arrivals', () {}),
-                      newsCard(4, colors, 'Blog', () {}),
-                      newsCard(3, colors, 'Arrivals', () {}),
-                      newsCard(4, colors, 'Blog', () {}),
-                      SizedBox(
-                        width: 6,
-                      ),
-                    ],
-                  ),
-                ),
+          SizedBox(
+            height: 133,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: 6,
+              itemBuilder: (context, index) {
+                return _buildNewsItemCard(index, colors, widget.isLoading);
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -122,4 +101,68 @@ Widget newsCard(
       ),
     ),
   );
+}
+
+Widget newsCardWithLoaderWrapper(bool? isLoading, Widget newsCard) {
+  return isLoading == true
+      ? Container(
+          margin: EdgeInsets.symmetric(vertical: HORIZOTAL_PADDING),
+          width: 90,
+          child: Column(
+            children: [
+              UniversalLoaderBox(
+                height: 70,
+                width: 70,
+                borderRadius: 100,
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              UniversalLoaderBox(
+                height: 15,
+                width: 65,
+              )
+            ],
+          ),
+        )
+      : newsCard;
+}
+
+Widget _buildNewsItemCard(int index, ColorScheme colors, bool? isLoading) {
+  switch (index) {
+    case 0:
+      return Row(
+        children: [
+          SizedBox(
+            width: 6,
+          ),
+          newsCardWithLoaderWrapper(
+              isLoading, newsCard(0, colors, 'Updates', () {})),
+        ],
+      );
+    case 1:
+      return newsCardWithLoaderWrapper(
+          isLoading, newsCard(1, colors, 'Collabs', () {}));
+    case 2:
+      return newsCardWithLoaderWrapper(
+          isLoading, newsCard(2, colors, 'Arrivals', () {}));
+    case 3:
+      return newsCardWithLoaderWrapper(
+          isLoading, newsCard(3, colors, 'Blog', () {}));
+    case 4:
+      return newsCardWithLoaderWrapper(
+          isLoading, newsCard(4, colors, 'Updates', () {}));
+    case 5:
+      return Row(
+        children: [
+          newsCardWithLoaderWrapper(
+              isLoading, newsCard(5, colors, 'Blog', () {})),
+          SizedBox(
+            width: 6,
+          )
+        ],
+      );
+    default:
+      return const SizedBox.shrink();
+  }
 }

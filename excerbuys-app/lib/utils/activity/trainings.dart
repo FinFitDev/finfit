@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:excerbuys/store/controllers/app_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/utils/backend/utils.dart';
@@ -24,10 +25,9 @@ List<ITrainingEntry>? convertTrainingsToRequest(
 
     for (final el in elements) {
       final value = el.value as WorkoutHealthValue;
-
       final ITrainingEntry parsedEl = ITrainingEntry(
           uuid:
-              '${Platform.isIOS ? 'ios' : 'android'}_${el.sourceDeviceId}_${el.uuid}',
+              '${Platform.isIOS ? 'ios' : 'android'}_${appController.deviceId}_${el.uuid}',
           points: 200,
           duration: calculateTrainingDuration(el.dateFrom, el.dateTo),
           calories: value.totalEnergyBurned ?? 0,
@@ -50,7 +50,7 @@ int calculateTrainingDuration(DateTime dateFrom, DateTime dateTo) {
   return dateTo.difference(dateFrom).inMilliseconds;
 }
 
-Future<List?> saveTrainings(List<ITrainingEntry>? parsedTrainingData) async {
+Future<String?> saveTrainings(List<ITrainingEntry>? parsedTrainingData) async {
   try {
     if (parsedTrainingData != null) {
       final serializedData =

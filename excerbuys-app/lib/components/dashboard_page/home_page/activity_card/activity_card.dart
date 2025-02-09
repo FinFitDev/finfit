@@ -2,6 +2,7 @@ import 'package:excerbuys/components/dashboard_page/home_page/activity_card/acti
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/home/utils.dart';
+import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,6 +12,8 @@ class ActivityCard extends StatefulWidget {
   final int points;
   final String date;
   final bool? isPurchase;
+  final int? calories;
+  final int? duration;
   final int index;
 
   const ActivityCard({
@@ -20,6 +23,8 @@ class ActivityCard extends StatefulWidget {
     required this.points,
     this.isPurchase,
     required this.index,
+    this.calories,
+    this.duration,
   });
 
   @override
@@ -59,7 +64,7 @@ class _ActivityCardState extends State<ActivityCard> {
                 : Container(
                     height: 50,
                     width: 50,
-                    padding: EdgeInsets.all(4),
+                    padding: EdgeInsets.all(5),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: Color.fromARGB(
@@ -81,7 +86,7 @@ class _ActivityCardState extends State<ActivityCard> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(
-                          width: 24,
+                          width: 23,
                           child: SvgPicture.asset(activityMetadata.icon,
                               colorFilter: ColorFilter.mode(
                                   colors.primary, BlendMode.srcIn)),
@@ -125,7 +130,7 @@ class _ActivityCardState extends State<ActivityCard> {
                   Row(
                     children: [
                       Text(
-                        '25 minutes',
+                        '${convertMillisecondsToMinutes(widget.duration ?? 0).round()} min',
                         style: TextStyle(
                           color: colors.tertiaryContainer,
                           fontSize: 13,
@@ -141,7 +146,7 @@ class _ActivityCardState extends State<ActivityCard> {
                         width: 12,
                       ),
                       Text(
-                        '256 kcal',
+                        '${widget.calories} kcal',
                         style: TextStyle(
                           color: colors.tertiaryContainer,
                           fontSize: 13,

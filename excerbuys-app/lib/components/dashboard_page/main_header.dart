@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
+import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,7 @@ class MainHeader extends StatelessWidget {
               stream: dashboardController.activePageStream,
               builder: (context, pageSnapshot) {
                 final bool isActive =
-                    snapshot.hasData && snapshot.data! > 390 ||
+                    snapshot.hasData && snapshot.data! > 350 ||
                         pageSnapshot.data != 0;
 
                 return AnimatedPositioned(
@@ -53,16 +54,18 @@ class MainHeader extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              '13909 fitness points',
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .tertiary
-                                      .withAlpha(isActive ? 255 : 0)),
-                            )
+                            StreamBuilder<double?>(
+                                stream: userController.userBalanceStream,
+                                builder: (context, snapshot) {
+                                  return Text(
+                                    '${(snapshot.data ?? 0).round()} fitness points',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                        color: colors.primaryFixedDim
+                                            .withAlpha(isActive ? 255 : 0)),
+                                  );
+                                })
                           ],
                         ),
                       ),

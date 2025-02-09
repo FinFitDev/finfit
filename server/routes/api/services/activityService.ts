@@ -6,6 +6,7 @@ import {
   fetchRecentUserTrainings,
   insertDailySteps,
   insertHourlySteps,
+  insertNewTrainingsPointsUpdateTransaction,
   insertTraining,
 } from "../../../models/activityModel";
 import { ONE_DAY_MILLISECONDS } from "../../../shared/constants";
@@ -19,6 +20,7 @@ import {
   aggregateDailyDataObject,
   getUtcMidnightDate,
 } from "../../../shared/utils";
+import { response } from "express";
 
 export const getUserRecentTrainings = async (
   user_id: number,
@@ -30,12 +32,21 @@ export const getUserRecentTrainings = async (
 };
 
 export const addTrainings = async (trainings: string[]) => {
-  const promises = trainings.map((training) => {
-    return insertTraining(JSON.parse(training));
-  });
-  const responses = await Promise.all(promises);
-  return responses;
+  if (!trainings.length) {
+    return 0;
+  }
+  const parsedTrainings: ITrainingEntry[] = trainings.map((training) =>
+    JSON.parse(training)
+  );
+  const userId = parsedTrainings[0].user_id;
+  const response = await insertNewTrainingsPointsUpdateTransaction(
+    parsedTrainings,
+    userId
+  );
+  return response;
 };
+
+// --------------------------------------- DEPRECATED --------------------------------------- //
 
 export const addStepsData = async (hourlySteps: string[]) => {
   const hourlyStepsParsed = hourlySteps.map((data) => JSON.parse(data));

@@ -6,6 +6,7 @@ class AppbarIconButton extends StatelessWidget {
   final double? padding;
   final bool? isActive;
   final String icon;
+  final String name;
   final void Function() onPressed;
   final bool? isLast;
   const AppbarIconButton(
@@ -14,7 +15,8 @@ class AppbarIconButton extends StatelessWidget {
       this.isActive,
       required this.icon,
       required this.onPressed,
-      this.isLast});
+      this.isLast,
+      required this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -22,17 +24,34 @@ class AppbarIconButton extends StatelessWidget {
       onPressed: onPressed,
       child: Container(
         color: Colors.transparent,
-        width: 60,
+        width: 65,
         height: 60,
         margin: EdgeInsets.only(right: isLast == true ? 0 : 20),
-        padding: EdgeInsets.all(padding ?? 18),
-        child: SvgPicture.asset(
-          icon,
-          colorFilter: ColorFilter.mode(
-              isActive == true
-                  ? Theme.of(context).colorScheme.secondary
-                  : Theme.of(context).colorScheme.tertiary,
-              BlendMode.srcIn),
+        child: Column(
+          children: [
+            SvgPicture.asset(
+              icon,
+              colorFilter: ColorFilter.mode(
+                  isActive == true
+                      ? Theme.of(context).colorScheme.secondary
+                      : Theme.of(context).colorScheme.tertiaryContainer,
+                  BlendMode.srcIn),
+              width: 32,
+              height: 32,
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              name,
+              style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: isActive == true
+                      ? Theme.of(context).colorScheme.secondary
+                      : Theme.of(context).colorScheme.primaryFixedDim,
+                  fontSize: 12),
+            )
+          ],
         ),
       ),
     );
