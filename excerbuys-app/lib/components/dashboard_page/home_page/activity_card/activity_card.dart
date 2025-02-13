@@ -1,4 +1,5 @@
 import 'package:excerbuys/components/dashboard_page/home_page/activity_card/activity_card_details.dart';
+import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/home/utils.dart';
@@ -111,13 +112,20 @@ class _ActivityCardState extends State<ActivityCard> {
                     children: [
                       Container(
                         margin: EdgeInsets.only(right: 6),
-                        child: Text(
-                          '${widget.points.abs().toString()} fitness points',
-                          style: TextStyle(
-                              color: color,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                        ),
+                        child: StreamBuilder<bool>(
+                            stream: dashboardController.balanceHiddenStream,
+                            builder: (context, snapshot) {
+                              final bool isHidden = snapshot.data ?? false;
+                              return Text(
+                                isHidden
+                                    ? '***** finpoints'
+                                    : '${widget.points.abs().toString()} finpoints',
+                                style: TextStyle(
+                                    color: color,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
+                              );
+                            }),
                       ),
                       Text(
                         widget.date

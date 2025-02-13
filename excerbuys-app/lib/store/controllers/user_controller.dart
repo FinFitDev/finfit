@@ -4,6 +4,7 @@ import 'package:excerbuys/store/persistence/storage_controller.dart';
 import 'package:excerbuys/store/selectors/user.dart';
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/backend/utils.dart';
+import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
 import 'package:excerbuys/utils/user/user.dart';
 import 'package:rxdart/rxdart.dart';
@@ -15,7 +16,7 @@ class UserController {
   setCurrentUser(User? user) {
     if (user != null) {
       _currentUser.add(user);
-      storageController.saveState('current_user', user.toString());
+      storageController.saveStateLocal('current_user', user.toString());
     }
   }
 
@@ -42,7 +43,7 @@ class UserController {
   restoreCurrentUserStateFromStorage() async {
     try {
       final String? currentUserSaved =
-          await storageController.loadState('current_user');
+          await storageController.loadStateLocal(CURRENT_USER_KEY);
 
       if (currentUserSaved != null && currentUserSaved.isNotEmpty) {
         setCurrentUser(User.fromMap(jsonDecode(currentUserSaved)));

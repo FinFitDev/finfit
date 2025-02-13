@@ -16,6 +16,7 @@ class LoadingPage extends StatefulWidget {
 class _LoadingPageState extends State<LoadingPage> {
   void loadApp() async {
     await appController.getDeviceId();
+    await appController.getInstallTimestamp();
     await appController.restoreStateFromStorage();
     final String refreshToken = authController.refreshToken;
     final User? currentUser = userController.currentUser;

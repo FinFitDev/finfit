@@ -14,6 +14,13 @@ class DashboardController {
   setScrollDistance(double distance) {
     _scrollDistance.add(distance);
   }
+
+  final BehaviorSubject<bool> _balanceHidden = BehaviorSubject.seeded(false);
+  Stream<bool> get balanceHiddenStream => _balanceHidden.stream;
+  bool get balanceHidden => _balanceHidden.value;
+  setBalanceHidden(bool value) {
+    _balanceHidden.add(value);
+  }
 }
 
 DashboardController dashboardController = DashboardController();

@@ -20,7 +20,7 @@ class MainHeader extends StatelessWidget {
               stream: dashboardController.activePageStream,
               builder: (context, pageSnapshot) {
                 final bool isActive =
-                    snapshot.hasData && snapshot.data! > 350 ||
+                    snapshot.hasData && snapshot.data! > 150 ||
                         pageSnapshot.data != 0;
 
                 return AnimatedPositioned(
@@ -28,45 +28,53 @@ class MainHeader extends StatelessWidget {
                   duration: const Duration(milliseconds: 200),
                   child: Stack(
                     children: [
-                      AnimatedContainer(
+                      AnimatedOpacity(
+                        opacity: isActive ? 1 : 0,
                         duration: Duration(milliseconds: 200),
                         curve: Curves.decelerate,
-                        padding: EdgeInsets.only(
-                            left: HORIZOTAL_PADDING * 2,
-                            right: HORIZOTAL_PADDING * 2,
-                            top: layoutController.statusBarHeight),
-                        width: MediaQuery.sizeOf(context).width,
-                        decoration: BoxDecoration(
-                          color: colors.primary.withAlpha(isActive ? 255 : 0),
-                          boxShadow: isActive
-                              ? [
-                                  BoxShadow(
-                                    color: Colors.black.withAlpha(20),
-                                    spreadRadius: 3,
-                                    blurRadius: 3,
-                                    offset: Offset(
-                                        0, 3), // changes position of shadow
-                                  ),
-                                ]
-                              : [],
-                        ),
-                        height: 60 + layoutController.statusBarHeight,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            StreamBuilder<double?>(
-                                stream: userController.userBalanceStream,
-                                builder: (context, snapshot) {
-                                  return Text(
-                                    '${(snapshot.data ?? 0).round()} fitness points',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
-                                        color: colors.primaryFixedDim
-                                            .withAlpha(isActive ? 255 : 0)),
-                                  );
-                                })
-                          ],
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              left: HORIZOTAL_PADDING * 2,
+                              right: HORIZOTAL_PADDING * 2,
+                              top: layoutController.statusBarHeight),
+                          width: MediaQuery.sizeOf(context).width,
+                          decoration: BoxDecoration(
+                            color: colors.primary,
+                            border: Border(
+                                bottom:
+                                    BorderSide(color: colors.primaryFixedDim)),
+                            // boxShadow: isActive
+                            //     ? [
+                            //         BoxShadow(
+                            //           color: Colors.black.withAlpha(20),
+                            //           spreadRadius: 3,
+                            //           blurRadius: 3,
+                            //           offset: Offset(
+                            //               0, 3), // changes position of shadow
+                            //         ),
+                            //       ]
+                            //     : [],
+                          ),
+                          height: 50 + layoutController.statusBarHeight,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              StreamBuilder<double?>(
+                                  stream: userController.userBalanceStream,
+                                  builder: (context, snapshot) {
+                                    return Text(
+                                      dashboardController.balanceHidden
+                                          ? '****** finpoints'
+                                          : '${(snapshot.data ?? 0).round()} finpoints',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: colors.primaryFixedDim
+                                              .withAlpha(isActive ? 255 : 0)),
+                                    );
+                                  })
+                            ],
+                          ),
                         ),
                       ),
                     ],

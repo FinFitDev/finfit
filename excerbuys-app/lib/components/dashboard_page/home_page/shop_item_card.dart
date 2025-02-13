@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/wrappers/price_text_wrapper.dart';
@@ -95,6 +96,7 @@ class _ShopItemCardState extends State<ShopItemCard> {
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   Expanded(
+                                    flex: 2,
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -125,32 +127,50 @@ class _ShopItemCardState extends State<ShopItemCard> {
                                   SizedBox(
                                     width: 10,
                                   ),
-                                  // Expanded(
-                                  //   flex: 1,
-                                  //   child: Container(
-                                  //     margin: EdgeInsets.symmetric(vertical: 5),
-                                  //     decoration: BoxDecoration(
-                                  //         color: isProgress
-                                  //             ? colors.primary.withAlpha(70)
-                                  //             : colors.secondary.withAlpha(70),
-                                  //         borderRadius:
-                                  //             BorderRadius.circular(10)),
-                                  //     child: Center(
-                                  //       child: Text(
-                                  //         '${widget.discount.toString()}%',
-                                  //         overflow: TextOverflow.ellipsis,
-                                  //         textAlign: TextAlign.center,
-                                  //         style: TextStyle(
-                                  //           fontSize: 16,
-                                  //           fontWeight: FontWeight.w500,
-                                  //           color: isProgress
-                                  //               ? colors.primary.withAlpha(200)
-                                  //               : colors.secondary,
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          '${widget.discount.toString()}%',
+                                          overflow: TextOverflow.ellipsis,
+                                          textAlign: TextAlign.end,
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500,
+                                            color: isProgress
+                                                ? colors.primary
+                                                : colors.secondary,
+                                          ),
+                                        ),
+                                        StreamBuilder<bool>(
+                                            stream: dashboardController
+                                                .balanceHiddenStream,
+                                            builder: (context, snapshot) {
+                                              final bool isHidden =
+                                                  snapshot.data ?? false;
+                                              return Text(
+                                                isHidden
+                                                    ? '***** finpoints'
+                                                    : '${widget.points.toString()} finpoints',
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.end,
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: isProgress
+                                                      ? colors.primary
+                                                      : colors.secondary,
+                                                ),
+                                              );
+                                            }),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -164,22 +184,30 @@ class _ShopItemCardState extends State<ShopItemCard> {
                   ],
                 ),
                 isProgress
-                    ? Container(
-                        margin: const EdgeInsets.only(
-                            right: HORIZOTAL_PADDING, top: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              'Only ${(((100 - widget.progress!) / 100) * widget.points).round()} points to go!',
-                              textAlign: TextAlign.end,
-                              style: TextStyle(
-                                  color: colors.tertiaryContainer,
-                                  fontSize: 12),
+                    ? StreamBuilder<bool>(
+                        stream: dashboardController.balanceHiddenStream,
+                        builder: (context, snapshot) {
+                          final bool isHidden = snapshot.data ?? false;
+                          return Container(
+                            margin: const EdgeInsets.only(
+                                right: HORIZOTAL_PADDING, top: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  isHidden
+                                      ? 'Only ***** finpoints to go!'
+                                      : 'Only ${(((100 - widget.progress!) / 100) * widget.points).round()} finpoints to go!',
+                                  textAlign: TextAlign.end,
+                                  style: TextStyle(
+                                      color: colors.tertiaryContainer,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      )
+                          );
+                        })
                     : SizedBox.shrink(),
               ],
             )));
@@ -188,8 +216,8 @@ class _ShopItemCardState extends State<ShopItemCard> {
 
 Widget progressBar(double progress, ColorScheme colors) {
   return Container(
-    height: 8,
-    margin: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+    height: 3,
+    margin: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(10),
       color: colors.secondary.withAlpha(70),

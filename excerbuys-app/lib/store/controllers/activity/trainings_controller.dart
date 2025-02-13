@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:excerbuys/store/controllers/activity/activity_controller.dart';
+import 'package:excerbuys/store/controllers/app_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
@@ -32,12 +33,21 @@ class TrainingsController {
   Future<void> fetchTrainings() async {
     final now = DateTime.now();
     final userCreated = userController.currentUser?.createdAt ?? now;
-    final Duration difference = now.difference(userCreated);
+    final installTimestamp = appController.installTimestamp;
+    final Duration differenceUserCreated = now.difference(userCreated);
+    final Duration differenceInstallApp = now.difference(installTimestamp);
     final Duration maxDifference = Duration(days: 90);
 
-    // Use the smaller of the two: the actual difference or 60 days (we only fetch max up to 3 months of tainings backwards)
-    final Duration limitedDifference =
-        difference > maxDifference ? maxDifference : difference;
+    // Use the smallest of the three:
+    // up to 90 days (we only fetch max up to 3 months of tainings backwards)
+    // up to app install date
+    // up to user creation date
+    final Duration limitedDifference = [
+      // TODO: uncomment when we have finished testing
+      // differenceInstallApp,
+      differenceUserCreated,
+      maxDifference,
+    ].reduce((a, b) => a.compareTo(b) < 0 ? a : b);
 
     final prev = now.subtract(limitedDifference);
 

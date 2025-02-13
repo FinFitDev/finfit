@@ -5,6 +5,7 @@ import 'package:excerbuys/containers/auth_page/signup_container.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/store/persistence/storage_controller.dart';
 import 'package:excerbuys/utils/backend/utils.dart';
+import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -25,7 +26,7 @@ class AuthController {
   String get accessToken => _accessToken.value;
   setAccessToken(String val) {
     _accessToken.add(val);
-    storageController.saveState('access_token', val);
+    storageController.saveStateLocal('access_token', val);
   }
 
   // refresh token state
@@ -34,15 +35,15 @@ class AuthController {
   String get refreshToken => _refreshToken.value;
   setRefreshToken(String val) {
     _refreshToken.add(val);
-    storageController.saveState('refresh_token', val);
+    storageController.saveStateLocal('refresh_token', val);
   }
 
   restoreAuthStateFromStorage() async {
     try {
       final String? accessToken =
-          await storageController.loadState('access_token');
+          await storageController.loadStateLocal(ACCESS_TOKEN_KEY);
       final String? refreshToken =
-          await storageController.loadState('refresh_token');
+          await storageController.loadStateLocal(REFRESH_TOKEN_KEY);
       if (accessToken != null && accessToken.isNotEmpty) {
         setAccessToken(accessToken);
       }

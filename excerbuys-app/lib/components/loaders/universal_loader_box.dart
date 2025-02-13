@@ -4,13 +4,10 @@ import 'package:flutter/material.dart';
 
 class UniversalLoaderBox extends StatefulWidget {
   final double height;
-  final double width;
+  final double? width;
   final double? borderRadius;
   const UniversalLoaderBox(
-      {super.key,
-      required this.height,
-      required this.width,
-      this.borderRadius});
+      {super.key, required this.height, this.width, this.borderRadius});
 
   @override
   State<UniversalLoaderBox> createState() => _UniversalLoaderBoxState();
@@ -31,9 +28,9 @@ class _UniversalLoaderBoxState extends State<UniversalLoaderBox>
 
     _stopsAnimation = TweenSequence<double>([
       TweenSequenceItem<double>(
-          tween: Tween<double>(begin: 0, end: 0.5), weight: 1),
+          tween: Tween<double>(begin: 0, end: 0.8), weight: 1),
       TweenSequenceItem<double>(
-          tween: Tween<double>(begin: 0.5, end: 0), weight: 1),
+          tween: Tween<double>(begin: 0.8, end: 0), weight: 1),
     ]).animate(_animationController);
 
     _animationController.repeat();
@@ -51,7 +48,7 @@ class _UniversalLoaderBoxState extends State<UniversalLoaderBox>
         animation: _animationController,
         builder: (context, _) {
           return Opacity(
-            opacity: _stopsAnimation.value + 0.3,
+            opacity: _stopsAnimation.value + 0.2,
             child: Container(
                 height: widget.height,
                 width: widget.width,
@@ -67,7 +64,7 @@ class _UniversalLoaderBoxState extends State<UniversalLoaderBox>
                         Theme.of(context)
                             .colorScheme
                             .tertiaryContainer
-                            .withAlpha(100),
+                            .withAlpha(50),
                       ],
                       stops: [_stopsAnimation.value, 1],
                       begin: Alignment.topLeft,

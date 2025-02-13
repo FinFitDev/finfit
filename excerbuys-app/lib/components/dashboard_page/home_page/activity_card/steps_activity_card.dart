@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:excerbuys/components/dashboard_page/home_page/activity_card/activity_card_details.dart';
+import 'package:excerbuys/components/loaders/universal_loader_box.dart';
+import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/constants.dart';
@@ -14,13 +16,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class StepsActivityCard extends StatefulWidget {
-  final int points;
   final IStoreStepsData stepsData;
+  final bool? isLoading;
 
   const StepsActivityCard({
     super.key,
-    required this.points,
     required this.stepsData,
+    this.isLoading,
   });
 
   @override
@@ -125,21 +127,28 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
                       )
                     ],
                   ),
-                  AnimatedTextKit(
-                    key: ValueKey<String>(
-                        "points${_totalSteps}"), // Unique key per widget
-                    isRepeatingAnimation: false,
-                    animatedTexts: [
-                      TyperAnimatedText(
-                        '${(_totalSteps * 0.2).round()} points',
-                        textStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w300,
-                          color: colors.primaryFixed,
-                        ),
-                      )
-                    ],
-                  ),
+                  StreamBuilder<bool>(
+                      stream: dashboardController.balanceHiddenStream,
+                      builder: (context, snapshot) {
+                        final bool isHidden = snapshot.data ?? false;
+                        return AnimatedTextKit(
+                          key: ValueKey<String>(
+                              "points${_totalSteps}${isHidden}"), // Unique key per widget
+                          isRepeatingAnimation: false,
+                          animatedTexts: [
+                            TyperAnimatedText(
+                              isHidden
+                                  ? '***** finpoints'
+                                  : '${(_totalSteps * 0.2).round()} finpoints',
+                              textStyle: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w300,
+                                color: colors.primaryFixed,
+                              ),
+                            )
+                          ],
+                        );
+                      }),
                 ],
               ),
               ValueListenableBuilder(
@@ -174,78 +183,85 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
             ],
           ),
         ),
-        Container(
-          height: 200,
-          margin: EdgeInsets.only(top: 10),
-          child: SfCartesianChart(
-            margin: EdgeInsets.all(0),
-            plotAreaBorderWidth: 0,
-            primaryXAxis: NumericAxis(
-              labelStyle: TextStyle(color: Colors.transparent),
-            ),
-            primaryYAxis: NumericAxis(
-              majorGridLines: MajorGridLines(width: 0),
-              isVisible: false,
-            ),
-            onTrackballPositionChanging: (trackballArgs) {
-              final point = trackballArgs.chartPointInfo.chartPoint;
-              if (point != null) {
-                final position = {
-                  'x': point.x as int,
-                  'y': (point.y ?? 0) as int
-                };
-
-                if (trackballPositionNotifier.value != position) {
-                  trackballPositionNotifier.value = position;
-                }
-              }
-            },
-            onChartTouchInteractionDown: (tapArgs) {
-              setState(() {
-                isTrackballVisible = true;
-              });
-            },
-            onChartTouchInteractionUp: (tapArgs) {
-              setState(() {
-                isTrackballVisible = false;
-                trackballPositionNotifier.value = {'x': null, 'y': null};
-              });
-            },
-            trackballBehavior: TrackballBehavior(
-                enable: true,
-                activationMode: ActivationMode.longPress,
-                tooltipSettings: InteractiveTooltip(
-                  enable: false,
-                ),
-                markerSettings: TrackballMarkerSettings(
-                  markerVisibility: TrackballVisibilityMode.hidden,
-                ),
-                lineType: TrackballLineType.vertical),
-            series: <ColumnSeries<MapEntry<int, int>, int>>[
-              ColumnSeries<MapEntry<int, int>, int>(
-                dataSource: widget.stepsData[constructDailyTimestamp(
-                            DateTime.now()
-                                .subtract(Duration(days: _daysAgo)))] !=
-                        null
-                    ? widget
-                        .stepsData[constructDailyTimestamp(
-                            DateTime.now().subtract(Duration(days: _daysAgo)))]!
-                        .entries
-                        .toList()
-                    : [for (int i = 0; i < 24; i++) MapEntry(i, 0)],
-                animationDuration: 300,
-                xValueMapper: (MapEntry<int, int> data, _) => data.key,
-                yValueMapper: (MapEntry<int, int> data, _) => data.value,
-                color: colors.secondary,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(4), topRight: Radius.circular(4)),
-                width: 0.95,
-                borderWidth: 0,
-                borderColor: colors.secondary,
+        Builder(builder: (context) {
+          if (widget.isLoading == true) {
+            return loadingSteps(context);
+          }
+          return Container(
+            height: 200,
+            margin: EdgeInsets.only(top: 10),
+            child: SfCartesianChart(
+              margin: EdgeInsets.all(0),
+              plotAreaBorderWidth: 0,
+              primaryXAxis: NumericAxis(
+                labelStyle: TextStyle(color: Colors.transparent),
               ),
-            ],
-          ),
-        ),
+              primaryYAxis: NumericAxis(
+                majorGridLines: MajorGridLines(width: 0),
+                isVisible: false,
+              ),
+              onTrackballPositionChanging: (trackballArgs) {
+                final point = trackballArgs.chartPointInfo.chartPoint;
+                if (point != null) {
+                  final position = {
+                    'x': point.x as int,
+                    'y': (point.y ?? 0) as int
+                  };
+
+                  if (trackballPositionNotifier.value != position) {
+                    trackballPositionNotifier.value = position;
+                  }
+                }
+              },
+              onChartTouchInteractionDown: (tapArgs) {
+                setState(() {
+                  isTrackballVisible = true;
+                });
+              },
+              onChartTouchInteractionUp: (tapArgs) {
+                setState(() {
+                  isTrackballVisible = false;
+                  trackballPositionNotifier.value = {'x': null, 'y': null};
+                });
+              },
+              trackballBehavior: TrackballBehavior(
+                  enable: true,
+                  activationMode: ActivationMode.longPress,
+                  tooltipSettings: InteractiveTooltip(
+                    enable: false,
+                  ),
+                  markerSettings: TrackballMarkerSettings(
+                    markerVisibility: TrackballVisibilityMode.hidden,
+                  ),
+                  lineColor: colors.tertiaryContainer,
+                  lineType: TrackballLineType.vertical),
+              series: <ColumnSeries<MapEntry<int, int>, int>>[
+                ColumnSeries<MapEntry<int, int>, int>(
+                  dataSource: widget.stepsData[constructDailyTimestamp(
+                              DateTime.now()
+                                  .subtract(Duration(days: _daysAgo)))] !=
+                          null
+                      ? widget
+                          .stepsData[constructDailyTimestamp(DateTime.now()
+                              .subtract(Duration(days: _daysAgo)))]!
+                          .entries
+                          .toList()
+                      : [for (int i = 0; i < 24; i++) MapEntry(i, 0)],
+                  animationDuration: 300,
+                  xValueMapper: (MapEntry<int, int> data, _) => data.key,
+                  yValueMapper: (MapEntry<int, int> data, _) => data.value,
+                  color: colors.secondary,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(4),
+                      topRight: Radius.circular(4)),
+                  width: 0.95,
+                  borderWidth: 0,
+                  borderColor: colors.secondary,
+                ),
+              ],
+            ),
+          );
+        }),
       ],
     );
   }
@@ -271,4 +287,21 @@ Widget daySelector(
       ),
     ),
   ));
+}
+
+Widget loadingSteps(BuildContext context) {
+  return Container(
+      margin: EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING, vertical: 24),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: List.generate(10, (index) {
+          final Random random = Random();
+          return random.nextInt(150) + 50;
+        }).map((el) {
+          return UniversalLoaderBox(
+              height: el.toDouble(),
+              width: MediaQuery.sizeOf(context).width / 10 - 10);
+        }).toList(),
+      ));
 }

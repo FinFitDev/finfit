@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:excerbuys/components/animated_balance.dart';
 import 'package:excerbuys/components/shared/indicators/ellipse/ellipse_painter.dart';
+import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -42,38 +43,108 @@ class _BalanceContainerState extends State<BalanceContainer> {
 
     return Container(
       width: MediaQuery.sizeOf(context).width,
-      height: MediaQuery.sizeOf(context).height - 100,
-      color: colors.primaryFixed,
-      child: Stack(
-        children: [
-          Positioned(child: RiveAnimation.asset('assets/rive/blobs.riv')),
-          Container(
-            width: MediaQuery.sizeOf(context).width,
-            padding: EdgeInsets.only(
-                left: HORIZOTAL_PADDING * 2,
-                right: HORIZOTAL_PADDING * 2,
-                top: 180),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                AnimatedBalance(balance: _balance),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'fitness points',
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      fontFamily: 'Quicksand'),
-                ),
-              ],
+      child: Container(
+        width: MediaQuery.sizeOf(context).width,
+        padding: EdgeInsets.only(
+            left: HORIZOTAL_PADDING * 2,
+            right: HORIZOTAL_PADDING * 2,
+            top: 150,
+            bottom: 40),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            StreamBuilder<bool>(
+                stream: dashboardController.balanceHiddenStream,
+                builder: (context, snapshot) {
+                  final bool isHidden = snapshot.data ?? false;
+
+                  return isHidden
+                      ? Text(
+                          '******',
+                          style: TextStyle(color: colors.primary, fontSize: 54),
+                        )
+                      : AnimatedBalance(balance: _balance);
+                }),
+            SizedBox(
+              height: 10,
             ),
-          ),
-        ],
+            Text(
+              'finpoints',
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                  fontFamily: 'Quicksand'),
+            ),
+            SizedBox(
+              height: 50,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                homeTopButton(
+                    context, () {}, 'assets/svg/qrcode.svg', 'Receive'),
+                SizedBox(
+                  width: 20,
+                ),
+                homeTopButton(context, () {}, 'assets/svg/sent.svg', 'Send'),
+                SizedBox(
+                  width: 20,
+                ),
+                StreamBuilder<bool>(
+                    stream: dashboardController.balanceHiddenStream,
+                    builder: (context, snapshot) {
+                      final bool isHidden = snapshot.data ?? false;
+                      return homeTopButton(context, () {
+                        dashboardController.setBalanceHidden(!isHidden);
+                      },
+                          isHidden
+                              ? 'assets/svg/eye.svg'
+                              : 'assets/svg/eye-close.svg',
+                          isHidden ? 'Show' : 'Hide');
+                    }),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
+}
+
+Widget homeTopButton(
+    BuildContext context, void Function() onPressed, String icon, String text) {
+  final colors = Theme.of(context).colorScheme;
+  return RippleWrapper(
+    onPressed: onPressed,
+    child: Column(
+      children: [
+        SizedBox(
+          width: 50,
+          height: 50,
+          child: CustomPaint(
+            painter: EllipsePainter(color: colors.primary.withAlpha(30)),
+            child: Center(
+              child: SvgPicture.asset(
+                icon,
+                colorFilter: ColorFilter.mode(colors.primary, BlendMode.srcIn),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        Text(
+          text,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.w600,
+            fontSize: 13,
+          ),
+        ),
+      ],
+    ),
+  );
 }
