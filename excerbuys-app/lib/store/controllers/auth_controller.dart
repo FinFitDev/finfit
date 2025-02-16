@@ -1,16 +1,13 @@
-import 'dart:convert';
+import 'dart:io';
 
 import 'package:excerbuys/containers/auth_page/login_container.dart';
 import 'package:excerbuys/containers/auth_page/signup_container.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/store/persistence/storage_controller.dart';
-import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
-import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:http/http.dart';
 
 enum AUTH_METHOD { LOGIN, SIGNUP }
 
@@ -29,7 +26,7 @@ class AuthController {
   String get accessToken => _accessToken.value;
   setAccessToken(String val) {
     _accessToken.add(val);
-    storageController.saveState('access_token', val);
+    storageController.saveStateLocal('access_token', val);
   }
 
   // refresh token state
@@ -38,15 +35,15 @@ class AuthController {
   String get refreshToken => _refreshToken.value;
   setRefreshToken(String val) {
     _refreshToken.add(val);
-    storageController.saveState('refresh_token', val);
+    storageController.saveStateLocal('refresh_token', val);
   }
 
   restoreAuthStateFromStorage() async {
     try {
       final String? accessToken =
-          await storageController.loadState('access_token');
+          await storageController.loadStateLocal(ACCESS_TOKEN_KEY);
       final String? refreshToken =
-          await storageController.loadState('refresh_token');
+          await storageController.loadStateLocal(REFRESH_TOKEN_KEY);
       if (accessToken != null && accessToken.isNotEmpty) {
         setAccessToken(accessToken);
       }
@@ -61,7 +58,7 @@ class AuthController {
   Future<Map<LOGIN_FIELD_TYPE, String?>?> logIn(
       String login, String password) async {
     try {
-      dynamic res = await BackendUtils.handleBackendRequests(
+      dynamic res = await handleBackendRequests(
           method: HTTP_METHOD.POST,
           endpoint: 'auth/login',
           body: {"login": login, "password": password});
@@ -100,7 +97,7 @@ class AuthController {
   Future<Map<SIGNUP_FIELD_TYPE, String?>?> signUp(
       String username, String email, String password) async {
     try {
-      dynamic res = await BackendUtils.handleBackendRequests(
+      dynamic res = await handleBackendRequests(
           method: HTTP_METHOD.POST,
           endpoint: 'auth/signup',
           body: {"username": username, "password": password, "email": email});
@@ -129,7 +126,7 @@ class AuthController {
   Future<bool> logOut() async {
     try {
       final String refreshToken = authController.refreshToken;
-      dynamic res = await BackendUtils.handleBackendRequests(
+      dynamic res = await handleBackendRequests(
           method: HTTP_METHOD.POST,
           endpoint: 'auth/logout',
           body: {"refresh_token": refreshToken});
@@ -153,10 +150,15 @@ class AuthController {
 
   Future<String?> useGoogleAuth(String id_token) async {
     try {
-      dynamic res = await BackendUtils.handleBackendRequests(
+      dynamic res = await handleBackendRequests(
           method: HTTP_METHOD.POST,
           endpoint: 'auth/googleAuth',
-          body: {"id_token": id_token});
+          body: {
+            "id_token": id_token,
+            "platform": Platform.isIOS
+                ? 'ios'
+                : 'android' // different backend token for platforms
+          });
 
       if (res['error'] != null) {
         // should not reach here

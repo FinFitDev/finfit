@@ -3,7 +3,6 @@ import 'package:excerbuys/store/controllers/auth_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/types/user.dart';
-import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -16,14 +15,16 @@ class LoadingPage extends StatefulWidget {
 
 class _LoadingPageState extends State<LoadingPage> {
   void loadApp() async {
+    await appController.getDeviceId();
+    await appController.getInstallTimestamp();
     await appController.restoreStateFromStorage();
     final String refreshToken = authController.refreshToken;
     final User? currentUser = userController.currentUser;
 
     if (refreshToken.isNotEmpty && currentUser != null) {
-      GeneralUtils.navigateWithClear(route: '/');
+      navigateWithClear(route: '/');
     } else {
-      GeneralUtils.navigateWithClear(route: '/login');
+      navigateWithClear(route: '/welcome');
     }
   }
 

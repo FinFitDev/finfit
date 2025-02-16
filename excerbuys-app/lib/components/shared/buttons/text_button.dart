@@ -1,4 +1,3 @@
-import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextButton extends StatelessWidget {
@@ -18,8 +17,8 @@ class CustomTextButton extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
+        color: Colors.transparent,
         height: 60,
-        color: colors.primary,
         child: Center(
           child: Text(
             text,

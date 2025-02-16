@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedBalance extends StatefulWidget {
@@ -11,31 +12,41 @@ class AnimatedBalance extends StatefulWidget {
 }
 
 class _AnimatedBalanceState extends State<AnimatedBalance> {
+  // numbers in the new balance
   List<String> _newBalanceChars = [];
+  // a list of differences between each number in changed balance
   List<int?> _charDifferences = [];
+  // flag to disable animation during calculations
   bool _isStopAnimating = true;
-  Color _textColor = Colors.black;
-  double centerBalance = 0;
-  double letterHeight = 92;
+  // animation timeout
   Timer? timeouutId;
+  // styles
+  Color _textColor = Colors.white;
+  double centerBalance = 0;
+  double letterHeight = 77;
+  double letterWidth = 34;
 
+  // splits a string into chars
   List<String> getTextChars(int value, int length) {
     return value.toString().padLeft(length, '0').split("");
   }
 
+  // generates a list filled with values in a given range
   List<String> generateRange(int start, int end) {
     return List<String>.generate(
         end - start + 1, (index) => (start + index).toString());
   }
 
+  // generates pairs of characters on each place in a string
   List<List<String?>> getCharsPairs(int oldValue, int newValue) {
     int maxLength = max(oldValue.toString().length, newValue.toString().length);
     List<String> oldChars = getTextChars(oldValue, maxLength);
     List<String> newChars = getTextChars(newValue, maxLength);
 
-// trim leading zeroes
+    // trim leading zeroes
     newChars = int.parse(newChars.join('')).toString().split("");
     oldChars = oldChars.sublist(oldChars.length - newChars.length);
+
     setState(() {
       _newBalanceChars = newChars;
     });
@@ -43,6 +54,7 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
     List<String> oldCharsReversed = oldChars.reversed.toList();
     List<String> newCharsReversed = newChars.reversed.toList();
 
+    // generate pairs from the last place in a string to avoid length issues
     final List<List<String?>> charPairs = oldCharsReversed
         .asMap()
         .map((idx, item) {
@@ -56,6 +68,7 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
     return charPairs;
   }
 
+  // calculates differences in each char pair
   List<int?> getCharDifferencess(List<List<String?>> charPairs) {
     final List<int?> differences = charPairs.reversed.map((element) {
       if (element[0] == null || element[1] == null) {
@@ -68,43 +81,48 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
 
   @override
   void didUpdateWidget(covariant AnimatedBalance oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    setState(() {
-      _isStopAnimating = true;
-      if (oldWidget.balance < widget.balance) {
-        _textColor = Colors.green;
+    if (oldWidget.balance != widget.balance) {
+      setState(() {
+        _isStopAnimating = true;
+        if (oldWidget.balance < widget.balance) {
+          _textColor = Theme.of(context).colorScheme.secondary;
+        }
+
+        if (oldWidget.balance > widget.balance) {
+          _textColor = Color(0xFFFA6161);
+        }
+      });
+      final List<List<String?>> charPairs =
+          getCharsPairs(oldWidget.balance, widget.balance);
+
+      final List<int?> differences = getCharDifferencess(charPairs);
+      setState(() {
+        _charDifferences = differences;
+      });
+
+      if (timeouutId != null) {
+        timeouutId!.cancel();
       }
 
-      if (oldWidget.balance > widget.balance) {
-        _textColor = Colors.red;
-      }
-    });
-    final List<List<String?>> charPairs =
-        getCharsPairs(oldWidget.balance, widget.balance);
+      // animation handler
+      timeouutId = Timer(
+          Duration(
+              milliseconds:
+                  max(calculateMaxDuration(differences) * 120, 400) + 200), () {
+        setState(() {
+          _textColor = Colors.white;
+        });
+      });
 
-    final List<int?> differences = getCharDifferencess(charPairs);
-    setState(() {
-      _charDifferences = differences;
-    });
-
-    if (timeouutId != null) {
-      timeouutId!.cancel();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          // Re-enable animation for the next transition
+          _isStopAnimating = false;
+        });
+      });
     }
-    timeouutId = Timer(
-        Duration(
-            milliseconds:
-                max(calculateMaxDuration(differences) * 120, 400) + 200), () {
-      setState(() {
-        _textColor = Colors.black;
-      });
-    });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        // Re-enable animation for the next transition
-        _isStopAnimating = false;
-      });
-    });
+    super.didUpdateWidget(oldWidget);
   }
 
   int calculateMaxDuration(List<int?> differences) {
@@ -116,17 +134,24 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
 
   @override
   void dispose() {
-    super.dispose();
     if (timeouutId != null) {
       timeouutId!.cancel();
     }
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    // initial char pairs generation
+    getCharsPairs(widget.balance, widget.balance);
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: _newBalanceChars.length * 38,
-      height: 92,
+      width: _newBalanceChars.length * letterWidth,
+      height: letterHeight,
       child: Stack(children: [
         ..._newBalanceChars
             .asMap()
@@ -165,8 +190,8 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
                         milliseconds: _isStopAnimating
                             ? 0
                             : max(400, (difference.abs() * 120))),
-                    width: 38,
-                    left: idx * 38,
+                    width: letterWidth,
+                    left: idx * letterWidth,
                     bottom: positionBottom,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -175,10 +200,10 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
                         return Text(
                           item,
                           style: TextStyle(
-                              fontSize: 64,
-                              color: difference != 0
-                                  ? _textColor
-                                  : Colors.black), // Style digits as needed
+                              fontFamily: 'Quicksand',
+                              fontSize: 54,
+                              color:
+                                  difference != 0 ? _textColor : Colors.white),
                         );
                       }).toList(),
                     ),
@@ -186,29 +211,6 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
             })
             .values
             .toList(),
-        Container(
-          width: _newBalanceChars.length * 38,
-          height: 0,
-          decoration: BoxDecoration(boxShadow: [
-            BoxShadow(
-                color: Theme.of(context).colorScheme.primary,
-                blurRadius: 10,
-                spreadRadius: 10)
-          ]),
-        ),
-        Positioned(
-          bottom: -1,
-          child: Container(
-            width: _newBalanceChars.length * 38,
-            height: 0,
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                  color: Theme.of(context).colorScheme.primary,
-                  blurRadius: 10,
-                  spreadRadius: 10)
-            ]),
-          ),
-        )
       ]),
     );
   }

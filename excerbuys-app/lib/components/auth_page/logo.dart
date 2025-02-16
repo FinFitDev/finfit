@@ -6,24 +6,22 @@ class Logo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            'excerbuys',
+            'finfit',
             style: TextStyle(
-                fontFamily: 'Blinker',
+                fontFamily: 'BrunoAce',
                 fontSize: 48,
                 color: Theme.of(context).colorScheme.tertiary,
                 letterSpacing: 5),
           ),
           Container(
-            margin: EdgeInsets.only(left: 50),
             child: Text(
               'Fitness is your currency',
               style: TextStyle(
-                  fontFamily: 'Blinker',
+                  fontFamily: 'BrunoAce',
                   fontSize: 14,
                   color: Theme.of(context).colorScheme.secondary,
                   letterSpacing: 3),

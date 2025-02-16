@@ -1,5 +1,9 @@
 import { ErrorWithCode } from "../../../exceptions/errorWithCode";
-import { fetchUserById, updatePointsScore } from "../../../models/userModel";
+import {
+  fetchUserById,
+  updatePointsScore,
+  updatePointsScoreWithUpdateTimestamp,
+} from "../../../models/userModel";
 import { IUserNoPassword } from "../../../shared/types";
 
 export const getUserById = async (user_id: number) => {
@@ -14,9 +18,21 @@ export const getUserById = async (user_id: number) => {
 
 export const updateUserPointsScore = async (
   user_id: number,
-  points: number,
-  updated_at: string
+  points: number
 ) => {
-  const response = await updatePointsScore(user_id, points, updated_at);
+  const response = await updatePointsScore(user_id, points);
+  return response.command;
+};
+
+export const updateUserPointsScoreWithUpdateTimestamp = async (
+  user_id: number,
+  points: number,
+  steps_updated_at: string
+) => {
+  const response = await updatePointsScoreWithUpdateTimestamp(
+    user_id,
+    points,
+    steps_updated_at
+  );
   return response.command;
 };

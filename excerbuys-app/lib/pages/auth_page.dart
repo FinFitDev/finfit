@@ -1,12 +1,10 @@
 import 'package:excerbuys/components/auth_page/buttons_switch.dart';
 import 'package:excerbuys/components/auth_page/logo.dart';
-import 'package:excerbuys/components/input_with_icon.dart';
-import 'package:excerbuys/components/shared/buttons/text_button.dart';
 import 'package:excerbuys/containers/auth_page/login_container.dart';
 import 'package:excerbuys/containers/auth_page/signup_container.dart';
 import 'package:excerbuys/store/controllers/auth_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
-import 'package:excerbuys/wrappers/ripple_wrapper.dart';
+import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -28,15 +26,34 @@ class _AuthPageState extends State<AuthPage> {
                 constraints: BoxConstraints(minHeight: height),
                 child: IntrinsicHeight(
                   child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 35, horizontal: 20),
+                      padding: EdgeInsets.only(
+                          top: 15 + layoutController.statusBarHeight,
+                          bottom: 15 + layoutController.bottomPadding,
+                          left: HORIZOTAL_PADDING,
+                          right: HORIZOTAL_PADDING),
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Column(
-                              children: [Logo(), ButtonSwitch()],
-                            ),
+                            Row(children: [
+                              IconButton(
+                                  onPressed: () {
+                                    if (Navigator.canPop(context)) {
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                  icon: SvgPicture.asset(
+                                      'assets/svg/arrowBack.svg',
+                                      height: 30,
+                                      colorFilter: ColorFilter.mode(
+                                          Theme.of(context)
+                                              .colorScheme
+                                              .tertiary,
+                                          BlendMode.srcIn))),
+                            ]),
+                            Container(
+                                margin: EdgeInsets.symmetric(vertical: 60),
+                                child: Logo()),
                             Expanded(
                                 child: StreamBuilder<Object>(
                                     stream:

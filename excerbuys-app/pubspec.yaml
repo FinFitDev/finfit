@@ -42,6 +42,12 @@ dependencies:
   flutter_spinkit: ^5.2.1
   shared_preferences: ^2.3.2
   google_sign_in: ^6.2.2
+  intl: ^0.18.0
+  syncfusion_flutter_charts: ^28.1.36
+  rive: ^0.13.20
+  animated_text_kit: ^4.2.3
+  flutter_secure_storage: ^9.2.4
+  uuid: ^4.5.1
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +73,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/svg/
+    - assets/rive/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -96,6 +103,10 @@ flutter:
       fonts:
         - asset: assets/fonts/Blinker-Regular.ttf
 
+    - family: BrunoAce
+      fonts:
+        - asset: assets/fonts/BrunoAce-Regular.ttf
+
     - family: Poppins
       fonts:
         - asset: assets/fonts/Poppins-Thin.ttf
@@ -114,6 +125,7 @@ flutter:
           weight: 700
         - asset: assets/fonts/Poppins-ExtraBold.ttf
           weight: 800
+
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

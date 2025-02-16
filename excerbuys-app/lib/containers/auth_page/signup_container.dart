@@ -2,9 +2,7 @@ import 'package:excerbuys/components/input_with_icon.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
-import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 enum SIGNUP_FIELD_TYPE { USERNAME, EMAIL, PASSWORD, PASSWORD_REPEAT }
 
@@ -50,7 +48,7 @@ class _SignupContainerState extends State<SignupContainer> {
                 : null,
         SIGNUP_FIELD_TYPE.EMAIL: email.isEmpty
             ? 'Email is required'
-            : !GeneralConstants.EMAIL_REGEX.hasMatch(email)
+            : !EMAIL_REGEX.hasMatch(email)
                 ? 'Email invalid'
                 : null,
         SIGNUP_FIELD_TYPE.PASSWORD: password.isEmpty
@@ -96,7 +94,7 @@ class _SignupContainerState extends State<SignupContainer> {
       }
 
       if (context.mounted) {
-        GeneralUtils.navigateWithClear(route: '/', context: context);
+        navigateWithClear(route: '/', context: context);
       }
     } catch (error) {
       return;

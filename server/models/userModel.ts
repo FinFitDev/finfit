@@ -2,7 +2,7 @@ import { pool } from "../shared/utils/db";
 
 export const fetchAllUsers = async (limit: number, offset: number) => {
   const response = await pool.query(
-    "SELECT id, username, email, image, created_at, points, updated_at FROM users LIMIT $1 OFFSET $2",
+    "SELECT id, username, email, image, created_at, points, steps_updated_at FROM users LIMIT $1 OFFSET $2",
     [limit, offset]
   );
 
@@ -15,7 +15,7 @@ export const fetchUsersByRegex = async (
   offset: number
 ) => {
   const response = await pool.query(
-    "SELECT id, username, email, image, created_at, points, updated_at FROM users u WHERE LIKE(u.username, $1) OR LIKE(u.email, $1) LIMIT $2 OFFSET $3",
+    "SELECT id, username, email, image, created_at, points, steps_updated_at FROM users u WHERE LIKE(u.username, $1) OR LIKE(u.email, $1) LIMIT $2 OFFSET $3",
     [regex, limit, offset]
   );
 
@@ -24,7 +24,7 @@ export const fetchUsersByRegex = async (
 
 export const fetchUserById = async (id: number) => {
   const response = await pool.query(
-    "SELECT id, username, email, image, created_at, points, updated_at FROM users WHERE users.id = $1",
+    "SELECT id, username, email, image, created_at, points, steps_updated_at FROM users WHERE users.id = $1",
     [id]
   );
 
@@ -85,14 +85,23 @@ export const fetchUserByUsernameOrEmail = async (login: string) => {
   return response;
 };
 
-export const updatePointsScore = async (
+export const updatePointsScore = async (user_id: number, points: number) => {
+  const response = await pool.query(
+    "UPDATE users SET points = points + $1 WHERE id = $2;",
+    [points, user_id]
+  );
+
+  return response;
+};
+
+export const updatePointsScoreWithUpdateTimestamp = async (
   user_id: number,
   points: number,
-  updated_at: string
+  steps_updated_at: string
 ) => {
   const response = await pool.query(
-    "UPDATE users SET points = $1, updated_at = $2 WHERE id = $3;",
-    [points, updated_at, user_id]
+    "UPDATE users SET points = points + $1, steps_updated_at = $2 WHERE id = $3;",
+    [points, steps_updated_at, user_id]
   );
 
   return response;
