@@ -51,7 +51,6 @@ authRouter.post(
   async (req: RequestWithPayload<{ refresh_token: string }>, res: Response) => {
     try {
       const refresh_token = req.body.refresh_token;
-
       const access_token = await regenerateAccessTokenFromRefreshToken(
         refresh_token
       );
@@ -105,7 +104,10 @@ authRouter.post(
 
 authRouter.post(
   "/googleAuth",
-  async (req: RequestWithPayload<{ id_token: string, platform: string }>, res: Response) => {
+  async (
+    req: RequestWithPayload<{ id_token: string; platform: string }>,
+    res: Response
+  ) => {
     try {
       const { id_token, platform } = req.body;
       const response = await verifyGoogleAuth(id_token, platform);

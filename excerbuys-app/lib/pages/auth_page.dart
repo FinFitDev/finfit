@@ -1,4 +1,3 @@
-import 'package:excerbuys/components/auth_page/buttons_switch.dart';
 import 'package:excerbuys/components/auth_page/logo.dart';
 import 'package:excerbuys/containers/auth_page/login_container.dart';
 import 'package:excerbuys/containers/auth_page/signup_container.dart';

@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:intl/intl.dart';
 
 String weekDayToName(int weekday) {
@@ -18,6 +16,38 @@ String weekDayToName(int weekday) {
       return 'Saturday';
     case 7:
       return 'Sunday';
+    default:
+      return 'Unknown';
+  }
+}
+
+String monthToName(int month) {
+  switch (month) {
+    case 1:
+      return 'January';
+    case 2:
+      return 'February';
+    case 3:
+      return 'March';
+    case 4:
+      return 'April';
+    case 5:
+      return 'May';
+    case 6:
+      return 'June';
+    case 7:
+      return 'July';
+    case 8:
+      return 'August';
+    case 9:
+      return 'September';
+    case 10:
+      return 'October';
+    case 11:
+      return 'November';
+    case 12:
+      return 'December';
+
     default:
       return 'Unknown';
   }
@@ -66,6 +96,24 @@ String getDayName(int daysAgo) {
   final DateTime now = DateTime.now();
   final DateTime nDaysAgo = now.subtract(Duration(days: daysAgo));
   return weekDayToName(nDaysAgo.weekday);
+}
+
+String getDayNumber(int daysAgo) {
+  final DateTime now = DateTime.now();
+  final DateTime nDaysAgo = now.subtract(Duration(days: daysAgo));
+  return nDaysAgo.day.toString();
+}
+
+String getDayMonth(int daysAgo) {
+  final DateTime now = DateTime.now();
+  final DateTime nDaysAgo = now.subtract(Duration(days: daysAgo));
+  return monthToName(nDaysAgo.month);
+}
+
+String getDayYear(int daysAgo) {
+  final DateTime now = DateTime.now();
+  final DateTime nDaysAgo = now.subtract(Duration(days: daysAgo));
+  return nDaysAgo.year.toString();
 }
 
 String convertHourAmPm(int hour) {

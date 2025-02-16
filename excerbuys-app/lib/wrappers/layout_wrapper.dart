@@ -97,7 +97,7 @@ class _LayoutWrapperState extends State<LayoutWrapper>
     return AnimatedBuilder(
         animation: _gradientController,
         builder: (context, _) {
-          return Container(
+          return SizedBox(
               height: MediaQuery.sizeOf(context).height,
               // color: Theme.of(context).colorScheme.secondary.withAlpha(40),
               child: widget.child);

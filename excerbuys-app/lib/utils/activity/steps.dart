@@ -72,7 +72,7 @@ Map<int, int> divideStepsIntoHours(List<HealthDataPoint> data) {
   // create a map of steps for each hour
   Map<int, int> hourlySteps = {for (int i = 0; i < 24; i++) i: 0};
 
-  data.forEach((dataPoint) {
+  for (var dataPoint in data) {
     final int key = dataPoint.dateFrom.hour;
     if (hourlySteps.containsKey(key)) {
       hourlySteps[key] = (hourlySteps[key]! +
@@ -82,7 +82,7 @@ Map<int, int> divideStepsIntoHours(List<HealthDataPoint> data) {
       hourlySteps[key] =
           (dataPoint.value as NumericHealthValue).numericValue.round();
     }
-  });
+  }
 
   return hourlySteps;
 }

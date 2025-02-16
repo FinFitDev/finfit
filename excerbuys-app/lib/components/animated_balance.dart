@@ -149,68 +149,62 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: _newBalanceChars.length * letterWidth,
       height: letterHeight,
       child: Stack(children: [
-        ..._newBalanceChars
-            .asMap()
-            .map((idx, element) {
-              int difference = 0;
-              if (idx < _charDifferences.length &&
-                  _charDifferences[idx] != null) {
-                difference = _charDifferences[idx]!;
-              }
+        ..._newBalanceChars.asMap().map((idx, element) {
+          int difference = 0;
+          if (idx < _charDifferences.length && _charDifferences[idx] != null) {
+            difference = _charDifferences[idx]!;
+          }
 
-              List<String> rangeList = generateRange(
-                  min(int.parse(element), int.parse(element) - difference),
-                  max(int.parse(element), int.parse(element) - difference));
+          List<String> rangeList = generateRange(
+              min(int.parse(element), int.parse(element) - difference),
+              max(int.parse(element), int.parse(element) - difference));
 
-              if (difference == 0) {
-                rangeList = [element];
-              }
-              rangeList = rangeList.reversed.toList();
+          if (difference == 0) {
+            rangeList = [element];
+          }
+          rangeList = rangeList.reversed.toList();
 
-              double positionBottom = centerBalance;
-              if (_isStopAnimating) {
-                positionBottom = difference >= 0
-                    ? centerBalance
-                    : centerBalance - (difference.abs() * letterHeight);
-              } else {
-                positionBottom = difference <= 0
-                    ? centerBalance
-                    : centerBalance - (difference.abs() * letterHeight);
-              }
+          double positionBottom = centerBalance;
+          if (_isStopAnimating) {
+            positionBottom = difference >= 0
+                ? centerBalance
+                : centerBalance - (difference.abs() * letterHeight);
+          } else {
+            positionBottom = difference <= 0
+                ? centerBalance
+                : centerBalance - (difference.abs() * letterHeight);
+          }
 
-              return MapEntry(
-                  idx,
-                  AnimatedPositioned(
-                    curve: Curves.decelerate,
-                    duration: Duration(
-                        milliseconds: _isStopAnimating
-                            ? 0
-                            : max(400, (difference.abs() * 120))),
-                    width: letterWidth,
-                    left: idx * letterWidth,
-                    bottom: positionBottom,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: rangeList.map((item) {
-                        return Text(
-                          item,
-                          style: TextStyle(
-                              fontFamily: 'Quicksand',
-                              fontSize: 54,
-                              color:
-                                  difference != 0 ? _textColor : Colors.white),
-                        );
-                      }).toList(),
-                    ),
-                  ));
-            })
-            .values
-            .toList(),
+          return MapEntry(
+              idx,
+              AnimatedPositioned(
+                curve: Curves.decelerate,
+                duration: Duration(
+                    milliseconds: _isStopAnimating
+                        ? 0
+                        : max(400, (difference.abs() * 120))),
+                width: letterWidth,
+                left: idx * letterWidth,
+                bottom: positionBottom,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: rangeList.map((item) {
+                    return Text(
+                      item,
+                      style: TextStyle(
+                          fontFamily: 'Quicksand',
+                          fontSize: 54,
+                          color: difference != 0 ? _textColor : Colors.white),
+                    );
+                  }).toList(),
+                ),
+              ));
+        }).values,
       ]),
     );
   }

@@ -44,7 +44,9 @@ class _MainButtonState extends State<MainButton> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final texts = Theme.of(context).textTheme;
+
+    return SizedBox(
       height: 60,
       child: TextButton(
         onPressed: widget.isDisabled != null && widget.isDisabled!
@@ -64,16 +66,12 @@ class _MainButtonState extends State<MainButton> with TickerProviderStateMixin {
                 controller:
                     _animationController, // Use the initialized controller
               )
-            : Text(
-                widget.label,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
+            : Text(widget.label,
+                style: texts.headlineLarge?.copyWith(
                   color: widget.isDisabled == true
                       ? widget.textColor.withAlpha(155)
                       : widget.textColor,
-                ),
-              ),
+                )),
       ),
     );
   }

@@ -1,10 +1,6 @@
-import 'package:excerbuys/components/dashboard_page/home_page/activity_card/activity_card.dart';
-import 'package:excerbuys/containers/dashboard_page/home_page/recent_training_section.dart';
-import 'package:excerbuys/components/dashboard_page/home_page/activity_card/steps_activity_card.dart';
 import 'package:excerbuys/components/loaders/universal_loader_box.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/types/activity.dart';
-import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class RecentActivityContainer extends StatefulWidget {

@@ -13,6 +13,7 @@ class CustomTextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
+    final texts = Theme.of(context).textTheme;
 
     return GestureDetector(
       onTap: onPressed,
@@ -22,10 +23,9 @@ class CustomTextButton extends StatelessWidget {
         child: Center(
           child: Text(
             text,
-            style: TextStyle(
-                color: isActive ? colors.secondary : colors.tertiary,
-                fontSize: 16,
-                fontWeight: FontWeight.w500),
+            style: texts.headlineMedium?.copyWith(
+              color: isActive ? colors.secondary : colors.tertiary,
+            ),
           ),
         ),
       ),

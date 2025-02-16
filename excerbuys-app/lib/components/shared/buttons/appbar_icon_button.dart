@@ -45,10 +45,10 @@ class AppbarIconButton extends StatelessWidget {
             Text(
               name,
               style: TextStyle(
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
                   color: isActive == true
                       ? Theme.of(context).colorScheme.secondary
-                      : Theme.of(context).colorScheme.primaryFixedDim,
+                      : Theme.of(context).colorScheme.tertiaryContainer,
                   fontSize: 12),
             )
           ],

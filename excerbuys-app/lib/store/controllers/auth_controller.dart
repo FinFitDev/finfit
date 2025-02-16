@@ -148,13 +148,13 @@ class AuthController {
     }
   }
 
-  Future<String?> useGoogleAuth(String id_token) async {
+  Future<String?> useGoogleAuth(String idToken) async {
     try {
       dynamic res = await handleBackendRequests(
           method: HTTP_METHOD.POST,
           endpoint: 'auth/googleAuth',
           body: {
-            "id_token": id_token,
+            "id_token": idToken,
             "platform": Platform.isIOS
                 ? 'ios'
                 : 'android' // different backend token for platforms

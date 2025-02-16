@@ -28,9 +28,9 @@ class StepsController {
     final now = DateTime.now();
     final lastUpdated = userController.currentUser?.stepsUpdatedAt ?? now;
     final Duration difference = now.difference(lastUpdated);
-    final Duration minDifference = Duration(days: 3);
+    final Duration minDifference = Duration(days: 6);
 
-// Use the larger of the two: the actual difference or 3 days
+// Use the larger of the two: the actual difference or 6 days
     final Duration limitedDifference =
         difference < minDifference ? minDifference : difference;
 
@@ -44,7 +44,7 @@ class StepsController {
       );
       healthData = Health().removeDuplicates(healthData);
 
-      final Map<String, HealthDataPoint> healthDataMap = Map();
+      final Map<String, HealthDataPoint> healthDataMap = {};
       for (var el in healthData) {
         healthDataMap[el.uuid] = el;
       }
@@ -61,7 +61,7 @@ class StepsController {
       addUserSteps(finalStepsDataInHours);
       setStepsLoading(false);
 
-      int pointsToAdd = newSteps.length > 0
+      int pointsToAdd = newSteps.isNotEmpty
           ? newSteps
               .map((point) =>
                   ((point.value as NumericHealthValue).numericValue * 0.2)

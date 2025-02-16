@@ -2,8 +2,6 @@ import 'dart:io';
 import 'package:excerbuys/store/controllers/activity/steps_controller.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
-import 'package:excerbuys/types/activity.dart';
-import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';

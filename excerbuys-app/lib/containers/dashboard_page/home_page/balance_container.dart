@@ -41,7 +41,7 @@ class _BalanceContainerState extends State<BalanceContainer> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
-    return Container(
+    return SizedBox(
       width: MediaQuery.sizeOf(context).width,
       child: Container(
         width: MediaQuery.sizeOf(context).width,

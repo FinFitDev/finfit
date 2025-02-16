@@ -100,9 +100,9 @@ class _LoginContainerState extends State<LoginContainer> {
       if (googleUser != null) {
         final GoogleSignInAuthentication googleAuth =
             await googleUser.authentication;
-        String id_token = googleAuth.idToken!;
+        String idToken = googleAuth.idToken!;
 
-        await widget.useGoogleAuth(id_token);
+        await widget.useGoogleAuth(idToken);
 
         if (context.mounted) {
           navigateWithClear(route: '/');
@@ -120,6 +120,8 @@ class _LoginContainerState extends State<LoginContainer> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
+    final texts = Theme.of(context).textTheme;
+
     final bool isButtonDisabled = _formErrorsState.values
             .any((value) => value != null && value.isNotEmpty) ||
         _formFieldsState.values.any((value) => value.isEmpty);

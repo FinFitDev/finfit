@@ -1,7 +1,5 @@
-import 'package:excerbuys/components/dashboard_page/home_page/activity_card/activity_card_details.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/types/activity.dart';
-import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/home/utils.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
@@ -38,6 +36,8 @@ class _ActivityCardState extends State<ActivityCard> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final texts = Theme.of(context).textTheme;
+
     final ActivityMetadata activityMetadata =
         getActivityMetadata(widget.activityType);
     final color = widget.points >= 0 ? colors.secondary : colors.error;
@@ -68,20 +68,7 @@ class _ActivityCardState extends State<ActivityCard> {
                     padding: EdgeInsets.all(5),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        color: Color.fromARGB(
-                            255,
-                            (colors.secondary.r *
-                                    255 /
-                                    (1 + widget.index * 0.1))
-                                .round(),
-                            (colors.secondary.g *
-                                    255 /
-                                    (1 + widget.index * 0.1))
-                                .round(),
-                            (colors.secondary.b *
-                                    255 /
-                                    (1 + widget.index * 0.1))
-                                .round())),
+                        color: colors.secondary),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -117,14 +104,12 @@ class _ActivityCardState extends State<ActivityCard> {
                             builder: (context, snapshot) {
                               final bool isHidden = snapshot.data ?? false;
                               return Text(
-                                isHidden
-                                    ? '***** finpoints'
-                                    : '${widget.points.abs().toString()} finpoints',
-                                style: TextStyle(
+                                  isHidden
+                                      ? '***** finpoints'
+                                      : '${widget.points.abs().toString()} finpoints',
+                                  style: texts.headlineMedium?.copyWith(
                                     color: color,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              );
+                                  ));
                             }),
                       ),
                       Text(
@@ -138,20 +123,21 @@ class _ActivityCardState extends State<ActivityCard> {
                   Row(
                     children: [
                       Text(
-                        '${convertMillisecondsToMinutes(widget.duration ?? 0).round()} min',
+                        '${convertMillisecondsToMinutes(widget.duration ?? 0).round()} minutes',
                         style: TextStyle(
                           color: colors.tertiaryContainer,
                           fontSize: 13,
                         ),
                       ),
-                      SizedBox(
-                        width: 4,
-                      ),
-                      SvgPicture.asset('assets/svg/clock.svg',
-                          colorFilter: ColorFilter.mode(
-                              colors.tertiaryContainer, BlendMode.srcIn)),
-                      SizedBox(
-                        width: 12,
+
+                      // SvgPicture.asset('assets/svg/clock.svg',
+                      //     colorFilter: ColorFilter.mode(
+                      //         colors.tertiaryContainer, BlendMode.srcIn)),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 8),
+                        width: 0.5,
+                        height: 16,
+                        color: colors.tertiaryContainer,
                       ),
                       Text(
                         '${widget.calories} kcal',
@@ -160,13 +146,11 @@ class _ActivityCardState extends State<ActivityCard> {
                           fontSize: 13,
                         ),
                       ),
-                      SizedBox(
-                        width: 4,
-                      ),
-                      SvgPicture.asset('assets/svg/fire.svg',
-                          colorFilter: ColorFilter.mode(
-                              colors.tertiaryContainer.withAlpha(150),
-                              BlendMode.srcIn))
+
+                      // SvgPicture.asset('assets/svg/fire.svg',
+                      //     colorFilter: ColorFilter.mode(
+                      //         colors.tertiaryContainer.withAlpha(150),
+                      //         BlendMode.srcIn))
                     ],
                   )
                 ],

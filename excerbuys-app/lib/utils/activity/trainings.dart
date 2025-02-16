@@ -71,6 +71,7 @@ Future<String?> saveTrainings(List<ITrainingEntry>? parsedTrainingData) async {
     print('Error saving trainings to database $error');
     rethrow;
   }
+  return null;
 }
 
 Future<List<ITrainingEntry>?> loadTrainings(

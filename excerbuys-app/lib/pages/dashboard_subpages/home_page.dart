@@ -86,7 +86,6 @@ class _HomePageState extends State<HomePage> {
                               // isLoading: true,
                               ),
                           ProgressOffersContainer(),
-
                           StreamBuilder<ContentWithLoading<IStoreStepsData>>(
                               stream: stepsController.userStepsStream,
                               builder: (context, stepsSnapshot) {
@@ -103,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                           StreamBuilder<
                                   ContentWithLoading<
                                       Map<String, ITrainingEntry>>>(
-                              stream: trainingsController.usetTrainingsStream,
+                              stream: trainingsController.userTrainingsStream,
                               builder: (context, snapshot) {
                                 final Map<String, ITrainingEntry> trainings =
                                     snapshot.hasData
@@ -122,9 +121,6 @@ class _HomePageState extends State<HomePage> {
                                         snapshot.data?.isLoading ?? false,
                                     recentTraining: trainings);
                               }),
-                          // GoalsContainer(
-                          //     // isLoading: true,
-                          //     ),
                         ],
                       ),
                     ),

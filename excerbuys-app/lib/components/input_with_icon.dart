@@ -30,6 +30,8 @@ class _InputWithIconState extends State<InputWithIcon> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
+    final TextTheme texts = Theme.of(context).textTheme;
+
     final bool isError = widget.error != null && widget.error!.isNotEmpty;
     final bool isPassword = widget.isPassword ?? false;
 
@@ -60,10 +62,8 @@ class _InputWithIconState extends State<InputWithIcon> {
 
               // Text styles
               cursorColor: iconsColor,
-              style: TextStyle(
-                fontSize: 16,
+              style: texts.headlineMedium?.copyWith(
                 color: isError ? colors.error : colors.tertiary,
-                fontWeight: FontWeight.w400,
               ),
 
               // decorations

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:excerbuys/components/dashboard_page/home_page/activity_card/activity_card_details.dart';
 import 'package:excerbuys/components/loaders/universal_loader_box.dart';
+import 'package:excerbuys/store/controllers/dashboard/history_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
@@ -18,11 +19,13 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 class StepsActivityCard extends StatefulWidget {
   final IStoreStepsData stepsData;
   final bool? isLoading;
+  final int? daysAgo;
 
   const StepsActivityCard({
     super.key,
     required this.stepsData,
     this.isLoading,
+    this.daysAgo,
   });
 
   @override
@@ -31,7 +34,8 @@ class StepsActivityCard extends StatefulWidget {
 
 class _StepsActivityCardState extends State<StepsActivityCard> {
   int _totalSteps = 0;
-  int _daysAgo = 0;
+  List<MapEntry<int, int>> _stepsData = [];
+
   final ValueNotifier<Map<String, int?>> trackballPositionNotifier =
       ValueNotifier({});
   bool isTrackballVisible = false;
@@ -39,7 +43,7 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
   void updateTotalSteps() {
     setState(() {
       final DateTime key = constructDailyTimestamp(
-          DateTime.now().subtract(Duration(days: _daysAgo)));
+          DateTime.now().subtract(Duration(days: widget.daysAgo ?? 0)));
       if (widget.stepsData.containsKey(key)) {
         _totalSteps =
             widget.stepsData[key]!.values.reduce((curr, next) => curr + next);
@@ -49,57 +53,43 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
     });
   }
 
+  void updateStepsData() {
+    setState(() {
+      _stepsData = widget.stepsData[constructDailyTimestamp(DateTime.now()
+                  .subtract(Duration(days: widget.daysAgo ?? 0)))] !=
+              null
+          ? widget
+              .stepsData[constructDailyTimestamp(DateTime.now()
+                  .subtract(Duration(days: widget.daysAgo ?? 0)))]!
+              .entries
+              .toList()
+          : [for (int i = 0; i < 24; i++) MapEntry(i, 0)];
+    });
+  }
+
   @override
   void initState() {
     updateTotalSteps();
+    updateStepsData();
     super.initState();
   }
 
   @override
   void didUpdateWidget(covariant StepsActivityCard oldWidget) {
     updateTotalSteps();
+    updateStepsData();
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final color = colors.secondary;
+    final texts = Theme.of(context).textTheme;
+    final bool isToday = (widget.daysAgo ?? 0) == 0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Container(
-        //   margin: EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING),
-        //   decoration: BoxDecoration(
-        //     borderRadius: BorderRadius.circular(10),
-        //     color: colors.primaryContainer.withAlpha(150),
-        //   ),
-        //   height: 45,
-        //   child: Row(
-        //     crossAxisAlignment: CrossAxisAlignment.stretch,
-        //     children: [
-        //       daySelector(_daysAgo == 0, colors, () {
-        //         setState(() {
-        //           _daysAgo = 0;
-        //         });
-        //         updateTotalSteps();
-        //       }, 'Today'),
-        //       daySelector(_daysAgo == 1, colors, () {
-        //         setState(() {
-        //           _daysAgo = 1;
-        //         });
-        //         updateTotalSteps();
-        //       }, 'Yesterday'),
-        //       daySelector(_daysAgo == 2, colors, () {
-        //         setState(() {
-        //           _daysAgo = 2;
-        //         });
-        //         updateTotalSteps();
-        //       }, getDayName(2)),
-        //     ],
-        //   ),
-        // ),
         Container(
           height: 55,
           margin: EdgeInsets.only(
@@ -114,16 +104,12 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
                 children: [
                   AnimatedTextKit(
                     key: ValueKey<String>(
-                        "steps${_totalSteps}"), // Unique key per widget
+                        "steps$_totalSteps $isToday"), // Unique key per widget
                     isRepeatingAnimation: false,
                     animatedTexts: [
                       TyperAnimatedText(
-                        '$_totalSteps steps today',
-                        textStyle: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: colors.tertiary,
-                        ),
+                        '$_totalSteps steps ${isToday ? 'today' : ''}',
+                        textStyle: texts.headlineLarge,
                       )
                     ],
                   ),
@@ -133,18 +119,15 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
                         final bool isHidden = snapshot.data ?? false;
                         return AnimatedTextKit(
                           key: ValueKey<String>(
-                              "points${_totalSteps}${isHidden}"), // Unique key per widget
+                              "points$_totalSteps$isHidden"), // Unique key per widget
                           isRepeatingAnimation: false,
                           animatedTexts: [
                             TyperAnimatedText(
                               isHidden
                                   ? '***** finpoints'
                                   : '${(_totalSteps * 0.2).round()} finpoints',
-                              textStyle: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w300,
-                                color: colors.primaryFixed,
-                              ),
+                              textStyle: texts.headlineMedium
+                                  ?.copyWith(fontWeight: FontWeight.w300),
                             )
                           ],
                         );
@@ -189,7 +172,8 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
           }
           return Container(
             height: 200,
-            margin: EdgeInsets.only(top: 10),
+            margin: EdgeInsets.only(
+                top: 10, left: HORIZOTAL_PADDING, right: HORIZOTAL_PADDING),
             child: SfCartesianChart(
               margin: EdgeInsets.all(0),
               plotAreaBorderWidth: 0,
@@ -237,16 +221,7 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
                   lineType: TrackballLineType.vertical),
               series: <ColumnSeries<MapEntry<int, int>, int>>[
                 ColumnSeries<MapEntry<int, int>, int>(
-                  dataSource: widget.stepsData[constructDailyTimestamp(
-                              DateTime.now()
-                                  .subtract(Duration(days: _daysAgo)))] !=
-                          null
-                      ? widget
-                          .stepsData[constructDailyTimestamp(DateTime.now()
-                              .subtract(Duration(days: _daysAgo)))]!
-                          .entries
-                          .toList()
-                      : [for (int i = 0; i < 24; i++) MapEntry(i, 0)],
+                  dataSource: _stepsData,
                   animationDuration: 300,
                   xValueMapper: (MapEntry<int, int> data, _) => data.key,
                   yValueMapper: (MapEntry<int, int> data, _) => data.value,
