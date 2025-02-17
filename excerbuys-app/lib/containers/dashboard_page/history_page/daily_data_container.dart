@@ -9,6 +9,7 @@ import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/activity/steps.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class DailyDataContainer extends StatefulWidget {
   const DailyDataContainer({super.key});
@@ -18,10 +19,49 @@ class DailyDataContainer extends StatefulWidget {
 }
 
 class _DailyDataContainerState extends State<DailyDataContainer> {
+  final ScrollController _scrollController = ScrollController();
+  double _lastOffsetForward = 0;
+  double _lastOffsetBackwards = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController.addListener(onScrollDirectionChange);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void onScrollDirectionChange() {
+    if (_scrollController.offset == 0) {
+      historyController.setCategoryHeaderVisible(true);
+    }
+    if (_scrollController.offset > 0) {
+      if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        _lastOffsetForward = _scrollController.offset;
+        if ((_scrollController.offset - _lastOffsetBackwards).abs() > 80) {
+          historyController.setCategoryHeaderVisible(false);
+        }
+      } else if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        _lastOffsetBackwards = _scrollController.offset;
+        if ((_scrollController.offset - _lastOffsetForward).abs() > 80) {
+          historyController.setCategoryHeaderVisible(true);
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.only(top: HORIZOTAL_PADDING),
+      controller: _scrollController,
+      padding: EdgeInsets.only(top: HORIZOTAL_PADDING + 56),
       child: Column(
         children: [
           Calendar(),

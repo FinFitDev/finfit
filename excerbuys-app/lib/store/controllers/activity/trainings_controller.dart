@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 import 'package:rxdart/rxdart.dart';
 
+const TRAINING_DATA_CHUNK_SIZE = 5;
+
 class TrainingsController {
   final BehaviorSubject<ContentWithLoading<Map<String, ITrainingEntry>>>
       _userTrainings = BehaviorSubject.seeded(ContentWithLoading(content: {}));
@@ -20,7 +22,9 @@ class TrainingsController {
       ...userTrainings.content,
       ...activity
     };
-    _userTrainings.add(ContentWithLoading(content: newTrainings));
+    final newData = ContentWithLoading(content: newTrainings);
+    newData.isLoading = userTrainings.isLoading;
+    _userTrainings.add(newData);
   }
 
   setTrainingsLoading(bool loading) {
@@ -28,11 +32,20 @@ class TrainingsController {
     _userTrainings.add(userTrainings);
   }
 
-  final BehaviorSubject<int> _lazyLoadOffset = BehaviorSubject.seeded(0);
-  Stream<int> get lazyLoadOffsetStream => _lazyLoadOffset.stream;
-  int get lazyLoadOffset => _lazyLoadOffset.value;
-  addLazyLoadOffset(int offsetToAdd) {
-    _lazyLoadOffset.add(lazyLoadOffset + offsetToAdd);
+  final BehaviorSubject<ContentWithLoading<int>> _lazyLoadOffset =
+      BehaviorSubject.seeded(ContentWithLoading(content: 0));
+  Stream<ContentWithLoading<int>> get lazyLoadOffsetStream =>
+      _lazyLoadOffset.stream;
+  ContentWithLoading<int> get lazyLoadOffset => _lazyLoadOffset.value;
+  setLazyLoadOffset(int newOffset) {
+    final newData = ContentWithLoading(content: newOffset);
+    newData.isLoading = lazyLoadOffset.isLoading;
+    _lazyLoadOffset.add(newData);
+  }
+
+  setLoadingMoreData(bool loading) {
+    lazyLoadOffset.isLoading = loading;
+    _lazyLoadOffset.add(lazyLoadOffset);
   }
 
   final BehaviorSubject<bool> _canFetchMore = BehaviorSubject.seeded(true);
@@ -43,6 +56,9 @@ class TrainingsController {
   }
 
   Future<void> fetchTrainings() async {
+    setTrainingsLoading(true);
+    setLoadingMoreData(false);
+
     final now = DateTime.now();
     final userCreated = userController.currentUser?.createdAt ?? now;
     final installTimestamp = appController.installTimestamp;
@@ -81,8 +97,9 @@ class TrainingsController {
       }
 
       if (userController.currentUser?.id != null) {
-        parsedTrainingData =
-            await loadTrainings(userController.currentUser!.id, 5, 0) ?? [];
+        parsedTrainingData = await loadTrainings(
+                userController.currentUser!.id, TRAINING_DATA_CHUNK_SIZE, 0) ??
+            [];
 
         Set<String> unique = {};
         parsedTrainingData = parsedTrainingData
@@ -95,14 +112,16 @@ class TrainingsController {
       };
 
       addUserTrainings(values);
-      setTrainingsLoading(false);
 
       // it means we are at the end of the data
-      if (values.length < 5) {
+      if (values.length < TRAINING_DATA_CHUNK_SIZE) {
         setCanFetchMore(false);
       }
+      setLazyLoadOffset(userTrainings.content.length);
     } catch (error) {
       debugPrint("Exception while extracting trainings data: $error");
+    } finally {
+      setTrainingsLoading(false);
     }
   }
 
@@ -111,10 +130,16 @@ class TrainingsController {
       if (userController.currentUser?.id == null) {
         throw Exception('Current user is null');
       }
+      setLoadingMoreData(true);
+      await Future.delayed(Duration(milliseconds: 3000));
 
       List<ITrainingEntry> parsedTrainingData = await loadTrainings(
-              userController.currentUser!.id, 5, lazyLoadOffset) ??
+              userController.currentUser!.id,
+              TRAINING_DATA_CHUNK_SIZE,
+              lazyLoadOffset.content) ??
           [];
+
+      print(parsedTrainingData);
 
       Set<String> unique = {};
       parsedTrainingData = parsedTrainingData
@@ -127,15 +152,17 @@ class TrainingsController {
 
       if (values.isNotEmpty) {
         addUserTrainings(values);
-        addLazyLoadOffset(5);
+        setLazyLoadOffset(userTrainings.content.length);
       }
 
       // it means we are at the end of the data
-      if (values.length < 5) {
+      if (values.length < TRAINING_DATA_CHUNK_SIZE) {
         setCanFetchMore(false);
       }
     } catch (error) {
       debugPrint("Exception while lazy loading more trainings data: $error");
+    } finally {
+      setLoadingMoreData(false);
     }
   }
 }

@@ -26,6 +26,14 @@ class HisotryController {
   setHistoryCategory(HISTORY_CATEGORY category) {
     _historyCategory.add(category);
   }
+
+  final BehaviorSubject<bool> _categoryHeaderVisible =
+      BehaviorSubject.seeded(true);
+  Stream<bool> get categoryHeaderVisibleStream => _categoryHeaderVisible.stream;
+  bool get categoryHeaderVisible => _categoryHeaderVisible.value;
+  setCategoryHeaderVisible(bool isVisible) {
+    _categoryHeaderVisible.add(isVisible);
+  }
 }
 
 HisotryController historyController = HisotryController();

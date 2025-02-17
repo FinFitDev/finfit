@@ -26,71 +26,92 @@ class _RecentPageState extends State<RecentPage> {
             bottom: APPBAR_HEIGHT),
         child: Container(
           padding: EdgeInsets.only(bottom: HORIZOTAL_PADDING),
-          child: Column(
+          child: Stack(
             children: [
+              Column(
+                children: [
+                  // pages
+                  Expanded(
+                    child: StreamBuilder<RECENT_DATA_CATEGORY>(
+                        stream:
+                            historyController.activeCategoryRecentDataStream,
+                        builder: (context, snapshot) {
+                          return IndexedStack(
+                            index: snapshot.data?.index ?? 0,
+                            children: [
+                              DailyDataContainer(),
+                              AllHistoricalContainer()
+                            ],
+                          );
+                        }),
+                  ),
+                ],
+              ),
               // buttons switch between daily data and all historical data
               StreamBuilder<Object>(
                   stream: historyController.activeCategoryRecentDataStream,
                   builder: (context, snapshot) {
-                    return Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: colors.secondary,
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: CategoryButton(
-                              title: 'Daily data',
-                              activeBackgroundColor: colors.primary,
-                              backgroundColor: Colors.transparent,
-                              activeTextColor: colors.secondary,
-                              textColor: colors.primary,
-                              onPressed: () {
-                                historyController.setActiveCategory(
-                                    RECENT_DATA_CATEGORY.DAILY);
-                              },
-                              fontSize: 16,
-                              isActive:
-                                  snapshot.data == RECENT_DATA_CATEGORY.DAILY,
+                    return StreamBuilder<bool>(
+                        stream: historyController.categoryHeaderVisibleStream,
+                        builder: (context, visibleSnapshot) {
+                          return AnimatedPositioned(
+                            duration: Duration(milliseconds: 200),
+                            curve: Curves.decelerate,
+                            top: visibleSnapshot.data == false ? -60 : 0,
+                            height: 56,
+                            width: layoutController.relativeContentWidth,
+                            child: AnimatedOpacity(
+                              duration: Duration(milliseconds: 200),
+                              curve: Curves.decelerate,
+                              opacity: visibleSnapshot.data == false ? 0 : 1,
+                              child: Container(
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: colors.secondary,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: CategoryButton(
+                                        title: 'Daily data',
+                                        activeBackgroundColor: colors.primary,
+                                        backgroundColor: Colors.transparent,
+                                        activeTextColor: colors.secondary,
+                                        textColor: colors.primary,
+                                        onPressed: () {
+                                          historyController.setActiveCategory(
+                                              RECENT_DATA_CATEGORY.DAILY);
+                                        },
+                                        fontSize: 16,
+                                        isActive: snapshot.data ==
+                                            RECENT_DATA_CATEGORY.DAILY,
+                                      ),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Expanded(
+                                      child: CategoryButton(
+                                        title: 'All historical',
+                                        activeBackgroundColor: colors.primary,
+                                        backgroundColor: Colors.transparent,
+                                        activeTextColor: colors.secondary,
+                                        textColor: colors.primary,
+                                        onPressed: () {
+                                          historyController.setActiveCategory(
+                                              RECENT_DATA_CATEGORY
+                                                  .ALL_HISTORICAL);
+                                        },
+                                        fontSize: 16,
+                                        isActive: snapshot.data ==
+                                            RECENT_DATA_CATEGORY.ALL_HISTORICAL,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: CategoryButton(
-                              title: 'All historical',
-                              activeBackgroundColor: colors.primary,
-                              backgroundColor: Colors.transparent,
-                              activeTextColor: colors.secondary,
-                              textColor: colors.primary,
-                              onPressed: () {
-                                historyController.setActiveCategory(
-                                    RECENT_DATA_CATEGORY.ALL_HISTORICAL);
-                              },
-                              fontSize: 16,
-                              isActive: snapshot.data ==
-                                  RECENT_DATA_CATEGORY.ALL_HISTORICAL,
-                            ),
-                          )
-                        ],
-                      ),
-                    );
+                          );
+                        });
                   }),
-
-              // pages
-              Expanded(
-                child: StreamBuilder<RECENT_DATA_CATEGORY>(
-                    stream: historyController.activeCategoryRecentDataStream,
-                    builder: (context, snapshot) {
-                      return IndexedStack(
-                        index: snapshot.data?.index ?? 0,
-                        children: [
-                          DailyDataContainer(),
-                          AllHistoricalContainer()
-                        ],
-                      );
-                    }),
-              ),
             ],
           ),
         ));

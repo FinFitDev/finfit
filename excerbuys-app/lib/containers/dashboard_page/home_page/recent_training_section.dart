@@ -132,7 +132,7 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
                             Expanded(
                               child: Container(
                                 margin: EdgeInsets.only(left: 8),
-                                height: 0.5,
+                                height: 0,
                                 color: colors.tertiaryContainer.withAlpha(100),
                               ),
                             )

@@ -25,6 +25,8 @@ class StepsController {
   }
 
   Future<void> fetchsSteps() async {
+    setStepsLoading(true);
+
     final now = DateTime.now();
     final lastUpdated = userController.currentUser?.stepsUpdatedAt ?? now;
     final Duration difference = now.difference(lastUpdated);
@@ -59,7 +61,6 @@ class StepsController {
 
       final finalStepsDataInHours = groupStepsData(filteredData);
       addUserSteps(finalStepsDataInHours);
-      setStepsLoading(false);
 
       int pointsToAdd = newSteps.isNotEmpty
           ? newSteps
@@ -112,6 +113,8 @@ class StepsController {
       // setTrainingsLoading(false);
     } catch (error) {
       debugPrint("Exception in getHealthDataFromTypes: $error");
+    } finally {
+      setStepsLoading(false);
     }
   }
 }
