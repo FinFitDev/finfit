@@ -37,7 +37,7 @@ class _DailyDataContainerState extends State<DailyDataContainer> {
   }
 
   void onScrollDirectionChange() {
-    if (_scrollController.offset == 0) {
+    if (_scrollController.offset <= 56) {
       historyController.setCategoryHeaderVisible(true);
     }
     if (_scrollController.offset > 0) {

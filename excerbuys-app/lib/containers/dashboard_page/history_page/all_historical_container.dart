@@ -54,7 +54,7 @@ class _AllHistoricalContainerState extends State<AllHistoricalContainer>
   }
 
   void onScrollDirectionChange() {
-    if (_scrollController.offset == 0) {
+    if (_scrollController.offset <= 56) {
       historyController.setCategoryHeaderVisible(true);
     }
 
