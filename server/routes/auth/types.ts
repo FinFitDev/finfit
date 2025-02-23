@@ -13,7 +13,7 @@ export interface IGoogleLoginPayload {
 export interface ILoginResponse {
   access_token: IAccessToken;
   refresh_token: IRefreshToken;
-  user_id: number;
+  user_id: string;
 }
 
 export interface ISignupPayload {

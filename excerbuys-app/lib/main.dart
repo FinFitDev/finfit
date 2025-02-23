@@ -32,6 +32,7 @@ class _HealthAppState extends State<HealthApp> {
                 primaryContainer: Color.fromARGB(255, 247, 247, 247),
                 primaryFixedDim: const Color(0xFF999191),
                 secondary: Color.fromARGB(255, 108, 180, 238),
+                secondaryContainer: Color.fromARGB(255, 7, 66, 114),
                 tertiary: const Color.fromARGB(255, 0, 0, 0),
                 tertiaryContainer: Color.fromARGB(255, 184, 184, 184),
                 error: Color(0xFFFA6161)),

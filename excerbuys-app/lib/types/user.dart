@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
+
 class User {
-  final int id;
+  final String id;
   final String username;
   final String email;
   final DateTime createdAt;
@@ -19,7 +21,7 @@ class User {
   // Factory constructor to create a User from a Map
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      id: int.parse(map['id']),
+      id: map['id'],
       username: map['username'],
       email: map['email'],
       createdAt: DateTime.parse(map['createdAt']),
@@ -43,7 +45,7 @@ class User {
   }
 
   User copyWith({
-    int? id,
+    String? id,
     String? username,
     String? email,
     DateTime? createdAt,
@@ -61,4 +63,26 @@ class User {
       image: image ?? this.image,
     );
   }
+}
+
+// used for profile image generation
+class ShapeModel {
+  final Color color;
+  final double x;
+  final double y;
+  final double w;
+  final double h;
+  final double angle;
+  final CustomPainter Function(Color, double, double, double, double, double)
+      painter;
+
+  ShapeModel({
+    required this.color,
+    required this.x,
+    required this.y,
+    required this.w,
+    required this.h,
+    required this.angle,
+    required this.painter,
+  });
 }

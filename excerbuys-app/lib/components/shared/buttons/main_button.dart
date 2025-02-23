@@ -67,7 +67,7 @@ class _MainButtonState extends State<MainButton> with TickerProviderStateMixin {
                     _animationController, // Use the initialized controller
               )
             : Text(widget.label,
-                style: texts.headlineLarge?.copyWith(
+                style: texts.headlineMedium?.copyWith(
                   color: widget.isDisabled == true
                       ? widget.textColor.withAlpha(155)
                       : widget.textColor,

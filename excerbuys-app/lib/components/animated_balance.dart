@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
+import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedBalance extends StatefulWidget {
@@ -44,7 +45,7 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
     List<String> newChars = getTextChars(newValue, maxLength);
 
     // trim leading zeroes
-    newChars = int.parse(newChars.join('')).toString().split("");
+    newChars = parseInt(newChars.join('')).toString().split("");
     oldChars = oldChars.sublist(oldChars.length - newChars.length);
 
     setState(() {
@@ -74,7 +75,7 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
       if (element[0] == null || element[1] == null) {
         return null;
       }
-      return int.parse(element[1]!) - int.parse(element[0]!);
+      return parseInt(element[1]!) - parseInt(element[0]!);
     }).toList();
     return differences;
   }
@@ -160,8 +161,8 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
           }
 
           List<String> rangeList = generateRange(
-              min(int.parse(element), int.parse(element) - difference),
-              max(int.parse(element), int.parse(element) - difference));
+              min(parseInt(element), parseInt(element) - difference),
+              max(parseInt(element), parseInt(element) - difference));
 
           if (difference == 0) {
             rangeList = [element];

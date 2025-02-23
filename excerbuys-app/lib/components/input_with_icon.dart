@@ -3,21 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class InputWithIcon extends StatefulWidget {
-  final String leftIcon;
+  final String? leftIcon;
+  final String? rightIcon;
+  final void Function()? onPressRightIcon;
   final void Function(String) onChange;
   final String placeholder;
   final String? error;
   final bool? isPassword;
   final bool? disabled;
+  final double? verticalPadding;
+  final double? borderRadius;
 
   const InputWithIcon(
       {super.key,
-      required this.leftIcon,
+      this.leftIcon,
       required this.placeholder,
       required this.onChange,
       this.error,
       this.isPassword,
-      this.disabled});
+      this.disabled,
+      this.rightIcon,
+      this.onPressRightIcon,
+      this.borderRadius,
+      this.verticalPadding});
 
   @override
   State<InputWithIcon> createState() => _InputWithIconState();
@@ -42,9 +50,8 @@ class _InputWithIconState extends State<InputWithIcon> {
             : colors.tertiary;
 
     return Container(
-      padding: const EdgeInsets.only(bottom: 15),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(widget.borderRadius ?? 20),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -72,18 +79,19 @@ class _InputWithIconState extends State<InputWithIcon> {
                   hintStyle: TextStyle(
                       color: colors.tertiaryContainer,
                       fontWeight: FontWeight.w400),
-                  prefixIcon: GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: SvgPicture.asset(
-                        widget.leftIcon,
-                        height: 20,
-                        colorFilter:
-                            ColorFilter.mode(iconsColor, BlendMode.srcIn),
-                      ),
-                    ),
-                  ),
+                  prefixIcon: widget.leftIcon != null
+                      ? GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: SvgPicture.asset(
+                                widget.leftIcon!,
+                                height: 20,
+                                colorFilter: ColorFilter.mode(
+                                    iconsColor, BlendMode.srcIn),
+                              )))
+                      : null,
                   suffixIcon: isPassword && _value.isNotEmpty
                       ? RippleWrapper(
                           onPressed: () {
@@ -104,19 +112,40 @@ class _InputWithIconState extends State<InputWithIcon> {
                             ),
                           ),
                         )
-                      : SizedBox.shrink(),
+                      : widget.rightIcon != null
+                          ? RippleWrapper(
+                              onPressed: () {
+                                widget.onPressRightIcon != null
+                                    ? widget.onPressRightIcon!()
+                                    : null;
+                              },
+                              child: Container(
+                                color: Colors.transparent,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                child: SvgPicture.asset(
+                                  widget.rightIcon!,
+                                  height: 22,
+                                  colorFilter: ColorFilter.mode(
+                                      iconsColor, BlendMode.srcIn),
+                                ),
+                              ),
+                            )
+                          : SizedBox.shrink(),
 
                   // decoration styles
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+                  contentPadding: EdgeInsets.symmetric(
+                      vertical: widget.verticalPadding ?? 18, horizontal: 20),
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius:
+                        BorderRadius.circular(widget.borderRadius ?? 20),
                     borderSide: BorderSide(
                         color: isError ? colors.error : Colors.transparent,
                         width: 1),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius:
+                        BorderRadius.circular(widget.borderRadius ?? 20),
                     borderSide: BorderSide(
                         color: isError ? colors.error : Colors.transparent,
                         width: 1),

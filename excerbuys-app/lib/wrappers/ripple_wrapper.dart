@@ -61,10 +61,16 @@ class _RippleWrapperState extends State<RippleWrapper> {
       }),
       child: Container(
         padding: widget.padding,
-        child: AnimatedOpacity(
-          duration: const Duration(milliseconds: 90),
-          curve: Curves.ease,
-          opacity: isPressed ? (widget.customOpacity ?? 0.8) : 1,
+        child: ShaderMask(
+          shaderCallback: (bounds) => LinearGradient(
+            colors: [
+              Colors.black
+                  .withOpacity(isPressed ? (widget.customOpacity ?? 0.8) : 1),
+              Colors.black
+                  .withOpacity(isPressed ? (widget.customOpacity ?? 0.8) : 1),
+            ],
+          ).createShader(bounds),
+          blendMode: BlendMode.dstIn,
           child: widget.child,
         ),
       ),

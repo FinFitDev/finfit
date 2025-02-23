@@ -1,35 +1,69 @@
 import 'dart:convert';
 
-import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 
 enum HTTP_METHOD { GET, POST, PUT, PATCH, DELETE }
+
+final options = BaseOptions(
+  connectTimeout: Duration(seconds: 10),
+  receiveTimeout: Duration(seconds: 10),
+  validateStatus: (status) {
+    return true;
+  },
+);
+final dio = Dio(options);
 
 Future<dynamic> httpHandler(
     {required String url,
     required HTTP_METHOD method,
     Map<String, String>? headers,
-    Object? body}) async {
+    Object? body,
+    CancelToken? cancelToken}) async {
   final Response? response;
-  Uri parsedUrl = Uri.parse(url);
 
   switch (method) {
     case HTTP_METHOD.POST:
-      response = await post(parsedUrl, headers: headers, body: body);
+      response = await dio.post(url,
+          options: Options(
+            headers: headers,
+          ),
+          data: body,
+          cancelToken: cancelToken);
       break;
     case HTTP_METHOD.PUT:
-      response = await put(parsedUrl, headers: headers, body: body);
+      response = await dio.put(url,
+          options: Options(
+            headers: headers,
+          ),
+          data: body,
+          cancelToken: cancelToken);
       break;
     case HTTP_METHOD.PATCH:
-      response = await patch(parsedUrl, headers: headers, body: body);
+      response = await dio.patch(url,
+          options: Options(
+            headers: headers,
+          ),
+          data: body,
+          cancelToken: cancelToken);
       break;
     case HTTP_METHOD.DELETE:
-      response = await delete(parsedUrl, headers: headers, body: body);
+      response = await dio.delete(url,
+          options: Options(
+            headers: headers,
+          ),
+          data: body,
+          cancelToken: cancelToken);
       break;
     case HTTP_METHOD.GET:
     // if method isnt passed we should use the get protocol
     default:
-      response = await get(parsedUrl, headers: headers);
+      response = await dio.get(url,
+          options: Options(
+            headers: headers,
+          ),
+          cancelToken: cancelToken);
       break;
   }
-  return jsonDecode(response.body);
+
+  return response.data;
 }

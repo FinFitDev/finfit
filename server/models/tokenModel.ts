@@ -9,10 +9,10 @@ import { pool } from "../shared/utils/db";
 import jwt from "jsonwebtoken";
 
 export interface ITokenData {
-  user_id: number;
+  user_id: string;
 }
 
-export const generateAccessToken = (user_id: number): IAccessToken => {
+export const generateAccessToken = (user_id: string): IAccessToken => {
   const token_data: ITokenData = {
     user_id,
   };
@@ -21,7 +21,7 @@ export const generateAccessToken = (user_id: number): IAccessToken => {
   });
 };
 
-export const generateRefreshToken = (user_id: number): IRefreshToken => {
+export const generateRefreshToken = (user_id: string): IRefreshToken => {
   const token_data: ITokenData = {
     user_id,
   };
@@ -30,7 +30,7 @@ export const generateRefreshToken = (user_id: number): IRefreshToken => {
 
 export const insertRefreshToken = async (
   refresh_token: IRefreshToken,
-  user_id: number
+  user_id: string
 ) => {
   try {
     await deleteExistingRefreshToken(user_id);
@@ -46,7 +46,7 @@ export const insertRefreshToken = async (
   }
 };
 
-export const deleteExistingRefreshToken = async (user_id: number) => {
+export const deleteExistingRefreshToken = async (user_id: string) => {
   const response = await pool.query(
     "DELETE FROM refresh_tokens rt WHERE rt.user_id = $1",
     [user_id]

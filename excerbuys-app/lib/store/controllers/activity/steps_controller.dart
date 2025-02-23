@@ -30,13 +30,13 @@ class StepsController {
     final now = DateTime.now();
     final lastUpdated = userController.currentUser?.stepsUpdatedAt ?? now;
     final Duration difference = now.difference(lastUpdated);
-    final Duration minDifference = Duration(days: 6);
+//     final Duration minDifference = Duration(days: 6);
 
-// Use the larger of the two: the actual difference or 6 days
-    final Duration limitedDifference =
-        difference < minDifference ? minDifference : difference;
+// // Use the larger of the two: the actual difference or 6 days
+//     final Duration limitedDifference =
+//         difference < minDifference ? minDifference : difference;
 
-    final prev = now.subtract(limitedDifference);
+    final prev = now.subtract(difference);
 
     try {
       List<HealthDataPoint> healthData = await Health().getHealthDataFromTypes(
@@ -54,16 +54,17 @@ class StepsController {
       final filteredData = filterOverlappingSteps(
           healthDataMap, trainingsController.userTrainings.content);
 
-      // steps that are not awarded yet
-      final newSteps = filteredData.values
-          .where((entry) => entry.dateFrom.compareTo(lastUpdated) > 0)
-          .toList();
+      // // steps that are not awarded yet
+      // final newSteps = filteredData.values
+      //     .where((entry) => entry.dateFrom.compareTo(lastUpdated) > 0)
+      //     .toList();
 
       final finalStepsDataInHours = groupStepsData(filteredData);
       addUserSteps(finalStepsDataInHours);
 
-      int pointsToAdd = newSteps.isNotEmpty
-          ? newSteps
+      int pointsToAdd = filteredData.isNotEmpty
+          ? filteredData.values
+              .toList()
               .map((point) =>
                   ((point.value as NumericHealthValue).numericValue * 0.2)
                       .round())

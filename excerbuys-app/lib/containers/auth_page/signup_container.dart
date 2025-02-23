@@ -129,6 +129,9 @@ class _SignupContainerState extends State<SignupContainer> {
             },
             error: _formErrorsState[SIGNUP_FIELD_TYPE.USERNAME],
           ),
+          SizedBox(
+            height: 16,
+          ),
           InputWithIcon(
             leftIcon: 'assets/svg/email.svg',
             placeholder: 'Email',
@@ -139,6 +142,9 @@ class _SignupContainerState extends State<SignupContainer> {
               });
             },
             error: _formErrorsState[SIGNUP_FIELD_TYPE.EMAIL],
+          ),
+          SizedBox(
+            height: 16,
           ),
           InputWithIcon(
             leftIcon: 'assets/svg/padlock.svg',
@@ -152,6 +158,9 @@ class _SignupContainerState extends State<SignupContainer> {
             error: _formErrorsState[SIGNUP_FIELD_TYPE.PASSWORD],
             isPassword: true,
           ),
+          SizedBox(
+            height: 16,
+          ),
           InputWithIcon(
             leftIcon: 'assets/svg/padlock.svg',
             placeholder: 'Repeat password',
@@ -163,6 +172,9 @@ class _SignupContainerState extends State<SignupContainer> {
             },
             error: _formErrorsState[SIGNUP_FIELD_TYPE.PASSWORD_REPEAT],
             isPassword: true,
+          ),
+          SizedBox(
+            height: 16,
           ),
         ]),
         MainButton(

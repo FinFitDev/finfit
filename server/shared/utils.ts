@@ -59,6 +59,50 @@ export const aggregateDailyDataObject = (data: IHourlyStepEntry[]) => {
   }, {});
 };
 
+export function generateSeed(): string {
+  const random = Math.random;
+  const backgroundColor = `0xFF${randomLightColor()}`;
+  const shapeParts: string[] = [];
+
+  // Generate a random type between 0 and 2
+  const type = Math.floor(random() * 3);
+
+  // Generate 5 shape parts
+  for (let i = 0; i < 5; i++) {
+    const color = `0xFF${randomColor()}`; // Random color for shape
+    const x = Math.floor(random() * 50); // Random x coordinate between 0 and 50
+    const y = Math.floor(random() * 50); // Random y coordinate between 0 and 50
+    const width = Math.floor(random() * 21) + (60 - i * 10); // Random width between 20 and 100
+    const height = Math.floor(random() * 21) + (60 - i * 10); // Random height between 20 and 100
+    const angle = Math.floor(random() * 361); // Random angle between 0 and 360
+
+    // Construct the shape part
+    const shapePart = `${color}_${x}_${y}_${width}_${height}_${angle}`;
+
+    shapeParts.push(shapePart);
+  }
+
+  return `${type}_${backgroundColor}-${shapeParts.join("-")}`;
+}
+
+function randomColor(): string {
+  const r = Math.floor(Math.random() * 150);
+  const g = Math.floor(Math.random() * 150);
+  const b = Math.floor(Math.random() * 150);
+  return toHex(r) + toHex(g) + toHex(b);
+}
+
+function randomLightColor(): string {
+  const r = Math.floor(Math.random() * 50) + 200;
+  const g = Math.floor(Math.random() * 50) + 200;
+  const b = Math.floor(Math.random() * 50) + 200;
+  return toHex(r) + toHex(g) + toHex(b);
+}
+
+function toHex(num: number): string {
+  return num.toString(16).padStart(2, "0");
+}
+
 // export function convertObjectToDBTuple<T extends Record<string, any>>(data:T[]){
 //   return data.reduce((acc, obj) => {
 //     const sortedObj = Object.keys(obj)

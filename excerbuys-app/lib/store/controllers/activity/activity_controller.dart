@@ -86,7 +86,8 @@ class ActivityController {
       print('Health connect unauthorized');
       return;
     }
-    // await userController.fetchCurrentUser('11');
+    // await userController
+    //     .fetchCurrentUser('87cbd492-b626-4db6-b5b8-690577e36810');
     await trainingsController.fetchTrainings();
     await stepsController.fetchsSteps();
     userController.addUserBalance(totalPointsToAdd);

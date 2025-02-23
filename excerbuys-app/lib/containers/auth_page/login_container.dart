@@ -132,7 +132,7 @@ class _LoginContainerState extends State<LoginContainer> {
         children: [
           Column(children: [
             InputWithIcon(
-              leftIcon: 'assets/svg/profile.svg',
+              leftIcon: 'assets/svg/login.svg',
               placeholder: 'Login',
               onChange: (String val) {
                 setState(() {
@@ -142,6 +142,9 @@ class _LoginContainerState extends State<LoginContainer> {
               },
               error: _formErrorsState[LOGIN_FIELD_TYPE.LOGIN],
               disabled: _loading,
+            ),
+            SizedBox(
+              height: 16,
             ),
             InputWithIcon(
               leftIcon: 'assets/svg/padlock.svg',
@@ -158,6 +161,9 @@ class _LoginContainerState extends State<LoginContainer> {
             ),
             loginOptions(colors),
           ]),
+          SizedBox(
+            height: 16,
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [

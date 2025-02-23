@@ -78,7 +78,7 @@ String padPriceDecimals(double price) {
   String? main = parts[0];
   String? decimals = parts[1];
 
-  if (decimals.isNotEmpty && int.parse(decimals) != 0) {
+  if (decimals.isNotEmpty && parseInt(decimals) != 0) {
     if (decimals.length > 2) {
       decimals = decimals.substring(0, 2);
     }
@@ -129,3 +129,21 @@ String convertHourAmPm(int hour) {
 double convertMillisecondsToMinutes(int milliseconds) {
   return milliseconds / 1000 / 60;
 }
+
+// String encodeBase36(String input) {
+//   BigInt num = BigInt.zero;
+//   for (int i = 0; i < input.length; i++) {
+//     num = num * BigInt.from(256) + BigInt.from(input.codeUnitAt(i));
+//   }
+//   return num.toRadixString(36);
+// }
+
+// String decodeBase36(String base36) {
+//   BigInt num = BigInt.parse(base36, radix: 36);
+//   List<int> bytes = [];
+//   while (num > BigInt.zero) {
+//     bytes.insert(0, (num % BigInt.from(256)).toInt());
+//     num = num ~/ BigInt.from(256);
+//   }
+//   return String.fromCharCodes(bytes);
+// }

@@ -17,7 +17,7 @@ class ITrainingEntry {
   final String uuid;
   final int points;
   final String type;
-  final int userId;
+  final String userId;
   final int duration;
   final DateTime createdAt;
   final int? calories;
@@ -49,7 +49,7 @@ class ITrainingEntry {
 
 class IHourlyStepsEntry {
   final int total;
-  final int userId;
+  final String userId;
   final DateTime timestamp;
   final String uuid;
 

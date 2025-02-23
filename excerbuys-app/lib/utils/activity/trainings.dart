@@ -17,7 +17,7 @@ List<HealthDataPoint> filterTrainings(List<HealthDataPoint> healthData) {
 List<ITrainingEntry>? convertTrainingsToRequest(
     List<HealthDataPoint> elements) {
   final List<ITrainingEntry> result = [];
-  final int? userId = userController.currentUser?.id;
+  final String? userId = userController.currentUser?.id;
   try {
     if (userId == null) {
       throw Exception('Not authorized');
@@ -75,7 +75,7 @@ Future<String?> saveTrainings(List<ITrainingEntry>? parsedTrainingData) async {
 }
 
 Future<List<ITrainingEntry>?> loadTrainings(
-    int userId, int? limit, int? offset) async {
+    String userId, int? limit, int? offset) async {
   final List<ITrainingEntry> result = [];
   try {
     final res = await handleBackendRequests(
@@ -93,7 +93,7 @@ Future<List<ITrainingEntry>?> loadTrainings(
         uuid: el['uuid'],
         points: parseInt(el['points']),
         type: el['type'],
-        userId: parseInt(el['user_id']),
+        userId: el['user_id'],
         duration: parseInt(el['duration']),
         calories: parseInt(el['calories']),
         distance: parseInt(el['distance']),

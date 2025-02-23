@@ -66,7 +66,7 @@ class UserController {
       }
 
       final User user = User(
-          id: int.parse(content['id']),
+          id: content['id'],
           email: content['email'],
           username: content['username'],
           createdAt: DateTime.parse(content['created_at']).toLocal(),
@@ -86,7 +86,7 @@ class UserController {
   Future<bool> updateUserPointsScore(int pointsToAdd) async {
     if (currentUser != null && pointsToAdd > 0) {
       final bool updateResult =
-          await updatePointsScore(currentUser!.id.toString(), pointsToAdd);
+          await updatePointsScore(currentUser!.id, pointsToAdd);
 
       return updateResult;
     } else {
@@ -97,7 +97,7 @@ class UserController {
   Future<bool> updateUserPointsScoreAndTimestamp(int pointsToAdd) async {
     if (currentUser != null && pointsToAdd > 0) {
       final bool updateResult = await updatePointsScoreWithUpdateTimestamp(
-          currentUser!.id.toString(), pointsToAdd);
+          currentUser!.id, pointsToAdd);
 
       if (updateResult) {
         setUserUpdatedAt(DateTime.now());

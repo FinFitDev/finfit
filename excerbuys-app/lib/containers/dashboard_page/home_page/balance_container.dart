@@ -2,12 +2,19 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:excerbuys/components/animated_balance.dart';
-import 'package:excerbuys/components/shared/indicators/ellipse/ellipse_painter.dart';
+import 'package:excerbuys/components/shared/indicators/canvas/ellipse_painter.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/qrcode_modal.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/send/qrscanner_modal.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/send/send_modal.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller.dart';
+import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/wrappers/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:rive/rive.dart';
 
 class BalanceContainer extends StatefulWidget {
@@ -83,12 +90,17 @@ class _BalanceContainerState extends State<BalanceContainer> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                homeTopButton(
-                    context, () {}, 'assets/svg/qrcode.svg', 'Receive'),
+                homeTopButton(context, () {
+                  if (userController.currentUser?.id != null) {
+                    openModal(context, QrcodeModal());
+                  }
+                }, 'assets/svg/qrcode.svg', 'Receive'),
                 SizedBox(
                   width: 20,
                 ),
-                homeTopButton(context, () {}, 'assets/svg/sent.svg', 'Send'),
+                homeTopButton(context, () {
+                  openModal(context, SendModal());
+                }, 'assets/svg/sent.svg', 'Send'),
                 SizedBox(
                   width: 20,
                 ),
@@ -124,7 +136,13 @@ Widget homeTopButton(
           width: 50,
           height: 50,
           child: CustomPaint(
-            painter: EllipsePainter(color: colors.primary.withAlpha(30)),
+            painter: EllipsePainter(
+                color: colors.primary.withAlpha(30),
+                w: 50,
+                h: 50,
+                x: 0,
+                y: 0,
+                angle: 0),
             child: Center(
               child: SvgPicture.asset(
                 icon,

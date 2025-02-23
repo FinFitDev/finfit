@@ -1,12 +1,13 @@
 import { ErrorWithCode } from "../../../exceptions/errorWithCode";
 import {
   fetchUserById,
+  fetchUsersByRegex,
   updatePointsScore,
   updatePointsScoreWithUpdateTimestamp,
 } from "../../../models/userModel";
 import { IUserNoPassword } from "../../../shared/types";
 
-export const getUserById = async (user_id: number) => {
+export const getUserById = async (user_id: string) => {
   const foundUser = await fetchUserById(user_id);
 
   if (foundUser.rowCount && foundUser.rowCount > 0)
@@ -16,8 +17,22 @@ export const getUserById = async (user_id: number) => {
   }
 };
 
+export const getUsersBySearch = async (
+  search: string,
+  limit: number,
+  offset: number
+) => {
+  const foundUsers = await fetchUsersByRegex(search, limit, offset);
+
+  if (foundUsers.rowCount && foundUsers.rowCount > 0)
+    return foundUsers.rows as IUserNoPassword[];
+  else {
+    throw new ErrorWithCode(`No users found with search ${search}`, 404);
+  }
+};
+
 export const updateUserPointsScore = async (
-  user_id: number,
+  user_id: string,
   points: number
 ) => {
   const response = await updatePointsScore(user_id, points);
@@ -25,7 +40,7 @@ export const updateUserPointsScore = async (
 };
 
 export const updateUserPointsScoreWithUpdateTimestamp = async (
-  user_id: number,
+  user_id: string,
   points: number,
   steps_updated_at: string
 ) => {
