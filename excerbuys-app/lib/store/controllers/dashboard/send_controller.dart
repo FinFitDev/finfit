@@ -1,68 +1,68 @@
+import 'dart:collection';
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
-import 'package:excerbuys/store/controllers/activity/activity_controller.dart';
-import 'package:excerbuys/store/controllers/app_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
-import 'package:excerbuys/types/activity.dart';
+import 'package:excerbuys/store/persistence/storage_controller.dart';
+import 'package:excerbuys/store/selectors/send.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/user.dart';
-import 'package:excerbuys/utils/activity/trainings.dart';
+import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/home/send.dart';
 import 'package:flutter/material.dart';
-import 'package:health/health.dart';
 import 'package:rxdart/rxdart.dart';
-
-const TRAINING_DATA_CHUNK_SIZE = 5;
 
 class SendController {
   CancelToken cancelToken = CancelToken();
 
   final BehaviorSubject<ContentWithLoading<Map<String, User>>> _userList =
       BehaviorSubject.seeded(ContentWithLoading(content: {}));
-  Stream<ContentWithLoading<Map<String, User>>> get userListStream =>
-      _userList.stream.map((data) {
-        final sortedContent = Map.fromEntries(data.content.entries.toList()
-          ..sort((a, b) => a.value.username.compareTo(b.value.username)));
 
-        return data.copyWith(content: sortedContent);
-      });
+  Stream<ContentWithLoading<Map<String, User>>> get userListStream =>
+      _userList.stream;
 
   ContentWithLoading<Map<String, User>> get userList => _userList.value;
 
   Stream<ContentWithLoading<Map<String, User>>> get usersForSearchStream =>
-      _userList.stream.map((data) {
-        final Map<String, User> filteredContent = {
-          for (var entry in data.content.entries.where((user) {
-            if (user.key == userController.currentUser?.id) {
-              return false;
-            }
-            if (searchValue == null || searchValue!.isEmpty) {
-              return true;
-            }
-
-            return user.value.username
-                .toLowerCase()
-                .contains(searchValue!.toLowerCase());
-          }))
-            entry.key: entry.value
-        };
-
-        return data.copyWith(content: filteredContent);
-      });
+      Rx.combineLatest3(userListStream, searchValueStream,
+          recentRecipientsIdsStream, getUsersForSearch);
 
   Stream<ContentWithLoading<Map<String, User>>> get selectedUsersStream =>
-      _userList.stream.map((data) {
-        final Map<String, User> filteredContent = {
-          for (var entry in data.content.entries.where((user) {
-            if (user.key == userController.currentUser?.id) {
-              return false;
-            }
-            return chosenUsersIds.contains(user.value.id);
-          }))
-            entry.key: entry.value
-        };
+      Rx.combineLatest2(userListStream, chosenUsersIdsStream, getSelectedUsers);
 
-        return data.copyWith(content: filteredContent);
-      });
+  final BehaviorSubject<String?> _searchValue = BehaviorSubject.seeded(null);
+  Stream<String?> get searchValueStream => _searchValue.stream;
+  String? get searchValue => _searchValue.value;
+
+// for optimization (dont fetch the same endpoint multiple times)
+  final BehaviorSubject<List<String>> _alreadyFetchedQueries =
+      BehaviorSubject.seeded([]);
+  List<String> get alreadyFetchedQueries => _alreadyFetchedQueries.value;
+
+  final BehaviorSubject<List<String>> _chosenUsersIds =
+      BehaviorSubject.seeded([]);
+  Stream<List<String>> get chosenUsersIdsStream => _chosenUsersIds.stream;
+  List<String> get chosenUsersIds => _chosenUsersIds.value;
+
+  final BehaviorSubject<List<String>> _recentRecipientsIds =
+      BehaviorSubject.seeded([]);
+  Stream<List<String>> get recentRecipientsIdsStream =>
+      _recentRecipientsIds.stream;
+  List<String> get recentRecipientsIds => _recentRecipientsIds.value;
+
+  final BehaviorSubject<int?> _amount = BehaviorSubject.seeded(null);
+  Stream<int?> get amountStream => _amount.stream;
+  int? get amount => _amount.value;
+
+  Stream<int> get totalAmountStream =>
+      Rx.combineLatest2(chosenUsersIdsStream, amountStream, getTotalAmount);
+
+  resetUi() {
+    _amount.add(null);
+    _searchValue.add(null);
+    _chosenUsersIds.add([]);
+  }
 
   clearUserList() {
     final ContentWithLoading<Map<String, User>> newData =
@@ -87,22 +87,17 @@ class SendController {
     _userList.add(userList);
   }
 
-  final BehaviorSubject<String?> _searchValue = BehaviorSubject.seeded(null);
-  Stream<String?> get searchValueStream => _searchValue.stream;
-  String? get searchValue => _searchValue.value;
-
   // its debounced so we can fetch on update
   setSearchValue(String? value) {
     if (userList.isLoading) cancelToken.cancel();
-    _searchValue.add(value);
+    _searchValue.add(value != null && value.isEmpty ? null : value);
     cancelToken = CancelToken();
     fetchUsersForSearch();
   }
 
-  final BehaviorSubject<List<String>> _chosenUsersIds =
-      BehaviorSubject.seeded([]);
-  Stream<List<String>> get chosenUsersIdsStream => _chosenUsersIds.stream;
-  List<String> get chosenUsersIds => _chosenUsersIds.value;
+  setAmount(int? amount) {
+    _amount.add(amount);
+  }
 
   proccessSelectUser(String userId) {
     if (chosenUsersIds.contains(userId)) {
@@ -112,15 +107,86 @@ class SendController {
     }
   }
 
+  addFetchedQuery(String query) {
+    if (!alreadyFetchedQueries.contains(query)) {
+      _alreadyFetchedQueries.add([...alreadyFetchedQueries, query]);
+    }
+  }
+
+  setRecentRecipientsIds(List<String> ids) {
+    _recentRecipientsIds.add(ids);
+  }
+
+  loadRecentRecipients() async {
+    final response =
+        await storageController.loadStateLocal(RECENT_RECIPIENTS_KEY);
+    if (response != null) {
+      final Map<String, User> userMap = {
+        for (final user
+            in (jsonDecode(response) as Map<String, dynamic>).entries)
+          user.key: UserItem.fromMap(jsonDecode(user.value)).user
+      };
+
+      if (userMap.isNotEmpty) {
+        addUsersToList(userMap);
+        setRecentRecipientsIds(userMap.keys.toList());
+      }
+    }
+    setListLoading(false);
+  }
+
+  saveRecentRecipients() async {
+    final Map<String, User> currentSelected =
+        (await selectedUsersStream.first).content;
+
+    final response =
+        await storageController.loadStateLocal(RECENT_RECIPIENTS_KEY);
+
+    Map<String, UserItem> fromStorage = {};
+    if (response != null) {
+      fromStorage = {
+        for (final user
+            in (jsonDecode(response) as Map<String, dynamic>).entries)
+          user.key: UserItem.fromMap(jsonDecode(user.value))
+      };
+    }
+
+    final mergedMap = {
+      ...currentSelected.map((key, value) => MapEntry(
+          key,
+          UserItem(
+              user: value,
+              timestamp: DateTime.now()))), // Assign timestamp to new users
+      ...fromStorage
+    };
+
+    final sortedEntries = mergedMap.entries.toList()
+      ..sort((a, b) => b.value.timestamp.compareTo(a.value.timestamp));
+
+    final Map<String, UserItem> userMap = {
+      for (var entry in [...sortedEntries.take(10)]) entry.key: entry.value
+    };
+
+    if (userMap.isNotEmpty) {
+      await storageController.saveStateLocal(
+          RECENT_RECIPIENTS_KEY,
+          jsonEncode({
+            for (var user in userMap.entries) user.key: user.value.toString()
+          }));
+    }
+  }
+
   Future<void> fetchUsersForSearch() async {
-    if (searchValue == null || searchValue!.isEmpty) {
+    if (searchValue == null ||
+        searchValue!.isEmpty ||
+        alreadyFetchedQueries.contains((searchValue))) {
       return;
     }
 
     setListLoading(true);
     try {
       List<User> foundUsers =
-          await loadUsers(searchValue!, 8, 0, cancelToken) ?? [];
+          await loadUsers(searchValue!, 10, 0, cancelToken) ?? [];
 
       Set<String> unique = {};
       foundUsers =
@@ -131,6 +197,8 @@ class SendController {
       };
 
       addUsersToList(values);
+      // we only add the query if it was successful
+      addFetchedQuery(searchValue!);
     } catch (error) {
       debugPrint("Exception while fetching users data: $error");
     } finally {
@@ -152,6 +220,26 @@ class SendController {
       debugPrint("Exception while fetching users data: $error");
     } finally {
       setListLoading(false);
+    }
+  }
+
+  Future<void> sendPoints() async {
+    try {
+      final totalAmount = await totalAmountStream.first;
+      if (userController.currentUser?.id == null ||
+          chosenUsersIds.isEmpty ||
+          totalAmount <= 0) {
+        throw 'Invalid data';
+      }
+
+      int? remainingPoints = await resolveSendPoints(
+          userController.currentUser!.id, chosenUsersIds, totalAmount);
+
+      if (remainingPoints != null) {
+        userController.setUserBalance(remainingPoints.toDouble());
+      }
+    } catch (error) {
+      debugPrint("Exception while sending points: $error");
     }
   }
 }

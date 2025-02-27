@@ -1,8 +1,6 @@
 import 'package:excerbuys/components/loaders/universal_loader_box.dart';
 import 'package:excerbuys/store/controllers/dashboard/send_controller.dart';
 import 'package:excerbuys/types/user.dart';
-import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -142,9 +140,7 @@ Widget emptyList(String query, ColorScheme colors, TextTheme texts) {
       style: texts.headlineMedium
           ?.copyWith(color: colors.tertiaryContainer), // Default style
       children: [
-        TextSpan(
-          text: 'No results for query ',
-        ),
+        TextSpan(text: 'No results for query '),
         TextSpan(
           text: query,
           style: texts.headlineMedium

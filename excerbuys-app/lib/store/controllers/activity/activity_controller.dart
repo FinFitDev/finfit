@@ -64,6 +64,17 @@ class ActivityController {
     setHealthSdkStatus(status ?? HealthConnectSdkStatus.sdkUnavailable);
   }
 
+  final BehaviorSubject<double> _todaysPoints = BehaviorSubject.seeded(0);
+  Stream<double> get todaysPointsStream => _todaysPoints.stream;
+  double get todaysPoints => _todaysPoints.value;
+  addTodaysPoints(double toAdd) {
+    _todaysPoints.add(todaysPoints + toAdd);
+  }
+
+  setTodaysPoints(double points) {
+    _todaysPoints.add(points);
+  }
+
   final BehaviorSubject<double> _totalPointsToAdd = BehaviorSubject.seeded(0);
   Stream<double> get totalPointsToAddStream => _totalPointsToAdd.stream;
   double get totalPointsToAdd => _totalPointsToAdd.value;
@@ -87,7 +98,7 @@ class ActivityController {
       return;
     }
     // await userController
-    //     .fetchCurrentUser('87cbd492-b626-4db6-b5b8-690577e36810');
+    //     .fetchCurrentUser('afd90984-17ec-456b-a735-0be89e48300f');
     await trainingsController.fetchTrainings();
     await stepsController.fetchsSteps();
     userController.addUserBalance(totalPointsToAdd);

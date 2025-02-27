@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:excerbuys/store/persistence/storage_controller.dart';
 import 'package:excerbuys/store/selectors/user.dart';
@@ -16,7 +17,7 @@ class UserController {
   setCurrentUser(User? user) {
     if (user != null) {
       _currentUser.add(user);
-      storageController.saveStateLocal('current_user', user.toString());
+      storageController.saveStateLocal(CURRENT_USER_KEY, user.toString());
     }
   }
 
@@ -31,6 +32,13 @@ class UserController {
   addUserBalance(double toAdd) {
     if (currentUser != null) {
       setCurrentUser(currentUser!.copyWith(points: (userBalance ?? 0) + toAdd));
+    }
+  }
+
+  subtractUserBalance(double toSubtract) {
+    if (currentUser != null) {
+      setCurrentUser(currentUser!
+          .copyWith(points: max(0, (userBalance ?? 0) - toSubtract)));
     }
   }
 

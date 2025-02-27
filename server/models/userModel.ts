@@ -110,3 +110,57 @@ export const updatePointsScoreWithUpdateTimestamp = async (
 
   return response;
 };
+
+export const transferPointsTransaction = async (
+  userId: string,
+  recipientsIds: string[],
+  totalAmount: number,
+  fractionAmount: number
+) => {
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    const remainingPoints = await client.query(
+      `
+        WITH users AS (
+          UPDATE users
+          SET points = points - $1
+          WHERE id = $2
+          RETURNING points
+        )
+        SELECT points FROM users
+      `,
+      [Math.round(totalAmount), userId]
+    );
+
+    const userRemainingPoints = remainingPoints.rows[0]?.points;
+
+    if (userRemainingPoints < 0) {
+      await client.query("ROLLBACK");
+      throw new Error("Not enough points for the transaction.");
+    }
+
+    for (const recipientId of recipientsIds) {
+      await client.query(
+        `
+          UPDATE users
+          SET points = points + $1
+          WHERE id = $2
+        `,
+        [fractionAmount, recipientId]
+      );
+    }
+
+    await client.query("COMMIT");
+
+    return userRemainingPoints;
+  } catch (err) {
+    await client.query("ROLLBACK");
+    console.error("Error transferring points:", err);
+    throw err;
+  } finally {
+    client.release();
+  }
+};

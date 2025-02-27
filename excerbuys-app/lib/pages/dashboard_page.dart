@@ -13,15 +13,6 @@ import 'dart:io';
 
 import 'package:health/health.dart';
 
-enum AppState {
-  DATA_NOT_FETCHED,
-  FETCHING_DATA,
-  DATA_READY,
-  NO_DATA,
-  AUTHORIZED,
-  AUTH_NOT_GRANTED,
-}
-
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
 

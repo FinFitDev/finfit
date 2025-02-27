@@ -63,3 +63,26 @@ Future<User?> loadUserForId(String userId, CancelToken cancelToken) async {
     rethrow;
   }
 }
+
+Future<int?> resolveSendPoints(
+    String userId, List<String> recipientsIds, int amount) async {
+  try {
+    final res = await handleBackendRequests(
+        method: HTTP_METHOD.POST,
+        endpoint: 'api/v1/users/send/$userId',
+        body: {"recipients_ids": recipientsIds, "amount": amount});
+
+    if (res['error'] != null) {
+      throw res['error'];
+    }
+
+    if (res['content'] != null) {
+      return parseInt(res['content']);
+    }
+
+    return null;
+  } catch (error) {
+    print('Error sending points $error');
+    rethrow;
+  }
+}

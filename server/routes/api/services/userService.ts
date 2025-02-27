@@ -2,6 +2,7 @@ import { ErrorWithCode } from "../../../exceptions/errorWithCode";
 import {
   fetchUserById,
   fetchUsersByRegex,
+  transferPointsTransaction,
   updatePointsScore,
   updatePointsScoreWithUpdateTimestamp,
 } from "../../../models/userModel";
@@ -50,4 +51,26 @@ export const updateUserPointsScoreWithUpdateTimestamp = async (
     steps_updated_at
   );
   return response.command;
+};
+
+export const transferPointsToOtherUsers = async (
+  user_id: string,
+  recipients_ids: string[],
+  amount: number
+) => {
+  const totalRecipients = recipients_ids.length;
+  const fractionAmount = Math.round(amount / totalRecipients);
+
+  if (!amount || amount <= 0) {
+    throw new Error("Invalid amount to send");
+  }
+
+  const response = await transferPointsTransaction(
+    user_id,
+    recipients_ids,
+    amount,
+    fractionAmount
+  );
+
+  return response;
 };

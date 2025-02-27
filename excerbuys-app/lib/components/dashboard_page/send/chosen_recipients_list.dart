@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 
 class ChosenRecipientsList extends StatefulWidget {
   final Map<String, User> selectedUsers;
-  const ChosenRecipientsList({super.key, required this.selectedUsers});
+  final bool? disallowChange;
+  const ChosenRecipientsList(
+      {super.key, required this.selectedUsers, this.disallowChange});
 
   @override
   State<ChosenRecipientsList> createState() => _ChosenRecipientsListState();
@@ -27,9 +29,15 @@ class _ChosenRecipientsListState extends State<ChosenRecipientsList> {
         itemBuilder: (context, index) {
           final entry = widget.selectedUsers.entries.elementAt(index);
 
-          return userCard(index, colors, entry.value.username, () {
-            sendController.proccessSelectUser(entry.key);
-          });
+          return userCard(
+              index,
+              colors,
+              entry.value.username,
+              widget.disallowChange == true
+                  ? () {}
+                  : () {
+                      sendController.proccessSelectUser(entry.key);
+                    });
         },
       ),
     );

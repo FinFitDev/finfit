@@ -25,13 +25,18 @@ class _ChooseRecipientsModalState extends State<ChooseRecipientsModal> {
   final Debouncer _debouncer = Debouncer(milliseconds: 300);
 
   @override
+  void initState() {
+    super.initState();
+    sendController.loadRecentRecipients();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final texts = Theme.of(context).textTheme;
 
     return ClipRRect(
-      borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(40), topRight: Radius.circular(40)),
+      borderRadius: BorderRadius.vertical(
+          top: Radius.circular(40), bottom: Radius.circular(20)),
       child: Container(
         color: colors.primary,
         width: double.infinity,
@@ -103,10 +108,13 @@ class _ChooseRecipientsModalState extends State<ChooseRecipientsModal> {
                 builder: (context, snapshot) {
                   return MainButton(
                       isDisabled: !snapshot.hasData || snapshot.data!.isEmpty,
-                      label: 'Confirm ${snapshot.data?.length} recipients',
+                      label: 'Confirm recipients',
                       backgroundColor: colors.secondary,
                       textColor: colors.primary,
-                      onPressed: () {});
+                      onPressed: () {
+                        widget.nextPage();
+                        // sendController.saveRecentRecipients();
+                      });
                 })
           ],
         ),

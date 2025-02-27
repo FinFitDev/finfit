@@ -22,7 +22,7 @@ class ModalHeader extends StatelessWidget {
             ? RippleWrapper(
                 onPressed: goBack!,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  padding: EdgeInsets.symmetric(horizontal: 12),
                   child: SvgPicture.asset('assets/svg/arrow_left.svg'),
                 ),
               )
@@ -45,7 +45,7 @@ class ModalHeader extends StatelessWidget {
             ? Opacity(
                 opacity: 0,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  padding: EdgeInsets.symmetric(horizontal: 12),
                   child: SvgPicture.asset('assets/svg/arrow_left.svg'),
                 ),
               )

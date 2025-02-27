@@ -1,3 +1,4 @@
+import 'package:excerbuys/store/controllers/activity/activity_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
@@ -71,13 +72,17 @@ class MainHeader extends StatelessWidget {
                                                 .withAlpha(
                                                     isActive ? 255 : 0)));
                                   }),
-                              Text(
-                                  dashboardController.balanceHidden
-                                      ? '****** finpoints today'
-                                      : '500 finpoints today',
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      color: colors.tertiaryContainer))
+                              StreamBuilder<double?>(
+                                  stream: activityController.todaysPointsStream,
+                                  builder: (context, snapshot) {
+                                    return Text(
+                                        dashboardController.balanceHidden
+                                            ? '****** finpoints today'
+                                            : '${snapshot.data?.round() ?? 0} finpoints today',
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            color: colors.tertiaryContainer));
+                                  })
                             ],
                           ),
                         ),

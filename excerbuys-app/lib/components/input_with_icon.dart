@@ -13,6 +13,8 @@ class InputWithIcon extends StatefulWidget {
   final bool? disabled;
   final double? verticalPadding;
   final double? borderRadius;
+  final bool? isNumberInput;
+  final String? initialValue;
 
   const InputWithIcon(
       {super.key,
@@ -25,15 +27,38 @@ class InputWithIcon extends StatefulWidget {
       this.rightIcon,
       this.onPressRightIcon,
       this.borderRadius,
-      this.verticalPadding});
+      this.verticalPadding,
+      this.isNumberInput,
+      this.initialValue});
 
   @override
   State<InputWithIcon> createState() => _InputWithIconState();
 }
 
 class _InputWithIconState extends State<InputWithIcon> {
+  late TextEditingController _controller;
   String _value = '';
   bool _obscureText = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = TextEditingController(text: widget.initialValue ?? '');
+
+    _controller.addListener(() {
+      widget.onChange(_controller.text);
+      setState(() {
+        _value = _controller.text;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,104 +82,100 @@ class _InputWithIconState extends State<InputWithIcon> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextField(
-              // enabled: !(widget.disabled ?? false),
-              obscureText: isPassword && _obscureText,
-              enableSuggestions: !isPassword,
-              onChanged: (String val) {
-                widget.onChange(val);
-                setState(() {
-                  _value = val;
-                });
-              },
+            controller: _controller, // Assign the controller here
+            keyboardType: widget.isNumberInput == true
+                ? TextInputType.number
+                : TextInputType.text,
+            obscureText: isPassword && _obscureText,
+            enableSuggestions: !isPassword,
+            onChanged: (String val) {
+              widget.onChange(val);
+              setState(() {
+                _value = val;
+              });
+            },
 
-              // Text styles
-              cursorColor: iconsColor,
-              style: texts.headlineMedium?.copyWith(
-                color: isError ? colors.error : colors.tertiary,
-              ),
-
-              // decorations
-              decoration: InputDecoration(
-                  hintText: widget.placeholder,
-                  hintStyle: TextStyle(
-                      color: colors.tertiaryContainer,
-                      fontWeight: FontWeight.w400),
-                  prefixIcon: widget.leftIcon != null
-                      ? GestureDetector(
-                          onTap: () {},
-                          child: Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: SvgPicture.asset(
-                                widget.leftIcon!,
-                                height: 20,
-                                colorFilter: ColorFilter.mode(
-                                    iconsColor, BlendMode.srcIn),
-                              )))
-                      : null,
-                  suffixIcon: isPassword && _value.isNotEmpty
+            cursorColor: iconsColor,
+            style: texts.headlineMedium?.copyWith(
+              color: isError ? colors.error : colors.tertiary,
+            ),
+            decoration: InputDecoration(
+              hintText: widget.placeholder,
+              hintStyle: TextStyle(
+                  color: colors.tertiaryContainer, fontWeight: FontWeight.w400),
+              prefixIcon: widget.leftIcon != null
+                  ? GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: SvgPicture.asset(
+                            widget.leftIcon!,
+                            height: 20,
+                            colorFilter:
+                                ColorFilter.mode(iconsColor, BlendMode.srcIn),
+                          )))
+                  : null,
+              suffixIcon: isPassword && _value.isNotEmpty
+                  ? RippleWrapper(
+                      onPressed: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                      child: Container(
+                        color: Colors.transparent,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: SvgPicture.asset(
+                          _obscureText
+                              ? 'assets/svg/eye.svg'
+                              : 'assets/svg/eye-close.svg',
+                          height: 22,
+                          colorFilter:
+                              ColorFilter.mode(iconsColor, BlendMode.srcIn),
+                        ),
+                      ),
+                    )
+                  : widget.rightIcon != null
                       ? RippleWrapper(
                           onPressed: () {
-                            setState(() {
-                              _obscureText = !_obscureText;
-                            });
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            widget.onPressRightIcon != null
+                                ? widget.onPressRightIcon!()
+                                : null;
                           },
                           child: Container(
                             color: Colors.transparent,
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: SvgPicture.asset(
-                              _obscureText
-                                  ? 'assets/svg/eye.svg'
-                                  : 'assets/svg/eye-close.svg',
+                              widget.rightIcon!,
                               height: 22,
                               colorFilter:
                                   ColorFilter.mode(iconsColor, BlendMode.srcIn),
                             ),
                           ),
                         )
-                      : widget.rightIcon != null
-                          ? RippleWrapper(
-                              onPressed: () {
-                                widget.onPressRightIcon != null
-                                    ? widget.onPressRightIcon!()
-                                    : null;
-                              },
-                              child: Container(
-                                color: Colors.transparent,
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
-                                child: SvgPicture.asset(
-                                  widget.rightIcon!,
-                                  height: 22,
-                                  colorFilter: ColorFilter.mode(
-                                      iconsColor, BlendMode.srcIn),
-                                ),
-                              ),
-                            )
-                          : SizedBox.shrink(),
-
-                  // decoration styles
-                  contentPadding: EdgeInsets.symmetric(
-                      vertical: widget.verticalPadding ?? 18, horizontal: 20),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(widget.borderRadius ?? 20),
-                    borderSide: BorderSide(
-                        color: isError ? colors.error : Colors.transparent,
-                        width: 1),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.circular(widget.borderRadius ?? 20),
-                    borderSide: BorderSide(
-                        color: isError ? colors.error : Colors.transparent,
-                        width: 1),
-                  ),
-                  filled: true,
-                  fillColor: colors.primaryContainer)),
+                      : SizedBox.shrink(),
+              contentPadding: EdgeInsets.symmetric(
+                  vertical: widget.verticalPadding ?? 18, horizontal: 20),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(widget.borderRadius ?? 20),
+                borderSide: BorderSide(
+                    color: isError ? colors.error : Colors.transparent,
+                    width: 1),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(widget.borderRadius ?? 20),
+                borderSide: BorderSide(
+                    color: isError ? colors.error : Colors.transparent,
+                    width: 1),
+              ),
+              filled: true,
+              fillColor: colors.primaryContainer,
+            ),
+          ),
           isError
               ? Container(
-                  margin: EdgeInsets.only(top: 8, left: 20),
+                  margin: EdgeInsets.only(top: 8, left: 8),
                   child: Text(
                     widget.error!,
                     style: TextStyle(color: colors.error, fontSize: 13),

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 class User {
@@ -44,6 +46,18 @@ class User {
     }""";
   }
 
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "username": username,
+      "email": email,
+      "createdAt": createdAt.toIso8601String(),
+      "stepsUpdatedAt": stepsUpdatedAt.toIso8601String(),
+      "points": points.toString(),
+      "image": image
+    };
+  }
+
   User copyWith({
     String? id,
     String? username,
@@ -61,6 +75,28 @@ class User {
       points: points ?? this.points,
       stepsUpdatedAt: stepsUpdatedAt ?? this.stepsUpdatedAt,
       image: image ?? this.image,
+    );
+  }
+}
+
+class UserItem {
+  final User user;
+  final DateTime timestamp;
+
+  const UserItem({required this.user, required this.timestamp});
+
+  @override
+  String toString() {
+    return jsonEncode({
+      "user": user.toMap(), // ✅ Convert to Map before encoding
+      "timestamp": timestamp.toIso8601String(), // ✅ Store in ISO format
+    });
+  }
+
+  static UserItem fromMap(Map<String, dynamic> map) {
+    return UserItem(
+      user: User.fromMap(map["user"]),
+      timestamp: DateTime.parse(map["timestamp"]),
     );
   }
 }

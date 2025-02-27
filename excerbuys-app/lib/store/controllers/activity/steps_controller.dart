@@ -25,18 +25,23 @@ class StepsController {
   }
 
   Future<void> fetchsSteps() async {
+    if (userSteps.isLoading) {
+      return;
+    }
+
     setStepsLoading(true);
 
     final now = DateTime.now();
     final lastUpdated = userController.currentUser?.stepsUpdatedAt ?? now;
+
     final Duration difference = now.difference(lastUpdated);
-//     final Duration minDifference = Duration(days: 6);
+    final Duration minDifference = Duration(days: 6);
 
-// // Use the larger of the two: the actual difference or 6 days
-//     final Duration limitedDifference =
-//         difference < minDifference ? minDifference : difference;
+// Use the larger of the two: the actual difference or 6 days
+    final Duration limitedDifference =
+        difference < minDifference ? minDifference : difference;
 
-    final prev = now.subtract(difference);
+    final prev = now.subtract(limitedDifference);
 
     try {
       List<HealthDataPoint> healthData = await Health().getHealthDataFromTypes(
@@ -54,22 +59,21 @@ class StepsController {
       final filteredData = filterOverlappingSteps(
           healthDataMap, trainingsController.userTrainings.content);
 
-      // // steps that are not awarded yet
-      // final newSteps = filteredData.values
-      //     .where((entry) => entry.dateFrom.compareTo(lastUpdated) > 0)
-      //     .toList();
-
       final finalStepsDataInHours = groupStepsData(filteredData);
       addUserSteps(finalStepsDataInHours);
 
       int pointsToAdd = filteredData.isNotEmpty
           ? filteredData.values
               .toList()
-              .map((point) =>
-                  ((point.value as NumericHealthValue).numericValue * 0.2)
-                      .round())
-              .reduce((accumulator, current) => accumulator + current)
+              .where((point) => point.dateFrom.compareTo(lastUpdated) > 0)
+              .fold(
+                  0,
+                  (sum, point) =>
+                      sum +
+                      (calculatePointsFromSteps(
+                          (point.value as NumericHealthValue).numericValue)))
           : 0;
+      print(pointsToAdd);
 
       // update in db and then compund the points for one animation
       if (pointsToAdd > 0) {
@@ -80,6 +84,15 @@ class StepsController {
         }
       }
 
+      final todaysPoints = filteredData.entries
+          .where((el) => areDatesEqualRespectToDay(now, el.value.dateFrom))
+          .fold(
+              0.0,
+              (sum, el) =>
+                  sum +
+                  (calculatePointsFromSteps(
+                      (el.value.value as NumericHealthValue).numericValue)));
+      activityController.addTodaysPoints(todaysPoints);
       // final stepsData = convertStepsToRequest(
       //     healthDataMap, trainingsController.userTrainings.content);
 
@@ -113,7 +126,7 @@ class StepsController {
       // addUserTrainings(values);
       // setTrainingsLoading(false);
     } catch (error) {
-      debugPrint("Exception in getHealthDataFromTypes: $error");
+      debugPrint("Exception in getting steps: $error");
     } finally {
       setStepsLoading(false);
     }

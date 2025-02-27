@@ -7,6 +7,7 @@ import 'package:excerbuys/store/controllers/dashboard/history_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
+import 'package:excerbuys/utils/activity/steps.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/home/utils.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
@@ -125,7 +126,7 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
                             TyperAnimatedText(
                               isHidden
                                   ? '***** finpoints'
-                                  : '${(_totalSteps * 0.2).round()} finpoints',
+                                  : '${calculatePointsFromSteps(_totalSteps)} finpoints',
                               textStyle: texts.headlineMedium
                                   ?.copyWith(fontWeight: FontWeight.w300),
                             )

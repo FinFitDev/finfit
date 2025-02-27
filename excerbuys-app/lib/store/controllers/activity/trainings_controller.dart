@@ -3,6 +3,7 @@ import 'package:excerbuys/store/controllers/app_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
+import 'package:excerbuys/utils/activity/steps.dart';
 import 'package:excerbuys/utils/activity/trainings.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
@@ -56,6 +57,10 @@ class TrainingsController {
   }
 
   Future<void> fetchTrainings() async {
+    if (userTrainings.isLoading) {
+      return;
+    }
+
     setTrainingsLoading(true);
     setLoadingMoreData(false);
 
@@ -118,6 +123,11 @@ class TrainingsController {
         setCanFetchMore(false);
       }
       setLazyLoadOffset(userTrainings.content.length);
+
+      final todaysPoints = values.entries
+          .where((el) => areDatesEqualRespectToDay(now, el.value.createdAt))
+          .fold(0.0, (sum, el) => sum + el.value.points);
+      activityController.addTodaysPoints(todaysPoints);
     } catch (error) {
       debugPrint("Exception while extracting trainings data: $error");
     } finally {

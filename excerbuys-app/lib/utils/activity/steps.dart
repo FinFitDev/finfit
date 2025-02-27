@@ -148,3 +148,7 @@ List<IHourlyStepsEntry> getTodaysSteps(List<IHourlyStepsEntry> stepsData) {
     ..sort((a, b) =>
         a.timestamp.compareTo(b.timestamp)); // Sort by timestamp (ascending)
 }
+
+int calculatePointsFromSteps(num steps) {
+  return (steps * 0.2).round();
+}

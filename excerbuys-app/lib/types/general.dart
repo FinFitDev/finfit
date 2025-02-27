@@ -1,8 +1,10 @@
 class ContentWithLoading<T> {
   T content;
-  bool isLoading = true;
+  bool isLoading = false;
 
-  ContentWithLoading({required this.content});
+  ContentWithLoading({
+    required this.content,
+  });
 
   ContentWithLoading<T> copyWith({T? content, bool? isLoading}) {
     final data = ContentWithLoading<T>(

@@ -89,7 +89,7 @@ String padPriceDecimals(double price) {
 }
 
 int parseInt(dynamic value) {
-  return value is String ? int.parse(value) : value;
+  return value is String ? int.tryParse(value) : value;
 }
 
 String getDayName(int daysAgo) {

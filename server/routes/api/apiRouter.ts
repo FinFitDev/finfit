@@ -2,6 +2,7 @@ import express, { Request, Response, Router } from "express";
 import {
   getUserById,
   getUsersBySearch,
+  transferPointsToOtherUsers,
   updateUserPointsScore,
   updateUserPointsScoreWithUpdateTimestamp,
 } from "./services/userService";
@@ -87,6 +88,27 @@ apiRouter.get(
     }
   }
 );
+
+apiRouter.post("/users/send/:id", async (req: Request, res: Response) => {
+  try {
+    const recipients_ids = req.body.recipients_ids;
+    const amount = req.body.amount;
+    const user_id = req.params.id;
+
+    const response = await transferPointsToOtherUsers(
+      user_id,
+      recipients_ids,
+      amount
+    );
+
+    res.status(200).json({ message: "Points sent", content: response });
+  } catch (error: any) {
+    res.status(error.statusCode ?? 404).json({
+      message: "Something went wrong when sending points",
+      error: error.message,
+    });
+  }
+});
 
 apiRouter.get(
   "/trainings/:id",
