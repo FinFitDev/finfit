@@ -18,10 +18,12 @@ class User {
       required this.createdAt,
       required this.points,
       required this.stepsUpdatedAt,
-      this.image});
+      String? image})
+      : image = image == 'NULL' ? null : image;
 
   // Factory constructor to create a User from a Map
   factory User.fromMap(Map<String, dynamic> map) {
+    final String? image = map['image'] == 'NULL' ? null : map['image'];
     return User(
       id: map['id'],
       username: map['username'],
@@ -29,7 +31,7 @@ class User {
       createdAt: DateTime.parse(map['createdAt']),
       points: double.parse(map['points']), // Ensure double conversion
       stepsUpdatedAt: DateTime.parse(map['stepsUpdatedAt']),
-      image: map['image'], // image is nullable, so it can handle nulls
+      image: image, // image is nullable, so it can handle nulls
     );
   }
 

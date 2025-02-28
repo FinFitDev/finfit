@@ -1,3 +1,4 @@
+import 'package:excerbuys/components/shared/profile_image_generator.dart';
 import 'package:excerbuys/store/controllers/dashboard/send_controller.dart';
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/constants.dart';
@@ -33,6 +34,7 @@ class _ChosenRecipientsListState extends State<ChosenRecipientsList> {
               index,
               colors,
               entry.value.username,
+              entry.value.image,
               widget.disallowChange == true
                   ? () {}
                   : () {
@@ -44,8 +46,8 @@ class _ChosenRecipientsListState extends State<ChosenRecipientsList> {
   }
 }
 
-Widget userCard(
-    int index, ColorScheme colors, String name, void Function() onPressed) {
+Widget userCard(int index, ColorScheme colors, String name, String? image,
+    void Function() onPressed) {
   return Container(
     margin: EdgeInsets.only(right: 8),
     child: GestureDetector(
@@ -55,16 +57,7 @@ Widget userCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: NetworkImage(
-                          'https://imageupscaler.com/wp-content/uploads/2024/07/deblured-cutty-fox.jpg'))),
-            ),
+            ProfileImageGenerator(seed: image, size: 50),
             SizedBox(
               height: 8,
             ),

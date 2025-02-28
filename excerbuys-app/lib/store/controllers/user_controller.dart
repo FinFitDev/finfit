@@ -7,7 +7,7 @@ import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
-import 'package:excerbuys/utils/user/user.dart';
+import 'package:excerbuys/utils/user/requests.dart';
 import 'package:rxdart/rxdart.dart';
 
 class UserController {
@@ -62,28 +62,12 @@ class UserController {
   }
 
   // ran only after login/sign up or on refresh
-  Future<User?> fetchCurrentUser(String userId) async {
+  Future<User?> getCurrentUser(String userId) async {
     try {
-      dynamic res = await handleBackendRequests(
-          method: HTTP_METHOD.GET, endpoint: 'api/v1/users/$userId');
-
-      final content = res['content'];
-
-      if (content == null || content.isEmpty) {
-        throw 'No data';
+      final User? user = await fetchUserById(userId, null);
+      if (user != null) {
+        setCurrentUser(user);
       }
-
-      final User user = User(
-          id: content['id'],
-          email: content['email'],
-          username: content['username'],
-          createdAt: DateTime.parse(content['created_at']).toLocal(),
-          stepsUpdatedAt: DateTime.parse(content['steps_updated_at']).toLocal(),
-          points: (content['points'] as int).toDouble(),
-          image: content['image']);
-
-      setCurrentUser(user);
-
       return user;
     } catch (err) {
       print(err);

@@ -9,7 +9,8 @@ import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/debug.dart';
-import 'package:excerbuys/utils/home/send.dart';
+import 'package:excerbuys/utils/home/send/requests.dart';
+import 'package:excerbuys/utils/user/requests.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -186,7 +187,7 @@ class SendController {
     setListLoading(true);
     try {
       List<User> foundUsers =
-          await loadUsers(searchValue!, 10, 0, cancelToken) ?? [];
+          await loadSendUsersRequest(searchValue!, 10, 0, cancelToken) ?? [];
 
       Set<String> unique = {};
       foundUsers =
@@ -208,7 +209,7 @@ class SendController {
 
   Future<void> fetchQrCodeUser(String userId) async {
     try {
-      User? foundUser = await loadUserForId(userId, cancelToken);
+      User? foundUser = await fetchUserById(userId, cancelToken);
 
       if (foundUser != null) {
         addUsersToList({foundUser.id: foundUser});
@@ -232,7 +233,7 @@ class SendController {
         throw 'Invalid data';
       }
 
-      int? remainingPoints = await resolveSendPoints(
+      int? remainingPoints = await resolveSendPointsRequest(
           userController.currentUser!.id, chosenUsersIds, totalAmount);
 
       if (remainingPoints != null) {

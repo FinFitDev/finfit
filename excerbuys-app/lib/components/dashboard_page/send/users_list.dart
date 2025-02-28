@@ -1,4 +1,5 @@
 import 'package:excerbuys/components/loaders/universal_loader_box.dart';
+import 'package:excerbuys/components/shared/profile_image_generator.dart';
 import 'package:excerbuys/store/controllers/dashboard/send_controller.dart';
 import 'package:excerbuys/types/user.dart';
 import 'package:flutter/material.dart';
@@ -33,8 +34,8 @@ class UsersList extends StatelessWidget {
                         final value = el.value;
                         final key = el.key;
 
-                        return userCard(
-                            colors, texts, value.username, value.email, () {
+                        return userCard(colors, texts, value.username,
+                            value.email, value.image, () {
                           sendController.proccessSelectUser(key);
                         }, (snapshot.data ?? []).contains(key));
                       }).toList());
@@ -47,6 +48,7 @@ Widget userCard(
   TextTheme texts,
   String name,
   String email,
+  String? image,
   void Function() onPressed,
   bool? isSelected,
 ) {
@@ -62,17 +64,7 @@ Widget userCard(
       ),
       child: Row(
         children: [
-          Container(
-            height: 50,
-            width: 50,
-            padding: EdgeInsets.all(5),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(
-                        'https://imageupscaler.com/wp-content/uploads/2024/07/deblured-cutty-fox.jpg'))),
-          ),
+          ProfileImageGenerator(seed: image, size: 50),
           SizedBox(
             width: 12,
           ),
@@ -134,19 +126,21 @@ Widget loadingUsers() {
 }
 
 Widget emptyList(String query, ColorScheme colors, TextTheme texts) {
-  return RichText(
-    textAlign: TextAlign.center,
-    text: TextSpan(
-      style: texts.headlineMedium
-          ?.copyWith(color: colors.tertiaryContainer), // Default style
-      children: [
-        TextSpan(text: 'No results for query '),
-        TextSpan(
-          text: query,
-          style: texts.headlineMedium
-              ?.copyWith(color: colors.secondary), // Different color for query
-        ),
-      ],
-    ),
-  );
+  return query.isNotEmpty
+      ? RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            style: texts.headlineMedium
+                ?.copyWith(color: colors.tertiaryContainer), // Default style
+            children: [
+              TextSpan(text: 'No results for query: '),
+              TextSpan(
+                text: query,
+                style: texts.headlineMedium?.copyWith(
+                    color: colors.secondary), // Different color for query
+              ),
+            ],
+          ),
+        )
+      : SizedBox.shrink();
 }

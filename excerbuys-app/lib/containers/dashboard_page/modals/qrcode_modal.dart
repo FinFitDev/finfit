@@ -11,7 +11,6 @@ class QrcodeModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final texts = Theme.of(context).textTheme;
 
     return ClipRRect(
       borderRadius: BorderRadius.only(

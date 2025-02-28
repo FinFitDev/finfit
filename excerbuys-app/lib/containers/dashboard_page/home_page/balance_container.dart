@@ -1,21 +1,14 @@
-import 'dart:async';
-import 'dart:math';
-
 import 'package:excerbuys/components/animated_balance.dart';
 import 'package:excerbuys/components/shared/indicators/canvas/ellipse_painter.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/qrcode_modal.dart';
-import 'package:excerbuys/containers/dashboard_page/modals/send/qrscanner_modal.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/send/send_modal.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:rive/rive.dart';
 
 class BalanceContainer extends StatefulWidget {
   final int balance;

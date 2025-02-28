@@ -50,7 +50,8 @@ int calculateTrainingDuration(DateTime dateFrom, DateTime dateTo) {
   return dateTo.difference(dateFrom).inMilliseconds;
 }
 
-Future<String?> saveTrainings(List<ITrainingEntry>? parsedTrainingData) async {
+Future<String?> saveTrainingsRequest(
+    List<ITrainingEntry>? parsedTrainingData) async {
   try {
     if (parsedTrainingData != null) {
       final serializedData =
@@ -74,7 +75,7 @@ Future<String?> saveTrainings(List<ITrainingEntry>? parsedTrainingData) async {
   return null;
 }
 
-Future<List<ITrainingEntry>?> loadTrainings(
+Future<List<ITrainingEntry>?> loadTrainingsRequest(
     String userId, int? limit, int? offset) async {
   final List<ITrainingEntry> result = [];
   try {

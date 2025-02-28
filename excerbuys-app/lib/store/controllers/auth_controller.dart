@@ -4,6 +4,7 @@ import 'package:excerbuys/containers/auth_page/login_container.dart';
 import 'package:excerbuys/containers/auth_page/signup_container.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/store/persistence/storage_controller.dart';
+import 'package:excerbuys/utils/auth/requests.dart';
 import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
@@ -58,31 +59,15 @@ class AuthController {
   Future<Map<LOGIN_FIELD_TYPE, String?>?> logIn(
       String login, String password) async {
     try {
-      dynamic res = await handleBackendRequests(
-          method: HTTP_METHOD.POST,
-          endpoint: 'auth/login',
-          body: {"login": login, "password": password});
-
-      if (res['error'] != null) {
-        if (res['type'] == 'login') {
-          return {LOGIN_FIELD_TYPE.LOGIN: res['error']};
-        }
-        if (res['type'] == 'password') {
-          return {LOGIN_FIELD_TYPE.PASSWORD: res['error']};
-        }
-        // should not reach here
-        throw Exception(res['message']);
-      }
-
       final {
         'access_token': accessToken,
         'refresh_token': refreshToken,
         'user_id': userId
-      } = res['content'];
+      } = await logInRequest(login, password);
 
       if (accessToken.isNotEmpty) {
         setAccessToken(accessToken);
-        await userController.fetchCurrentUser(userId);
+        await userController.getCurrentUser(userId);
       }
       if (refreshToken.isNotEmpty) {
         setRefreshToken(refreshToken);
@@ -97,23 +82,9 @@ class AuthController {
   Future<Map<SIGNUP_FIELD_TYPE, String?>?> signUp(
       String username, String email, String password) async {
     try {
-      dynamic res = await handleBackendRequests(
-          method: HTTP_METHOD.POST,
-          endpoint: 'auth/signup',
-          body: {"username": username, "password": password, "email": email});
+      final String message = await signUpRequest(username, email, password);
 
-      if (res['error'] != null) {
-        if (res['type'] == 'username') {
-          return {SIGNUP_FIELD_TYPE.USERNAME: res['error']};
-        }
-        if (res['type'] == 'email') {
-          return {SIGNUP_FIELD_TYPE.EMAIL: res['error']};
-        }
-        // should not reach here
-        throw Exception(res['message']);
-      }
-
-      if (res['message'] == "Sign up successful") {
+      if (message == "Sign up successful") {
         await logIn(username, password);
       }
       return null;
@@ -126,16 +97,13 @@ class AuthController {
   Future<bool> logOut() async {
     try {
       final String refreshToken = authController.refreshToken;
-      dynamic res = await handleBackendRequests(
-          method: HTTP_METHOD.POST,
-          endpoint: 'auth/logout',
-          body: {"refresh_token": refreshToken});
+      final String? message = await logOutRequest(refreshToken);
 
-      if (res['error'] != null) {
-        throw Exception(res['error']);
+      if (message == null) {
+        throw 'Failed to log out';
       }
 
-      if (res['message'] == 'Logout successful') {
+      if (message == 'Logout successful') {
         authController.setAccessToken('');
         authController.setRefreshToken('');
         userController.setCurrentUser(null);
@@ -143,46 +111,27 @@ class AuthController {
 
       return true;
     } catch (err) {
-      print(err);
       return false;
     }
   }
 
   Future<String?> useGoogleAuth(String idToken) async {
     try {
-      dynamic res = await handleBackendRequests(
-          method: HTTP_METHOD.POST,
-          endpoint: 'auth/googleAuth',
-          body: {
-            "id_token": idToken,
-            "platform": Platform.isIOS
-                ? 'ios'
-                : 'android' // different backend token for platforms
-          });
-
-      if (res['error'] != null) {
-        // should not reach here
-        throw Exception(res['message']);
-      }
-
-      print(res);
-
       final {
         'access_token': accessToken,
         'refresh_token': refreshToken,
         'user_id': userId
-      } = res['content'];
+      } = await googleAuthRequest(idToken);
 
       if (accessToken.isNotEmpty) {
         setAccessToken(accessToken);
-        await userController.fetchCurrentUser(userId);
+        await userController.getCurrentUser(userId);
       }
       if (refreshToken.isNotEmpty) {
         setRefreshToken(refreshToken);
       }
       return null;
     } catch (error) {
-      print(error);
       rethrow;
     }
   }

@@ -128,7 +128,7 @@ class _ProgressOffersContainerState extends State<ProgressOffersContainer> {
       case 0:
         return ShopItemCard(
           image:
-              'https://media.istockphoto.com/id/960293984/vector/cute-avocado-cartoon-character-doing-exercises-with-hula-hoop-vector-cartoon-flat.jpg?s=612x612&w=0&k=20&c=_Kbj2loiacXJy6T25gs9TLPLeeyfXVzwkeRFOzC7KEQ=',
+              'https://img.freepik.com/free-vector/cute-panda-lifting-barbell-gym-fitness-cartoon-vector-icon-illustration-animal-sports-icon-isolated_138676-5482.jpg',
           points: 25000,
           originalPrice: 58,
           name: 'Avocado protein',

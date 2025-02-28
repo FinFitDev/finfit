@@ -95,14 +95,15 @@ class TrainingsController {
       List<ITrainingEntry> parsedTrainingData =
           convertTrainingsToRequest(healthData) ?? [];
 
-      final pointsAwardedResponse = await saveTrainings(parsedTrainingData);
+      final pointsAwardedResponse =
+          await saveTrainingsRequest(parsedTrainingData);
       if (pointsAwardedResponse != null) {
         activityController
             .compundPointsToAdd(double.parse(pointsAwardedResponse));
       }
 
       if (userController.currentUser?.id != null) {
-        parsedTrainingData = await loadTrainings(
+        parsedTrainingData = await loadTrainingsRequest(
                 userController.currentUser!.id, TRAINING_DATA_CHUNK_SIZE, 0) ??
             [];
 
@@ -143,7 +144,7 @@ class TrainingsController {
       setLoadingMoreData(true);
       await Future.delayed(Duration(milliseconds: 3000));
 
-      List<ITrainingEntry> parsedTrainingData = await loadTrainings(
+      List<ITrainingEntry> parsedTrainingData = await loadTrainingsRequest(
               userController.currentUser!.id,
               TRAINING_DATA_CHUNK_SIZE,
               lazyLoadOffset.content) ??

@@ -37,7 +37,7 @@ class StepsController {
     final Duration difference = now.difference(lastUpdated);
     final Duration minDifference = Duration(days: 6);
 
-// Use the larger of the two: the actual difference or 6 days
+    // Use the larger of the two: the actual difference or 6 days
     final Duration limitedDifference =
         difference < minDifference ? minDifference : difference;
 
@@ -73,7 +73,6 @@ class StepsController {
                       (calculatePointsFromSteps(
                           (point.value as NumericHealthValue).numericValue)))
           : 0;
-      print(pointsToAdd);
 
       // update in db and then compund the points for one animation
       if (pointsToAdd > 0) {
@@ -93,6 +92,7 @@ class StepsController {
                   (calculatePointsFromSteps(
                       (el.value.value as NumericHealthValue).numericValue)));
       activityController.addTodaysPoints(todaysPoints);
+
       // final stepsData = convertStepsToRequest(
       //     healthDataMap, trainingsController.userTrainings.content);
 
@@ -111,12 +111,12 @@ class StepsController {
       // List<ITrainingEntry> parsedTrainingData =
       //     convertTrainingsToRequest(healthData) ?? [];
 
-      // await saveTrainings(parsedTrainingData);
+      // await saveTrainingsRequest(parsedTrainingData);
 
       // if (parsedTrainingData.length < 5 &&
       //     userController.currentUser?.id != null) {
       //   parsedTrainingData =
-      //       await loadTrainings(userController.currentUser!.id, 3, 0) ?? [];
+      //       await loadTrainingsRequest(userController.currentUser!.id, 3, 0) ?? [];
       // }
 
       // Map<String, ITrainingEntry> values = {

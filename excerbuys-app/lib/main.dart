@@ -49,11 +49,11 @@ class _HealthAppState extends State<HealthApp> {
                 )),
             useMaterial3: true,
             fontFamily: 'Poppins'),
-        initialRoute: "/loading",
+        initialRoute: "/",
         routes: {
-          "/": (context) => LayoutWrapper(child: Layout()),
+          "/": (context) => LayoutWrapper(child: LoadingPage()),
+          "/dashboard": (context) => LayoutWrapper(child: Layout()),
           "/login": (context) => LayoutWrapper(child: AuthPage()),
-          "/loading": (context) => LayoutWrapper(child: LoadingPage()),
           "/welcome": (context) => LayoutWrapper(child: WelcomePage())
         },
       ),
