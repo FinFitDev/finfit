@@ -19,7 +19,6 @@ class _ChosenRecipientsListState extends State<ChosenRecipientsList> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final texts = Theme.of(context).textTheme;
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10),

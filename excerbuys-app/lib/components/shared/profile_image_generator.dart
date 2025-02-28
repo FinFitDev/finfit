@@ -17,10 +17,7 @@ class _ProfileImageGeneratorState extends State<ProfileImageGenerator> {
   List<ShapeModel> shapesList = [];
   Color backgroundColor = Color(0xFFFFFFFF);
 
-  @override
-  void initState() {
-    super.initState();
-
+  void parseSeed() {
     if (widget.seed == null) {
       return;
     }
@@ -46,21 +43,32 @@ class _ProfileImageGeneratorState extends State<ProfileImageGenerator> {
   }
 
   @override
+  void didUpdateWidget(covariant ProfileImageGenerator oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    parseSeed();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    parseSeed();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(100),
+      borderRadius: BorderRadius.circular(10),
       child: widget.seed == null
           ? Container(
               height: widget.size,
               width: widget.size,
-              padding: EdgeInsets.all(5),
               decoration: BoxDecoration(
                   image: DecorationImage(
                       fit: BoxFit.cover,
                       colorFilter:
                           ColorFilter.mode(Colors.grey, BlendMode.saturation),
                       image: NetworkImage(
-                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDRxkIyitXb_MFEFrtxFQGt7nfPoT4LrgH-g&s'))),
+                          'https://static.vecteezy.com/system/resources/previews/036/594/092/non_2x/man-empty-avatar-photo-placeholder-for-social-networks-resumes-forums-and-dating-sites-male-and-female-no-photo-images-for-unfilled-user-profile-free-vector.jpg'))),
             )
           : Container(
               width: widget.size,

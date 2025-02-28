@@ -13,10 +13,10 @@ class InputWithIcon extends StatefulWidget {
   final bool? disabled;
   final double? verticalPadding;
   final double? borderRadius;
-  final bool? isNumberInput;
+  TextInputType? inputType = TextInputType.text;
   final String? initialValue;
 
-  const InputWithIcon(
+  InputWithIcon(
       {super.key,
       this.leftIcon,
       required this.placeholder,
@@ -28,7 +28,7 @@ class InputWithIcon extends StatefulWidget {
       this.onPressRightIcon,
       this.borderRadius,
       this.verticalPadding,
-      this.isNumberInput,
+      this.inputType,
       this.initialValue});
 
   @override
@@ -83,9 +83,7 @@ class _InputWithIconState extends State<InputWithIcon> {
         children: [
           TextField(
             controller: _controller, // Assign the controller here
-            keyboardType: widget.isNumberInput == true
-                ? TextInputType.number
-                : TextInputType.text,
+            keyboardType: widget.inputType,
             obscureText: isPassword && _obscureText,
             enableSuggestions: !isPassword,
             onChanged: (String val) {

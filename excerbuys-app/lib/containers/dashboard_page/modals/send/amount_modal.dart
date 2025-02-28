@@ -83,7 +83,7 @@ class _AmountModalState extends State<AmountModal> {
               },
               borderRadius: 10,
               verticalPadding: 12,
-              isNumberInput: true,
+              inputType: TextInputType.number,
               error: _balanceError ? 'Not enough balance' : null,
               initialValue: (sendController.amount)?.toString(),
             ),
@@ -149,10 +149,11 @@ class _AmountModalState extends State<AmountModal> {
                 stream: sendController.amountStream,
                 builder: (context, snapshot) {
                   return MainButton(
+                      holdToConfirm: true,
                       isDisabled: !snapshot.hasData ||
                           snapshot.data == 0 ||
                           _balanceError,
-                      label: 'Send finpoints',
+                      label: 'Hold to confirm',
                       backgroundColor: colors.secondary,
                       textColor: colors.primary,
                       loading: isLoading,

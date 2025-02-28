@@ -142,6 +142,7 @@ class _SignupContainerState extends State<SignupContainer> {
             },
             error: _formErrorsState[SIGNUP_FIELD_TYPE.EMAIL],
             borderRadius: 10,
+            inputType: TextInputType.emailAddress,
           ),
           SizedBox(
             height: 16,

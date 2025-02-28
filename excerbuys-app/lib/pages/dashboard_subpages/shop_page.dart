@@ -23,6 +23,7 @@ class _ShopPageState extends State<ShopPage> {
   @override
   void initState() {
     super.initState();
+    print(seed);
     final List<String> seedParts = seed.split('-');
 
     setState(() {
