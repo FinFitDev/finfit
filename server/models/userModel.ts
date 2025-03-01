@@ -89,6 +89,15 @@ export const fetchUserByUsernameOrEmail = async (login: string) => {
   return response;
 };
 
+export const updateImageSeed = async (user_id: string, image: string) => {
+  const response = await pool.query(
+    "UPDATE users SET image = $1 WHERE id = $2;",
+    [image, user_id]
+  );
+
+  return response;
+};
+
 export const updatePointsScore = async (user_id: string, points: number) => {
   const response = await pool.query(
     "UPDATE users SET points = points + $1 WHERE id = $2;",

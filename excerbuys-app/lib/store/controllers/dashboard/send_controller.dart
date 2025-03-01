@@ -209,7 +209,7 @@ class SendController {
 
   Future<void> fetchQrCodeUser(String userId) async {
     try {
-      User? foundUser = await fetchUserById(userId, cancelToken);
+      User? foundUser = await fetchUserByIdRequest(userId, cancelToken);
 
       if (foundUser != null) {
         addUsersToList({foundUser.id: foundUser});
@@ -232,6 +232,8 @@ class SendController {
           totalAmount <= 0) {
         throw 'Invalid data';
       }
+
+      await Future.delayed(Duration(seconds: 3));
 
       int? remainingPoints = await resolveSendPointsRequest(
           userController.currentUser!.id, chosenUsersIds, totalAmount);

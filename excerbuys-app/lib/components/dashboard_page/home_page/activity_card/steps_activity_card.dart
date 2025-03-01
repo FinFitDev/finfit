@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:excerbuys/components/dashboard_page/home_page/activity_card/activity_card_details.dart';
-import 'package:excerbuys/components/loaders/universal_loader_box.dart';
+import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/store/controllers/dashboard/history_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/types/activity.dart';

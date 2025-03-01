@@ -49,7 +49,6 @@ class _AmountModalState extends State<AmountModal> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final texts = Theme.of(context).textTheme;
 
     return ClipRRect(
       borderRadius: BorderRadius.vertical(
@@ -58,34 +57,39 @@ class _AmountModalState extends State<AmountModal> {
         color: colors.primary,
         width: double.infinity,
         padding: EdgeInsets.only(
-            left: HORIZOTAL_PADDING,
-            right: HORIZOTAL_PADDING,
             bottom: layoutController.bottomPadding + HORIZOTAL_PADDING),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ModalHeader(
-              title: 'Send finpoints',
-              subtitle: 'Enter amount',
-              goBack: widget.previousPage,
-            ),
-            SizedBox(
-              height: 16,
-            ),
-            InputWithIcon(
-              placeholder: 'Amount',
-              onChange: (val) {
-                if (val.isEmpty) {
-                  sendController.setAmount(null);
-                } else {
-                  sendController.setAmount(parseInt(val));
-                }
-              },
-              borderRadius: 10,
-              verticalPadding: 12,
-              inputType: TextInputType.number,
-              error: _balanceError ? 'Not enough balance' : null,
-              initialValue: (sendController.amount)?.toString(),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING),
+              child: Column(
+                children: [
+                  ModalHeader(
+                    title: 'Send finpoints',
+                    subtitle: 'Enter amount',
+                    goBack: widget.previousPage,
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  InputWithIcon(
+                    placeholder: 'Amount',
+                    onChange: (val) {
+                      if (val.isEmpty) {
+                        sendController.setAmount(null);
+                      } else {
+                        sendController.setAmount(parseInt(val));
+                      }
+                    },
+                    borderRadius: 10,
+                    verticalPadding: 12,
+                    inputType: TextInputType.number,
+                    error: _balanceError ? 'Not enough balance' : null,
+                    initialValue: (sendController.amount)?.toString(),
+                  ),
+                ],
+              ),
             ),
             StreamBuilder<List<String>>(
                 stream: sendController.chosenUsersIdsStream,
@@ -113,34 +117,33 @@ class _AmountModalState extends State<AmountModal> {
                       });
                 }),
             Expanded(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                StreamBuilder<int?>(
-                    stream: sendController.amountStream,
-                    builder: (context, snapshot) {
-                      return ListComponent(
-                        data: {
-                          'Amount': '${snapshot.data ?? 0} finpoints',
-                          'Recipients':
-                              '${sendController.chosenUsersIds.length} users',
-                          'Current balance':
-                              '${(userController.userBalance ?? 0).round().toString()} finpoints',
-                          'Remaining balance':
-                              '${max(((userController.userBalance ?? 0) - (snapshot.data ?? 0) * sendController.chosenUsersIds.length), 0).round().toString()} finpoints'
-                        },
-                        summary:
-                            '${(snapshot.data ?? 0) * sendController.chosenUsersIds.length} finpoints',
-                        summaryColor: colors.secondary,
-                      );
-                    }),
-                // Text(
-                //   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                //   style:
-                //       TextStyle(fontSize: 12, color: colors.tertiaryContainer),
-                // )
-              ],
+                child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  StreamBuilder<int?>(
+                      stream: sendController.amountStream,
+                      builder: (context, snapshot) {
+                        return ListComponent(
+                          data: {
+                            'Amount': '${snapshot.data ?? 0} finpoints',
+                            'Recipients':
+                                '${sendController.chosenUsersIds.length} users',
+                            'Current balance':
+                                '${(userController.userBalance ?? 0).round().toString()} finpoints',
+                            'Remaining balance':
+                                '${max(((userController.userBalance ?? 0) - (snapshot.data ?? 0) * sendController.chosenUsersIds.length), 0).round().toString()} finpoints'
+                          },
+                          summary:
+                              '${(snapshot.data ?? 0) * sendController.chosenUsersIds.length} finpoints',
+                          summaryColor: colors.secondary,
+                        );
+                      }),
+                ],
+              ),
             )),
             SizedBox(
               height: 16,
@@ -148,31 +151,38 @@ class _AmountModalState extends State<AmountModal> {
             StreamBuilder<int?>(
                 stream: sendController.amountStream,
                 builder: (context, snapshot) {
-                  return MainButton(
-                      holdToConfirm: true,
-                      isDisabled: !snapshot.hasData ||
-                          snapshot.data == 0 ||
-                          _balanceError,
-                      label: 'Hold to confirm',
-                      backgroundColor: colors.secondary,
-                      textColor: colors.primary,
-                      loading: isLoading,
-                      onPressed: () async {
-                        if (isLoading) {
-                          return;
-                        }
-                        setState(() {
-                          isLoading = true;
-                        });
-                        await sendController.sendPoints();
-                        sendController.saveRecentRecipients();
-                        setState(() {
-                          isLoading = false;
-                        });
-                        if (mounted) {
-                          Navigator.pop(context);
-                        }
-                      });
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: HORIZOTAL_PADDING),
+                    child: MainButton(
+                        holdToConfirm: true,
+                        isDisabled: !snapshot.hasData ||
+                            snapshot.data == 0 ||
+                            _balanceError,
+                        label: 'Hold to confirm',
+                        backgroundColor: colors.secondary,
+                        textColor: colors.primary,
+                        loading: isLoading,
+                        onPressed: () async {
+                          if (isLoading) {
+                            return;
+                          }
+                          if (mounted) {
+                            setState(() {
+                              isLoading = true;
+                            });
+                          }
+
+                          await sendController.sendPoints();
+                          sendController.saveRecentRecipients();
+                          if (mounted) {
+                            setState(() {
+                              isLoading = false;
+                            });
+                            Navigator.pop(context);
+                          }
+                        }),
+                  );
                 })
           ],
         ),

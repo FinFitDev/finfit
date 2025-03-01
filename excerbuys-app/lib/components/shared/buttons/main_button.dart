@@ -4,10 +4,12 @@ import 'package:excerbuys/components/shared/indicators/circle_progress/circle_pr
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 
 class MainButton extends StatefulWidget {
   final String label;
+  final String? icon;
   final Color backgroundColor;
   final Color textColor;
   final void Function() onPressed;
@@ -24,6 +26,7 @@ class MainButton extends StatefulWidget {
     this.isDisabled,
     this.loading,
     this.holdToConfirm,
+    this.icon,
   });
 
   @override
@@ -80,21 +83,13 @@ class _MainButtonState extends State<MainButton> with TickerProviderStateMixin {
     return SizedBox(
       height: 60,
       child: GestureDetector(
-        onTapDown: (e) {
+        onLongPressStart: (e) {
           if (widget.holdToConfirm != true || widget.isDisabled == true) {
             return;
           }
           _incrementProgress();
         },
         onLongPressEnd: (e) {
-          if (widget.holdToConfirm != true || widget.isDisabled == true) {
-            return;
-          }
-
-          progressTimer?.cancel();
-          holdProgressNotifier.value = 0;
-        },
-        onTapUp: (e) {
           if (widget.holdToConfirm != true || widget.isDisabled == true) {
             return;
           }
@@ -134,12 +129,29 @@ class _MainButtonState extends State<MainButton> with TickerProviderStateMixin {
                           progress: value / 100,
                         );
                       }
-                      return Text(widget.label,
-                          style: texts.headlineMedium?.copyWith(
-                            color: widget.isDisabled == true
-                                ? widget.textColor.withAlpha(155)
-                                : widget.textColor,
-                          ));
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          widget.icon != null
+                              ? Container(
+                                  margin: EdgeInsets.only(right: 8),
+                                  child: SvgPicture.asset(
+                                    widget.icon!,
+                                    width: 24,
+                                    height: 24,
+                                    colorFilter: ColorFilter.mode(
+                                        widget.textColor, BlendMode.srcIn),
+                                  ),
+                                )
+                              : SizedBox.shrink(),
+                          Text(widget.label,
+                              style: texts.headlineMedium?.copyWith(
+                                color: widget.isDisabled == true
+                                    ? widget.textColor.withAlpha(155)
+                                    : widget.textColor,
+                              )),
+                        ],
+                      );
                     })),
       ),
     );

@@ -41,8 +41,6 @@ class _ChooseRecipientsModalState extends State<ChooseRecipientsModal> {
         color: colors.primary,
         width: double.infinity,
         padding: EdgeInsets.only(
-            left: HORIZOTAL_PADDING,
-            right: HORIZOTAL_PADDING,
             bottom: layoutController.bottomPadding + HORIZOTAL_PADDING),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -54,17 +52,24 @@ class _ChooseRecipientsModalState extends State<ChooseRecipientsModal> {
             SizedBox(
               height: 16,
             ),
-            InputWithIcon(
-              placeholder: 'Find users',
-              onChange: (val) {
-                _debouncer.run(() {
-                  sendController.setSearchValue(val);
-                });
-              },
-              rightIcon: 'assets/svg/scan.svg',
-              borderRadius: 10,
-              verticalPadding: 12,
-              onPressRightIcon: () => openModal(context, QrscannerModal()),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING),
+              child: InputWithIcon(
+                placeholder: 'Find users',
+                onChange: (val) {
+                  _debouncer.run(() {
+                    sendController.setSearchValue(val);
+                  });
+                },
+                rightIcon: 'assets/svg/scan.svg',
+                borderRadius: 10,
+                verticalPadding: 12,
+                onPressRightIcon: () => openModal(context, QrscannerModal()),
+              ),
+            ),
+            SizedBox(
+              height: 16,
             ),
             StreamBuilder<List<String>>(
                 stream: sendController.chosenUsersIdsStream,
@@ -76,15 +81,8 @@ class _ChooseRecipientsModalState extends State<ChooseRecipientsModal> {
                                 snapshot.data!.content.isNotEmpty
                             ? Column(
                                 children: [
-                                  SizedBox(
-                                    height: 16,
-                                  ),
                                   ChosenRecipientsList(
                                     selectedUsers: snapshot.data!.content,
-                                  ),
-                                  Container(
-                                    height: 0.5,
-                                    color: colors.tertiaryContainer,
                                   ),
                                 ],
                               )
@@ -95,9 +93,13 @@ class _ChooseRecipientsModalState extends State<ChooseRecipientsModal> {
                 child: StreamBuilder<ContentWithLoading<Map<String, User>>>(
                     stream: sendController.usersForSearchStream,
                     builder: (context, snapshot) {
-                      return UsersList(
-                        usersForSearch: snapshot.data?.content,
-                        isLoading: snapshot.data?.isLoading,
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: HORIZOTAL_PADDING),
+                        child: UsersList(
+                          usersForSearch: snapshot.data?.content,
+                          isLoading: snapshot.data?.isLoading,
+                        ),
                       );
                     })),
             SizedBox(
@@ -106,15 +108,18 @@ class _ChooseRecipientsModalState extends State<ChooseRecipientsModal> {
             StreamBuilder<List<String>>(
                 stream: sendController.chosenUsersIdsStream,
                 builder: (context, snapshot) {
-                  return MainButton(
-                      isDisabled: !snapshot.hasData || snapshot.data!.isEmpty,
-                      label: 'Confirm recipients',
-                      backgroundColor: colors.secondary,
-                      textColor: colors.primary,
-                      onPressed: () {
-                        widget.nextPage();
-                        // sendController.saveRecentRecipients();
-                      });
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: HORIZOTAL_PADDING),
+                    child: MainButton(
+                        isDisabled: !snapshot.hasData || snapshot.data!.isEmpty,
+                        label: 'Confirm recipients',
+                        backgroundColor: colors.secondary,
+                        textColor: colors.primary,
+                        onPressed: () {
+                          widget.nextPage();
+                        }),
+                  );
                 })
           ],
         ),

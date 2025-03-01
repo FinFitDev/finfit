@@ -1,4 +1,4 @@
-import 'package:excerbuys/components/loaders/universal_loader_box.dart';
+import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:flutter/material.dart';

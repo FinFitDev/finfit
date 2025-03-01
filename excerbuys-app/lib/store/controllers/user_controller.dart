@@ -21,6 +21,11 @@ class UserController {
     }
   }
 
+  updateUserImage(String image) {
+    final updatedUser = currentUser?.copyWith(image: image);
+    setCurrentUser(updatedUser);
+  }
+
   Stream<double?> get userBalanceStream => currentUserStream.map(getBalance);
   double? get userBalance => getBalance(currentUser);
   setUserBalance(double newBalance) {
@@ -64,7 +69,7 @@ class UserController {
   // ran only after login/sign up or on refresh
   Future<User?> getCurrentUser(String userId) async {
     try {
-      final User? user = await fetchUserById(userId, null);
+      final User? user = await fetchUserByIdRequest(userId, null);
       if (user != null) {
         setCurrentUser(user);
       }
@@ -75,10 +80,30 @@ class UserController {
     }
   }
 
+  Future<bool> fetchUpdateUserImage(String? imageSeed) async {
+    try {
+      if (currentUser == null || imageSeed == null) {
+        return false;
+      }
+
+      final bool successfulUpdate =
+          await updateUserImageRequest(currentUser!.id, imageSeed);
+
+      if (successfulUpdate == true) {
+        updateUserImage(imageSeed);
+        return true;
+      }
+      return false;
+    } catch (err) {
+      print(err);
+      return false;
+    }
+  }
+
   Future<bool> updateUserPointsScore(int pointsToAdd) async {
     if (currentUser != null && pointsToAdd > 0) {
       final bool updateResult =
-          await updatePointsScore(currentUser!.id, pointsToAdd);
+          await updatePointsScoreRequest(currentUser!.id, pointsToAdd);
 
       return updateResult;
     } else {
@@ -88,8 +113,9 @@ class UserController {
 
   Future<bool> updateUserPointsScoreAndTimestamp(int pointsToAdd) async {
     if (currentUser != null && pointsToAdd > 0) {
-      final bool updateResult = await updatePointsScoreWithUpdateTimestamp(
-          currentUser!.id, pointsToAdd);
+      final bool updateResult =
+          await updatePointsScoreWithUpdateTimestampRequest(
+              currentUser!.id, pointsToAdd);
 
       if (updateResult) {
         setUserUpdatedAt(DateTime.now());

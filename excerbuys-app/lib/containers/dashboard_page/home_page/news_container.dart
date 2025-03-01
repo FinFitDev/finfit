@@ -1,4 +1,4 @@
-import 'package:excerbuys/components/loaders/universal_loader_box.dart';
+import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';

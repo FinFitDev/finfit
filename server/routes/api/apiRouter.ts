@@ -3,6 +3,7 @@ import {
   getUserById,
   getUsersBySearch,
   transferPointsToOtherUsers,
+  updateUserImage,
   updateUserPointsScore,
   updateUserPointsScoreWithUpdateTimestamp,
 } from "./services/userService";
@@ -34,7 +35,7 @@ apiRouter.get(
 );
 
 apiRouter.post(
-  "/users/:id",
+  "/users/points/:id",
   async (
     req: RequestWithPayload<
       { points: number; steps_updated_at?: string },
@@ -64,6 +65,28 @@ apiRouter.post(
     } catch (error: any) {
       res.status(error.statusCode ?? 404).json({
         message: "Something went wrong when updating the point score",
+        error: error.message,
+      });
+    }
+  }
+);
+
+apiRouter.post(
+  "/users/image/:id",
+  async (
+    req: RequestWithPayload<{ image: string }, { id: string }>,
+    res: Response
+  ) => {
+    try {
+      const user_id = req.params.id;
+      const { image } = req.body;
+
+      const response = await updateUserImage(user_id, image);
+
+      res.status(200).json({ message: "Image updated", content: response });
+    } catch (error: any) {
+      res.status(error.statusCode ?? 404).json({
+        message: "Something went wrong when updating the image",
         error: error.message,
       });
     }

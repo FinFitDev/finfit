@@ -1,5 +1,5 @@
 import 'package:excerbuys/components/dashboard_page/home_page/activity_card/activity_card.dart';
-import 'package:excerbuys/components/loaders/universal_loader_box.dart';
+import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/home/utils.dart';
@@ -230,7 +230,18 @@ Widget loadingWorkouts() {
           SizedBox(
             height: 8,
           ),
-          UniversalLoaderBox(height: 70)
+          UniversalLoaderBox(height: 70),
+          SizedBox(
+            height: 16,
+          ),
+          UniversalLoaderBox(
+            height: 20,
+            width: 150,
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          UniversalLoaderBox(height: 70),
         ],
       ));
 }

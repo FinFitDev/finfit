@@ -1,5 +1,5 @@
 import 'package:excerbuys/components/dashboard_page/home_page/shop_item_card.dart';
-import 'package:excerbuys/components/loaders/universal_loader_box.dart';
+import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/components/shared/indicators/current_item/current_item_indicator.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/utils/constants.dart';

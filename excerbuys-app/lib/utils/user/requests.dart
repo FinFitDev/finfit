@@ -4,7 +4,7 @@ import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 
-Future<bool> updatePointsScoreWithUpdateTimestamp(
+Future<bool> updatePointsScoreWithUpdateTimestampRequest(
     String userId, int points) async {
   try {
     final res = await handleBackendRequests(
@@ -26,11 +26,11 @@ Future<bool> updatePointsScoreWithUpdateTimestamp(
   }
 }
 
-Future<bool> updatePointsScore(String userId, int points) async {
+Future<bool> updatePointsScoreRequest(String userId, int points) async {
   try {
     final res = await handleBackendRequests(
         method: HTTP_METHOD.POST,
-        endpoint: 'api/v1/users/$userId',
+        endpoint: 'api/v1/users/points/$userId',
         body: {
           "points": points.toString(),
         });
@@ -46,7 +46,28 @@ Future<bool> updatePointsScore(String userId, int points) async {
   }
 }
 
-Future<User?> fetchUserById(String userId, CancelToken? cancelToken) async {
+Future<bool> updateUserImageRequest(String userId, String image) async {
+  try {
+    final res = await handleBackendRequests(
+        method: HTTP_METHOD.POST,
+        endpoint: 'api/v1/users/image/$userId',
+        body: {
+          "image": image,
+        });
+
+    if (res['error'] != null) {
+      throw res['error'];
+    }
+
+    return res['content'] == 'UPDATE';
+  } catch (error) {
+    print(error);
+    return false;
+  }
+}
+
+Future<User?> fetchUserByIdRequest(
+    String userId, CancelToken? cancelToken) async {
   try {
     final res = await handleBackendRequests(
         method: HTTP_METHOD.GET,

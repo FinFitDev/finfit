@@ -1,3 +1,5 @@
+import 'package:excerbuys/components/shared/profile_image_generator.dart';
+import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,6 +11,7 @@ class AppbarIconButton extends StatelessWidget {
   final String name;
   final void Function() onPressed;
   final bool? isLast;
+  final bool? isProfile;
   const AppbarIconButton(
       {super.key,
       this.padding,
@@ -16,7 +19,8 @@ class AppbarIconButton extends StatelessWidget {
       required this.icon,
       required this.onPressed,
       this.isLast,
-      required this.name});
+      required this.name,
+      this.isProfile});
 
   @override
   Widget build(BuildContext context) {
@@ -29,16 +33,19 @@ class AppbarIconButton extends StatelessWidget {
         margin: EdgeInsets.only(right: isLast == true ? 0 : 20),
         child: Column(
           children: [
-            SvgPicture.asset(
-              icon,
-              colorFilter: ColorFilter.mode(
-                  isActive == true
-                      ? Theme.of(context).colorScheme.secondary
-                      : Theme.of(context).colorScheme.tertiaryContainer,
-                  BlendMode.srcIn),
-              width: 32,
-              height: 32,
-            ),
+            isProfile == true
+                ? ProfileImageGenerator(
+                    seed: userController.currentUser?.image, size: 32)
+                : SvgPicture.asset(
+                    icon,
+                    colorFilter: ColorFilter.mode(
+                        isActive == true
+                            ? Theme.of(context).colorScheme.secondary
+                            : Theme.of(context).colorScheme.tertiaryContainer,
+                        BlendMode.srcIn),
+                    width: 32,
+                    height: 32,
+                  ),
             SizedBox(
               height: 5,
             ),

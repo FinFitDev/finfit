@@ -67,7 +67,7 @@ class _RecentPageState extends State<RecentPage> {
                               child: Container(
                                 padding: EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: colors.secondary,
+                                  color: colors.primaryContainer,
                                 ),
                                 child: Row(
                                   children: [
@@ -77,7 +77,7 @@ class _RecentPageState extends State<RecentPage> {
                                         activeBackgroundColor: colors.primary,
                                         backgroundColor: Colors.transparent,
                                         activeTextColor: colors.secondary,
-                                        textColor: colors.primary,
+                                        textColor: colors.tertiaryContainer,
                                         onPressed: () {
                                           historyController.setActiveCategory(
                                               RECENT_DATA_CATEGORY.DAILY);
@@ -94,7 +94,7 @@ class _RecentPageState extends State<RecentPage> {
                                         activeBackgroundColor: colors.primary,
                                         backgroundColor: Colors.transparent,
                                         activeTextColor: colors.secondary,
-                                        textColor: colors.primary,
+                                        textColor: colors.tertiaryContainer,
                                         onPressed: () {
                                           historyController.setActiveCategory(
                                               RECENT_DATA_CATEGORY

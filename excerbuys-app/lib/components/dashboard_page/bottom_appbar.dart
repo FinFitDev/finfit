@@ -1,6 +1,8 @@
 import 'package:excerbuys/components/shared/buttons/appbar_icon_button.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
+import 'package:excerbuys/store/controllers/user_controller.dart';
+import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -69,15 +71,22 @@ class _BottomBarState extends State<BottomBar> {
                       },
                       isActive: snapshot.data == 2,
                     ),
-                    AppbarIconButton(
-                      name: 'Profile',
-                      icon: 'assets/svg/profile.svg',
-                      onPressed: () {
-                        dashboardController.setActivePage(3);
-                      },
-                      isActive: snapshot.data == 3,
-                      isLast: true,
-                    ),
+                    StreamBuilder<User?>(
+                        stream: userController.currentUserStream,
+                        builder: (context, userSnapshot) {
+                          return AppbarIconButton(
+                            name: 'Profile',
+                            icon: 'assets/svg/profile.svg',
+                            isProfile: userSnapshot.hasData,
+                            onPressed: () {
+                              !userSnapshot.hasData
+                                  ? null
+                                  : dashboardController.setActivePage(3);
+                            },
+                            isActive: snapshot.data == 3,
+                            isLast: true,
+                          );
+                        }),
                   ],
                 ),
               ),

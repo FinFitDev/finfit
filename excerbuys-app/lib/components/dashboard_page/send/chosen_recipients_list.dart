@@ -24,6 +24,7 @@ class _ChosenRecipientsListState extends State<ChosenRecipientsList> {
       padding: EdgeInsets.symmetric(vertical: 10),
       height: 100,
       child: ListView.builder(
+        padding: EdgeInsets.only(left: HORIZOTAL_PADDING, right: 8),
         scrollDirection: Axis.horizontal,
         itemCount: widget.selectedUsers.length,
         itemBuilder: (context, index) {

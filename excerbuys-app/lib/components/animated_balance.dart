@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:flutter/material.dart';
 

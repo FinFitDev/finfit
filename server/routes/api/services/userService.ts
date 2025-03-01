@@ -3,6 +3,7 @@ import {
   fetchUserById,
   fetchUsersByRegex,
   transferPointsTransaction,
+  updateImageSeed,
   updatePointsScore,
   updatePointsScoreWithUpdateTimestamp,
 } from "../../../models/userModel";
@@ -30,6 +31,11 @@ export const getUsersBySearch = async (
   else {
     throw new ErrorWithCode(`No users found with search ${search}`, 404);
   }
+};
+
+export const updateUserImage = async (user_id: string, image: string) => {
+  const response = await updateImageSeed(user_id, image);
+  return response.command;
 };
 
 export const updateUserPointsScore = async (

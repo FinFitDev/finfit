@@ -1,4 +1,4 @@
-import 'package:excerbuys/components/loaders/universal_loader_box.dart';
+import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/components/shared/profile_image_generator.dart';
 import 'package:excerbuys/store/controllers/dashboard/send_controller.dart';
 import 'package:excerbuys/types/user.dart';
@@ -18,7 +18,6 @@ class UsersList extends StatelessWidget {
     final texts = Theme.of(context).textTheme;
 
     return SingleChildScrollView(
-        padding: EdgeInsets.only(top: 16),
         child: isLoading == true
             ? loadingUsers()
             : usersForSearch == null || usersForSearch!.isEmpty
