@@ -2,8 +2,6 @@ import 'dart:io';
 import 'package:excerbuys/store/controllers/activity/steps_controller.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
-import 'package:excerbuys/types/activity.dart';
-import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
@@ -66,6 +64,17 @@ class ActivityController {
     setHealthSdkStatus(status ?? HealthConnectSdkStatus.sdkUnavailable);
   }
 
+  final BehaviorSubject<double> _todaysPoints = BehaviorSubject.seeded(0);
+  Stream<double> get todaysPointsStream => _todaysPoints.stream;
+  double get todaysPoints => _todaysPoints.value;
+  addTodaysPoints(double toAdd) {
+    _todaysPoints.add(todaysPoints + toAdd);
+  }
+
+  setTodaysPoints(double points) {
+    _todaysPoints.add(points);
+  }
+
   final BehaviorSubject<double> _totalPointsToAdd = BehaviorSubject.seeded(0);
   Stream<double> get totalPointsToAddStream => _totalPointsToAdd.stream;
   double get totalPointsToAdd => _totalPointsToAdd.value;
@@ -88,7 +97,10 @@ class ActivityController {
       print('Health connect unauthorized');
       return;
     }
-    // await userController.fetchCurrentUser('11');
+    // await userController
+    //     .fetchCurrentUser('afd90984-17ec-456b-a735-0be89e48300f');
+
+    // await userController.getCurrentUser('b1588072-8da4-4ab2-a79e-70816401d3f6');
     await trainingsController.fetchTrainings();
     await stepsController.fetchsSteps();
     userController.addUserBalance(totalPointsToAdd);

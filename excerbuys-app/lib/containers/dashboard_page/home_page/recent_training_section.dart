@@ -1,5 +1,5 @@
 import 'package:excerbuys/components/dashboard_page/home_page/activity_card/activity_card.dart';
-import 'package:excerbuys/components/loaders/universal_loader_box.dart';
+import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/home/utils.dart';
@@ -10,9 +10,17 @@ import 'package:health/health.dart';
 class RecentTrainingSection extends StatefulWidget {
   final Map<String, ITrainingEntry> recentTraining;
   final bool? isLoading;
+  final bool? isDaily;
+  final bool? hideTitle;
+  final bool? allowLoadMore;
 
   const RecentTrainingSection(
-      {super.key, required this.recentTraining, this.isLoading});
+      {super.key,
+      required this.recentTraining,
+      this.isLoading,
+      this.isDaily,
+      this.hideTitle,
+      this.allowLoadMore});
 
   @override
   State<RecentTrainingSection> createState() => _RecentTrainingSectionState();
@@ -33,7 +41,11 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
           ? '${splitParsedDate[0]} ${splitParsedDate[1]}'
           : splitParsedDate[0];
 
-      groupedData.putIfAbsent(dateKey, () => []).add(el);
+      groupedData
+          .putIfAbsent(
+              '${dateKey}_${DateTime.now().difference(el.createdAt).inDays}',
+              () => [])
+          .add(el);
     }
 
     setState(() {
@@ -58,59 +70,78 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final texts = Theme.of(context).textTheme;
 
     return Builder(builder: (BuildContext context) {
       if (widget.recentTraining.isEmpty) {
-        return emptyActivity;
+        return emptyActivity(colors, texts, widget.isDaily ?? false);
       }
 
       return Container(
-        margin:
-            EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING, vertical: 24),
+        margin: EdgeInsets.symmetric(
+            horizontal: HORIZOTAL_PADDING,
+            vertical: widget.hideTitle == true ? 0 : 24),
         child:
             Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          Text(
-            'Last workouts',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: colors.tertiary,
-            ),
-          ),
+          widget.hideTitle == true
+              ? SizedBox.shrink()
+              : Text(
+                  widget.isDaily == true ? 'Daily workouts' : 'Last workouts',
+                  style: texts.headlineLarge,
+                ),
           Builder(builder: (context) {
             if (widget.isLoading == true) {
               return loadingWorkouts();
             }
-            return Column(
-              children: [
-                ..._groupedTrainingsData.entries.indexed.map((el) {
-                  final index = el.$1;
-                  final key = el.$2.key;
-                  final values = el.$2.value;
+            return ListView.builder(
+              padding: EdgeInsets.all(0),
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: _groupedTrainingsData.length,
+              itemBuilder: (context, index) {
+                final entry = _groupedTrainingsData.entries.elementAt(index);
+                final keyParts = entry.key.split('_');
+                final dateLabel = keyParts[0];
+                final daysAgo = keyParts.length > 1 ? keyParts[1] : '';
 
-                  return Column(
-                    children: [
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (widget.isDaily != true)
                       Container(
-                        margin: EdgeInsets.only(top: 16, bottom: 4),
+                        margin: EdgeInsets.only(top: 12, bottom: 4),
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              key,
+                              dateLabel,
                               style: TextStyle(
                                   fontSize: 15,
                                   color: colors.tertiaryContainer),
                             ),
+                            SizedBox(width: 6),
+                            if (dateLabel != 'Today' &&
+                                dateLabel != 'Yesterday')
+                              Text(
+                                '($daysAgo days ago)',
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    color: colors.tertiaryContainer
+                                        .withAlpha(150)),
+                              ),
                             Expanded(
-                                child: Container(
-                              margin: EdgeInsets.only(left: 8),
-                              height: 1,
-                              color: colors.tertiaryContainer.withAlpha(100),
-                            ))
+                              child: Container(
+                                margin: EdgeInsets.only(left: 8),
+                                height: 0,
+                                color: colors.tertiaryContainer.withAlpha(100),
+                              ),
+                            )
                           ],
                         ),
                       ),
-                      ...values.toList().asMap().entries.map((entry) {
-                        ITrainingEntry healthData = entry.value;
+                    Column(
+                      // Replaced inner ListView with Column
+                      children: entry.value.map((healthData) {
                         final type = HealthWorkoutActivityType.values
                             .firstWhere((el) => el.name == healthData.type);
 
@@ -122,11 +153,11 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
                           duration: healthData.duration,
                           calories: healthData.calories,
                         );
-                      })
-                    ],
-                  );
-                }),
-              ],
+                      }).toList(),
+                    ),
+                  ],
+                );
+              },
             );
           }),
         ]),
@@ -135,9 +166,7 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
   }
 }
 
-final Widget emptyActivity = Builder(builder: (BuildContext context) {
-  final colors = Theme.of(context).colorScheme;
-
+Widget emptyActivity(ColorScheme colors, TextTheme texts, bool isDaily) {
   return Container(
     margin: EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING, vertical: 24),
     child: Column(
@@ -147,18 +176,16 @@ final Widget emptyActivity = Builder(builder: (BuildContext context) {
         Container(
           margin: EdgeInsets.only(bottom: 12),
           child: Text(
-            'No workouts yet',
+            isDaily == true ? 'Daily workouts' : 'No workouts yet',
             textAlign: TextAlign.start,
-            style: TextStyle(
-              color: colors.tertiary,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),
+            style: texts.headlineLarge,
           ),
         ),
         Text(
           textAlign: TextAlign.start,
-          'Start working out to earn fitness points and claim your discounts in the shop!',
+          isDaily == true
+              ? 'Could not find workout data for the selected date. Make sure to change that next time :)'
+              : 'Start working out to earn finpoints and claim your discounts in the shop!',
           style: TextStyle(
             color: colors.primaryFixedDim,
           ),
@@ -166,7 +193,7 @@ final Widget emptyActivity = Builder(builder: (BuildContext context) {
       ],
     ),
   );
-});
+}
 
 Widget loadingWorkouts() {
   return Container(
@@ -203,7 +230,18 @@ Widget loadingWorkouts() {
           SizedBox(
             height: 8,
           ),
-          UniversalLoaderBox(height: 70)
+          UniversalLoaderBox(height: 70),
+          SizedBox(
+            height: 16,
+          ),
+          UniversalLoaderBox(
+            height: 20,
+            width: 150,
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          UniversalLoaderBox(height: 70),
         ],
       ));
 }

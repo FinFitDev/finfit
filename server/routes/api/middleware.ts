@@ -14,8 +14,9 @@ export const middleware = (req: Request, res: Response, next: NextFunction) => {
   if (token == process.env.SECURITY_TOKEN) return next();
 
   jwt.verify(token, process.env.JWT_SECRET as string, (err, data) => {
-    if (err) return res.status(403).json({ error: "Token invalid or expired" });
-
+    if (err) {
+      return res.status(403).json({ error: "Token invalid or expired" });
+    }
     (req as any).user = data;
     next();
   });

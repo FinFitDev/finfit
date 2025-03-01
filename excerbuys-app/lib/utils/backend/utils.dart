@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:excerbuys/store/controllers/auth_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
@@ -6,7 +7,8 @@ Future<dynamic> handleBackendRequests(
     {required String endpoint,
     required HTTP_METHOD method,
     Map<String, String>? headers,
-    Object? body}) async {
+    Object? body,
+    CancelToken? cancelToken}) async {
   String accessToken = authController.accessToken;
   final String refreshToken = authController.refreshToken;
 
@@ -17,6 +19,8 @@ Future<dynamic> handleBackendRequests(
         url: "${BACKEND_BASE_URL}auth/verify",
         method: HTTP_METHOD.POST,
         body: {"access_token": accessToken});
+
+    print(verifyResponse);
 
     if (!verifyResponse['valid_token']) {
       // throw if we cant refresh
@@ -37,15 +41,17 @@ Future<dynamic> handleBackendRequests(
     }
 
     return await httpHandler(
-        url: "${BACKEND_BASE_URL}$endpoint",
+        url: "$BACKEND_BASE_URL$endpoint",
         method: method,
         headers: {...(headers ?? {}), "authorization": "Bearer $accessToken"},
-        body: body);
+        body: body,
+        cancelToken: cancelToken);
   }
 
   return await httpHandler(
-      url: "${BACKEND_BASE_URL}$endpoint",
+      url: "$BACKEND_BASE_URL$endpoint",
       method: method,
       headers: headers,
-      body: body);
+      body: body,
+      cancelToken: cancelToken);
 }

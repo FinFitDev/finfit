@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageController {
   SharedPreferences? instance;
+  // persistent until device factory reset
   FlutterSecureStorage? hardStorage;
 
   // get instance (singleton pattern)

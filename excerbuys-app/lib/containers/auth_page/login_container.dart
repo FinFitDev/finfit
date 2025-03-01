@@ -61,10 +61,16 @@ class _LoginContainerState extends State<LoginContainer> {
       setState(() {
         _loading = true;
       });
+      await widget.logIn(
+          _formFieldsState[LOGIN_FIELD_TYPE.LOGIN]!.replaceAll(' ', ''),
+          _formFieldsState[LOGIN_FIELD_TYPE.PASSWORD]!.replaceAll(' ', ''));
 
-      final Map<LOGIN_FIELD_TYPE, String?>? serverResponse = await widget.logIn(
-          _formFieldsState[LOGIN_FIELD_TYPE.LOGIN]!,
-          _formFieldsState[LOGIN_FIELD_TYPE.PASSWORD]!);
+      if (context.mounted) {
+        navigateWithClear(route: '/', context: context);
+      }
+    } catch (error) {
+      final Map<LOGIN_FIELD_TYPE, dynamic>? serverResponse =
+          error as Map<LOGIN_FIELD_TYPE, dynamic>?;
 
       if (serverResponse != null) {
         serverResponse.forEach((key, val) {
@@ -72,14 +78,7 @@ class _LoginContainerState extends State<LoginContainer> {
             _formErrorsState[key] = val;
           });
         });
-        return;
       }
-
-      if (context.mounted) {
-        navigateWithClear(route: '/', context: context);
-      }
-    } catch (error) {
-      return;
     } finally {
       setState(() {
         _loading = false;
@@ -100,9 +99,9 @@ class _LoginContainerState extends State<LoginContainer> {
       if (googleUser != null) {
         final GoogleSignInAuthentication googleAuth =
             await googleUser.authentication;
-        String id_token = googleAuth.idToken!;
+        String idToken = googleAuth.idToken!;
 
-        await widget.useGoogleAuth(id_token);
+        await widget.useGoogleAuth(idToken);
 
         if (context.mounted) {
           navigateWithClear(route: '/');
@@ -120,6 +119,8 @@ class _LoginContainerState extends State<LoginContainer> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
+    final texts = Theme.of(context).textTheme;
+
     final bool isButtonDisabled = _formErrorsState.values
             .any((value) => value != null && value.isNotEmpty) ||
         _formFieldsState.values.any((value) => value.isEmpty);
@@ -130,7 +131,7 @@ class _LoginContainerState extends State<LoginContainer> {
         children: [
           Column(children: [
             InputWithIcon(
-              leftIcon: 'assets/svg/profile.svg',
+              leftIcon: 'assets/svg/login.svg',
               placeholder: 'Login',
               onChange: (String val) {
                 setState(() {
@@ -140,6 +141,10 @@ class _LoginContainerState extends State<LoginContainer> {
               },
               error: _formErrorsState[LOGIN_FIELD_TYPE.LOGIN],
               disabled: _loading,
+              borderRadius: 10,
+            ),
+            SizedBox(
+              height: 16,
             ),
             InputWithIcon(
               leftIcon: 'assets/svg/padlock.svg',
@@ -153,9 +158,13 @@ class _LoginContainerState extends State<LoginContainer> {
               error: _formErrorsState[LOGIN_FIELD_TYPE.PASSWORD],
               isPassword: true,
               disabled: _loading,
+              borderRadius: 10,
             ),
             loginOptions(colors),
           ]),
+          SizedBox(
+            height: 16,
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -197,7 +206,7 @@ class _LoginContainerState extends State<LoginContainer> {
                   style: TextButton.styleFrom(
                     backgroundColor: colors.primaryContainer,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
+                        borderRadius: BorderRadius.circular(10)),
                   ),
                   onPressed: signInWithGoogle,
                   label: Text(
@@ -220,7 +229,7 @@ class _LoginContainerState extends State<LoginContainer> {
                         style: TextButton.styleFrom(
                             backgroundColor: Colors.black,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)),
+                                borderRadius: BorderRadius.circular(10)),
                             padding: const EdgeInsets.only(right: 15)),
                         onPressed: () {},
                         label: Text(

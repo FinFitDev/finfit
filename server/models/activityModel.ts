@@ -6,7 +6,7 @@ import {
 import { pool } from "../shared/utils/db";
 
 export const fetchRecentUserTrainings = async (
-  user_id: number,
+  user_id: string,
   limit?: number,
   offset?: number
 ) => {
@@ -44,7 +44,7 @@ export const insertTraining = async ({
 
 export const insertNewTrainingsPointsUpdateTransaction = async (
   trainings: ITrainingEntry[],
-  userId: number
+  userId: string
 ) => {
   const client = await pool.connect();
 
@@ -137,7 +137,7 @@ export const insertHourlySteps = async ({
 // select values which we should aggregate into the daily_steps table
 export const extractExpiredHourlySteps = async (
   timestamp: Date,
-  user_id: number
+  user_id: string
 ) => {
   const response = await pool.query(
     `SELECT * 
@@ -183,7 +183,7 @@ export const insertDailySteps = async ({
 // select values which we should aggregate into the monthly_steps table
 export const extractExpiredDailySteps = async (
   timestamp: Date,
-  user_id: number
+  user_id: string
 ) => {
   const response = await pool.query(
     `SELECT *

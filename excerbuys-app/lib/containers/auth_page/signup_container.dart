@@ -78,26 +78,24 @@ class _SignupContainerState extends State<SignupContainer> {
         _loading = true;
       });
 
-      final Map<SIGNUP_FIELD_TYPE, String?>? serverResponse =
-          await widget.signUp(
-              _formFieldsState[SIGNUP_FIELD_TYPE.USERNAME]!,
-              _formFieldsState[SIGNUP_FIELD_TYPE.EMAIL]!,
-              _formFieldsState[SIGNUP_FIELD_TYPE.PASSWORD]!);
+      await widget.signUp(
+          _formFieldsState[SIGNUP_FIELD_TYPE.USERNAME]!.replaceAll(' ', ''),
+          _formFieldsState[SIGNUP_FIELD_TYPE.EMAIL]!.replaceAll(' ', ''),
+          _formFieldsState[SIGNUP_FIELD_TYPE.PASSWORD]!.replaceAll(' ', ''));
 
+      if (context.mounted) {
+        navigateWithClear(route: '/', context: context);
+      }
+    } catch (error) {
+      final Map<SIGNUP_FIELD_TYPE, dynamic>? serverResponse =
+          error as Map<SIGNUP_FIELD_TYPE, dynamic>?;
       if (serverResponse != null) {
         serverResponse.forEach((key, val) {
           setState(() {
             _formErrorsState[key] = val;
           });
         });
-        return;
       }
-
-      if (context.mounted) {
-        navigateWithClear(route: '/', context: context);
-      }
-    } catch (error) {
-      return;
     } finally {
       setState(() {
         _loading = false;
@@ -128,6 +126,10 @@ class _SignupContainerState extends State<SignupContainer> {
               });
             },
             error: _formErrorsState[SIGNUP_FIELD_TYPE.USERNAME],
+            borderRadius: 10,
+          ),
+          SizedBox(
+            height: 16,
           ),
           InputWithIcon(
             leftIcon: 'assets/svg/email.svg',
@@ -139,6 +141,11 @@ class _SignupContainerState extends State<SignupContainer> {
               });
             },
             error: _formErrorsState[SIGNUP_FIELD_TYPE.EMAIL],
+            borderRadius: 10,
+            inputType: TextInputType.emailAddress,
+          ),
+          SizedBox(
+            height: 16,
           ),
           InputWithIcon(
             leftIcon: 'assets/svg/padlock.svg',
@@ -151,6 +158,10 @@ class _SignupContainerState extends State<SignupContainer> {
             },
             error: _formErrorsState[SIGNUP_FIELD_TYPE.PASSWORD],
             isPassword: true,
+            borderRadius: 10,
+          ),
+          SizedBox(
+            height: 16,
           ),
           InputWithIcon(
             leftIcon: 'assets/svg/padlock.svg',
@@ -163,6 +174,10 @@ class _SignupContainerState extends State<SignupContainer> {
             },
             error: _formErrorsState[SIGNUP_FIELD_TYPE.PASSWORD_REPEAT],
             isPassword: true,
+            borderRadius: 10,
+          ),
+          SizedBox(
+            height: 16,
           ),
         ]),
         MainButton(

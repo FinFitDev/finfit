@@ -21,6 +21,12 @@ class DashboardController {
   setBalanceHidden(bool value) {
     _balanceHidden.add(value);
   }
+
+  reset() {
+    setActivePage(0);
+    setScrollDistance(0);
+    setBalanceHidden(false);
+  }
 }
 
 DashboardController dashboardController = DashboardController();

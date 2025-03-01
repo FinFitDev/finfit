@@ -13,7 +13,6 @@ export const regenerateAccessTokenFromRefreshToken = async (
   refresh_token: IRefreshToken
 ) => {
   if (!refresh_token) throw new ErrorWithCode("You are not authorized", 401);
-
   const found_token = await fetchTokenFromDb(refresh_token);
 
   if (found_token.rowCount == 0)

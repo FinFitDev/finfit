@@ -23,7 +23,7 @@ import {
 import { response } from "express";
 
 export const getUserRecentTrainings = async (
-  user_id: number,
+  user_id: string,
   limit?: number,
   offset?: number
 ) => {
@@ -33,7 +33,7 @@ export const getUserRecentTrainings = async (
 
 export const addTrainings = async (trainings: string[]) => {
   if (!trainings.length) {
-    return 0;
+    return "0";
   }
   const parsedTrainings: ITrainingEntry[] = trainings.map((training) =>
     JSON.parse(training)
@@ -82,7 +82,7 @@ export const addStepsData = async (hourlySteps: string[]) => {
 
 export const aggregateExpiredData = async (
   thresholdDate: Date,
-  user_id: number,
+  user_id: string,
   dataToMergeAggregate: IHourlyStepEntry[]
 ) => {
   const responseSelectExpired: QueryResult<IHourlyStepEntry> =

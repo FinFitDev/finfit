@@ -14,15 +14,16 @@ export const fetchUsersByRegex = async (
   limit: number,
   offset: number
 ) => {
-  const response = await pool.query(
-    "SELECT id, username, email, image, created_at, points, steps_updated_at FROM users u WHERE LIKE(u.username, $1) OR LIKE(u.email, $1) LIMIT $2 OFFSET $3",
-    [regex, limit, offset]
-  );
+  const formattedRegex = `%${regex.toLowerCase()}%`;
 
+  const response = await pool.query(
+    "SELECT id, username, email, image, created_at, points, steps_updated_at FROM users u WHERE LOWER(u.username) LIKE $1 LIMIT $2 OFFSET $3",
+    [formattedRegex, limit, offset]
+  );
   return response;
 };
 
-export const fetchUserById = async (id: number) => {
+export const fetchUserById = async (id: string) => {
   const response = await pool.query(
     "SELECT id, username, email, image, created_at, points, steps_updated_at FROM users WHERE users.id = $1",
     [id]
@@ -32,27 +33,30 @@ export const fetchUserById = async (id: number) => {
 };
 
 export const insertUser = async (
+  id: string,
   username: string,
   email: string,
-  password: string
+  password: string,
+  image: string
 ) => {
   const response = await pool.query(
-    "INSERT INTO users (username, email, password) VALUES ($1, $2, $3)",
-    [username, email, password]
+    "INSERT INTO users (id, username, email, password, image) VALUES ($1, $2, $3, $4, $5)",
+    [id, username, email, password, image]
   );
 
   return response;
 };
 
 export const insertGoogleAuthUser = async (
+  id: string,
   username: string,
   email: string,
   google_id: string,
-  image?: string
+  image: string
 ) => {
   const response = await pool.query(
-    "INSERT INTO users (username, email, google_id, image) VALUES ($1, $2, $3, $4)",
-    [username, email, google_id, image]
+    "INSERT INTO users (id, username, email, google_id, image) VALUES ($1, $2, $3, $4, $5)",
+    [id, username, email, google_id, image]
   );
 
   return response;
@@ -85,7 +89,16 @@ export const fetchUserByUsernameOrEmail = async (login: string) => {
   return response;
 };
 
-export const updatePointsScore = async (user_id: number, points: number) => {
+export const updateImageSeed = async (user_id: string, image: string) => {
+  const response = await pool.query(
+    "UPDATE users SET image = $1 WHERE id = $2;",
+    [image, user_id]
+  );
+
+  return response;
+};
+
+export const updatePointsScore = async (user_id: string, points: number) => {
   const response = await pool.query(
     "UPDATE users SET points = points + $1 WHERE id = $2;",
     [points, user_id]
@@ -95,7 +108,7 @@ export const updatePointsScore = async (user_id: number, points: number) => {
 };
 
 export const updatePointsScoreWithUpdateTimestamp = async (
-  user_id: number,
+  user_id: string,
   points: number,
   steps_updated_at: string
 ) => {
@@ -105,4 +118,58 @@ export const updatePointsScoreWithUpdateTimestamp = async (
   );
 
   return response;
+};
+
+export const transferPointsTransaction = async (
+  userId: string,
+  recipientsIds: string[],
+  totalAmount: number,
+  fractionAmount: number
+) => {
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    const remainingPoints = await client.query(
+      `
+        WITH users AS (
+          UPDATE users
+          SET points = points - $1
+          WHERE id = $2
+          RETURNING points
+        )
+        SELECT points FROM users
+      `,
+      [Math.round(totalAmount), userId]
+    );
+
+    const userRemainingPoints = remainingPoints.rows[0]?.points;
+
+    if (userRemainingPoints < 0) {
+      await client.query("ROLLBACK");
+      throw new Error("Not enough points for the transaction.");
+    }
+
+    for (const recipientId of recipientsIds) {
+      await client.query(
+        `
+          UPDATE users
+          SET points = points + $1
+          WHERE id = $2
+        `,
+        [fractionAmount, recipientId]
+      );
+    }
+
+    await client.query("COMMIT");
+
+    return userRemainingPoints;
+  } catch (err) {
+    await client.query("ROLLBACK");
+    console.error("Error transferring points:", err);
+    throw err;
+  } finally {
+    client.release();
+  }
 };

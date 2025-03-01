@@ -1,5 +1,9 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+
 class User {
-  final int id;
+  final String id;
   final String username;
   final String email;
   final DateTime createdAt;
@@ -14,18 +18,20 @@ class User {
       required this.createdAt,
       required this.points,
       required this.stepsUpdatedAt,
-      this.image});
+      String? image})
+      : image = image == 'NULL' ? null : image;
 
   // Factory constructor to create a User from a Map
   factory User.fromMap(Map<String, dynamic> map) {
+    final String? image = map['image'] == 'NULL' ? null : map['image'];
     return User(
-      id: int.parse(map['id']),
+      id: map['id'],
       username: map['username'],
       email: map['email'],
       createdAt: DateTime.parse(map['createdAt']),
       points: double.parse(map['points']), // Ensure double conversion
       stepsUpdatedAt: DateTime.parse(map['stepsUpdatedAt']),
-      image: map['image'], // image is nullable, so it can handle nulls
+      image: image, // image is nullable, so it can handle nulls
     );
   }
 
@@ -42,8 +48,20 @@ class User {
     }""";
   }
 
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "username": username,
+      "email": email,
+      "createdAt": createdAt.toIso8601String(),
+      "stepsUpdatedAt": stepsUpdatedAt.toIso8601String(),
+      "points": points.toString(),
+      "image": image
+    };
+  }
+
   User copyWith({
-    int? id,
+    String? id,
     String? username,
     String? email,
     DateTime? createdAt,
@@ -61,4 +79,48 @@ class User {
       image: image ?? this.image,
     );
   }
+}
+
+class UserItem {
+  final User user;
+  final DateTime timestamp;
+
+  const UserItem({required this.user, required this.timestamp});
+
+  @override
+  String toString() {
+    return jsonEncode({
+      "user": user.toMap(), // ✅ Convert to Map before encoding
+      "timestamp": timestamp.toIso8601String(), // ✅ Store in ISO format
+    });
+  }
+
+  static UserItem fromMap(Map<String, dynamic> map) {
+    return UserItem(
+      user: User.fromMap(map["user"]),
+      timestamp: DateTime.parse(map["timestamp"]),
+    );
+  }
+}
+
+// used for profile image generation
+class ShapeModel {
+  final Color color;
+  final double x;
+  final double y;
+  final double w;
+  final double h;
+  final double angle;
+  final CustomPainter Function(Color, double, double, double, double, double)
+      painter;
+
+  ShapeModel({
+    required this.color,
+    required this.x,
+    required this.y,
+    required this.w,
+    required this.h,
+    required this.angle,
+    required this.painter,
+  });
 }

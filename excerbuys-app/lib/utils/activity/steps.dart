@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/types/activity.dart';
-import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
 import 'package:excerbuys/utils/utils.dart';
@@ -11,7 +10,7 @@ import 'package:health/health.dart';
 List<IHourlyStepsEntry>? convertStepsToRequest(
     Map<String, HealthDataPoint> stepsData,
     Map<String, ITrainingEntry> trainingsData) {
-  final int? userId = userController.currentUser?.id;
+  final String? userId = userController.currentUser?.id;
   try {
     if (userId == null) {
       throw Exception('Not authorized');
@@ -72,7 +71,7 @@ Map<int, int> divideStepsIntoHours(List<HealthDataPoint> data) {
   // create a map of steps for each hour
   Map<int, int> hourlySteps = {for (int i = 0; i < 24; i++) i: 0};
 
-  data.forEach((dataPoint) {
+  for (var dataPoint in data) {
     final int key = dataPoint.dateFrom.hour;
     if (hourlySteps.containsKey(key)) {
       hourlySteps[key] = (hourlySteps[key]! +
@@ -82,7 +81,7 @@ Map<int, int> divideStepsIntoHours(List<HealthDataPoint> data) {
       hourlySteps[key] =
           (dataPoint.value as NumericHealthValue).numericValue.round();
     }
-  });
+  }
 
   return hourlySteps;
 }
@@ -147,4 +146,8 @@ List<IHourlyStepsEntry> getTodaysSteps(List<IHourlyStepsEntry> stepsData) {
       .toList()
     ..sort((a, b) =>
         a.timestamp.compareTo(b.timestamp)); // Sort by timestamp (ascending)
+}
+
+int calculatePointsFromSteps(num steps) {
+  return (steps * 0.2).round();
 }

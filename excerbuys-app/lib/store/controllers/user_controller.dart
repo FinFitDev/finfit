@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:excerbuys/store/persistence/storage_controller.dart';
 import 'package:excerbuys/store/selectors/user.dart';
@@ -6,7 +7,7 @@ import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
-import 'package:excerbuys/utils/user/user.dart';
+import 'package:excerbuys/utils/user/requests.dart';
 import 'package:rxdart/rxdart.dart';
 
 class UserController {
@@ -16,8 +17,13 @@ class UserController {
   setCurrentUser(User? user) {
     if (user != null) {
       _currentUser.add(user);
-      storageController.saveStateLocal('current_user', user.toString());
+      storageController.saveStateLocal(CURRENT_USER_KEY, user.toString());
     }
+  }
+
+  updateUserImage(String image) {
+    final updatedUser = currentUser?.copyWith(image: image);
+    setCurrentUser(updatedUser);
   }
 
   Stream<double?> get userBalanceStream => currentUserStream.map(getBalance);
@@ -31,6 +37,13 @@ class UserController {
   addUserBalance(double toAdd) {
     if (currentUser != null) {
       setCurrentUser(currentUser!.copyWith(points: (userBalance ?? 0) + toAdd));
+    }
+  }
+
+  subtractUserBalance(double toSubtract) {
+    if (currentUser != null) {
+      setCurrentUser(currentUser!
+          .copyWith(points: max(0, (userBalance ?? 0) - toSubtract)));
     }
   }
 
@@ -54,28 +67,12 @@ class UserController {
   }
 
   // ran only after login/sign up or on refresh
-  Future<User?> fetchCurrentUser(String userId) async {
+  Future<User?> getCurrentUser(String userId) async {
     try {
-      dynamic res = await handleBackendRequests(
-          method: HTTP_METHOD.GET, endpoint: 'api/v1/users/$userId');
-
-      final content = res['content'];
-
-      if (content == null || content.isEmpty) {
-        throw 'No data';
+      final User? user = await fetchUserByIdRequest(userId, null);
+      if (user != null) {
+        setCurrentUser(user);
       }
-
-      final User user = User(
-          id: int.parse(content['id']),
-          email: content['email'],
-          username: content['username'],
-          createdAt: DateTime.parse(content['created_at']).toLocal(),
-          stepsUpdatedAt: DateTime.parse(content['steps_updated_at']).toLocal(),
-          points: (content['points'] as int).toDouble(),
-          image: content['image']);
-
-      setCurrentUser(user);
-
       return user;
     } catch (err) {
       print(err);
@@ -83,10 +80,30 @@ class UserController {
     }
   }
 
+  Future<bool> fetchUpdateUserImage(String? imageSeed) async {
+    try {
+      if (currentUser == null || imageSeed == null) {
+        return false;
+      }
+
+      final bool successfulUpdate =
+          await updateUserImageRequest(currentUser!.id, imageSeed);
+
+      if (successfulUpdate == true) {
+        updateUserImage(imageSeed);
+        return true;
+      }
+      return false;
+    } catch (err) {
+      print(err);
+      return false;
+    }
+  }
+
   Future<bool> updateUserPointsScore(int pointsToAdd) async {
     if (currentUser != null && pointsToAdd > 0) {
       final bool updateResult =
-          await updatePointsScore(currentUser!.id.toString(), pointsToAdd);
+          await updatePointsScoreRequest(currentUser!.id, pointsToAdd);
 
       return updateResult;
     } else {
@@ -96,8 +113,9 @@ class UserController {
 
   Future<bool> updateUserPointsScoreAndTimestamp(int pointsToAdd) async {
     if (currentUser != null && pointsToAdd > 0) {
-      final bool updateResult = await updatePointsScoreWithUpdateTimestamp(
-          currentUser!.id.toString(), pointsToAdd);
+      final bool updateResult =
+          await updatePointsScoreWithUpdateTimestampRequest(
+              currentUser!.id, pointsToAdd);
 
       if (updateResult) {
         setUserUpdatedAt(DateTime.now());

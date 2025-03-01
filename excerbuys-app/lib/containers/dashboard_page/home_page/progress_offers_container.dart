@@ -1,11 +1,8 @@
-import 'dart:math';
-
 import 'package:excerbuys/components/dashboard_page/home_page/shop_item_card.dart';
-import 'package:excerbuys/components/loaders/universal_loader_box.dart';
+import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/components/shared/indicators/current_item/current_item_indicator.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class ProgressOffersContainer extends StatefulWidget {
@@ -56,6 +53,7 @@ class _ProgressOffersContainerState extends State<ProgressOffersContainer> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final texts = Theme.of(context).textTheme;
 
     return Container(
       padding: const EdgeInsets.only(bottom: 2 * HORIZOTAL_PADDING),
@@ -67,14 +65,7 @@ class _ProgressOffersContainerState extends State<ProgressOffersContainer> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Nearly there, keep going',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: colors.tertiary,
-                  ),
-                ),
+                Text('Nearly there, keep going', style: texts.headlineLarge),
               ],
             ),
           ),
@@ -137,7 +128,7 @@ class _ProgressOffersContainerState extends State<ProgressOffersContainer> {
       case 0:
         return ShopItemCard(
           image:
-              'https://media.istockphoto.com/id/960293984/vector/cute-avocado-cartoon-character-doing-exercises-with-hula-hoop-vector-cartoon-flat.jpg?s=612x612&w=0&k=20&c=_Kbj2loiacXJy6T25gs9TLPLeeyfXVzwkeRFOzC7KEQ=',
+              'https://img.freepik.com/free-vector/cute-panda-lifting-barbell-gym-fitness-cartoon-vector-icon-illustration-animal-sports-icon-isolated_138676-5482.jpg',
           points: 25000,
           originalPrice: 58,
           name: 'Avocado protein',

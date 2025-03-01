@@ -6,6 +6,7 @@ import 'package:excerbuys/containers/dashboard_page/home_page/available_offers_c
 import 'package:excerbuys/containers/dashboard_page/home_page/balance_container.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/news_container.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/progress_offers_container.dart';
+import 'package:excerbuys/store/controllers/activity/activity_controller.dart';
 import 'package:excerbuys/store/controllers/activity/steps_controller.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
@@ -13,6 +14,8 @@ import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
+import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/wrappers/refresh_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,6 +27,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     widget.fetchActivity();
@@ -52,84 +57,99 @@ class _HomePageState extends State<HomePage> {
               }
               return false;
             },
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  StreamBuilder<double?>(
-                      stream: userController.userBalanceStream,
-                      builder: (context, balance) {
-                        return balance.hasData
-                            ? BalanceContainer(
-                                balance: (balance.data ?? 0).round(),
-                              )
-                            : SizedBox(
-                                height: 420,
-                              );
-                      }),
-                  Container(
-                    padding: EdgeInsets.only(
-                        bottom: 80 + layoutController.bottomPadding),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30)),
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          NewsContainer(
-                              // isLoading: true,
-                              ),
-                          AvailableOffers(
-                              // isLoading: true,
-                              ),
-                          ProgressOffersContainer(),
+            child: RefreshWrapper(
+              onRefresh: () async {
+                if (userController.currentUser == null) {
+                  return;
+                }
 
-                          StreamBuilder<ContentWithLoading<IStoreStepsData>>(
-                              stream: stepsController.userStepsStream,
-                              builder: (context, stepsSnapshot) {
-                                final IStoreStepsData stepsData =
-                                    stepsSnapshot.hasData
-                                        ? stepsSnapshot.data!.content
-                                        : {};
-                                return StepsActivityCard(
-                                  isLoading:
-                                      stepsSnapshot.data?.isLoading ?? false,
-                                  stepsData: stepsData,
+                await userController
+                    .getCurrentUser(userController.currentUser!.id);
+                _scrollController.animateTo(
+                  0,
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.ease,
+                );
+                await Future.delayed(Duration(milliseconds: 300));
+
+                await activityController.fetchActivity();
+              },
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                child: Column(
+                  children: [
+                    StreamBuilder<double?>(
+                        stream: userController.userBalanceStream,
+                        builder: (context, balance) {
+                          return balance.hasData
+                              ? BalanceContainer(
+                                  balance: (balance.data ?? 0).round(),
+                                )
+                              : SizedBox(
+                                  height: 420,
                                 );
-                              }),
-                          StreamBuilder<
-                                  ContentWithLoading<
-                                      Map<String, ITrainingEntry>>>(
-                              stream: trainingsController.usetTrainingsStream,
-                              builder: (context, snapshot) {
-                                final Map<String, ITrainingEntry> trainings =
-                                    snapshot.hasData
-                                        ? Map.fromEntries(snapshot
-                                            .data!.content.entries
-                                            .toList()
-                                            .sublist(
-                                                0,
-                                                min(
-                                                    snapshot.data!.content
-                                                        .values.length,
-                                                    4)))
-                                        : {};
-                                return RecentTrainingSection(
+                        }),
+                    Container(
+                      padding: EdgeInsets.only(
+                          bottom: 80 + layoutController.bottomPadding),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30)),
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            NewsContainer(
+                                // isLoading: true,
+                                ),
+                            AvailableOffers(
+                                // isLoading: true,
+                                ),
+                            ProgressOffersContainer(),
+                            StreamBuilder<ContentWithLoading<IStoreStepsData>>(
+                                stream: stepsController.userStepsStream,
+                                builder: (context, stepsSnapshot) {
+                                  final IStoreStepsData stepsData =
+                                      stepsSnapshot.hasData
+                                          ? stepsSnapshot.data!.content
+                                          : {};
+                                  return StepsActivityCard(
                                     isLoading:
-                                        snapshot.data?.isLoading ?? false,
-                                    recentTraining: trainings);
-                              }),
-                          // GoalsContainer(
-                          //     // isLoading: true,
-                          //     ),
-                        ],
+                                        stepsSnapshot.data?.isLoading ?? false,
+                                    stepsData: stepsData,
+                                  );
+                                }),
+                            StreamBuilder<
+                                    ContentWithLoading<
+                                        Map<String, ITrainingEntry>>>(
+                                stream: trainingsController.userTrainingsStream,
+                                builder: (context, snapshot) {
+                                  final Map<String, ITrainingEntry> trainings =
+                                      snapshot.hasData
+                                          ? Map.fromEntries(snapshot
+                                              .data!.content.entries
+                                              .toList()
+                                              .sublist(
+                                                  0,
+                                                  min(
+                                                      snapshot.data!.content
+                                                          .values.length,
+                                                      4)))
+                                          : {};
+                                  return RecentTrainingSection(
+                                      isLoading:
+                                          snapshot.data?.isLoading ?? false,
+                                      recentTraining: trainings);
+                                }),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             )),
       ],

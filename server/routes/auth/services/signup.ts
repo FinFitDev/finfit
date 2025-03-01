@@ -2,12 +2,14 @@ import bcrypt from "bcryptjs";
 import { ErrorWithCode } from "../../../exceptions/errorWithCode";
 import {
   fetchUserByEmail,
+  fetchUserById,
   fetchUserByUsername,
   insertGoogleAuthUser,
   insertUser,
 } from "../../../models/userModel";
 import { IGoogleSignUpPayload, ISignupPayload } from "../types";
-import { isUserGoogleSignup } from "../../../shared/utils";
+import { generateSeed, isUserGoogleSignup } from "../../../shared/utils";
+import { v4 as uuidv4 } from "uuid";
 
 export const signUpUser = async (
   user: ISignupPayload | IGoogleSignUpPayload
@@ -30,9 +32,29 @@ export const signUpUser = async (
   if (takenEmail.rows.length > 0)
     throw new ErrorWithCode("Email is taken", 400, "email");
 
+  let takenId = true;
+  let user_id = uuidv4();
+  let tries = 0;
+  // ensure the uuid is unique
+  while (takenId) {
+    if (tries > 10) {
+      throw new ErrorWithCode("Couldn't generate an unique id", 400, "email");
+    }
+    user_id = uuidv4();
+    const userById = await fetchUserById(user_id);
+    takenId = userById.rows.length > 0;
+    tries++;
+  }
+
   // user creates an account with google signin
   if (isUserGoogleSignup(user)) {
-    return insertGoogleAuthUser(username, email, user.google_id);
+    return insertGoogleAuthUser(
+      user_id,
+      username,
+      email,
+      user.google_id,
+      generateSeed()
+    );
   } else {
     const takenUsername = await fetchUserByUsername(username);
     if (takenUsername.rows.length > 0)
@@ -41,6 +63,12 @@ export const signUpUser = async (
     const salt = await bcrypt.genSalt(10);
     const hashed_password = await bcrypt.hash(user.password, salt);
 
-    return insertUser(username, email, hashed_password);
+    return insertUser(
+      user_id,
+      username,
+      email,
+      hashed_password,
+      generateSeed()
+    );
   }
 };

@@ -1,11 +1,8 @@
-import 'dart:math';
-
 import 'package:excerbuys/components/dashboard_page/home_page/shop_item_card.dart';
-import 'package:excerbuys/components/loaders/universal_loader_box.dart';
+import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/components/shared/indicators/current_item/current_item_indicator.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class AvailableOffers extends StatefulWidget {
@@ -55,6 +52,7 @@ class _AvailableOffersState extends State<AvailableOffers> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final texts = Theme.of(context).textTheme;
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 2 * HORIZOTAL_PADDING),
@@ -66,14 +64,7 @@ class _AvailableOffersState extends State<AvailableOffers> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Start saving today',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: colors.tertiary,
-                  ),
-                ),
+                Text('Start saving today', style: texts.headlineLarge),
               ],
             ),
           ),

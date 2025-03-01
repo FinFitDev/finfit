@@ -1,6 +1,4 @@
-import 'dart:math';
-import 'dart:ui';
-
+import 'package:excerbuys/store/controllers/activity/activity_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
@@ -13,6 +11,8 @@ class MainHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final texts = Theme.of(context).textTheme;
+
     return StreamBuilder<double>(
         stream: dashboardController.scrollDistanceStream,
         builder: (context, snapshot) {
@@ -20,7 +20,7 @@ class MainHeader extends StatelessWidget {
               stream: dashboardController.activePageStream,
               builder: (context, pageSnapshot) {
                 final bool isActive =
-                    snapshot.hasData && snapshot.data! > 150 ||
+                    snapshot.hasData && snapshot.data! > 380 ||
                         pageSnapshot.data != 0;
 
                 return AnimatedPositioned(
@@ -41,8 +41,8 @@ class MainHeader extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: colors.primary,
                             border: Border(
-                                bottom:
-                                    BorderSide(color: colors.primaryFixedDim)),
+                                bottom: BorderSide(
+                                    color: colors.primaryFixedDim, width: 0.5)),
                             // boxShadow: isActive
                             //     ? [
                             //         BoxShadow(
@@ -55,23 +55,33 @@ class MainHeader extends StatelessWidget {
                             //       ]
                             //     : [],
                           ),
-                          height: 50 + layoutController.statusBarHeight,
-                          child: Row(
+                          height: MAIN_HEADER_HEIGHT +
+                              layoutController.statusBarHeight,
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               StreamBuilder<double?>(
                                   stream: userController.userBalanceStream,
                                   builder: (context, snapshot) {
                                     return Text(
-                                      dashboardController.balanceHidden
-                                          ? '****** finpoints'
-                                          : '${(snapshot.data ?? 0).round()} finpoints',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: colors.primaryFixedDim
-                                              .withAlpha(isActive ? 255 : 0)),
-                                    );
+                                        dashboardController.balanceHidden
+                                            ? '****** finpoints total'
+                                            : '${(snapshot.data ?? 0).round()} finpoints total',
+                                        style: texts.headlineMedium?.copyWith(
+                                            color: colors.primaryFixedDim
+                                                .withAlpha(
+                                                    isActive ? 255 : 0)));
+                                  }),
+                              StreamBuilder<double?>(
+                                  stream: activityController.todaysPointsStream,
+                                  builder: (context, snapshot) {
+                                    return Text(
+                                        dashboardController.balanceHidden
+                                            ? '****** finpoints today'
+                                            : '${snapshot.data?.round() ?? 0} finpoints today',
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            color: colors.tertiaryContainer));
                                   })
                             ],
                           ),

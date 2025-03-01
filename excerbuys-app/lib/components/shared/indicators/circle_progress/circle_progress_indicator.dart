@@ -16,8 +16,8 @@ class CircleProgress extends StatelessWidget {
             size: Size(size, size),
             painter: CircleProgressPainter(
                 progress,
-                Theme.of(context).colorScheme.secondary,
-                Theme.of(context).colorScheme.secondary.withAlpha(50)),
+                Theme.of(context).colorScheme.primary,
+                Theme.of(context).colorScheme.primary.withAlpha(50)),
           ),
           progress == 1
               ? Positioned(
@@ -27,8 +27,7 @@ class CircleProgress extends StatelessWidget {
                     'assets/svg/tick.svg',
                     width: (size / 40 * 20),
                     colorFilter: ColorFilter.mode(
-                        Theme.of(context).colorScheme.secondary,
-                        BlendMode.srcIn),
+                        Theme.of(context).colorScheme.primary, BlendMode.srcIn),
                   ))
               : SizedBox.shrink()
         ],

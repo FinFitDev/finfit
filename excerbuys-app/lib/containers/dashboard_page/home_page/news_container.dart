@@ -1,5 +1,4 @@
-import 'package:excerbuys/components/loaders/universal_loader_box.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
+import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +15,7 @@ class _NewsContainerState extends State<NewsContainer> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final texts = Theme.of(context).textTheme;
 
     return Container(
       padding: const EdgeInsets.only(top: 24),
@@ -27,14 +27,7 @@ class _NewsContainerState extends State<NewsContainer> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Good day',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: colors.tertiary,
-                  ),
-                ),
+                Text('Good day', style: texts.headlineLarge),
               ],
             ),
           ),

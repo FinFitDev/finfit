@@ -1,11 +1,10 @@
-import 'dart:ui';
-
 import 'package:excerbuys/components/shared/buttons/appbar_icon_button.dart';
-import 'package:excerbuys/pages/dashboard_subpages/home_page.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
+import 'package:excerbuys/store/controllers/user_controller.dart';
+import 'package:excerbuys/types/user.dart';
+import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key});
@@ -25,7 +24,7 @@ class _BottomBarState extends State<BottomBar> {
           return Stack(
             children: [
               Container(
-                height: 80 + layoutController.bottomPadding,
+                height: APPBAR_HEIGHT + layoutController.bottomPadding,
                 padding: EdgeInsets.only(
                     left: 24,
                     right: 24,
@@ -41,8 +40,9 @@ class _BottomBarState extends State<BottomBar> {
                   //     offset: Offset(0, -3), // changes position of shadow
                   //   ),
                   // ]
-                  border:
-                      Border(top: BorderSide(color: colors.primaryFixedDim)),
+                  border: Border(
+                      top: BorderSide(
+                          color: colors.primaryFixedDim, width: 0.5)),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -71,15 +71,22 @@ class _BottomBarState extends State<BottomBar> {
                       },
                       isActive: snapshot.data == 2,
                     ),
-                    AppbarIconButton(
-                      name: 'Profile',
-                      icon: 'assets/svg/profile.svg',
-                      onPressed: () {
-                        dashboardController.setActivePage(3);
-                      },
-                      isActive: snapshot.data == 3,
-                      isLast: true,
-                    ),
+                    StreamBuilder<User?>(
+                        stream: userController.currentUserStream,
+                        builder: (context, userSnapshot) {
+                          return AppbarIconButton(
+                            name: 'Profile',
+                            icon: 'assets/svg/profile.svg',
+                            isProfile: userSnapshot.hasData,
+                            onPressed: () {
+                              !userSnapshot.hasData
+                                  ? null
+                                  : dashboardController.setActivePage(3);
+                            },
+                            isActive: snapshot.data == 3,
+                            isLast: true,
+                          );
+                        }),
                   ],
                 ),
               ),

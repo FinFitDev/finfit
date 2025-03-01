@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:excerbuys/store/controllers/dashboard_controller.dart';
+import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedBalance extends StatefulWidget {
@@ -44,7 +44,7 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
     List<String> newChars = getTextChars(newValue, maxLength);
 
     // trim leading zeroes
-    newChars = int.parse(newChars.join('')).toString().split("");
+    newChars = parseInt(newChars.join('')).toString().split("");
     oldChars = oldChars.sublist(oldChars.length - newChars.length);
 
     setState(() {
@@ -74,7 +74,7 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
       if (element[0] == null || element[1] == null) {
         return null;
       }
-      return int.parse(element[1]!) - int.parse(element[0]!);
+      return parseInt(element[1]!) - parseInt(element[0]!);
     }).toList();
     return differences;
   }
@@ -149,68 +149,62 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: _newBalanceChars.length * letterWidth,
       height: letterHeight,
       child: Stack(children: [
-        ..._newBalanceChars
-            .asMap()
-            .map((idx, element) {
-              int difference = 0;
-              if (idx < _charDifferences.length &&
-                  _charDifferences[idx] != null) {
-                difference = _charDifferences[idx]!;
-              }
+        ..._newBalanceChars.asMap().map((idx, element) {
+          int difference = 0;
+          if (idx < _charDifferences.length && _charDifferences[idx] != null) {
+            difference = _charDifferences[idx]!;
+          }
 
-              List<String> rangeList = generateRange(
-                  min(int.parse(element), int.parse(element) - difference),
-                  max(int.parse(element), int.parse(element) - difference));
+          List<String> rangeList = generateRange(
+              min(parseInt(element), parseInt(element) - difference),
+              max(parseInt(element), parseInt(element) - difference));
 
-              if (difference == 0) {
-                rangeList = [element];
-              }
-              rangeList = rangeList.reversed.toList();
+          if (difference == 0) {
+            rangeList = [element];
+          }
+          rangeList = rangeList.reversed.toList();
 
-              double positionBottom = centerBalance;
-              if (_isStopAnimating) {
-                positionBottom = difference >= 0
-                    ? centerBalance
-                    : centerBalance - (difference.abs() * letterHeight);
-              } else {
-                positionBottom = difference <= 0
-                    ? centerBalance
-                    : centerBalance - (difference.abs() * letterHeight);
-              }
+          double positionBottom = centerBalance;
+          if (_isStopAnimating) {
+            positionBottom = difference >= 0
+                ? centerBalance
+                : centerBalance - (difference.abs() * letterHeight);
+          } else {
+            positionBottom = difference <= 0
+                ? centerBalance
+                : centerBalance - (difference.abs() * letterHeight);
+          }
 
-              return MapEntry(
-                  idx,
-                  AnimatedPositioned(
-                    curve: Curves.decelerate,
-                    duration: Duration(
-                        milliseconds: _isStopAnimating
-                            ? 0
-                            : max(400, (difference.abs() * 120))),
-                    width: letterWidth,
-                    left: idx * letterWidth,
-                    bottom: positionBottom,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: rangeList.map((item) {
-                        return Text(
-                          item,
-                          style: TextStyle(
-                              fontFamily: 'Quicksand',
-                              fontSize: 54,
-                              color:
-                                  difference != 0 ? _textColor : Colors.white),
-                        );
-                      }).toList(),
-                    ),
-                  ));
-            })
-            .values
-            .toList(),
+          return MapEntry(
+              idx,
+              AnimatedPositioned(
+                curve: Curves.decelerate,
+                duration: Duration(
+                    milliseconds: _isStopAnimating
+                        ? 0
+                        : max(400, (difference.abs() * 120))),
+                width: letterWidth,
+                left: idx * letterWidth,
+                bottom: positionBottom,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: rangeList.map((item) {
+                    return Text(
+                      item,
+                      style: TextStyle(
+                          fontFamily: 'Quicksand',
+                          fontSize: 54,
+                          color: difference != 0 ? _textColor : Colors.white),
+                    );
+                  }).toList(),
+                ),
+              ));
+        }).values,
       ]),
     );
   }

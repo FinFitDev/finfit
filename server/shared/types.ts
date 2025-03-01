@@ -4,7 +4,7 @@ export type IAccessToken = string;
 export type IRefreshToken = string;
 
 export interface IUser {
-  id: number;
+  id: string;
   email: string;
   username: string;
   password?: string;
@@ -27,7 +27,7 @@ export interface ITrainingEntry {
   calories?: number;
   distance?: number;
   type: string;
-  user_id: number;
+  user_id: string;
   uuid: number;
   created_at?: string;
 }
@@ -46,13 +46,13 @@ export interface IHourlyStepEntry {
   uuid: string;
   timestamp: string;
   total: number;
-  user_id: number;
+  user_id: string;
 }
 
 export interface IDailyStepEntry {
   uuid: string;
   timestamp: string;
   total: number;
-  user_id: number;
+  user_id: string;
   mean: number;
 }

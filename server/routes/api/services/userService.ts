@@ -1,12 +1,15 @@
 import { ErrorWithCode } from "../../../exceptions/errorWithCode";
 import {
   fetchUserById,
+  fetchUsersByRegex,
+  transferPointsTransaction,
+  updateImageSeed,
   updatePointsScore,
   updatePointsScoreWithUpdateTimestamp,
 } from "../../../models/userModel";
 import { IUserNoPassword } from "../../../shared/types";
 
-export const getUserById = async (user_id: number) => {
+export const getUserById = async (user_id: string) => {
   const foundUser = await fetchUserById(user_id);
 
   if (foundUser.rowCount && foundUser.rowCount > 0)
@@ -16,8 +19,27 @@ export const getUserById = async (user_id: number) => {
   }
 };
 
+export const getUsersBySearch = async (
+  search: string,
+  limit: number,
+  offset: number
+) => {
+  const foundUsers = await fetchUsersByRegex(search, limit, offset);
+
+  if (foundUsers.rowCount && foundUsers.rowCount > 0)
+    return foundUsers.rows as IUserNoPassword[];
+  else {
+    throw new ErrorWithCode(`No users found with search ${search}`, 404);
+  }
+};
+
+export const updateUserImage = async (user_id: string, image: string) => {
+  const response = await updateImageSeed(user_id, image);
+  return response.command;
+};
+
 export const updateUserPointsScore = async (
-  user_id: number,
+  user_id: string,
   points: number
 ) => {
   const response = await updatePointsScore(user_id, points);
@@ -25,7 +47,7 @@ export const updateUserPointsScore = async (
 };
 
 export const updateUserPointsScoreWithUpdateTimestamp = async (
-  user_id: number,
+  user_id: string,
   points: number,
   steps_updated_at: string
 ) => {
@@ -35,4 +57,26 @@ export const updateUserPointsScoreWithUpdateTimestamp = async (
     steps_updated_at
   );
   return response.command;
+};
+
+export const transferPointsToOtherUsers = async (
+  user_id: string,
+  recipients_ids: string[],
+  amount: number
+) => {
+  const totalRecipients = recipients_ids.length;
+  const fractionAmount = Math.round(amount / totalRecipients);
+
+  if (!amount || amount <= 0) {
+    throw new Error("Invalid amount to send");
+  }
+
+  const response = await transferPointsTransaction(
+    user_id,
+    recipients_ids,
+    amount,
+    fractionAmount
+  );
+
+  return response;
 };

@@ -1,9 +1,5 @@
-import 'dart:ui';
-
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/utils/parsers/parsers.dart';
-import 'package:excerbuys/wrappers/price_text_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -36,6 +32,8 @@ class _ShopItemCardState extends State<ShopItemCard> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final texts = Theme.of(context).textTheme;
+
     final isProgress = widget.progress != null && widget.progress! < 100;
 
     return Container(
@@ -106,9 +104,7 @@ class _ShopItemCardState extends State<ShopItemCard> {
                                         Text(
                                           widget.name,
                                           overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
+                                          style: texts.headlineMedium?.copyWith(
                                             color: colors.primary,
                                           ),
                                         ),
@@ -142,9 +138,7 @@ class _ShopItemCardState extends State<ShopItemCard> {
                                           style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w500,
-                                            color: isProgress
-                                                ? colors.primary
-                                                : colors.secondary,
+                                            color: colors.secondary,
                                           ),
                                         ),
                                         StreamBuilder<bool>(
@@ -161,10 +155,8 @@ class _ShopItemCardState extends State<ShopItemCard> {
                                                 textAlign: TextAlign.end,
                                                 style: TextStyle(
                                                   fontSize: 10,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: isProgress
-                                                      ? colors.primary
-                                                      : colors.secondary,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: colors.secondary,
                                                 ),
                                               );
                                             }),

@@ -17,7 +17,7 @@ class ITrainingEntry {
   final String uuid;
   final int points;
   final String type;
-  final int userId;
+  final String userId;
   final int duration;
   final DateTime createdAt;
   final int? calories;
@@ -35,21 +35,21 @@ class ITrainingEntry {
 
   String toJson() {
     return """{
-        "uuid":"${this.uuid}",
-        "points":"${this.points}",
-        "type":"${this.type}",
-        "user_id":"${this.userId}",
-        "duration":"${this.duration}",
-        "calories":"${this.calories}",
-        "distance":"${this.distance}",
-        "created_at":"${this.createdAt}"
+        "uuid":"${uuid}",
+        "points":"${points}",
+        "type":"${type}",
+        "user_id":"${userId}",
+        "duration":"${duration}",
+        "calories":"${calories}",
+        "distance":"${distance}",
+        "created_at":"${createdAt}"
       }""";
   }
 }
 
 class IHourlyStepsEntry {
   final int total;
-  final int userId;
+  final String userId;
   final DateTime timestamp;
   final String uuid;
 
