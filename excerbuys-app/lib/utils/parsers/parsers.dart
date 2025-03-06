@@ -130,6 +130,11 @@ double convertMillisecondsToMinutes(int milliseconds) {
   return milliseconds / 1000 / 60;
 }
 
+String formatNumber(num number) {
+  String formatted = number.toString().replaceAllMapped(
+      RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match match) => '${match[1]},');
+  return formatted;
+}
 // String encodeBase36(String input) {
 //   BigInt num = BigInt.zero;
 //   for (int i = 0; i < input.length; i++) {

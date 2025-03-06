@@ -43,19 +43,18 @@ CustomPainter getShapePainterForType(int type, Color color, double x, double y,
 String generateSeed() {
   final random = Random();
 
-  // Generate the background color (Random Color)
-  final backgroundColor = 'FF' + randomLightColor(random);
+  final backgroundColor = 'FF${randomLightColor(random)}';
 
-  // List to hold shape parts
   List<String> shapeParts = [];
 
-  // Generate 5 shape parts
-  final type = random.nextInt(3); // Random type between 0 and 2
+  // select shape type (square, triangle, circle)
+  final type = random.nextInt(3);
 
+  // Generate 5 shape parts
   for (int i = 0; i < 4; i++) {
-    final color = 'FF' + randomColor(random); // Random color for shape
-    final x = random.nextInt(50); // Random x coordinate between 0 and 60
-    final y = random.nextInt(50); // Random y coordinate between 0 and 60
+    final color = 'FF${randomColor(random)}'; // Random color for shape
+    final x = random.nextInt(70) - 30; // Random x coordinate between 0 and 60
+    final y = random.nextInt(70) - 30; // Random y coordinate between 0 and 60
     final width = random.nextInt(21) +
         (100 - (i * 20)); // Random width between 20 and 100
     final height = random.nextInt(21) +
@@ -69,7 +68,7 @@ String generateSeed() {
   }
 
   // Combine the background color and shape parts to form the seed string
-  return '$type-$backgroundColor-${shapeParts.join('-')}';
+  return '$type|$backgroundColor|${shapeParts.join('|')}';
 }
 
 String randomColor(Random random) {

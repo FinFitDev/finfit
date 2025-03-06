@@ -1,4 +1,6 @@
+import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CategoryButton extends StatelessWidget {
   final String title;
@@ -7,6 +9,7 @@ class CategoryButton extends StatelessWidget {
   final Color activeTextColor;
   final Color textColor;
   final bool? isActive;
+  final String? icon;
   final void Function() onPressed;
   final double fontSize;
   final double? height;
@@ -23,24 +26,38 @@ class CategoryButton extends StatelessWidget {
       required this.onPressed,
       required this.fontSize,
       this.height,
-      this.padding});
+      this.padding,
+      this.icon});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
+    return RippleWrapper(
+      onPressed: onPressed,
       child: Container(
           padding: padding ?? EdgeInsets.all(10),
           height: height ?? 40,
           decoration: BoxDecoration(
               color: isActive == true ? activeBackgroundColor : backgroundColor,
               borderRadius: BorderRadius.circular(10)),
-          child: Center(
-            child: Text(title,
-                style: TextStyle(
-                    fontSize: fontSize,
-                    color: isActive == true ? activeTextColor : textColor,
-                    fontWeight: FontWeight.w500)),
+          child: Row(
+            children: [
+              icon != null
+                  ? Container(
+                      margin: EdgeInsets.only(right: 8),
+                      child: SvgPicture.asset(
+                        icon!,
+                        colorFilter: ColorFilter.mode(
+                            isActive == true ? activeTextColor : textColor,
+                            BlendMode.srcIn),
+                      ),
+                    )
+                  : SizedBox.shrink(),
+              Text(title,
+                  style: TextStyle(
+                      fontSize: fontSize,
+                      color: isActive == true ? activeTextColor : textColor,
+                      fontWeight: FontWeight.w500))
+            ],
           )),
     );
   }

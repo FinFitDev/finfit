@@ -1,6 +1,7 @@
 import 'package:excerbuys/store/controllers/dashboard/history_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
+import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class Calendar extends StatefulWidget {
@@ -75,8 +76,8 @@ Widget calendarDayCard(void Function() onPressed, String day, String dayAbbr,
           ? colors.secondary
           : colors.tertiaryContainer;
   return Expanded(
-    child: GestureDetector(
-      onTap: onPressed,
+    child: RippleWrapper(
+      onPressed: onPressed,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 4),
         margin: EdgeInsets.symmetric(horizontal: 2),

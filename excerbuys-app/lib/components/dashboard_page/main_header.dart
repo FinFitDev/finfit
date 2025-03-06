@@ -3,6 +3,7 @@ import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:flutter/material.dart';
 
 class MainHeader extends StatelessWidget {
@@ -66,7 +67,7 @@ class MainHeader extends StatelessWidget {
                                     return Text(
                                         dashboardController.balanceHidden
                                             ? '****** finpoints total'
-                                            : '${(snapshot.data ?? 0).round()} finpoints total',
+                                            : '${formatNumber((snapshot.data ?? 0).round())} finpoints total',
                                         style: texts.headlineMedium?.copyWith(
                                             color: colors.primaryFixedDim
                                                 .withAlpha(
@@ -78,7 +79,7 @@ class MainHeader extends StatelessWidget {
                                     return Text(
                                         dashboardController.balanceHidden
                                             ? '****** finpoints today'
-                                            : '${snapshot.data?.round() ?? 0} finpoints today',
+                                            : '${formatNumber(snapshot.data?.round() ?? 0)} finpoints today',
                                         style: TextStyle(
                                             fontSize: 13,
                                             color: colors.tertiaryContainer));

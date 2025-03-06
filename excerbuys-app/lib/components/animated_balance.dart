@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:excerbuys/utils/parsers/parsers.dart';
+import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 
 class AnimatedBalance extends StatefulWidget {
   final int balance;
@@ -82,6 +84,7 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
   @override
   void didUpdateWidget(covariant AnimatedBalance oldWidget) {
     if (oldWidget.balance != widget.balance) {
+      triggerVibrate(FeedbackType.heavy);
       setState(() {
         _isStopAnimating = true;
         if (oldWidget.balance < widget.balance) {

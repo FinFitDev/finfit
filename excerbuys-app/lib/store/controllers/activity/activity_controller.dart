@@ -98,9 +98,11 @@ class ActivityController {
       return;
     }
     // await userController
-    //     .fetchCurrentUser('afd90984-17ec-456b-a735-0be89e48300f');
+    //     .getCurrentUser('afd90984-17ec-456b-a735-0be89e48300f');
 
     // await userController.getCurrentUser('b1588072-8da4-4ab2-a79e-70816401d3f6');
+
+    setTodaysPoints(0);
     await trainingsController.fetchTrainings();
     await stepsController.fetchsSteps();
     userController.addUserBalance(totalPointsToAdd);

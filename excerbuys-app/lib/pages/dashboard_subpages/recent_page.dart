@@ -1,5 +1,7 @@
+import 'dart:async';
+
 import 'package:excerbuys/components/shared/buttons/category_button.dart';
-import 'package:excerbuys/containers/dashboard_page/history_page/all_historical_container.dart';
+import 'package:excerbuys/containers/dashboard_page/history_page/historical_workouts.dart';
 import 'package:excerbuys/containers/dashboard_page/history_page/daily_data_container.dart';
 import 'package:excerbuys/store/controllers/dashboard/history_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
@@ -15,105 +17,140 @@ class RecentPage extends StatefulWidget {
 }
 
 class _RecentPageState extends State<RecentPage> {
+  Timer? animationProgressTimer;
+  bool _isAnimating = false;
+  final List<Map<String, dynamic>> categoryButtons = [
+    {
+      'title': 'Daily data',
+      'icon': 'assets/svg/calendar.svg',
+      'category': RECENT_DATA_CATEGORY.DAILY,
+    },
+    {
+      'title': 'Transactions',
+      'icon': 'assets/svg/wallet.svg',
+      'category': RECENT_DATA_CATEGORY.TRANSACTIONS,
+    },
+    {
+      'title': 'Workouts',
+      'icon': 'assets/svg/dumbell.svg',
+      'category': RECENT_DATA_CATEGORY.WORKOUTS,
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
 
-    return Container(
-        padding: EdgeInsets.only(
-            top: layoutController.statusBarHeight + MAIN_HEADER_HEIGHT,
-            bottom: APPBAR_HEIGHT),
-        child: Container(
-          padding: EdgeInsets.only(bottom: HORIZOTAL_PADDING),
-          child: Stack(
-            children: [
-              Column(
-                children: [
-                  // pages
-                  Expanded(
-                    child: StreamBuilder<RECENT_DATA_CATEGORY>(
-                        stream:
-                            historyController.activeCategoryRecentDataStream,
-                        builder: (context, snapshot) {
-                          return IndexedStack(
-                            index: snapshot.data?.index ?? 0,
+    return SingleChildScrollView(
+      padding: EdgeInsets.only(
+          top: layoutController.statusBarHeight + MAIN_HEADER_HEIGHT,
+          bottom: APPBAR_HEIGHT + HORIZOTAL_PADDING),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          // buttons switch between daily data and all historical data
+          StreamBuilder<RECENT_DATA_CATEGORY>(
+              stream: historyController.activeCategoryRecentDataStream,
+              builder: (context, snapshot) {
+                return Container(
+                  height: 76,
+                  width: layoutController.relativeContentWidth,
+                  child: ListView.builder(
+                    padding: EdgeInsets.all(16),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: categoryButtons.length,
+                    itemBuilder: (context, index) {
+                      final item = categoryButtons[index];
+                      return Padding(
+                        padding: EdgeInsets.only(left: index == 0 ? 0 : 10.0),
+                        child: CategoryButton(
+                          title: item['title'],
+                          icon: item['icon'],
+                          activeBackgroundColor: colors.secondary,
+                          backgroundColor: colors.primaryContainer,
+                          activeTextColor: colors.primary,
+                          textColor: colors.tertiaryContainer,
+                          onPressed: () {
+                            historyController
+                                .setActiveCategory(item['category']);
+                            animationProgressTimer?.cancel();
+                            setState(() {
+                              _isAnimating = true;
+                            });
+                            animationProgressTimer =
+                                Timer(Duration(milliseconds: 250), () {
+                              setState(() {
+                                _isAnimating = false;
+                              });
+                            });
+                          },
+                          fontSize: 13,
+                          isActive: snapshot.data == item['category'],
+                        ),
+                      );
+                    },
+                  ),
+                );
+              }),
+          SizedBox(
+            height: 8,
+          ),
+
+          StreamBuilder<RECENT_DATA_CATEGORY>(
+              stream: historyController.activeCategoryRecentDataStream,
+              builder: (context, snapshot) {
+                return AnimatedSwitcher(
+                  duration: Duration(milliseconds: 200),
+                  switchInCurve: Curves.decelerate,
+                  switchOutCurve: Curves.decelerate,
+                  transitionBuilder:
+                      (Widget child, Animation<double> animation) {
+                    final fadeAnimation = Tween<double>(
+                      begin: 0.0,
+                      end: 1.0,
+                    ).animate(animation);
+
+                    final scaleAnimation = Tween<double>(
+                      begin: 0.995,
+                      end: 1.0,
+                    ).animate(animation);
+
+                    return FadeTransition(
+                      opacity: fadeAnimation,
+                      child: ScaleTransition(
+                        scale: scaleAnimation,
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: snapshot.data?.index == 0
+                      ? Container(
+                          constraints: BoxConstraints(
+                              minHeight: _isAnimating ? 15000 : 0),
+                          key: ValueKey('DailyData'),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               DailyDataContainer(),
-                              AllHistoricalContainer()
                             ],
-                          );
-                        }),
-                  ),
-                ],
-              ),
-              // buttons switch between daily data and all historical data
-              StreamBuilder<Object>(
-                  stream: historyController.activeCategoryRecentDataStream,
-                  builder: (context, snapshot) {
-                    return StreamBuilder<bool>(
-                        stream: historyController.categoryHeaderVisibleStream,
-                        builder: (context, visibleSnapshot) {
-                          return AnimatedPositioned(
-                            duration: Duration(milliseconds: 200),
-                            curve: Curves.decelerate,
-                            top: visibleSnapshot.data == false ? -60 : 0,
-                            height: 56,
-                            width: layoutController.relativeContentWidth,
-                            child: AnimatedOpacity(
-                              duration: Duration(milliseconds: 200),
-                              curve: Curves.decelerate,
-                              opacity: visibleSnapshot.data == false ? 0 : 1,
-                              child: Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: colors.primaryContainer,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: CategoryButton(
-                                        title: 'Daily data',
-                                        activeBackgroundColor: colors.primary,
-                                        backgroundColor: Colors.transparent,
-                                        activeTextColor: colors.secondary,
-                                        textColor: colors.tertiaryContainer,
-                                        onPressed: () {
-                                          historyController.setActiveCategory(
-                                              RECENT_DATA_CATEGORY.DAILY);
-                                        },
-                                        fontSize: 16,
-                                        isActive: snapshot.data ==
-                                            RECENT_DATA_CATEGORY.DAILY,
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                      child: CategoryButton(
-                                        title: 'All historical',
-                                        activeBackgroundColor: colors.primary,
-                                        backgroundColor: Colors.transparent,
-                                        activeTextColor: colors.secondary,
-                                        textColor: colors.tertiaryContainer,
-                                        onPressed: () {
-                                          historyController.setActiveCategory(
-                                              RECENT_DATA_CATEGORY
-                                                  .ALL_HISTORICAL);
-                                        },
-                                        fontSize: 16,
-                                        isActive: snapshot.data ==
-                                            RECENT_DATA_CATEGORY.ALL_HISTORICAL,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        });
-                  }),
-            ],
-          ),
-        ));
+                          ),
+                        )
+                      : Container(
+                          constraints: BoxConstraints(
+                              minHeight: _isAnimating ? 15000 : 0),
+                          key: ValueKey('Workouts'),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              HistoricalWorkouts(),
+                            ],
+                          ),
+                        ),
+                );
+              })
+        ],
+      ),
+    );
   }
 }

@@ -74,7 +74,8 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
 
     return Builder(builder: (BuildContext context) {
       if (widget.recentTraining.isEmpty) {
-        return emptyActivity(colors, texts, widget.isDaily ?? false);
+        return emptyActivity(
+            colors, texts, widget.isDaily ?? false, widget.hideTitle ?? false);
       }
 
       return Container(
@@ -104,58 +105,61 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
                 final dateLabel = keyParts[0];
                 final daysAgo = keyParts.length > 1 ? keyParts[1] : '';
 
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (widget.isDaily != true)
-                      Container(
-                        margin: EdgeInsets.only(top: 12, bottom: 4),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              dateLabel,
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: colors.tertiaryContainer),
-                            ),
-                            SizedBox(width: 6),
-                            if (dateLabel != 'Today' &&
-                                dateLabel != 'Yesterday')
+                return Container(
+                  margin: EdgeInsets.only(top: index != 0 ? 8 : 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      if (widget.isDaily != true)
+                        Container(
+                          margin: EdgeInsets.only(top: 4, bottom: 4),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
                               Text(
-                                '($daysAgo days ago)',
+                                dateLabel,
                                 style: TextStyle(
-                                    fontSize: 11,
-                                    color: colors.tertiaryContainer
-                                        .withAlpha(150)),
+                                    fontSize: 15,
+                                    color: colors.tertiaryContainer),
                               ),
-                            Expanded(
-                              child: Container(
-                                margin: EdgeInsets.only(left: 8),
-                                height: 0,
-                                color: colors.tertiaryContainer.withAlpha(100),
-                              ),
-                            )
-                          ],
+                              SizedBox(width: 6),
+                              if (dateLabel != 'Today' &&
+                                  dateLabel != 'Yesterday')
+                                Text(
+                                  '($daysAgo days ago)',
+                                  style: TextStyle(
+                                      fontSize: 11,
+                                      color: colors.tertiaryContainer
+                                          .withAlpha(150)),
+                                ),
+                              Expanded(
+                                child: Container(
+                                  margin: EdgeInsets.only(left: 8),
+                                  height: 0,
+                                  color:
+                                      colors.tertiaryContainer.withAlpha(100),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                    Column(
-                      // Replaced inner ListView with Column
-                      children: entry.value.map((healthData) {
-                        final type = HealthWorkoutActivityType.values
-                            .firstWhere((el) => el.name == healthData.type);
+                      Column(
+                        children: entry.value.map((healthData) {
+                          final type = HealthWorkoutActivityType.values
+                              .firstWhere((el) => el.name == healthData.type);
 
-                        return ActivityCard(
-                          index: 0,
-                          activityType: parseActivityType(type),
-                          points: healthData.points,
-                          date: parseDate(healthData.createdAt),
-                          duration: healthData.duration,
-                          calories: healthData.calories,
-                        );
-                      }).toList(),
-                    ),
-                  ],
+                          return ActivityCard(
+                            index: 0,
+                            activityType: parseActivityType(type),
+                            points: healthData.points,
+                            date: parseDate(healthData.createdAt),
+                            duration: healthData.duration,
+                            calories: healthData.calories,
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
                 );
               },
             );
@@ -166,9 +170,11 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
   }
 }
 
-Widget emptyActivity(ColorScheme colors, TextTheme texts, bool isDaily) {
+Widget emptyActivity(
+    ColorScheme colors, TextTheme texts, bool isDaily, bool hideTitle) {
   return Container(
-    margin: EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING, vertical: 24),
+    margin: EdgeInsets.symmetric(
+        horizontal: HORIZOTAL_PADDING, vertical: hideTitle ? 0 : 24),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.stretch,

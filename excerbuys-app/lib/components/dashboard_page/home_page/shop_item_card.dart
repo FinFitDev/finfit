@@ -1,5 +1,6 @@
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -47,7 +48,7 @@ class _ShopItemCardState extends State<ShopItemCard> {
                 Stack(
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(10),
                       child: ColorFiltered(
                         colorFilter: ColorFilter.mode(
                             isProgress ? Colors.grey : Colors.transparent,
@@ -56,7 +57,7 @@ class _ShopItemCardState extends State<ShopItemCard> {
                           height: 220,
                           decoration: BoxDecoration(
                               color: colors.primary,
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(10),
                               image: DecorationImage(
                                   image: NetworkImage(widget.image),
                                   fit: BoxFit.cover)),
@@ -66,7 +67,7 @@ class _ShopItemCardState extends State<ShopItemCard> {
                     Container(
                       height: 220,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(10),
                           gradient: LinearGradient(
                               colors: [
                                 Colors.black.withAlpha(220),
@@ -150,7 +151,7 @@ class _ShopItemCardState extends State<ShopItemCard> {
                                               return Text(
                                                 isHidden
                                                     ? '***** finpoints'
-                                                    : '${widget.points.toString()} finpoints',
+                                                    : '${formatNumber(widget.points)} finpoints',
                                                 overflow: TextOverflow.ellipsis,
                                                 textAlign: TextAlign.end,
                                                 style: TextStyle(
@@ -189,7 +190,7 @@ class _ShopItemCardState extends State<ShopItemCard> {
                                 Text(
                                   isHidden
                                       ? 'Only ***** finpoints to go!'
-                                      : 'Only ${(((100 - widget.progress!) / 100) * widget.points).round()} finpoints to go!',
+                                      : 'Only ${formatNumber((((100 - widget.progress!) / 100) * widget.points).round())} finpoints to go!',
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
                                       color: colors.tertiaryContainer,

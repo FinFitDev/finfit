@@ -5,6 +5,7 @@ import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/activity/steps.dart';
 import 'package:excerbuys/utils/activity/trainings.dart';
+import 'package:excerbuys/utils/debug.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 import 'package:rxdart/rxdart.dart';
@@ -90,8 +91,8 @@ class TrainingsController {
         startTime: prev,
         endTime: now,
       );
-      healthData = filterTrainings(Health().removeDuplicates(healthData));
 
+      healthData = filterTrainings(Health().removeDuplicates(healthData));
       List<ITrainingEntry> parsedTrainingData =
           convertTrainingsToRequest(healthData) ?? [];
 
@@ -149,8 +150,6 @@ class TrainingsController {
               TRAINING_DATA_CHUNK_SIZE,
               lazyLoadOffset.content) ??
           [];
-
-      print(parsedTrainingData);
 
       Set<String> unique = {};
       parsedTrainingData = parsedTrainingData

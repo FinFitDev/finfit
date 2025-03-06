@@ -49,7 +49,7 @@ class _ActivityCardState extends State<ActivityCard> {
         });
       },
       child: Container(
-        height: 70,
+        height: 75,
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(top: 8),
         decoration: BoxDecoration(
@@ -74,14 +74,14 @@ class _ActivityCardState extends State<ActivityCard> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(
-                          width: 23,
+                          width: 22,
                           child: SvgPicture.asset(activityMetadata.icon,
                               colorFilter: ColorFilter.mode(
                                   colors.primary, BlendMode.srcIn)),
                         ),
                         Text(
                           activityMetadata.name,
-                          style: TextStyle(fontSize: 7, color: colors.primary),
+                          style: TextStyle(fontSize: 6, color: colors.primary),
                           overflow: TextOverflow.ellipsis,
                         )
                       ],
@@ -92,7 +92,7 @@ class _ActivityCardState extends State<ActivityCard> {
             ),
             Expanded(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -120,12 +120,15 @@ class _ActivityCardState extends State<ActivityCard> {
                       )
                     ],
                   ),
+                  SizedBox(
+                    height: 4,
+                  ),
                   Row(
                     children: [
                       Text(
                         '${convertMillisecondsToMinutes(widget.duration ?? 0).round()} minutes',
                         style: TextStyle(
-                          color: colors.tertiaryContainer,
+                          color: colors.secondary.withAlpha(150),
                           fontSize: 13,
                         ),
                       ),
@@ -137,12 +140,12 @@ class _ActivityCardState extends State<ActivityCard> {
                         margin: EdgeInsets.symmetric(horizontal: 8),
                         width: 0.5,
                         height: 16,
-                        color: colors.tertiaryContainer,
+                        color: colors.secondary.withAlpha(150),
                       ),
                       Text(
                         '${widget.calories} kcal',
                         style: TextStyle(
-                          color: colors.tertiaryContainer,
+                          color: colors.secondary.withAlpha(150),
                           fontSize: 13,
                         ),
                       ),

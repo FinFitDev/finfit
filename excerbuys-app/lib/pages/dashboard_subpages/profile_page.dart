@@ -9,6 +9,7 @@ import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/modal_wrapper.dart';
+import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -37,8 +38,8 @@ class _ProfilePageState extends State<ProfilePage> {
             height: 24,
           ),
           Center(
-            child: GestureDetector(
-              onTap: () {
+            child: RippleWrapper(
+              onPressed: () {
                 openModal(context, RegenerateImageModal());
               },
               child: StreamBuilder<User?>(

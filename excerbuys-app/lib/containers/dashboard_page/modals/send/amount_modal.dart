@@ -129,13 +129,14 @@ class _AmountModalState extends State<AmountModal> {
                       builder: (context, snapshot) {
                         return ListComponent(
                           data: {
-                            'Amount': '${snapshot.data ?? 0} finpoints',
+                            'Amount':
+                                '${formatNumber(snapshot.data ?? 0)} finpoints',
                             'Recipients':
                                 '${sendController.chosenUsersIds.length} users',
                             'Current balance':
-                                '${(userController.userBalance ?? 0).round().toString()} finpoints',
+                                '${formatNumber((userController.userBalance ?? 0).round())} finpoints',
                             'Remaining balance':
-                                '${max(((userController.userBalance ?? 0) - (snapshot.data ?? 0) * sendController.chosenUsersIds.length), 0).round().toString()} finpoints'
+                                '${formatNumber(max(((userController.userBalance ?? 0) - (snapshot.data ?? 0) * sendController.chosenUsersIds.length), 0).round())} finpoints'
                           },
                           summary:
                               '${(snapshot.data ?? 0) * sendController.chosenUsersIds.length} finpoints',

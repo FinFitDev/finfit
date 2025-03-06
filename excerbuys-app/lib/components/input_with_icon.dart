@@ -1,5 +1,6 @@
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class InputWithIcon extends StatefulWidget {
@@ -84,6 +85,9 @@ class _InputWithIconState extends State<InputWithIcon> {
           TextField(
             controller: _controller, // Assign the controller here
             keyboardType: widget.inputType,
+            inputFormatters: widget.inputType == TextInputType.number
+                ? <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly]
+                : null,
             obscureText: isPassword && _obscureText,
             enableSuggestions: !isPassword,
             onChanged: (String val) {

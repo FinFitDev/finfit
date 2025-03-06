@@ -22,7 +22,7 @@ class _ProfileImageGeneratorState extends State<ProfileImageGenerator> {
       return;
     }
 
-    final List<String> seedParts = widget.seed!.split('-');
+    final List<String> seedParts = widget.seed!.split('|');
     setState(() {
       backgroundColor = Color(parseInt('0x${seedParts[1]}'));
 

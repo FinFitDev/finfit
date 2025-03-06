@@ -3,6 +3,7 @@ import 'package:excerbuys/components/shared/profile_image_generator.dart';
 import 'package:excerbuys/store/controllers/dashboard/send_controller.dart';
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/debug.dart';
+import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -52,8 +53,8 @@ Widget userCard(
   void Function() onPressed,
   bool? isSelected,
 ) {
-  return GestureDetector(
-    onTap: onPressed,
+  return RippleWrapper(
+    onPressed: onPressed,
     child: Container(
       height: 70,
       padding: EdgeInsets.all(10),

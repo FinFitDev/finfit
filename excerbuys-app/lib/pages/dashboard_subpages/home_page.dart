@@ -14,7 +14,6 @@ import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
-import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/refresh_wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +32,24 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     widget.fetchActivity();
     super.initState();
+  }
+
+  Future<void> onRefresh() async {
+    if (userController.currentUser == null) {
+      return;
+    }
+
+    await userController.getCurrentUser(userController.currentUser!.id);
+
+    _scrollController.animateTo(
+      0,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.ease,
+    );
+
+    await Future.delayed(Duration(milliseconds: 300));
+
+    await activityController.fetchActivity();
   }
 
   @override
@@ -58,22 +75,7 @@ class _HomePageState extends State<HomePage> {
               return false;
             },
             child: RefreshWrapper(
-              onRefresh: () async {
-                if (userController.currentUser == null) {
-                  return;
-                }
-
-                await userController
-                    .getCurrentUser(userController.currentUser!.id);
-                _scrollController.animateTo(
-                  0,
-                  duration: Duration(milliseconds: 300),
-                  curve: Curves.ease,
-                );
-                await Future.delayed(Duration(milliseconds: 300));
-
-                await activityController.fetchActivity();
-              },
+              onRefresh: onRefresh,
               child: SingleChildScrollView(
                 controller: _scrollController,
                 child: Column(
@@ -129,16 +131,23 @@ class _HomePageState extends State<HomePage> {
                                 builder: (context, snapshot) {
                                   final Map<String, ITrainingEntry> trainings =
                                       snapshot.hasData
-                                          ? Map.fromEntries(snapshot
-                                              .data!.content.entries
-                                              .toList()
-                                              .sublist(
-                                                  0,
-                                                  min(
-                                                      snapshot.data!.content
-                                                          .values.length,
-                                                      4)))
+                                          ? Map.fromEntries(
+                                              (snapshot.data!.content.entries
+                                                      .toList()
+                                                    ..sort((a, b) => b
+                                                        .value.createdAt
+                                                        .compareTo(
+                                                            a.value.createdAt)))
+                                                  .sublist(
+                                                0,
+                                                min(
+                                                    snapshot.data!.content
+                                                        .values.length,
+                                                    5),
+                                              ),
+                                            )
                                           : {};
+
                                   return RecentTrainingSection(
                                       isLoading:
                                           snapshot.data?.isLoading ?? false,
