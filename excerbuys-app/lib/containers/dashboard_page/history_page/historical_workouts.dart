@@ -1,4 +1,5 @@
 import 'package:excerbuys/components/shared/buttons/category_button.dart';
+import 'package:excerbuys/components/shared/indicators/circle_progress/circle_progress_indicator.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/recent_training_section.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard/history_controller.dart';
@@ -12,7 +13,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class HistoricalWorkouts extends StatefulWidget {
-  const HistoricalWorkouts({super.key});
+  final double? scrollLoadMoreProgress;
+  const HistoricalWorkouts({super.key, this.scrollLoadMoreProgress});
 
   @override
   State<HistoricalWorkouts> createState() => _HistoricalWorkoutsState();
@@ -20,10 +22,7 @@ class HistoricalWorkouts extends StatefulWidget {
 
 class _HistoricalWorkoutsState extends State<HistoricalWorkouts>
     with TickerProviderStateMixin {
-  // final ScrollController _scrollController = ScrollController();
   late final AnimationController _animationController;
-  // double _lastOffsetForward = 0;
-  // double _lastOffsetBackwards = 0;
 
   @override
   void initState() {
@@ -68,17 +67,46 @@ class _HistoricalWorkoutsState extends State<HistoricalWorkouts>
                   stream: trainingsController.lazyLoadOffsetStream,
                   builder: (context, loadingSnapshot) {
                     return Container(
-                      margin: EdgeInsets.all(
-                          loadingSnapshot.data?.isLoading == true ? 30 : 0),
+                      margin: EdgeInsets.only(
+                          top: loadingSnapshot.data?.isLoading == true ? 20 : 0,
+                          bottom:
+                              loadingSnapshot.data?.isLoading == true ? 40 : 0),
                       child: loadingSnapshot.data?.isLoading == true
                           ? SpinKitCircle(
                               color: colors.secondary,
                               size: 30.0,
                               controller: _animationController,
                             )
-                          : SizedBox.shrink(),
+                          : trainingsController.canFetchMore
+                              ? Opacity(
+                                  opacity:
+                                      (widget.scrollLoadMoreProgress ?? 0) /
+                                          100,
+                                  child: Column(
+                                    children: [
+                                      CircleProgress(
+                                        size: 30,
+                                        progress:
+                                            (widget.scrollLoadMoreProgress ??
+                                                    0) /
+                                                100,
+                                        color: colors.secondary,
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      Text(
+                                        'Load more data',
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            color: colors.secondary),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              : SizedBox.shrink(),
                     );
-                  })
+                  }),
             ],
           );
         });

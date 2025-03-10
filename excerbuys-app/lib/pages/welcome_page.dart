@@ -51,7 +51,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   ],
                 )),
                 MainButton(
-                    label: 'Login',
+                    label: 'Log in',
                     backgroundColor: colors.secondary,
                     textColor: colors.primary,
                     onPressed: () {
@@ -62,7 +62,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   height: 16,
                 ),
                 MainButton(
-                    label: 'Signup',
+                    label: 'Sign up',
                     backgroundColor: colors.primary,
                     textColor: colors.secondary,
                     onPressed: () {

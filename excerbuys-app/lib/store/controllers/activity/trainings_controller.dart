@@ -5,7 +5,6 @@ import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/activity/steps.dart';
 import 'package:excerbuys/utils/activity/trainings.dart';
-import 'package:excerbuys/utils/debug.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 import 'package:rxdart/rxdart.dart';

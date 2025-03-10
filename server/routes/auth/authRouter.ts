@@ -6,6 +6,7 @@ import { logOut } from "./services/logout";
 import { RequestWithPayload } from "../../shared/types";
 import { ILoginPayload, ISignupPayload } from "./types";
 import { verifyAccessToken, verifyGoogleAuth } from "./services/verify";
+import { getUserByEmail } from "./services/resetPassword";
 
 const authRouter: Router = express.Router();
 
@@ -117,6 +118,27 @@ authRouter.post(
     } catch (error: any) {
       res.status(500).json({
         message: "Google auth failed",
+        error: error.message,
+        type: error.type,
+      });
+    }
+  }
+);
+
+authRouter.get(
+  "/user",
+  async (req: RequestWithPayload<undefined>, res: Response) => {
+    try {
+      const email = req.query.email as string;
+
+      const isFound = await getUserByEmail(email);
+      res.status(200).json({
+        message: isFound ? "User found" : "User not found",
+        content: isFound,
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        message: "Error finding user",
         error: error.message,
         type: error.type,
       });

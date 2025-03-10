@@ -26,7 +26,11 @@ class _GoalsContainerState extends State<GoalsContainer> {
       ),
       child: Row(
         children: [
-          CircleProgress(size: 50, progress: 0.3),
+          CircleProgress(
+            size: 50,
+            progress: 0.3,
+            color: colors.secondary,
+          ),
           SizedBox(width: 16),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,

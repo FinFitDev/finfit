@@ -1,5 +1,6 @@
 import { ErrorWithCode } from "../../../exceptions/errorWithCode";
 import {
+  fetchUserByEmail,
   fetchUserById,
   fetchUsersByRegex,
   transferPointsTransaction,

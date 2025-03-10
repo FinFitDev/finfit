@@ -125,9 +125,9 @@ class _MainButtonState extends State<MainButton> with TickerProviderStateMixin {
                     builder: (context, value, child) {
                       if (widget.holdToConfirm == true && value > 0) {
                         return CircleProgress(
-                          size: 40,
-                          progress: value / 100,
-                        );
+                            size: 40,
+                            progress: value / 100,
+                            color: Theme.of(context).colorScheme.primary);
                       }
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,

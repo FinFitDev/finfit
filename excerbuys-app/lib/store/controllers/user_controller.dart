@@ -75,7 +75,6 @@ class UserController {
       }
       return user;
     } catch (err) {
-      print(err);
       return null;
     }
   }

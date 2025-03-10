@@ -7,7 +7,7 @@ import {
   updateUserPointsScore,
   updateUserPointsScoreWithUpdateTimestamp,
 } from "./services/userService";
-import { RequestWithPayload } from "../../shared/types";
+import { IUserNoPassword, RequestWithPayload } from "../../shared/types";
 import {
   addStepsData,
   addTrainings,

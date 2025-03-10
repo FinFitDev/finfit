@@ -37,8 +37,8 @@ class _RegenerateImageModalState extends State<RegenerateImageModal> {
             color: colors.primary,
             width: double.infinity,
             padding: EdgeInsets.only(
-                left: 2 * HORIZOTAL_PADDING,
-                right: 2 * HORIZOTAL_PADDING,
+                left: HORIZOTAL_PADDING,
+                right: HORIZOTAL_PADDING,
                 bottom: layoutController.bottomPadding + HORIZOTAL_PADDING),
             child: Wrap(
               runSpacing: 12,
@@ -50,7 +50,7 @@ class _RegenerateImageModalState extends State<RegenerateImageModal> {
                 ProfileImageGenerator(
                     seed: _seed,
                     size: MediaQuery.sizeOf(context).width -
-                        4 * HORIZOTAL_PADDING),
+                        2 * HORIZOTAL_PADDING),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [

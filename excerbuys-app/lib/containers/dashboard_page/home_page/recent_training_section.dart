@@ -79,9 +79,11 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
       }
 
       return Container(
-        margin: EdgeInsets.symmetric(
-            horizontal: HORIZOTAL_PADDING,
-            vertical: widget.hideTitle == true ? 0 : 24),
+        margin: EdgeInsets.only(
+            left: HORIZOTAL_PADDING,
+            right: HORIZOTAL_PADDING,
+            top: widget.hideTitle == true ? 0 : 24,
+            bottom: 24),
         child:
             Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           widget.hideTitle == true

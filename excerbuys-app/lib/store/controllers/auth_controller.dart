@@ -4,10 +4,13 @@ import 'package:excerbuys/containers/auth_page/login_container.dart';
 import 'package:excerbuys/containers/auth_page/signup_container.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/store/persistence/storage_controller.dart';
+import 'package:excerbuys/types/enums.dart';
+import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/auth/requests.dart';
 import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
+import 'package:excerbuys/utils/user/requests.dart';
 import 'package:rxdart/rxdart.dart';
 
 enum AUTH_METHOD { LOGIN, SIGNUP }
@@ -133,6 +136,25 @@ class AuthController {
       return null;
     } catch (error) {
       rethrow;
+    }
+  }
+
+  Future<RESET_PASSWORD_ERROR?> resetPassword(String email) async {
+    try {
+      final bool? isUser = await fetchUserByEmailRequest(email);
+
+      if (isUser == false) {
+        throw RESET_PASSWORD_ERROR.WRONG_EMAIL;
+      }
+
+      // success
+      return null;
+    } catch (error) {
+      if (error == RESET_PASSWORD_ERROR.WRONG_EMAIL) {
+        return RESET_PASSWORD_ERROR.WRONG_EMAIL;
+      } else {
+        return RESET_PASSWORD_ERROR.SERVER_ERROR;
+      }
     }
   }
 }

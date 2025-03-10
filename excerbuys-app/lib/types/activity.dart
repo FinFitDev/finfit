@@ -1,4 +1,5 @@
 import 'package:excerbuys/types/general.dart';
+import 'package:flutter/material.dart';
 
 enum STEPS_AGGREGATION_TYPE { HOURLY, DAILY, MONTHLY }
 
@@ -9,8 +10,14 @@ enum ACTIVITY_TYPE { WALKING, RUNNING, BIKE_RIDING, SWIMMING }
 class ActivityMetadata {
   final String icon;
   final String name;
+  final Color color;
+  final Color? textColor;
 
-  const ActivityMetadata({required this.icon, required this.name});
+  const ActivityMetadata(
+      {required this.icon,
+      required this.name,
+      required this.color,
+      this.textColor});
 }
 
 class ITrainingEntry {

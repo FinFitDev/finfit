@@ -95,3 +95,16 @@ Future<User?> fetchUserByIdRequest(
     rethrow;
   }
 }
+
+Future<bool?> fetchUserByEmailRequest(String email) async {
+  final res = await handleBackendRequests(
+    method: HTTP_METHOD.GET,
+    endpoint: 'auth/user?email=$email',
+  );
+
+  if (res['error'] != null) {
+    throw res['error'];
+  }
+
+  return res['content'];
+}
