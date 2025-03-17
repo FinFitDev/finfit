@@ -61,7 +61,7 @@ export const aggregateDailyDataObject = (data: IHourlyStepEntry[]) => {
 
 export function generateSeed(): string {
   const random = Math.random;
-  const backgroundColor = `0xFF${randomLightColor()}`;
+  const backgroundColor = `FF${randomLightColor()}`;
   const shapeParts: string[] = [];
 
   // Generate a random type between 0 and 2
@@ -69,7 +69,7 @@ export function generateSeed(): string {
 
   // Generate 5 shape parts
   for (let i = 0; i < 5; i++) {
-    const color = `0xFF${randomColor()}`; // Random color for shape
+    const color = `FF${randomColor()}`; // Random color for shape
     const x = Math.floor(random() * 50); // Random x coordinate between 0 and 50
     const y = Math.floor(random() * 50); // Random y coordinate between 0 and 50
     const width = Math.floor(random() * 21) + (60 - i * 10); // Random width between 20 and 100
@@ -82,7 +82,7 @@ export function generateSeed(): string {
     shapeParts.push(shapePart);
   }
 
-  return `${type}_${backgroundColor}-${shapeParts.join("-")}`;
+  return `${type}|${backgroundColor}|${shapeParts.join("|")}`;
 }
 
 function randomColor(): string {
@@ -102,6 +102,10 @@ function randomLightColor(): string {
 function toHex(num: number): string {
   return num.toString(16).padStart(2, "0");
 }
+
+export const generate6digitCode = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
 
 // export function convertObjectToDBTuple<T extends Record<string, any>>(data:T[]){
 //   return data.reduce((acc, obj) => {

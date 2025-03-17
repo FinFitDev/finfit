@@ -1,15 +1,10 @@
-import 'dart:io';
-
-import 'package:excerbuys/containers/auth_page/login_container.dart';
-import 'package:excerbuys/containers/auth_page/signup_container.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/store/persistence/storage_controller.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/auth/requests.dart';
-import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/utils/fetching/utils.dart';
+import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/user/requests.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -30,7 +25,7 @@ class AuthController {
   String get accessToken => _accessToken.value;
   setAccessToken(String val) {
     _accessToken.add(val);
-    storageController.saveStateLocal('access_token', val);
+    storageController.saveStateLocal(ACCESS_TOKEN_KEY, val);
   }
 
   // refresh token state
@@ -39,7 +34,16 @@ class AuthController {
   String get refreshToken => _refreshToken.value;
   setRefreshToken(String val) {
     _refreshToken.add(val);
-    storageController.saveStateLocal('refresh_token', val);
+    storageController.saveStateLocal(REFRESH_TOKEN_KEY, val);
+  }
+
+  // verify user is necessary
+  final BehaviorSubject<UserToVerify?> _userToVerify =
+      BehaviorSubject.seeded(null);
+  Stream<UserToVerify?> get userToVerifyStream => _userToVerify.stream;
+  UserToVerify? get userToVerify => _userToVerify.value;
+  setUserToVerify(UserToVerify? userId) {
+    _userToVerify.add(userId);
   }
 
   restoreAuthStateFromStorage() async {
@@ -59,40 +63,54 @@ class AuthController {
     }
   }
 
-  Future<Map<LOGIN_FIELD_TYPE, String?>?> logIn(
-      String login, String password) async {
+  Future<void> logIn(String login, String password) async {
     try {
-      final {
-        'access_token': accessToken,
-        'refresh_token': refreshToken,
-        'user_id': userId
-      } = await logInRequest(login, password);
+      setUserToVerify(null);
+      final Map<String, dynamic> response = await logInRequest(login, password);
+      final String? userId = response['user_id'];
+      final String? accessToken = response['access_token'];
+      final String? refreshToken = response['refresh_token'];
 
-      if (accessToken.isNotEmpty) {
-        setAccessToken(accessToken);
-        await userController.getCurrentUser(userId);
+      if (userId != null && accessToken == null && refreshToken == null) {
+        setUserToVerify(
+            UserToVerify(userId: userId, login: login, password: password));
+        return;
       }
-      if (refreshToken.isNotEmpty) {
-        setRefreshToken(refreshToken);
+
+      if (refreshToken?.isNotEmpty == true) {
+        setRefreshToken(refreshToken!);
       }
-      return null;
+
+      if (accessToken?.isNotEmpty == true) {
+        setAccessToken(accessToken!);
+        await userController.getCurrentUser(userId!);
+      }
     } catch (error) {
       print(error);
       rethrow;
     }
   }
 
-  Future<Map<SIGNUP_FIELD_TYPE, String?>?> signUp(
-      String username, String email, String password) async {
+  Future<void> signUp(String username, String email, String password) async {
     try {
-      final String message = await signUpRequest(username, email, password);
+      setUserToVerify(null);
+      final Map<String, dynamic> response =
+          await signUpRequest(username, email, password);
 
-      if (message == "Sign up successful") {
-        await logIn(username, password);
+      if (response['user_id'] != null) {
+        setUserToVerify(UserToVerify(
+            userId: response['user_id'], login: username, password: password));
       }
-      return null;
     } catch (error) {
-      print(error);
+      rethrow;
+    }
+  }
+
+  Future<void> resendVerificationEmail(String userId) async {
+    try {
+      final String? returnedUserId =
+          await resendVerificationEmailRequest(userId);
+    } catch (error) {
       rethrow;
     }
   }
@@ -146,6 +164,8 @@ class AuthController {
       if (isUser == false) {
         throw RESET_PASSWORD_ERROR.WRONG_EMAIL;
       }
+
+      print('success');
 
       // success
       return null;

@@ -61,6 +61,7 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
                         error = null;
                       });
                     },
+                    inputType: TextInputType.emailAddress,
                     borderRadius: 10,
                     verticalPadding: 12,
                   ),

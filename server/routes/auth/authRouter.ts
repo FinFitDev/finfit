@@ -5,8 +5,15 @@ import { regenerateAccessTokenFromRefreshToken } from "./services/refresh";
 import { logOut } from "./services/logout";
 import { RequestWithPayload } from "../../shared/types";
 import { ILoginPayload, ISignupPayload } from "./types";
-import { verifyAccessToken, verifyGoogleAuth } from "./services/verify";
-import { getUserByEmail } from "./services/resetPassword";
+import {
+  resendEmailVerify,
+  verifyAccessToken,
+  verifyEmailFlow,
+  verifyEmailToken,
+  verifyGoogleAuth,
+} from "./services/verify";
+import path from "path";
+import { resolveSendResetPasswordMail } from "./services/resetPassword";
 
 const authRouter: Router = express.Router();
 
@@ -25,6 +32,45 @@ authRouter.post(
         message: "An error occured while signing up.",
         error: error.message,
         type: error.type,
+      });
+    }
+  }
+);
+
+authRouter.get(
+  "/signup/verify",
+  async (req: RequestWithPayload<undefined>, res: Response) => {
+    try {
+      const { token } = req.query as { token: string };
+      const verification = await verifyEmailFlow(token);
+      if (verification) {
+        res
+          .status(200)
+          .sendFile(
+            path.join(__dirname, "../../../views/email/success_verify.html")
+          );
+      }
+    } catch (error) {
+      res.status(500).json({
+        message: "Token verification failed",
+        valid_token: false,
+      });
+    }
+  }
+);
+
+authRouter.get(
+  "/signup/verify/resend",
+  async (req: RequestWithPayload<undefined>, res: Response) => {
+    try {
+      const { user_id } = req.query as { user_id: string };
+      await resendEmailVerify(user_id);
+
+      res.status(200).json({ message: "Email resent", content: user_id });
+    } catch (error: any) {
+      res.status(500).json({
+        message: "Failed to send verification email",
+        error: error.message,
       });
     }
   }
@@ -129,18 +175,53 @@ authRouter.get(
   "/user",
   async (req: RequestWithPayload<undefined>, res: Response) => {
     try {
-      const email = req.query.email as string;
-
-      const isFound = await getUserByEmail(email);
-      res.status(200).json({
-        message: isFound ? "User found" : "User not found",
-        content: isFound,
-      });
     } catch (error: any) {
       res.status(500).json({
         message: "Error finding user",
         error: error.message,
         type: error.type,
+      });
+    }
+  }
+);
+
+authRouter.get(
+  "/signup/verify",
+  async (req: RequestWithPayload<undefined>, res: Response) => {
+    try {
+      const { token } = req.query as { token: string };
+      const verification = await verifyEmailFlow(token);
+      if (verification) {
+        res
+          .status(200)
+          .sendFile(
+            path.join(__dirname, "../../../views/email/success_verify.html")
+          );
+      }
+    } catch (error) {
+      res.status(500).json({
+        message: "Token verification failed",
+        valid_token: false,
+      });
+    }
+  }
+);
+
+authRouter.get(
+  "/login/reset-password/send-mail",
+  async (req: RequestWithPayload<undefined>, res: Response) => {
+    try {
+      const email = req.query.email as string;
+
+      const user_id = await resolveSendResetPasswordMail(email);
+
+      res
+        .status(200)
+        .json({ message: "Reset password email sent", content: user_id });
+    } catch (error: any) {
+      res.status(500).json({
+        message: "Failed to send password reset email",
+        error: error.message,
       });
     }
   }

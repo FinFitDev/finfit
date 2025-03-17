@@ -5,7 +5,7 @@ import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
 import 'package:excerbuys/containers/auth_page/signup_container.dart';
 
-Future<Map<String, String>> logInRequest(String login, String password) async {
+Future<Map<String, dynamic>> logInRequest(String login, String password) async {
   dynamic res = await handleBackendRequests(
       method: HTTP_METHOD.POST,
       endpoint: 'auth/login',
@@ -25,7 +25,7 @@ Future<Map<String, String>> logInRequest(String login, String password) async {
   return res['content'];
 }
 
-Future<String> signUpRequest(
+Future<Map<String, dynamic>> signUpRequest(
     String username, String email, String password) async {
   dynamic res = await handleBackendRequests(
       method: HTTP_METHOD.POST,
@@ -43,7 +43,25 @@ Future<String> signUpRequest(
     throw Exception(res['message']);
   }
 
-  return res['message'];
+  return res['content'];
+}
+
+Future<String?> resendVerificationEmailRequest(String userId) async {
+  try {
+    dynamic res = await handleBackendRequests(
+      method: HTTP_METHOD.GET,
+      endpoint: 'auth/signup/verify/resend?user_id=$userId',
+    );
+
+    if (res['error'] != null) {
+      throw Exception(res['error']);
+    }
+
+    return res['content'];
+  } catch (err) {
+    print(err);
+    return null;
+  }
 }
 
 Future<String?> logOutRequest(String refreshToken) async {

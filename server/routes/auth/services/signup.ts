@@ -10,10 +10,12 @@ import {
 import { IGoogleSignUpPayload, ISignupPayload } from "../types";
 import { generateSeed, isUserGoogleSignup } from "../../../shared/utils";
 import { v4 as uuidv4 } from "uuid";
+import { sendVerificationEmail } from "../../../shared/utils/email";
+import { generateEmailVerificationToken } from "../../../models/tokenModel";
 
 export const signUpUser = async (
   user: ISignupPayload | IGoogleSignUpPayload
-) => {
+): Promise<{ user_id: string }> => {
   if (!user) throw new ErrorWithCode("User data invalid", 400);
 
   const { username, email } = user;
@@ -48,7 +50,7 @@ export const signUpUser = async (
 
   // user creates an account with google signin
   if (isUserGoogleSignup(user)) {
-    return insertGoogleAuthUser(
+    await insertGoogleAuthUser(
       user_id,
       username,
       email,
@@ -63,12 +65,11 @@ export const signUpUser = async (
     const salt = await bcrypt.genSalt(10);
     const hashed_password = await bcrypt.hash(user.password, salt);
 
-    return insertUser(
-      user_id,
-      username,
-      email,
-      hashed_password,
-      generateSeed()
-    );
+    await insertUser(user_id, username, email, hashed_password, generateSeed());
+
+    const emailVerificationToken = generateEmailVerificationToken(user_id);
+    await sendVerificationEmail(email, emailVerificationToken, username);
   }
+
+  return { user_id };
 };

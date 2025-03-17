@@ -2,6 +2,7 @@ import { Request } from "express";
 
 export type IAccessToken = string;
 export type IRefreshToken = string;
+export type IEmailVerificationToken = string;
 
 export interface IUser {
   id: string;
@@ -13,6 +14,7 @@ export interface IUser {
   steps_updated_at: string;
   points: number;
   image?: string;
+  verified?: boolean;
 }
 
 export type IUserNoPassword = Omit<IUser, "password">;
@@ -56,3 +58,5 @@ export interface IDailyStepEntry {
   user_id: string;
   mean: number;
 }
+
+export type IResetPasswordCode = string;

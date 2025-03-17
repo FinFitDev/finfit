@@ -1,14 +1,15 @@
 import 'package:excerbuys/components/input_with_icon.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
+import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 enum SIGNUP_FIELD_TYPE { USERNAME, EMAIL, PASSWORD, PASSWORD_REPEAT }
 
 class SignupContainer extends StatefulWidget {
-  final Future<Map<SIGNUP_FIELD_TYPE, String?>?> Function(
-      String, String, String) signUp;
+  final Future<void> Function(String, String, String) signUp;
 
   const SignupContainer({super.key, required this.signUp});
 
@@ -84,7 +85,8 @@ class _SignupContainerState extends State<SignupContainer> {
           _formFieldsState[SIGNUP_FIELD_TYPE.PASSWORD]!.replaceAll(' ', ''));
 
       if (context.mounted) {
-        navigateWithClear(route: '/', context: context);
+        // we always want to verify after signup
+        navigate(route: '/verify_email', context: context);
       }
     } catch (error) {
       final Map<SIGNUP_FIELD_TYPE, dynamic>? serverResponse =
@@ -187,6 +189,7 @@ class _SignupContainerState extends State<SignupContainer> {
             isDisabled: isButtonDisabled,
             loading: _loading,
             onPressed: () {
+              FocusScope.of(context).requestFocus(FocusNode());
               submitForm(context);
             })
       ],

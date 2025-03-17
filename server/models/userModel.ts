@@ -25,7 +25,7 @@ export const fetchUsersByRegex = async (
 
 export const fetchUserById = async (id: string) => {
   const response = await pool.query(
-    "SELECT id, username, email, image, created_at, points, steps_updated_at FROM users WHERE users.id = $1",
+    "SELECT id, username, email, image, created_at, points, steps_updated_at, verified FROM users WHERE users.id = $1",
     [id]
   );
 
@@ -55,8 +55,9 @@ export const insertGoogleAuthUser = async (
   image: string
 ) => {
   const response = await pool.query(
-    "INSERT INTO users (id, username, email, google_id, image) VALUES ($1, $2, $3, $4, $5)",
-    [id, username, email, google_id, image]
+    "INSERT INTO users (id, username, email, google_id, image, verified) VALUES ($1, $2, $3, $4, $5, $6)",
+    // the user is verified if google verified the email
+    [id, username, email, google_id, image, true]
   );
 
   return response;
@@ -95,6 +96,14 @@ export const updateImageSeed = async (user_id: string, image: string) => {
     [image, user_id]
   );
 
+  return response;
+};
+
+export const updateVerifyUser = async (user_id: string) => {
+  const response = await pool.query(
+    "UPDATE users SET verified = $1 WHERE id = $2;",
+    [true, user_id]
+  );
   return response;
 };
 

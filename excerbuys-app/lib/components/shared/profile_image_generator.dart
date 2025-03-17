@@ -57,7 +57,7 @@ class _ProfileImageGeneratorState extends State<ProfileImageGenerator> {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(1000),
       child: widget.seed == null
           ? Container(
               height: widget.size,

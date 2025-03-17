@@ -1,6 +1,7 @@
 import { QueryResult } from "pg";
 import {
   IAccessToken,
+  IEmailVerificationToken,
   IRefreshToken,
   IUser,
   IUserNoPassword,
@@ -11,6 +12,17 @@ import jwt from "jsonwebtoken";
 export interface ITokenData {
   user_id: string;
 }
+
+export const generateEmailVerificationToken = (
+  user_id: string
+): IEmailVerificationToken => {
+  const token_data: ITokenData = {
+    user_id,
+  };
+  return jwt.sign(token_data, process.env.EMAIL_SECRET as string, {
+    expiresIn: "10m",
+  });
+};
 
 export const generateAccessToken = (user_id: string): IAccessToken => {
   const token_data: ITokenData = {

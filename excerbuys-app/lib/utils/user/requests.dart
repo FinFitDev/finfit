@@ -87,7 +87,8 @@ Future<User?> fetchUserByIdRequest(
         email: el['email'],
         image: el['image'],
         createdAt: DateTime.parse(el['created_at']).toLocal(),
-        stepsUpdatedAt: DateTime.parse(el['steps_updated_at']).toLocal());
+        stepsUpdatedAt: DateTime.parse(el['steps_updated_at']).toLocal(),
+        verified: el['verified']);
 
     return result;
   } catch (error) {

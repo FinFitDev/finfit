@@ -10,6 +10,7 @@ class User {
   final double points;
   final DateTime stepsUpdatedAt;
   final String? image;
+  final bool? verified;
 
   User(
       {required this.id,
@@ -18,21 +19,25 @@ class User {
       required this.createdAt,
       required this.points,
       required this.stepsUpdatedAt,
-      String? image})
+      String? image,
+      this.verified})
       : image = image == 'NULL' ? null : image;
 
   // Factory constructor to create a User from a Map
   factory User.fromMap(Map<String, dynamic> map) {
     final String? image = map['image'] == 'NULL' ? null : map['image'];
+    final bool? verified = map['verified'] == 'NULL'
+        ? null
+        : bool.parse(map['verified'] ?? 'false');
     return User(
-      id: map['id'],
-      username: map['username'],
-      email: map['email'],
-      createdAt: DateTime.parse(map['createdAt']),
-      points: double.parse(map['points']), // Ensure double conversion
-      stepsUpdatedAt: DateTime.parse(map['stepsUpdatedAt']),
-      image: image, // image is nullable, so it can handle nulls
-    );
+        id: map['id'],
+        username: map['username'],
+        email: map['email'],
+        createdAt: DateTime.parse(map['createdAt']),
+        points: double.parse(map['points']), // Ensure double conversion
+        stepsUpdatedAt: DateTime.parse(map['stepsUpdatedAt']),
+        image: image,
+        verified: verified);
   }
 
   @override
@@ -44,7 +49,8 @@ class User {
       "createdAt": "${createdAt.toString()}",
       "stepsUpdatedAt": "${stepsUpdatedAt.toString()}",
       "points": "$points",
-      "image": "$image"
+      "image": "$image",
+      "verified":"$verified"
     }""";
   }
 
@@ -56,7 +62,8 @@ class User {
       "createdAt": createdAt.toIso8601String(),
       "stepsUpdatedAt": stepsUpdatedAt.toIso8601String(),
       "points": points.toString(),
-      "image": image
+      "image": image,
+      'verified': verified
     };
   }
 
@@ -70,14 +77,14 @@ class User {
     String? image,
   }) {
     return User(
-      id: id ?? this.id,
-      username: username ?? this.username,
-      email: email ?? this.email,
-      createdAt: createdAt ?? this.createdAt,
-      points: points ?? this.points,
-      stepsUpdatedAt: stepsUpdatedAt ?? this.stepsUpdatedAt,
-      image: image ?? this.image,
-    );
+        id: id ?? this.id,
+        username: username ?? this.username,
+        email: email ?? this.email,
+        createdAt: createdAt ?? this.createdAt,
+        points: points ?? this.points,
+        stepsUpdatedAt: stepsUpdatedAt ?? this.stepsUpdatedAt,
+        image: image ?? this.image,
+        verified: verified ?? this.verified);
   }
 }
 
@@ -101,6 +108,15 @@ class UserItem {
       timestamp: DateTime.parse(map["timestamp"]),
     );
   }
+}
+
+class UserToVerify {
+  final String login;
+  final String password;
+  final String userId;
+
+  const UserToVerify(
+      {required this.userId, required this.login, required this.password});
 }
 
 // used for profile image generation

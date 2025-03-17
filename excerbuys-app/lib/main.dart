@@ -1,6 +1,7 @@
 import 'package:excerbuys/layout.dart';
 import 'package:excerbuys/pages/auth_page.dart';
 import 'package:excerbuys/pages/loading_page.dart';
+import 'package:excerbuys/pages/verify_email_page.dart';
 import 'package:excerbuys/pages/welcome_page.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/layout_wrapper.dart';
@@ -54,7 +55,8 @@ class _HealthAppState extends State<HealthApp> {
           "/": (context) => LayoutWrapper(child: LoadingPage()),
           "/dashboard": (context) => LayoutWrapper(child: Layout()),
           "/login": (context) => LayoutWrapper(child: AuthPage()),
-          "/welcome": (context) => LayoutWrapper(child: WelcomePage())
+          "/welcome": (context) => LayoutWrapper(child: WelcomePage()),
+          '/verify_email': (context) => LayoutWrapper(child: VerifyEmailPage())
         },
       ),
     );

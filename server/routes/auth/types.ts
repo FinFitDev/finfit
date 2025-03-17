@@ -11,8 +11,8 @@ export interface IGoogleLoginPayload {
 }
 
 export interface ILoginResponse {
-  access_token: IAccessToken;
-  refresh_token: IRefreshToken;
+  access_token?: IAccessToken;
+  refresh_token?: IRefreshToken;
   user_id: string;
 }
 

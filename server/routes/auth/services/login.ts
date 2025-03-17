@@ -3,12 +3,14 @@ import { ErrorWithCode } from "../../../exceptions/errorWithCode";
 import { fetchUserByUsernameOrEmail } from "../../../models/userModel";
 import {
   generateAccessToken,
+  generateEmailVerificationToken,
   generateRefreshToken,
   insertRefreshToken,
 } from "../../../models/tokenModel";
 import { IGoogleLoginPayload, ILoginPayload, ILoginResponse } from "../types";
 import { IUser } from "../../../shared/types";
 import { isUserGoogleLogin } from "../../../shared/utils";
+import { sendVerificationEmail } from "../../../shared/utils/email";
 
 export const logInUser = async (
   user: ILoginPayload | IGoogleLoginPayload
@@ -41,9 +43,22 @@ export const logInUser = async (
       throw new ErrorWithCode("Invalid password", 400, "password");
   }
 
+  // we will request email verification first
+  if (!foundUserData.verified) {
+    const emailVerificationToken = generateEmailVerificationToken(
+      foundUserData.id
+    );
+    await sendVerificationEmail(
+      foundUserData.email,
+      emailVerificationToken,
+      foundUserData.username
+    );
+    return { user_id: foundUserData.id };
+  }
+
   const access_token = generateAccessToken(foundUserData.id);
   const refresh_token = generateRefreshToken(foundUserData.id);
   await insertRefreshToken(refresh_token, foundUserData.id);
 
-  return { access_token, refresh_token, user_id: foundUser.rows[0].id };
+  return { access_token, refresh_token, user_id: foundUserData.id };
 };

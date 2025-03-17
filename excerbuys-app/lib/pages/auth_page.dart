@@ -18,6 +18,7 @@ class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     final double height = layoutController.relativeContentHeight;
+    final ColorScheme colors = Theme.of(context).colorScheme;
 
     return Scaffold(
         body: SingleChildScrollView(
@@ -34,27 +35,62 @@ class _AuthPageState extends State<AuthPage> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(children: [
-                              IconButton(
-                                  onPressed: () {
-                                    if (Navigator.canPop(context)) {
-                                      Navigator.pop(context);
-                                    }
-                                  },
-                                  icon: SvgPicture.asset(
-                                      'assets/svg/arrowBack.svg',
-                                      height: 30,
-                                      colorFilter: ColorFilter.mode(
-                                          Theme.of(context)
-                                              .colorScheme
-                                              .tertiary,
-                                          BlendMode.srcIn))),
-                            ]),
-                            Container(
-                                margin: EdgeInsets.symmetric(vertical: 60),
-                                child: Logo()),
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  IconButton(
+                                      onPressed: () {
+                                        FocusScope.of(context)
+                                            .requestFocus(FocusNode());
+
+                                        if (Navigator.canPop(context)) {
+                                          Navigator.pop(context);
+                                        }
+                                      },
+                                      icon: SvgPicture.asset(
+                                          'assets/svg/arrowBack.svg',
+                                          height: 30,
+                                          colorFilter: ColorFilter.mode(
+                                              Theme.of(context)
+                                                  .colorScheme
+                                                  .tertiary,
+                                              BlendMode.srcIn))),
+                                ]),
+                            StreamBuilder<AUTH_METHOD>(
+                                stream: authController.activeAuthMethodStream,
+                                builder: (context, snapshot) {
+                                  return Container(
+                                      margin:
+                                          EdgeInsets.only(top: 30, bottom: 60),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            snapshot.data == AUTH_METHOD.LOGIN
+                                                ? 'Log in below'
+                                                : 'Sign up below',
+                                            style: TextStyle(
+                                                fontSize: 32,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          SizedBox(
+                                            height: 8,
+                                          ),
+                                          Text(
+                                            snapshot.data == AUTH_METHOD.LOGIN
+                                                ? 'And continue your journey with FinFit'
+                                                : 'And start your journey with FinFit',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontFamily: 'Poppins',
+                                                fontWeight: FontWeight.w400,
+                                                color: colors.primaryFixedDim),
+                                          ),
+                                        ],
+                                      ));
+                                }),
                             Expanded(
-                                child: StreamBuilder<Object>(
+                                child: StreamBuilder<AUTH_METHOD>(
                                     stream:
                                         authController.activeAuthMethodStream,
                                     builder: (context, snapshot) {

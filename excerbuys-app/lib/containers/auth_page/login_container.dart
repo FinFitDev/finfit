@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:excerbuys/components/input_with_icon.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/forgot_password_modal.dart';
+import 'package:excerbuys/store/controllers/auth_controller.dart';
+import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/modal_wrapper.dart';
@@ -14,7 +16,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 enum LOGIN_FIELD_TYPE { LOGIN, PASSWORD }
 
 class LoginContainer extends StatefulWidget {
-  final Future<Map<LOGIN_FIELD_TYPE, String?>?> Function(String, String) logIn;
+  final Future<void> Function(String, String) logIn;
   final Future<String?> Function(String) useGoogleAuth;
 
   const LoginContainer(
@@ -68,7 +70,12 @@ class _LoginContainerState extends State<LoginContainer> {
           _formFieldsState[LOGIN_FIELD_TYPE.PASSWORD]!.replaceAll(' ', ''));
 
       if (context.mounted) {
-        navigateWithClear(route: '/', context: context);
+        // if the user has to be verified, go to the verify page
+        if (authController.userToVerify != null) {
+          navigate(route: '/verify_email', context: context);
+        } else {
+          navigateWithClear(route: '/', context: context);
+        }
       }
     } catch (error) {
       final Map<LOGIN_FIELD_TYPE, dynamic>? serverResponse =
@@ -188,6 +195,8 @@ class _LoginContainerState extends State<LoginContainer> {
                 backgroundColor: colors.secondary,
                 textColor: colors.primary,
                 onPressed: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+
                   submitForm(context);
                 },
                 isDisabled: isButtonDisabled || _loading,

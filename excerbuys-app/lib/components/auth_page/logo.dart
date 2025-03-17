@@ -9,24 +9,43 @@ class Logo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          RichText(
+              text: TextSpan(
+                  style: TextStyle(
+                      fontFamily: 'CarterOne',
+                      fontSize: 48,
+                      color: Theme.of(context).colorScheme.tertiary,
+                      letterSpacing: 8),
+                  children: [
+                TextSpan(
+                    text: 'F',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                    )),
+                TextSpan(
+                    text: 'in',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.tertiary,
+                    )),
+                TextSpan(
+                    text: 'F',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                    )),
+                TextSpan(
+                    text: 'it',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.tertiary,
+                    ))
+              ])),
           Text(
-            'finfit',
+            'Fitness is your currency',
             style: TextStyle(
-                fontFamily: 'BrunoAce',
-                fontSize: 48,
-                color: Theme.of(context).colorScheme.tertiary,
-                letterSpacing: 5),
+                fontFamily: 'Calligraffiti',
+                fontSize: 16,
+                color: Theme.of(context).colorScheme.primaryFixedDim,
+                letterSpacing: 3),
           ),
-          Container(
-            child: Text(
-              'Fitness is your currency',
-              style: TextStyle(
-                  fontFamily: 'BrunoAce',
-                  fontSize: 14,
-                  color: Theme.of(context).colorScheme.secondary,
-                  letterSpacing: 3),
-            ),
-          )
         ],
       ),
     );

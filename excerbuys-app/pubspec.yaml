@@ -112,6 +112,14 @@ flutter:
       fonts:
         - asset: assets/fonts/BrunoAce-Regular.ttf
 
+    - family: Calligraffiti
+      fonts:
+        - asset: assets/fonts/Calligraffitti-Regular.ttf
+
+    - family: CarterOne
+      fonts:
+        - asset: assets/fonts/CarterOne-Regular.ttf
+
     - family: Poppins
       fonts:
         - asset: assets/fonts/Poppins-Thin.ttf
