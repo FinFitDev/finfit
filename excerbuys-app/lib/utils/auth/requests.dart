@@ -64,6 +64,56 @@ Future<String?> resendVerificationEmailRequest(String userId) async {
   }
 }
 
+Future<String?> sendPasswordResetEmailRequest(String email) async {
+  try {
+    dynamic res = await handleBackendRequests(
+      method: HTTP_METHOD.GET,
+      endpoint: 'auth/login/reset/mail?email=$email',
+    );
+    if (res['error'] != null) {
+      throw res['error'];
+    }
+
+    return res['content'];
+  } catch (err) {
+    rethrow;
+  }
+}
+
+Future<bool?> verifyPasswordResetCodeRequest(String code, String userId) async {
+  try {
+    dynamic res = await handleBackendRequests(
+        method: HTTP_METHOD.POST,
+        endpoint: 'auth/login/reset/verify',
+        body: {"code": code, "user_id": userId});
+
+    if (res['error'] != null) {
+      throw res['error'];
+    }
+
+    return res['content'];
+  } catch (err) {
+    rethrow;
+  }
+}
+
+Future<String?> setNewPasswordRequest(String password, String userId) async {
+  try {
+    dynamic res = await handleBackendRequests(
+        method: HTTP_METHOD.POST,
+        endpoint: 'auth/login/reset/new',
+        body: {"password": password, "user_id": userId});
+
+    if (res['error'] != null) {
+      throw res['error'];
+    }
+
+    return res['content'];
+  } catch (err) {
+    rethrow;
+  }
+}
+
 Future<String?> logOutRequest(String refreshToken) async {
   try {
     dynamic res = await handleBackendRequests(

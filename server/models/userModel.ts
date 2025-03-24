@@ -99,6 +99,18 @@ export const updateImageSeed = async (user_id: string, image: string) => {
   return response;
 };
 
+export const updateUserPassword = async (
+  user_id: string,
+  hashed_password: string
+) => {
+  const response = await pool.query(
+    "UPDATE users SET password = $1 WHERE id = $2;",
+    [hashed_password, user_id]
+  );
+
+  return response;
+};
+
 export const updateVerifyUser = async (user_id: string) => {
   const response = await pool.query(
     "UPDATE users SET verified = $1 WHERE id = $2;",

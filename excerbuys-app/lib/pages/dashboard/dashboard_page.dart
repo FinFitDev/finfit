@@ -1,9 +1,9 @@
 import 'package:excerbuys/components/dashboard_page/bottom_appbar.dart';
 import 'package:excerbuys/components/dashboard_page/main_header.dart';
-import 'package:excerbuys/pages/dashboard_subpages/home_page.dart';
-import 'package:excerbuys/pages/dashboard_subpages/profile_page.dart';
-import 'package:excerbuys/pages/dashboard_subpages/recent_page.dart';
-import 'package:excerbuys/pages/dashboard_subpages/shop_page.dart';
+import 'package:excerbuys/pages/dashboard/home_page.dart';
+import 'package:excerbuys/pages/dashboard/profile_page.dart';
+import 'package:excerbuys/pages/dashboard/recent_page.dart';
+import 'package:excerbuys/pages/dashboard/shop_page.dart';
 import 'package:excerbuys/store/controllers/activity/activity_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';

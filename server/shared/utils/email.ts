@@ -59,7 +59,7 @@ export const sendPasswordResetEmail = async (
   const transporter = getTransporter();
 
   const htmlContent = readFile(
-    path.join(__dirname, "../../../views/email/verify.html")
+    path.join(__dirname, "../../../views/email/reset_password.html")
   );
   const emailHtml = htmlContent
     .replace("{{USERNAME}}", username)

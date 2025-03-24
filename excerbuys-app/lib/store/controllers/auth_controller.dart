@@ -46,6 +46,15 @@ class AuthController {
     _userToVerify.add(userId);
   }
 
+  final BehaviorSubject<ResetPasswordUser?> _resetPasswordUser =
+      BehaviorSubject.seeded(null);
+  Stream<ResetPasswordUser?> get resetPasswordUserStream =>
+      _resetPasswordUser.stream;
+  ResetPasswordUser? get resetPasswordUser => _resetPasswordUser.value;
+  setResetPasswordEmail(ResetPasswordUser? newUser) {
+    _resetPasswordUser.add(newUser);
+  }
+
   restoreAuthStateFromStorage() async {
     try {
       final String? accessToken =
@@ -108,8 +117,8 @@ class AuthController {
 
   Future<void> resendVerificationEmail(String userId) async {
     try {
-      final String? returnedUserId =
-          await resendVerificationEmailRequest(userId);
+      // returns user id
+      final String? _ = await resendVerificationEmailRequest(userId);
     } catch (error) {
       rethrow;
     }
@@ -157,25 +166,48 @@ class AuthController {
     }
   }
 
-  Future<RESET_PASSWORD_ERROR?> resetPassword(String email) async {
+  Future<RESET_PASSWORD_ERROR?> sendResetPassword(String email) async {
     try {
-      final bool? isUser = await fetchUserByEmailRequest(email);
+      // returns user id
+      final String? userId = await sendPasswordResetEmailRequest(email);
 
-      if (isUser == false) {
-        throw RESET_PASSWORD_ERROR.WRONG_EMAIL;
+      if (userId == null) {
+        throw "Couldn't send";
       }
 
-      print('success');
-
-      // success
+      setResetPasswordEmail(ResetPasswordUser(email: email, userId: userId));
       return null;
     } catch (error) {
-      if (error == RESET_PASSWORD_ERROR.WRONG_EMAIL) {
+      if (error == 'User not found') {
         return RESET_PASSWORD_ERROR.WRONG_EMAIL;
       } else {
         return RESET_PASSWORD_ERROR.SERVER_ERROR;
       }
     }
+  }
+
+  Future<bool?> verifyResetPasswordCode(String code) async {
+    try {
+      if (resetPasswordUser?.userId == null) {
+        return null;
+      }
+      final bool? verified =
+          await verifyPasswordResetCodeRequest(code, resetPasswordUser!.userId);
+
+      return verified;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  Future<void> setNewPassword(String newPassword) async {
+    if (resetPasswordUser?.userId == null) {
+      throw 'Email not set';
+    }
+    final String? _ =
+        await setNewPasswordRequest(newPassword, resetPasswordUser!.userId);
+
+    return;
   }
 }
 

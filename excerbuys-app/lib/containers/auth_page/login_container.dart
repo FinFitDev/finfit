@@ -4,7 +4,6 @@ import 'package:excerbuys/components/input_with_icon.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/forgot_password_modal.dart';
 import 'package:excerbuys/store/controllers/auth_controller.dart';
-import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/modal_wrapper.dart';
@@ -128,7 +127,6 @@ class _LoginContainerState extends State<LoginContainer> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
-    final texts = Theme.of(context).textTheme;
 
     final bool isButtonDisabled = _formErrorsState.values
             .any((value) => value != null && value.isNotEmpty) ||

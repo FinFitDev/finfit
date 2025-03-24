@@ -13,7 +13,11 @@ import {
   verifyGoogleAuth,
 } from "./services/verify";
 import path from "path";
-import { resolveSendResetPasswordMail } from "./services/resetPassword";
+import {
+  resetPassword,
+  resolveSendResetPasswordMail,
+  verifyResetCode,
+} from "./services/resetPassword";
 
 const authRouter: Router = express.Router();
 
@@ -172,20 +176,6 @@ authRouter.post(
 );
 
 authRouter.get(
-  "/user",
-  async (req: RequestWithPayload<undefined>, res: Response) => {
-    try {
-    } catch (error: any) {
-      res.status(500).json({
-        message: "Error finding user",
-        error: error.message,
-        type: error.type,
-      });
-    }
-  }
-);
-
-authRouter.get(
   "/signup/verify",
   async (req: RequestWithPayload<undefined>, res: Response) => {
     try {
@@ -208,7 +198,7 @@ authRouter.get(
 );
 
 authRouter.get(
-  "/login/reset-password/send-mail",
+  "/login/reset/mail",
   async (req: RequestWithPayload<undefined>, res: Response) => {
     try {
       const email = req.query.email as string;
@@ -221,6 +211,54 @@ authRouter.get(
     } catch (error: any) {
       res.status(500).json({
         message: "Failed to send password reset email",
+        error: error.message,
+      });
+    }
+  }
+);
+
+authRouter.post(
+  "/login/reset/verify",
+  async (
+    req: RequestWithPayload<{ code: string; user_id: string }>,
+    res: Response
+  ) => {
+    try {
+      const { code, user_id: userId } = req.body;
+
+      const verified = await verifyResetCode(code, userId);
+
+      if (!verified) {
+        throw new Error("Reset code incorrect");
+      }
+
+      res.status(200).json({ message: "Code is correct", content: true });
+    } catch (error: any) {
+      res.status(500).json({
+        message: "Reset code incorrect",
+        error: error.message,
+      });
+    }
+  }
+);
+
+authRouter.post(
+  "/login/reset/new",
+  async (
+    req: RequestWithPayload<{ password: string; user_id: string }>,
+    res: Response
+  ) => {
+    try {
+      const { password, user_id: userId } = req.body;
+
+      const updatedUserId = await resetPassword(password, userId);
+
+      res
+        .status(200)
+        .json({ message: "Password was reset", content: updatedUserId });
+    } catch (error: any) {
+      res.status(500).json({
+        message: "Password reset error",
         error: error.message,
       });
     }

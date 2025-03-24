@@ -5,6 +5,7 @@ import {
   ISignupPayload,
 } from "../routes/auth/types";
 import { IDailyStepEntry, IHourlyStepEntry } from "./types";
+import bcrypt from "bcryptjs";
 
 export const isUserGoogleLogin = (
   user: ILoginPayload | IGoogleLoginPayload
@@ -103,7 +104,7 @@ function toHex(num: number): string {
   return num.toString(16).padStart(2, "0");
 }
 
-export const generate6digitCode = () => {
+export const generate6DigitCode = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
 

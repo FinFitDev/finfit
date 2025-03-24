@@ -8,6 +8,7 @@ import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/user/profile_image.dart';
+import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -21,6 +22,35 @@ class ForgotPasswordModal extends StatefulWidget {
 class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
   String _email = "";
   RESET_PASSWORD_ERROR? error;
+  bool _loading = false;
+
+  void sendEmail() async {
+    try {
+      setState(() {
+        _loading = true;
+      });
+      if (_email.isNotEmpty && EMAIL_REGEX.hasMatch(_email)) {
+        final response = await authController.sendResetPassword(_email);
+
+        if (response != null) {
+          setState(() {
+            error = response;
+          });
+        } else {
+          if (mounted && Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
+          navigate(route: '/reset_password_code');
+        }
+      }
+    } catch (error) {
+      print(error);
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,20 +102,10 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
                       isDisabled:
                           _email.isEmpty || !EMAIL_REGEX.hasMatch(_email),
                       label: 'Send email',
+                      loading: _loading,
                       backgroundColor: colors.secondary,
                       textColor: colors.primary,
-                      onPressed: () async {
-                        if (_email.isNotEmpty && EMAIL_REGEX.hasMatch(_email)) {
-                          final response =
-                              await authController.resetPassword(_email);
-
-                          if (response != null) {
-                            setState(() {
-                              error = response;
-                            });
-                          }
-                        }
-                      }),
+                      onPressed: sendEmail),
                 ],
               ))),
     );

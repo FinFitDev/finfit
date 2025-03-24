@@ -1,8 +1,10 @@
 import 'package:excerbuys/layout.dart';
-import 'package:excerbuys/pages/auth_page.dart';
+import 'package:excerbuys/pages/auth/auth_page.dart';
+import 'package:excerbuys/pages/auth/reset_password.dart';
+import 'package:excerbuys/pages/auth/reset_password_code.dart';
 import 'package:excerbuys/pages/loading_page.dart';
-import 'package:excerbuys/pages/verify_email_page.dart';
-import 'package:excerbuys/pages/welcome_page.dart';
+import 'package:excerbuys/pages/auth/verify_email_page.dart';
+import 'package:excerbuys/pages/auth/welcome_page.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/layout_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +58,11 @@ class _HealthAppState extends State<HealthApp> {
           "/dashboard": (context) => LayoutWrapper(child: Layout()),
           "/login": (context) => LayoutWrapper(child: AuthPage()),
           "/welcome": (context) => LayoutWrapper(child: WelcomePage()),
-          '/verify_email': (context) => LayoutWrapper(child: VerifyEmailPage())
+          '/verify_email': (context) => LayoutWrapper(child: VerifyEmailPage()),
+          "/reset_password_code": (context) =>
+              LayoutWrapper(child: ResetPasswordCodePage()),
+          "/set_new_password": (context) =>
+              LayoutWrapper(child: ResetPassword()),
         },
       ),
     );

@@ -40,44 +40,42 @@ class _WelcomePageState extends State<WelcomePage> {
                 Expanded(
                     child: Column(
                   children: [
-                    Container(
-                      margin: EdgeInsets.only(top: 30, bottom: 20),
-                      height: 200,
-                      width: 200,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          // boxShadow: [
-                          //   BoxShadow(
-                          //     color: const Color.fromARGB(255, 0, 34, 92)
-                          //         .withAlpha(200),
-                          //     spreadRadius: 2,
-                          //     blurRadius: 2,
-                          //     offset:
-                          //         Offset(0, 0), // changes position of shadow
-                          //   ),
-                          // ],
-                          gradient: LinearGradient(
-                              colors: [
-                                Color.fromARGB(255, 18, 34, 43),
-                                Color.fromARGB(255, 2, 61, 120)
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              stops: [0, 0.8])),
-                      child: Container(
-                          height: 150,
-                          width: 150,
-                          margin: EdgeInsets.only(left: 20, right: 20, top: 12),
-                          child: Transform.rotate(
-                            angle: 0.5,
-                            child: rive.RiveAnimation.asset(
-                              'assets/rive/dolphin.riv',
-                              fit: BoxFit.contain,
-                            ),
-                          )),
+                    Stack(
+                      children: [
+                        Positioned(
+                          left: 0,
+                          top: 100,
+                          child: Opacity(
+                            opacity: 0.2,
+                            child: SizedBox(
+                                height: 180,
+                                width: 180,
+                                child: Transform.rotate(
+                                  angle: 0.1,
+                                  child: rive.RiveAnimation.asset(
+                                    'assets/rive/dolphin.riv',
+                                    fit: BoxFit.contain,
+                                  ),
+                                )),
+                          ),
+                        ),
+                        Positioned(
+                          child: Container(
+                              margin: EdgeInsets.only(top: 30),
+                              height: 250,
+                              width: 250,
+                              child: Transform.rotate(
+                                angle: 0.5,
+                                child: rive.RiveAnimation.asset(
+                                  'assets/rive/dolphin.riv',
+                                  fit: BoxFit.contain,
+                                ),
+                              )),
+                        ),
+                      ],
                     ),
                     SizedBox(
-                      height: 32,
+                      height: 12,
                     ),
                     RichText(
                         textAlign: TextAlign.center,

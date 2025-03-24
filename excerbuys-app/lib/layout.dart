@@ -1,4 +1,4 @@
-import 'package:excerbuys/pages/dashboard_page.dart';
+import 'package:excerbuys/pages/dashboard/dashboard_page.dart';
 import 'package:flutter/material.dart';
 
 class Layout extends StatelessWidget {

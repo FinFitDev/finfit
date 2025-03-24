@@ -119,6 +119,13 @@ class UserToVerify {
       {required this.userId, required this.login, required this.password});
 }
 
+class ResetPasswordUser {
+  final String email;
+  final String userId;
+
+  const ResetPasswordUser({required this.email, required this.userId});
+}
+
 // used for profile image generation
 class ShapeModel {
   final Color color;
