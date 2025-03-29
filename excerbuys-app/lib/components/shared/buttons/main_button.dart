@@ -109,7 +109,7 @@ class _MainButtonState extends State<MainButton> with TickerProviderStateMixin {
             style: TextButton.styleFrom(
               backgroundColor: widget.backgroundColor,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(10),
               ),
               disabledBackgroundColor: widget.backgroundColor.withAlpha(155),
             ),

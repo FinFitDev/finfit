@@ -5,7 +5,7 @@ import {
 } from "../shared/types";
 import { pool } from "../shared/utils/db";
 
-export const fetchRecentUserTrainings = async (
+export const fetchUserTrainings = async (
   user_id: string,
   limit?: number,
   offset?: number
@@ -17,6 +17,18 @@ export const fetchRecentUserTrainings = async (
     ORDER BY trainings.created_at DESC 
     LIMIT $1 OFFSET $2`,
     [limit, offset, user_id]
+  );
+  return response;
+};
+
+// fetch trainings 7 days back - first fetch
+export const fetchRecentUserTrainings = async (user_id: string) => {
+  const response = await pool.query(
+    `SELECT * 
+    FROM trainings 
+    WHERE trainings.user_id = $1 AND trainings.created_at >= NOW() - INTERVAL '7 days'
+    ORDER BY trainings.created_at DESC`,
+    [user_id]
   );
   return response;
 };

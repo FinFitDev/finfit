@@ -1,3 +1,4 @@
+import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 Future<T?> openModal<T>(BuildContext context, Widget component) {
@@ -7,7 +8,7 @@ Future<T?> openModal<T>(BuildContext context, Widget component) {
       backgroundColor: Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-          top: Radius.circular(40.0),
+          top: Radius.circular(MODAL_BORDER_RADIUS),
         ),
       ),
       builder: (ctx) => component);

@@ -97,8 +97,8 @@ class _HomePageState extends State<HomePage> {
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30),
-                              topRight: Radius.circular(30)),
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20)),
                           color: Theme.of(context).colorScheme.primary,
                         ),
                         child: Column(

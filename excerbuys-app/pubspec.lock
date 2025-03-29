@@ -65,6 +65,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.0"
+  convert:
+    dependency: transitive
+    description:
+      name: convert
+      sha256: b30acd5944035672bc15c6b7a8b47d773e41e2f17de064350988c5d02adb1c68
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.2"
   cross_file:
     dependency: transitive
     description:
@@ -89,6 +97,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  dap:
+    dependency: transitive
+    description:
+      name: dap
+      sha256: "42b0b083a09c59a118741769e218fc3738980ab591114f09d1026241d2b9c290"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
+  dds_service_extensions:
+    dependency: transitive
+    description:
+      name: dds_service_extensions
+      sha256: "5a5f0f9af646505f5bb21159c78ae5c275cd8bdb99e1a8e27f2f395c49568743"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   device_info_plus:
     dependency: transitive
     description:
@@ -105,6 +129,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
+  devtools_app_shared:
+    dependency: "direct overridden"
+    description:
+      name: devtools_app_shared
+      sha256: "7c5ffac115f441d563b2f1ea2f0a14e2e0960aa8648fe151b0e372574e061111"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.2"
+  devtools_extensions:
+    dependency: "direct overridden"
+    description:
+      name: devtools_extensions
+      sha256: "60f7042f36f038d7102d8bd9fe1e3c32023afec90a3d579b15aff5adf4e198e1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.2"
+  devtools_shared:
+    dependency: transitive
+    description:
+      name: devtools_shared
+      sha256: "72369878105eccd563547afbad97407a2431b96bd4c04a1d6da75cb068437f50"
+      url: "https://pub.dev"
+    source: hosted
+    version: "10.0.2"
   dio:
     dependency: "direct main"
     description:
@@ -121,6 +169,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  dtd:
+    dependency: transitive
+    description:
+      name: dtd
+      sha256: b8269bc263ef516f3fea23bb47bbbe12a808280ec57245319e538b4767ff6d18
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.5.0"
+  extension_discovery:
+    dependency: transitive
+    description:
+      name: extension_discovery
+      sha256: de1fce715ab013cdfb00befc3bdf0914bea5e409c3a567b7f8f144bc061611a7
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   fake_async:
     dependency: transitive
     description:
@@ -248,6 +312,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  get_it:
+    dependency: transitive
+    description:
+      name: get_it
+      sha256: d85128a5dae4ea777324730dc65edd9c9f43155c109d5cc0a69cab74139fbac1
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.7.0"
   google_identity_services_web:
     dependency: transitive
     description:
@@ -332,10 +404,18 @@ packages:
     dependency: "direct main"
     description:
       name: intl
-      sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
+      sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
       url: "https://pub.dev"
     source: hosted
-    version: "0.18.1"
+    version: "0.19.0"
+  io:
+    dependency: transitive
+    description:
+      name: io
+      sha256: dfd5a80599cf0165756e3181807ed3e77daf6dd4137caaad72d0b7931597650b
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.5"
   js:
     dependency: transitive
     description:
@@ -352,6 +432,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.9.0"
+  json_rpc_2:
+    dependency: transitive
+    description:
+      name: json_rpc_2
+      sha256: "246b321532f0e8e2ba474b4d757eaa558ae4fdd0688fdbc1e1ca9705f9b8ca0e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.3"
   leak_tracker:
     dependency: transitive
     description:
@@ -384,6 +472,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.0"
+  logging:
+    dependency: transitive
+    description:
+      name: logging
+      sha256: c8245ada5f1717ed44271ed1c26b8ce85ca3228fd2ffdb75468ab01979309d61
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.0"
   matcher:
     dependency: transitive
     description:
@@ -412,10 +508,18 @@ packages:
     dependency: transitive
     description:
       name: mime
-      sha256: "41a20518f0cb1256669420fdba0cd90d21561e560ac240f26ef8322e45bb7ed6"
+      sha256: "801fd0b26f14a4a58ccb09d5892c3fbdeff209594300a542492cf13fba9d247a"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "1.0.6"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   path:
     dependency: transitive
     description:
@@ -480,6 +584,150 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
+  payu:
+    dependency: "direct main"
+    description:
+      path: payu
+      ref: HEAD
+      resolved-ref: "8f8c5f64e7c6e365bf770133d660865b08fc657a"
+      url: "https://github.com/PayU-EMEA/PayU-Flutter.git"
+    source: git
+    version: "1.0.3"
+  payu_add_card:
+    dependency: transitive
+    description:
+      path: payu_add_card
+      ref: HEAD
+      resolved-ref: "8f8c5f64e7c6e365bf770133d660865b08fc657a"
+      url: "https://github.com/PayU-EMEA/PayU-Flutter.git"
+    source: git
+    version: "1.0.3"
+  payu_api:
+    dependency: transitive
+    description:
+      path: payu_api
+      ref: HEAD
+      resolved-ref: "8f8c5f64e7c6e365bf770133d660865b08fc657a"
+      url: "https://github.com/PayU-EMEA/PayU-Flutter.git"
+    source: git
+    version: "1.0.3"
+  payu_core:
+    dependency: transitive
+    description:
+      path: payu_core
+      ref: HEAD
+      resolved-ref: "8f8c5f64e7c6e365bf770133d660865b08fc657a"
+      url: "https://github.com/PayU-EMEA/PayU-Flutter.git"
+    source: git
+    version: "1.0.3"
+  payu_interface:
+    dependency: transitive
+    description:
+      path: payu_interface
+      ref: HEAD
+      resolved-ref: "8f8c5f64e7c6e365bf770133d660865b08fc657a"
+      url: "https://github.com/PayU-EMEA/PayU-Flutter.git"
+    source: git
+    version: "1.0.3"
+  payu_mobile_payments:
+    dependency: "direct main"
+    description:
+      path: "payu_mobile_payments/payu_mobile_payments"
+      ref: HEAD
+      resolved-ref: "8f8c5f64e7c6e365bf770133d660865b08fc657a"
+      url: "https://github.com/PayU-EMEA/PayU-Flutter.git"
+    source: git
+    version: "1.0.3"
+  payu_mobile_payments_android:
+    dependency: transitive
+    description:
+      path: "payu_mobile_payments/payu_mobile_payments_android"
+      ref: HEAD
+      resolved-ref: "8f8c5f64e7c6e365bf770133d660865b08fc657a"
+      url: "https://github.com/PayU-EMEA/PayU-Flutter.git"
+    source: git
+    version: "1.0.1"
+  payu_mobile_payments_ios:
+    dependency: transitive
+    description:
+      path: "payu_mobile_payments/payu_mobile_payments_ios"
+      ref: HEAD
+      resolved-ref: "8f8c5f64e7c6e365bf770133d660865b08fc657a"
+      url: "https://github.com/PayU-EMEA/PayU-Flutter.git"
+    source: git
+    version: "1.0.1"
+  payu_mobile_payments_platform_interface:
+    dependency: transitive
+    description:
+      path: "payu_mobile_payments/payu_mobile_payments_platform_interface"
+      ref: HEAD
+      resolved-ref: "8f8c5f64e7c6e365bf770133d660865b08fc657a"
+      url: "https://github.com/PayU-EMEA/PayU-Flutter.git"
+    source: git
+    version: "1.0.1"
+  payu_payment_methods:
+    dependency: transitive
+    description:
+      path: payu_payment_methods
+      ref: HEAD
+      resolved-ref: "8f8c5f64e7c6e365bf770133d660865b08fc657a"
+      url: "https://github.com/PayU-EMEA/PayU-Flutter.git"
+    source: git
+    version: "1.0.3"
+  payu_state_management:
+    dependency: transitive
+    description:
+      path: payu_state_management
+      ref: HEAD
+      resolved-ref: "8f8c5f64e7c6e365bf770133d660865b08fc657a"
+      url: "https://github.com/PayU-EMEA/PayU-Flutter.git"
+    source: git
+    version: "1.0.3"
+  payu_terms_and_conditions:
+    dependency: transitive
+    description:
+      path: payu_terms_and_conditions
+      ref: HEAD
+      resolved-ref: "8f8c5f64e7c6e365bf770133d660865b08fc657a"
+      url: "https://github.com/PayU-EMEA/PayU-Flutter.git"
+    source: git
+    version: "1.0.3"
+  payu_three_ds:
+    dependency: transitive
+    description:
+      path: payu_three_ds
+      ref: HEAD
+      resolved-ref: "8f8c5f64e7c6e365bf770133d660865b08fc657a"
+      url: "https://github.com/PayU-EMEA/PayU-Flutter.git"
+    source: git
+    version: "1.0.3"
+  payu_translations:
+    dependency: transitive
+    description:
+      path: payu_translations
+      ref: HEAD
+      resolved-ref: "8f8c5f64e7c6e365bf770133d660865b08fc657a"
+      url: "https://github.com/PayU-EMEA/PayU-Flutter.git"
+    source: git
+    version: "1.0.3"
+  payu_ui:
+    dependency: transitive
+    description:
+      path: payu_ui
+      ref: HEAD
+      resolved-ref: "8f8c5f64e7c6e365bf770133d660865b08fc657a"
+      url: "https://github.com/PayU-EMEA/PayU-Flutter.git"
+    source: git
+    version: "1.0.3"
+  payu_web_payments:
+    dependency: transitive
+    description:
+      path: payu_web_payments
+      ref: HEAD
+      resolved-ref: "8f8c5f64e7c6e365bf770133d660865b08fc657a"
+      url: "https://github.com/PayU-EMEA/PayU-Flutter.git"
+    source: git
+    version: "1.0.3"
   permission_handler:
     dependency: "direct main"
     description:
@@ -560,6 +808,54 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  pointer_interceptor:
+    dependency: "direct overridden"
+    description:
+      name: pointer_interceptor
+      sha256: "57210410680379aea8b1b7ed6ae0c3ad349bfd56fe845b8ea934a53344b9d523"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.1+2"
+  pointer_interceptor_ios:
+    dependency: transitive
+    description:
+      name: pointer_interceptor_ios
+      sha256: a6906772b3205b42c44614fcea28f818b1e5fdad73a4ca742a7bd49818d9c917
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.1"
+  pointer_interceptor_platform_interface:
+    dependency: transitive
+    description:
+      name: pointer_interceptor_platform_interface
+      sha256: "0597b0560e14354baeb23f8375cd612e8bd4841bf8306ecb71fcd0bb78552506"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.0+1"
+  pointer_interceptor_web:
+    dependency: transitive
+    description:
+      name: pointer_interceptor_web
+      sha256: "7a7087782110f8c1827170660b09f8aa893e0e9a61431dbbe2ac3fc482e8c044"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.2+1"
+  pool:
+    dependency: transitive
+    description:
+      name: pool
+      sha256: "20fe868b6314b322ea036ba325e6fc0711a22948856475e2c2b6306e8ab39c2a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.1"
+  provider:
+    dependency: transitive
+    description:
+      name: provider
+      sha256: "489024f942069c2920c844ee18bb3d467c69e48955a4f32d1677f71be103e310"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.4"
   qr:
     dependency: transitive
     description:
@@ -612,10 +908,10 @@ packages:
     dependency: "direct main"
     description:
       name: share_plus
-      sha256: fce43200aa03ea87b91ce4c3ac79f0cecd52e2a7a56c7a4185023c271fbfa6da
+      sha256: "59dfd53f497340a0c3a81909b220cfdb9b8973a91055c4e5ab9b9b9ad7c513c0"
       url: "https://pub.dev"
     source: hosted
-    version: "10.1.4"
+    version: "10.0.0"
   share_plus_platform_interface:
     dependency: transitive
     description:
@@ -680,6 +976,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.1"
+  shelf:
+    dependency: transitive
+    description:
+      name: shelf
+      sha256: ad29c505aee705f41a4d8963641f91ac4cee3c8fad5947e033390a7bd8180fa4
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -701,6 +1005,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+  sse:
+    dependency: transitive
+    description:
+      name: sse
+      sha256: "4389a01d5bc7ef3e90fbc645f8e7c6d8711268adb1f511e14ae9c71de47ee32b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.7"
   stack_trace:
     dependency: transitive
     description:
@@ -765,6 +1077,38 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.2"
+  unified_analytics:
+    dependency: transitive
+    description:
+      name: unified_analytics
+      sha256: b85c6ace8bf31b3cfd358a1b727db501eb30ee71984abcb3bfbcdec45e3172da
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.1"
+  url_launcher:
+    dependency: transitive
+    description:
+      name: url_launcher
+      sha256: "9d06212b1362abc2f0f0d78e6f09f726608c74e3b9462e8368bb03314aa8d603"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.3.1"
+  url_launcher_android:
+    dependency: transitive
+    description:
+      name: url_launcher_android
+      sha256: "1d0eae19bd7606ef60fe69ef3b312a437a16549476c42321d5dc1506c9ca3bf4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.3.15"
+  url_launcher_ios:
+    dependency: "direct overridden"
+    description:
+      name: url_launcher_ios
+      sha256: "16a513b6c12bb419304e72ea0ae2ab4fed569920d1c7cb850263fe3acc824626"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.3.2"
   url_launcher_linux:
     dependency: transitive
     description:
@@ -773,6 +1117,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.1"
+  url_launcher_macos:
+    dependency: transitive
+    description:
+      name: url_launcher_macos
+      sha256: "17ba2000b847f334f16626a574c702b196723af2a289e7a93ffcb79acff855c2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.2"
   url_launcher_platform_interface:
     dependency: transitive
     description:
@@ -849,18 +1201,74 @@ packages:
     dependency: transitive
     description:
       name: web
-      sha256: d43c1d6b787bf0afad444700ae7f4db8827f701bc61c255ac8d328c6f4d52062
+      sha256: "97da13628db363c635202ad97068d47c5b8aa555808e7a9411963c533b449b27"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
-  win32:
+    version: "0.5.1"
+  web_socket:
     dependency: transitive
     description:
-      name: win32
-      sha256: "68d1e89a91ed61ad9c370f9f8b6effed9ae5e0ede22a270bdfa6daf79fc2290a"
+      name: web_socket
+      sha256: "3c12d96c0c9a4eec095246debcea7b86c0324f22df69893d538fcc6f1b8cce83"
       url: "https://pub.dev"
     source: hosted
-    version: "5.5.4"
+    version: "0.1.6"
+  web_socket_channel:
+    dependency: transitive
+    description:
+      name: web_socket_channel
+      sha256: "0b8e2457400d8a859b7b2030786835a28a8e80836ef64402abef392ff4f1d0e5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.2"
+  webkit_inspection_protocol:
+    dependency: transitive
+    description:
+      name: webkit_inspection_protocol
+      sha256: "87d3f2333bb240704cd3f1c6b5b7acd8a10e7f0bc28c28dcf14e782014f4a572"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.1"
+  webview_flutter:
+    dependency: transitive
+    description:
+      name: webview_flutter
+      sha256: "392c1d83b70fe2495de3ea2c84531268d5b8de2de3f01086a53334d8b6030a88"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.4"
+  webview_flutter_android:
+    dependency: transitive
+    description:
+      name: webview_flutter_android
+      sha256: "8b3b2450e98876c70bfcead876d9390573b34b9418c19e28168b74f6cb252dbd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.10.4"
+  webview_flutter_platform_interface:
+    dependency: transitive
+    description:
+      name: webview_flutter_platform_interface
+      sha256: "812165e4e34ca677bdfbfa58c01e33b27fd03ab5fa75b70832d4b7d4ca1fa8cf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.9.5"
+  webview_flutter_wkwebview:
+    dependency: transitive
+    description:
+      name: webview_flutter_wkwebview
+      sha256: a5364369c758892aa487cbf59ea41d9edd10f9d9baf06a94e80f1bd1b4c7bbc0
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.9.5"
+  win32:
+    dependency: "direct overridden"
+    description:
+      name: win32
+      sha256: ed1b29469ef4158ab78295c967a2948d6e1b84dd6cb12d3a6dc677403e59647d
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.5.2"
   win32_registry:
     dependency: transitive
     description:
@@ -885,6 +1293,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.5.0"
+  yaml:
+    dependency: transitive
+    description:
+      name: yaml
+      sha256: b9da305ac7c39faa3f030eccd175340f968459dae4af175130b3fc47e40d76ce
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.3"
+  yaml_edit:
+    dependency: transitive
+    description:
+      name: yaml_edit
+      sha256: fb38626579fb345ad00e674e2af3a5c9b0cc4b9bfb8fd7f7ff322c7c9e62aef5
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.2"
 sdks:
   dart: ">=3.6.0 <4.0.0"
   flutter: ">=3.27.0"

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 class ListEntry extends StatelessWidget {
   final String title;
   final String label;
-  const ListEntry({super.key, required this.title, required this.label});
+  final bool? isFeatured;
+  const ListEntry(
+      {super.key, required this.title, required this.label, this.isFeatured});
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +18,17 @@ class ListEntry extends StatelessWidget {
           title,
           style: TextStyle(
               fontSize: 13,
-              color: colors.tertiaryContainer,
-              fontWeight: FontWeight.w300),
+              color: isFeatured == true
+                  ? colors.secondary.withAlpha(150)
+                  : colors.tertiaryContainer.withAlpha(150),
+              fontWeight: FontWeight.w400),
         ),
         Text(label,
             style: TextStyle(
                 fontSize: 13,
-                color: colors.tertiaryContainer,
+                color: isFeatured == true
+                    ? colors.secondary
+                    : colors.tertiaryContainer,
                 fontWeight: FontWeight.w600))
       ],
     );

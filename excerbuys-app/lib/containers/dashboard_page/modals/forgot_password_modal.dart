@@ -63,7 +63,8 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
       ),
       child: ClipRRect(
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(40), topRight: Radius.circular(40)),
+              topLeft: Radius.circular(MODAL_BORDER_RADIUS),
+              topRight: Radius.circular(MODAL_BORDER_RADIUS)),
           child: Container(
               color: colors.primary,
               width: double.infinity,

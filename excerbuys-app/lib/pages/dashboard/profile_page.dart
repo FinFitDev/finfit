@@ -1,6 +1,7 @@
 import 'package:excerbuys/components/shared/postition.dart';
 import 'package:excerbuys/components/shared/profile_image_generator.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/regenerate_image_modal.dart';
+import 'package:excerbuys/store/controllers/activity/activity_controller.dart';
 import 'package:excerbuys/store/controllers/auth_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
@@ -131,6 +132,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   await authController.logOut();
                   navigateWithClear(route: '/welcome');
                   dashboardController.reset();
+                  activityController.reset();
                 },
                 color: colors.error,
                 iconLeft: 'assets/svg/logout.svg',

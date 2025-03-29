@@ -1,15 +1,11 @@
-import 'package:excerbuys/components/shared/buttons/category_button.dart';
 import 'package:excerbuys/components/shared/indicators/circle_progress/circle_progress_indicator.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/recent_training_section.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard/history_controller.dart';
-import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/types/general.dart';
-import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class HistoricalWorkouts extends StatefulWidget {

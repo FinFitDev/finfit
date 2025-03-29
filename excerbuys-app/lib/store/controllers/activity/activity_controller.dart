@@ -9,6 +9,11 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ActivityController {
+  reset() {
+    trainingsController.reset();
+    stepsController.reset();
+  }
+
   // obtaining health data auth
   final BehaviorSubject<bool> _healthAuthorized = BehaviorSubject.seeded(false);
   Stream<bool> get healthAuthorizedStream => _healthAuthorized.stream;

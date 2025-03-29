@@ -28,7 +28,7 @@ class User {
     final String? image = map['image'] == 'NULL' ? null : map['image'];
     final bool? verified = map['verified'] == 'NULL'
         ? null
-        : bool.parse(map['verified'] ?? 'false');
+        : bool.tryParse(map['verified'].toString() ?? 'false');
     return User(
         id: map['id'],
         username: map['username'],

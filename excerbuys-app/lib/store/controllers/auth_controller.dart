@@ -72,10 +72,12 @@ class AuthController {
     }
   }
 
-  Future<void> logIn(String login, String password) async {
+  Future<void> logIn(String login, String password,
+      {bool noEmail = false}) async {
     try {
       setUserToVerify(null);
-      final Map<String, dynamic> response = await logInRequest(login, password);
+      final Map<String, dynamic> response =
+          await logInRequest(login, password, noEmail: noEmail);
       final String? userId = response['user_id'];
       final String? accessToken = response['access_token'];
       final String? refreshToken = response['refresh_token'];

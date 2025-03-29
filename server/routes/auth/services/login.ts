@@ -13,7 +13,8 @@ import { isUserGoogleLogin } from "../../../shared/utils";
 import { sendVerificationEmail } from "../../../shared/utils/email";
 
 export const logInUser = async (
-  user: ILoginPayload | IGoogleLoginPayload
+  user: ILoginPayload | IGoogleLoginPayload,
+  noEmail = false
 ): Promise<ILoginResponse> => {
   if (!user) throw new ErrorWithCode("User data invalid", 400);
 
@@ -45,14 +46,16 @@ export const logInUser = async (
 
   // we will request email verification first
   if (!foundUserData.verified) {
-    const emailVerificationToken = generateEmailVerificationToken(
-      foundUserData.id
-    );
-    await sendVerificationEmail(
-      foundUserData.email,
-      emailVerificationToken,
-      foundUserData.username
-    );
+    if (!noEmail) {
+      const emailVerificationToken = generateEmailVerificationToken(
+        foundUserData.id
+      );
+      await sendVerificationEmail(
+        foundUserData.email,
+        emailVerificationToken,
+        foundUserData.username
+      );
+    }
     return { user_id: foundUserData.id };
   }
 

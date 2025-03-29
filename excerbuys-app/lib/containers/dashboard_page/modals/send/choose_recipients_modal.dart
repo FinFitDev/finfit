@@ -36,7 +36,8 @@ class _ChooseRecipientsModalState extends State<ChooseRecipientsModal> {
 
     return ClipRRect(
       borderRadius: BorderRadius.vertical(
-          top: Radius.circular(40), bottom: Radius.circular(20)),
+          top: Radius.circular(MODAL_BORDER_RADIUS),
+          bottom: Radius.circular(MODAL_BORDER_RADIUS)),
       child: Container(
         color: colors.primary,
         width: double.infinity,

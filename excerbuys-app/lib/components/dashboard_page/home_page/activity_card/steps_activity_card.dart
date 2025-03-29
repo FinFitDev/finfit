@@ -1,20 +1,13 @@
 import 'dart:math';
-
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:excerbuys/components/dashboard_page/home_page/activity_card/activity_card_details.dart';
 import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
-import 'package:excerbuys/store/controllers/dashboard/history_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/types/activity.dart';
-import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/activity/steps.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/utils/home/utils.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/utils.dart';
-import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class StepsActivityCard extends StatefulWidget {
@@ -173,13 +166,19 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
           }
           return Container(
             height: 200,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: colors.primaryContainer,
+            ),
+            padding: EdgeInsets.only(top: 10, left: 10, right: 10),
             margin: EdgeInsets.only(
-                top: 10, left: HORIZOTAL_PADDING, right: HORIZOTAL_PADDING),
+                left: HORIZOTAL_PADDING, right: HORIZOTAL_PADDING),
             child: SfCartesianChart(
               margin: EdgeInsets.all(0),
               plotAreaBorderWidth: 0,
               primaryXAxis: NumericAxis(
                 labelStyle: TextStyle(color: Colors.transparent),
+                isVisible: false,
               ),
               primaryYAxis: NumericAxis(
                 majorGridLines: MajorGridLines(width: 0),

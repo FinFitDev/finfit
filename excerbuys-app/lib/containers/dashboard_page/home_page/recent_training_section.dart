@@ -1,9 +1,12 @@
 import 'package:excerbuys/components/dashboard_page/home_page/activity_card/activity_card.dart';
 import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/info/workout_info_modal.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/home/utils.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
+import 'package:excerbuys/wrappers/modal_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 
@@ -41,9 +44,13 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
           ? '${splitParsedDate[0]} ${splitParsedDate[1]}'
           : splitParsedDate[0];
 
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final elementTimestampDay =
+          DateTime(el.createdAt.year, el.createdAt.month, el.createdAt.day);
       groupedData
           .putIfAbsent(
-              '${dateKey}_${DateTime.now().difference(el.createdAt).inDays}',
+              '${dateKey}_${today.difference(elementTimestampDay).inDays}',
               () => [])
           .add(el);
     }
@@ -82,7 +89,7 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
         margin: EdgeInsets.only(
             left: HORIZOTAL_PADDING,
             right: HORIZOTAL_PADDING,
-            top: widget.hideTitle == true ? 0 : 24,
+            top: widget.hideTitle == true ? 0 : 30,
             bottom: 24),
         child:
             Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -97,7 +104,7 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
               return loadingWorkouts();
             }
             return ListView.builder(
-              padding: EdgeInsets.all(0),
+              padding: EdgeInsets.only(top: widget.hideTitle == true ? 0 : 16),
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               itemCount: _groupedTrainingsData.length,
@@ -145,20 +152,32 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
                             ],
                           ),
                         ),
-                      Column(
-                        children: entry.value.map((healthData) {
-                          final type = HealthWorkoutActivityType.values
-                              .firstWhere((el) => el.name == healthData.type);
+                      Container(
+                        margin: EdgeInsets.only(top: 8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: colors.primaryContainer,
+                        ),
+                        child: Column(
+                          children: entry.value.map((healthData) {
+                            final type = HealthWorkoutActivityType.values
+                                .firstWhere((el) => el.name == healthData.type);
 
-                          return ActivityCard(
-                            index: 0,
-                            activityType: parseActivityType(type),
-                            points: healthData.points,
-                            date: parseDate(healthData.createdAt),
-                            duration: healthData.duration,
-                            calories: healthData.calories,
-                          );
-                        }).toList(),
+                            return ActivityCard(
+                              activityType: parseActivityType(type),
+                              points: healthData.points,
+                              date: parseDate(healthData.createdAt),
+                              duration: healthData.duration,
+                              calories: healthData.calories,
+                              onPressed: () {
+                                openModal(
+                                    context,
+                                    WorkoutInfoModal(
+                                        workoutId: healthData.uuid));
+                              },
+                            );
+                          }).toList(),
+                        ),
                       ),
                     ],
                   ),

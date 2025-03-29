@@ -135,6 +135,31 @@ String formatNumber(num number) {
       RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match match) => '${match[1]},');
   return formatted;
 }
+
+String parseDuration(int durationMilliseconds) {
+  int seconds = durationMilliseconds ~/ 1000;
+  if (seconds < 60) {
+    return '$seconds second${seconds == 1 ? '' : 's'}';
+  }
+
+  int minutes = seconds ~/ 60;
+  if (minutes < 60) {
+    return '$minutes minute${minutes == 1 ? '' : 's'}';
+  }
+
+  int hours = minutes ~/ 60;
+  return '$hours hour${hours == 1 ? '' : 's'}';
+}
+
+String parseDistance(double meters) {
+  if (meters < 1000) {
+    return '${meters.toStringAsFixed(0)} meter${meters == 1 ? '' : 's'}';
+  }
+
+  double kilometers = meters / 1000;
+  return '${kilometers.toStringAsFixed(1)} km';
+}
+
 // String encodeBase36(String input) {
 //   BigInt num = BigInt.zero;
 //   for (int i = 0; i < input.length; i++) {

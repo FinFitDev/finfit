@@ -11,7 +11,7 @@ import { IUserNoPassword, RequestWithPayload } from "../../shared/types";
 import {
   addStepsData,
   addTrainings,
-  getUserRecentTrainings,
+  getUserTrainings,
 } from "./services/activityService";
 
 const apiRouter: Router = express.Router();
@@ -140,7 +140,7 @@ apiRouter.get(
       const user_id = req.params.id;
       const limit = req.query.limit;
       const offset = req.query.offset;
-      const response = await getUserRecentTrainings(
+      const response = await getUserTrainings(
         user_id,
         limit ? +limit : undefined,
         offset ? +offset : undefined
@@ -169,42 +169,42 @@ apiRouter.post("/trainings", async (req: Request, res: Response) => {
   }
 });
 
-apiRouter.get(
-  "/steps/:id",
-  async (req: RequestWithPayload<undefined, { id: string }>, res: Response) => {
-    try {
-      const user_id = req.params.id;
-      const limit = req.query.limit;
-      const offset = req.query.offset;
-      const response = await getUserRecentTrainings(
-        user_id,
-        limit ? +limit : undefined,
-        offset ? +offset : undefined
-      );
+// apiRouter.get(
+//   "/steps/:id",
+//   async (req: RequestWithPayload<undefined, { id: string }>, res: Response) => {
+//     try {
+//       const user_id = req.params.id;
+//       const limit = req.query.limit;
+//       const offset = req.query.offset;
+//       const response = await getUserRecentTrainings(
+//         user_id,
+//         limit ? +limit : undefined,
+//         offset ? +offset : undefined
+//       );
 
-      res.status(200).json({ message: "Trainings found", content: response });
-    } catch (error: any) {
-      res.status(error.statusCode ?? 404).json({
-        message: "Something went wrong when getting user trainings",
-        error: error.message,
-      });
-    }
-  }
-);
+//       res.status(200).json({ message: "Trainings found", content: response });
+//     } catch (error: any) {
+//       res.status(error.statusCode ?? 404).json({
+//         message: "Something went wrong when getting user trainings",
+//         error: error.message,
+//       });
+//     }
+//   }
+// );
 
-apiRouter.post("/steps", async (req: Request, res: Response) => {
-  try {
-    const steps = JSON.parse(req.body.steps);
-    const response = await addStepsData(steps);
-    res
-      .status(200)
-      .json({ message: "Steps added and aggregated", content: response });
-  } catch (error: any) {
-    res.status(error.statusCode ?? 404).json({
-      message: "Something went wrong when adding or aggregating steps data",
-      error: error.message,
-    });
-  }
-});
+// apiRouter.post("/steps", async (req: Request, res: Response) => {
+//   try {
+//     const steps = JSON.parse(req.body.steps);
+//     const response = await addStepsData(steps);
+//     res
+//       .status(200)
+//       .json({ message: "Steps added and aggregated", content: response });
+//   } catch (error: any) {
+//     res.status(error.statusCode ?? 404).json({
+//       message: "Something went wrong when adding or aggregating steps data",
+//       error: error.message,
+//     });
+//   }
+// });
 
 export default apiRouter as Router;

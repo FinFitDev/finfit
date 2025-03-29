@@ -85,7 +85,8 @@ authRouter.post(
   async (req: RequestWithPayload<ILoginPayload>, res: Response) => {
     try {
       const user = req.body;
-      const response = await logInUser(user);
+      const { no_email } = req.query;
+      const response = await logInUser(user, no_email == "true");
       res.status(200).json({ message: "Log in successful", content: response });
     } catch (error: any) {
       res.status(error.statusCode ?? 400).json({

@@ -1,19 +1,22 @@
+import 'package:excerbuys/components/shared/activity_icon.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/info/workout_info_modal.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/utils/home/utils.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
+import 'package:excerbuys/wrappers/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ActivityCard extends StatefulWidget {
+  final void Function() onPressed;
   final ACTIVITY_TYPE activityType;
   final int points;
   final String date;
   final bool? isPurchase;
   final int? calories;
   final int? duration;
-  final int index;
 
   const ActivityCard({
     super.key,
@@ -21,9 +24,9 @@ class ActivityCard extends StatefulWidget {
     required this.date,
     required this.points,
     this.isPurchase,
-    required this.index,
     this.calories,
     this.duration,
+    required this.onPressed,
   });
 
   @override
@@ -44,49 +47,19 @@ class _ActivityCardState extends State<ActivityCard> {
 
     return RippleWrapper(
       onPressed: () {
-        setState(() {
-          _detailsOpen = !_detailsOpen;
-        });
+        widget.onPressed();
       },
       child: Container(
         height: 75,
         padding: EdgeInsets.all(10),
-        margin: EdgeInsets.only(top: 8),
-        decoration: BoxDecoration(
-          color: colors.primaryContainer,
-          borderRadius: BorderRadius.circular(10),
-        ),
+        color: Colors.transparent,
         child: Row(
           children: [
             widget.isPurchase == true
                 ? SizedBox(
                     height: 36,
                   )
-                : Container(
-                    height: 50,
-                    width: 50,
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: colors.secondary),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 22,
-                          child: SvgPicture.asset(activityMetadata.icon,
-                              colorFilter: ColorFilter.mode(
-                                  colors.primary, BlendMode.srcIn)),
-                        ),
-                        Text(
-                          activityMetadata.name,
-                          style: TextStyle(fontSize: 6, color: colors.primary),
-                          overflow: TextOverflow.ellipsis,
-                        )
-                      ],
-                    ),
-                  ),
+                : ActivityIcon(icon: activityMetadata.icon, size: 50),
             SizedBox(
               width: 12,
             ),
@@ -126,26 +99,22 @@ class _ActivityCardState extends State<ActivityCard> {
                   Row(
                     children: [
                       Text(
-                        '${convertMillisecondsToMinutes(widget.duration ?? 0).round()} minutes',
+                        parseDuration(widget.duration ?? 0),
                         style: TextStyle(
-                          color: colors.secondary.withAlpha(150),
+                          color: colors.tertiaryContainer,
                           fontSize: 13,
                         ),
                       ),
-
-                      // SvgPicture.asset('assets/svg/clock.svg',
-                      //     colorFilter: ColorFilter.mode(
-                      //         colors.tertiaryContainer, BlendMode.srcIn)),
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 8),
                         width: 0.5,
                         height: 16,
-                        color: colors.secondary.withAlpha(150),
+                        color: colors.tertiaryContainer,
                       ),
                       Text(
                         '${widget.calories} kcal',
                         style: TextStyle(
-                          color: colors.secondary.withAlpha(150),
+                          color: colors.tertiaryContainer,
                           fontSize: 13,
                         ),
                       ),

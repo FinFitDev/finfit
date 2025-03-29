@@ -5,10 +5,11 @@ import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
 import 'package:excerbuys/containers/auth_page/signup_container.dart';
 
-Future<Map<String, dynamic>> logInRequest(String login, String password) async {
+Future<Map<String, dynamic>> logInRequest(String login, String password,
+    {bool noEmail = false}) async {
   dynamic res = await handleBackendRequests(
       method: HTTP_METHOD.POST,
-      endpoint: 'auth/login',
+      endpoint: 'auth/login?no_email=${noEmail == true ? "true" : "false"}',
       body: {"login": login, "password": password});
 
   if (res['error'] != null) {

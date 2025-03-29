@@ -3,50 +3,48 @@ import 'package:flutter/material.dart';
 
 class ListComponent extends StatelessWidget {
   final Map<String, String> data;
-  final String summary;
-  final Color summaryColor;
+  final String? summary;
+  final Color? summaryColor;
 
   const ListComponent(
-      {super.key,
-      required this.data,
-      required this.summary,
-      required this.summaryColor});
+      {super.key, required this.data, this.summary, this.summaryColor});
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
     return Container(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(10),
             color: colors.primaryContainer),
         child: Wrap(
-          runSpacing: 8,
           children: [
             ...data.entries.map((entry) {
-              return ListEntry(title: entry.key, label: entry.value);
-            }).toList(),
-            Container(
-              decoration: BoxDecoration(
-                  border: Border(
-                      top: BorderSide(
-                          width: 0.5, color: colors.tertiaryContainer))),
-              margin: EdgeInsets.only(top: 8),
-              padding: EdgeInsets.only(top: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+              return Column(
                 children: [
-                  Text(
-                    summary,
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: summaryColor,
-                        fontWeight: FontWeight.w600),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: ListEntry(title: entry.key, label: entry.value),
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 12),
+                    height: 2,
+                    color: colors.primary,
                   ),
                 ],
-              ),
-            )
+              );
+            }),
+            summary != null
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: ListEntry(
+                      title: 'Summary',
+                      label: summary!,
+                      isFeatured: true,
+                    ),
+                  )
+                : SizedBox.shrink()
           ],
         ));
   }

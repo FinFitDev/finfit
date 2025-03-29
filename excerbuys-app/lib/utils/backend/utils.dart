@@ -14,15 +14,21 @@ Future<dynamic> handleBackendRequests(
 
   // if we want to query the api, check the validity of the access token
   if (endpoint.split("/").contains("api")) {
-    // verify access token
-    final dynamic verifyResponse = await httpHandler(
-        url: "${BACKEND_BASE_URL}auth/verify",
-        method: HTTP_METHOD.POST,
-        body: {"access_token": accessToken});
+    final response = await httpHandler(
+        url: "$BACKEND_BASE_URL$endpoint",
+        method: method,
+        headers: {...(headers ?? {}), "authorization": "Bearer $accessToken"},
+        body: body,
+        cancelToken: cancelToken);
 
-    print(verifyResponse);
+    if (response['error'] == "You are not authorized" ||
+        response["error"] == "Token invalid or expired") {
+      // // verify access token
+      // final dynamic verifyResponse = await httpHandler(
+      //     url: "${BACKEND_BASE_URL}auth/verify",
+      //     method: HTTP_METHOD.POST,
+      //     body: {"access_token": accessToken});
 
-    if (!verifyResponse['valid_token']) {
       // throw if we cant refresh
       if (refreshToken.isEmpty) {
         throw Exception("Invalid refresh token");
@@ -38,14 +44,16 @@ Future<dynamic> handleBackendRequests(
         authController.setAccessToken(refreshResponse['access_token']);
         accessToken = newAccessToken;
       }
+
+      return await httpHandler(
+          url: "$BACKEND_BASE_URL$endpoint",
+          method: method,
+          headers: {...(headers ?? {}), "authorization": "Bearer $accessToken"},
+          body: body,
+          cancelToken: cancelToken);
     }
 
-    return await httpHandler(
-        url: "$BACKEND_BASE_URL$endpoint",
-        method: method,
-        headers: {...(headers ?? {}), "authorization": "Bearer $accessToken"},
-        body: body,
-        cancelToken: cancelToken);
+    return response;
   }
 
   return await httpHandler(

@@ -31,17 +31,19 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
         return;
       }
 
-      await authController.logIn(userToVerify.login, userToVerify.password);
+      await authController.logIn(userToVerify.login, userToVerify.password,
+          noEmail: true);
+
+      // if after login user is still not verified
+      if (authController.userToVerify != null) {
+        throw "Still not verified";
+      }
 
       if (mounted) {
         navigateWithClear(route: '/');
       }
-
-      // if after login user is still not verified
-      if (authController.userToVerify != null) {
-        print('Still not verified');
-      }
     } catch (e) {
+      print(e);
       // TODO: Add snackbar
     } finally {
       setState(() {

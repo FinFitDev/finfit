@@ -12,6 +12,18 @@ import 'package:rxdart/rxdart.dart';
 const TRAINING_DATA_CHUNK_SIZE = 5;
 
 class TrainingsController {
+  reset() {
+    final newData = ContentWithLoading(content: Map<String, ITrainingEntry>());
+    newData.isLoading = userTrainings.isLoading;
+    _userTrainings.add(newData);
+
+    _canFetchMore.add(true);
+
+    final newLazyLoadData = ContentWithLoading(content: 0);
+    newData.isLoading = lazyLoadOffset.isLoading;
+    _lazyLoadOffset.add(newLazyLoadData);
+  }
+
   final BehaviorSubject<ContentWithLoading<Map<String, ITrainingEntry>>>
       _userTrainings = BehaviorSubject.seeded(ContentWithLoading(content: {}));
   Stream<ContentWithLoading<Map<String, ITrainingEntry>>>
@@ -95,11 +107,13 @@ class TrainingsController {
       List<ITrainingEntry> parsedTrainingData =
           convertTrainingsToRequest(healthData) ?? [];
 
-      final pointsAwardedResponse =
-          await saveTrainingsRequest(parsedTrainingData);
-      if (pointsAwardedResponse != null) {
-        activityController
-            .compundPointsToAdd(double.parse(pointsAwardedResponse));
+      if (parsedTrainingData.isNotEmpty) {
+        final pointsAwardedResponse =
+            await saveTrainingsRequest(parsedTrainingData);
+        if (pointsAwardedResponse != null) {
+          activityController
+              .compundPointsToAdd(double.parse(pointsAwardedResponse));
+        }
       }
 
       if (userController.currentUser?.id != null) {

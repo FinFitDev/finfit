@@ -4,6 +4,7 @@ import {
   deleteHourlySteps,
   extractExpiredHourlySteps,
   fetchRecentUserTrainings,
+  fetchUserTrainings,
   insertDailySteps,
   insertHourlySteps,
   insertNewTrainingsPointsUpdateTransaction,
@@ -16,19 +17,36 @@ import {
   ITrainingEntry,
   ITrainingEntryResponse,
 } from "../../../shared/types";
-import {
-  aggregateDailyDataObject,
-  getUtcMidnightDate,
-} from "../../../shared/utils";
-import { response } from "express";
+import { aggregateDailyDataObject } from "../../../shared/utils";
 
-export const getUserRecentTrainings = async (
+export const getUserTrainings = async (
   user_id: string,
   limit?: number,
   offset?: number
 ) => {
-  const foundTrainings = await fetchRecentUserTrainings(user_id, limit, offset);
-  return foundTrainings.rows as ITrainingEntryResponse[];
+  // Fetch recent trainings if no offset or offset is 0
+  let foundTrainings =
+    !offset || offset === 0
+      ? await fetchRecentUserTrainings(user_id)
+      : undefined;
+
+  // If offset exists or we need more data based on row count
+  if (offset || (foundTrainings?.rowCount ?? 0) < (limit ?? 0)) {
+    const local = await fetchUserTrainings(
+      user_id,
+      (limit ?? 0) - (foundTrainings?.rowCount ?? 0),
+      (offset ?? 0) + (foundTrainings?.rowCount ?? 0)
+    );
+    foundTrainings = foundTrainings
+      ? {
+          ...foundTrainings,
+          rows: [...foundTrainings.rows, ...local.rows],
+          rowCount: (foundTrainings.rowCount ?? 0) + (local.rowCount ?? 0),
+        }
+      : local;
+  }
+
+  return foundTrainings?.rows as ITrainingEntryResponse[];
 };
 
 export const addTrainings = async (trainings: string[]) => {

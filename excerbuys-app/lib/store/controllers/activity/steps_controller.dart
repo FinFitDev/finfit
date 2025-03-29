@@ -9,6 +9,11 @@ import 'package:health/health.dart';
 import 'package:rxdart/rxdart.dart';
 
 class StepsController {
+  reset() {
+    IStoreStepsData newSteps = {};
+    _userSteps.add(ContentWithLoading(content: newSteps));
+  }
+
   final BehaviorSubject<ContentWithLoading<IStoreStepsData>> _userSteps =
       BehaviorSubject.seeded(ContentWithLoading(content: {}));
   Stream<ContentWithLoading<IStoreStepsData>> get userStepsStream =>

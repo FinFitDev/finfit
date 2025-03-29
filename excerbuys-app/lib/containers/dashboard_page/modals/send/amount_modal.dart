@@ -52,7 +52,8 @@ class _AmountModalState extends State<AmountModal> {
 
     return ClipRRect(
       borderRadius: BorderRadius.vertical(
-          top: Radius.circular(40), bottom: Radius.circular(20)),
+          top: Radius.circular(MODAL_BORDER_RADIUS),
+          bottom: Radius.circular(MODAL_BORDER_RADIUS)),
       child: Container(
         color: colors.primary,
         width: double.infinity,
@@ -131,8 +132,8 @@ class _AmountModalState extends State<AmountModal> {
                           data: {
                             'Amount':
                                 '${formatNumber(snapshot.data ?? 0)} finpoints',
-                            'Recipients':
-                                '${sendController.chosenUsersIds.length} users',
+                            'No. of recipients':
+                                '${sendController.chosenUsersIds.length}',
                             'Current balance':
                                 '${formatNumber((userController.userBalance ?? 0).round())} finpoints',
                             'Remaining balance':

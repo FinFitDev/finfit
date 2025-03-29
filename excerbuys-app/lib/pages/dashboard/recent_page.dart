@@ -46,6 +46,8 @@ class _RecentPageState extends State<RecentPage> {
   ];
 
   void setLoadMoreWorkoutsProgressIndicator() {
+    if (!_scrollController.hasClients) return;
+
     if (!trainingsController.canFetchMore ||
         trainingsController.lazyLoadOffset.isLoading) {
       return;
@@ -61,12 +63,16 @@ class _RecentPageState extends State<RecentPage> {
 
     historyController.activeCategoryRecentDataStream.listen((data) {
       if (data == RECENT_DATA_CATEGORY.TRANSACTIONS) {
-        if (_scrollController.position.maxScrollExtent == 0 &&
-            trainingsController.canFetchMore) {
-          trainingsController.lazyLoadMoreTrainings();
+        // Ensure ScrollController is attached before accessing position
+        if (mounted && _scrollController.hasClients) {
+          if (_scrollController.position.maxScrollExtent == 0 &&
+              trainingsController.canFetchMore) {
+            trainingsController.lazyLoadMoreTrainings();
+          }
+          _scrollController
+              .removeListener(setLoadMoreWorkoutsProgressIndicator);
+          _scrollController.addListener(setLoadMoreWorkoutsProgressIndicator);
         }
-        _scrollController.removeListener(setLoadMoreWorkoutsProgressIndicator);
-        _scrollController.addListener(setLoadMoreWorkoutsProgressIndicator);
       }
     });
   }
@@ -74,6 +80,7 @@ class _RecentPageState extends State<RecentPage> {
   @override
   void dispose() {
     super.dispose();
+    _scrollController.removeListener(setLoadMoreWorkoutsProgressIndicator);
     _scrollController.dispose();
   }
 
@@ -120,9 +127,9 @@ class _RecentPageState extends State<RecentPage> {
                           child: CategoryButton(
                             title: item['title'],
                             icon: item['icon'],
-                            activeBackgroundColor: colors.secondary,
+                            activeBackgroundColor: colors.primary,
                             backgroundColor: colors.primaryContainer,
-                            activeTextColor: colors.primary,
+                            activeTextColor: colors.secondary,
                             textColor: colors.tertiaryContainer,
                             onPressed: () {
                               historyController

@@ -9,7 +9,7 @@ Future<bool> updatePointsScoreWithUpdateTimestampRequest(
   try {
     final res = await handleBackendRequests(
         method: HTTP_METHOD.POST,
-        endpoint: 'api/v1/users/$userId',
+        endpoint: 'api/v1/users/points/$userId',
         body: {
           "points": points.toString(),
           "steps_updated_at": DateTime.now().toString()
