@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
-import 'package:excerbuys/utils/parsers/parsers.dart';
 
 Future<bool> updatePointsScoreWithUpdateTimestampRequest(
     String userId, int points) async {
@@ -80,15 +79,7 @@ Future<User?> fetchUserByIdRequest(
 
     final dynamic el = res['content'];
 
-    final User result = User(
-        id: el['id'],
-        points: parseInt(el['points'] as int).toDouble(),
-        username: el['username'],
-        email: el['email'],
-        image: el['image'],
-        createdAt: DateTime.parse(el['created_at']).toLocal(),
-        stepsUpdatedAt: DateTime.parse(el['steps_updated_at']).toLocal(),
-        verified: el['verified']);
+    final User result = User.fromJson(el);
 
     return result;
   } catch (error) {

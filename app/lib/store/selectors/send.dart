@@ -10,7 +10,7 @@ ContentWithLoading<Map<String, User>> getUsersForSearch(
     List<String> recentRecipients) {
   final LinkedHashMap<String, User> filteredContent = LinkedHashMap.fromEntries(
     data.content.entries.where((user) {
-      if (user.key == userController.currentUser?.id) {
+      if (user.key == userController.currentUser?.uuid) {
         return false;
       }
       if (search == null || search.isEmpty) {
@@ -27,7 +27,8 @@ ContentWithLoading<Map<String, User>> getSelectedUsers(
     ContentWithLoading<Map<String, User>> data, List<String> chosenIds) {
   final List<MapEntry<String, User>> filteredEntries = chosenIds
       .where((id) =>
-          id != userController.currentUser?.id && data.content.containsKey(id))
+          id != userController.currentUser?.uuid &&
+          data.content.containsKey(id))
       .map((id) => MapEntry(id, data.content[id]!))
       .toList();
 

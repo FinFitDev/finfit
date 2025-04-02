@@ -48,7 +48,7 @@ export const logInUser = async (
   if (!foundUserData.verified) {
     if (!noEmail) {
       const emailVerificationToken = generateEmailVerificationToken(
-        foundUserData.id
+        foundUserData.uuid
       );
       await sendVerificationEmail(
         foundUserData.email,
@@ -56,12 +56,12 @@ export const logInUser = async (
         foundUserData.username
       );
     }
-    return { user_id: foundUserData.id };
+    return { user_id: foundUserData.uuid };
   }
 
-  const access_token = generateAccessToken(foundUserData.id);
-  const refresh_token = generateRefreshToken(foundUserData.id);
-  await insertRefreshToken(refresh_token, foundUserData.id);
+  const access_token = generateAccessToken(foundUserData.uuid);
+  const refresh_token = generateRefreshToken(foundUserData.uuid);
+  await insertRefreshToken(refresh_token, foundUserData.uuid);
 
-  return { access_token, refresh_token, user_id: foundUserData.id };
+  return { access_token, refresh_token, user_id: foundUserData.uuid };
 };

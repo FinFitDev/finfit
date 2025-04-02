@@ -5,7 +5,7 @@ export type IRefreshToken = string;
 export type IEmailVerificationToken = string;
 
 export interface IUser {
-  id: string;
+  uuid: string;
   email: string;
   username: string;
   password?: string;
@@ -60,3 +60,19 @@ export interface IDailyStepEntry {
 }
 
 export type IResetPasswordCode = string;
+
+export interface IProduct {
+  uuid: string;
+  name: string;
+  description: string;
+  owner: string;
+  original_price: number;
+  finpoints_price: number;
+  discount: number;
+  created_at: string;
+  link?: string;
+  image?: string;
+  category: string;
+  total_transactions: number;
+  isAffordable?: boolean;
+}

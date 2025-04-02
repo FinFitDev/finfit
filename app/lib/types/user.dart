@@ -1,9 +1,10 @@
 import 'dart:convert';
 
+import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:flutter/material.dart';
 
 class User {
-  final String id;
+  final String uuid;
   final String username;
   final String email;
   final DateTime createdAt;
@@ -13,7 +14,7 @@ class User {
   final bool? verified;
 
   User(
-      {required this.id,
+      {required this.uuid,
       required this.username,
       required this.email,
       required this.createdAt,
@@ -30,7 +31,7 @@ class User {
         ? null
         : bool.tryParse(map['verified'].toString() ?? 'false');
     return User(
-        id: map['id'],
+        uuid: map['uuid'],
         username: map['username'],
         email: map['email'],
         createdAt: DateTime.parse(map['createdAt']),
@@ -43,7 +44,7 @@ class User {
   @override
   String toString() {
     return """{
-      "id": "$id",
+      "uuid": "$uuid",
       "username": "$username",
       "email": "$email",
       "createdAt": "${createdAt.toString()}",
@@ -56,7 +57,7 @@ class User {
 
   Map<String, dynamic> toMap() {
     return {
-      "id": id,
+      "uuid": uuid,
       "username": username,
       "email": email,
       "createdAt": createdAt.toIso8601String(),
@@ -68,7 +69,7 @@ class User {
   }
 
   User copyWith({
-    String? id,
+    String? uuid,
     String? username,
     String? email,
     DateTime? createdAt,
@@ -77,7 +78,7 @@ class User {
     String? image,
   }) {
     return User(
-        id: id ?? this.id,
+        uuid: uuid ?? this.uuid,
         username: username ?? this.username,
         email: email ?? this.email,
         createdAt: createdAt ?? this.createdAt,
@@ -85,6 +86,18 @@ class User {
         stepsUpdatedAt: stepsUpdatedAt ?? this.stepsUpdatedAt,
         image: image ?? this.image,
         verified: verified ?? this.verified);
+  }
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+        uuid: json['uuid'],
+        points: parseInt(json['points'] as int).toDouble(),
+        username: json['username'],
+        email: json['email'],
+        image: json['image'],
+        createdAt: DateTime.parse(json['created_at']).toLocal(),
+        stepsUpdatedAt: DateTime.parse(json['steps_updated_at']).toLocal(),
+        verified: json['verified']);
   }
 }
 
@@ -124,26 +137,4 @@ class ResetPasswordUser {
   final String userId;
 
   const ResetPasswordUser({required this.email, required this.userId});
-}
-
-// used for profile image generation
-class ShapeModel {
-  final Color color;
-  final double x;
-  final double y;
-  final double w;
-  final double h;
-  final double angle;
-  final CustomPainter Function(Color, double, double, double, double, double)
-      painter;
-
-  ShapeModel({
-    required this.color,
-    required this.x,
-    required this.y,
-    required this.w,
-    required this.h,
-    required this.angle,
-    required this.painter,
-  });
 }

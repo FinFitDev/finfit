@@ -1,13 +1,11 @@
 import 'package:excerbuys/components/shared/activity_icon.dart';
-import 'package:excerbuys/containers/dashboard_page/modals/info/workout_info_modal.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/types/activity.dart';
+import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/utils/home/utils.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
-import 'package:excerbuys/wrappers/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class ActivityCard extends StatefulWidget {
   final void Function() onPressed;
@@ -34,8 +32,6 @@ class ActivityCard extends StatefulWidget {
 }
 
 class _ActivityCardState extends State<ActivityCard> {
-  bool _detailsOpen = false;
-
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;

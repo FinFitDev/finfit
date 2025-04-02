@@ -84,7 +84,7 @@ class _BalanceContainerState extends State<BalanceContainer> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 homeTopButton(context, () {
-                  if (userController.currentUser?.id != null) {
+                  if (userController.currentUser?.uuid != null) {
                     openModal(context, QrcodeModal());
                   }
                 }, 'assets/svg/qrcode.svg', 'Receive'),

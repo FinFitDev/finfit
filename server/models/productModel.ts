@@ -1,0 +1,48 @@
+import { pool } from "../shared/utils/db";
+
+export const fetchProductsByRegex = async (
+  regex: string,
+  limit: number,
+  offset: number
+) => {
+  const formattedRegex = `%${regex.toLowerCase()}%`;
+
+  const response = await pool.query(
+    "SELECT * FROM products p WHERE LOWER(p.name) LIKE $1 OR LOWER(p.owner) LIKE $1 ORDER BY p.total_transactions DESC LIMIT $2 OFFSET $3",
+    [formattedRegex, limit, offset]
+  );
+  return response;
+};
+
+export const fetchAffordableProducts = async (
+  points: number,
+  limit: number,
+  offset: number
+) => {
+  const response = await pool.query(
+    `
+        SELECT *
+        FROM products p
+        WHERE p.finpoints_price <= $1
+        ORDER BY p.total_transactions DESC
+        LIMIT $2
+        OFFSET $3
+    `,
+    [points, limit, offset]
+  );
+  return response;
+};
+
+export const fetchNearlyAfforableProducts = async (points: number) => {
+  const response = await pool.query(
+    `
+        SELECT *
+        FROM products p
+        WHERE p.finpoints_price > $1
+        ORDER BY (p.finpoints_price - $1) ASC, p.total_transactions DESC
+        LIMIT 10
+      `,
+    [points]
+  );
+  return response;
+};

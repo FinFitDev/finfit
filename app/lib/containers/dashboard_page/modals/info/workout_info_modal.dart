@@ -15,6 +15,7 @@ import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class WorkoutInfoModal extends StatefulWidget {
   final String workoutId;
@@ -29,6 +30,24 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
   ITrainingEntry? _workout;
   int _daysAgo = 0;
   ActivityMetadata? _activityMetadata;
+
+  void openAppleHealth() async {
+    const url = 'x-apple-health://'; // Opens Apple Health
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  void openGoogleFit() async {
+    const url = 'https://fit.google.com/';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   void getWorkoutMetadata() {
     final foundWorkout =
@@ -86,18 +105,17 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
               topLeft: Radius.circular(MODAL_BORDER_RADIUS),
               topRight: Radius.circular(MODAL_BORDER_RADIUS)),
           child: Container(
+              height: MediaQuery.sizeOf(context).height * 0.9,
               color: colors.primary,
               width: double.infinity,
               padding: EdgeInsets.only(
-                  top: HORIZOTAL_PADDING,
+                  top: 2 * HORIZOTAL_PADDING,
                   left: HORIZOTAL_PADDING,
                   right: HORIZOTAL_PADDING,
                   bottom: layoutController.bottomPadding + HORIZOTAL_PADDING),
               child: _error
                   ? emptyMetadata(colors, texts)
-                  : Wrap(
-                      runSpacing: 24,
-                      alignment: WrapAlignment.center,
+                  : Column(
                       children: [
                         Row(
                           children: [
@@ -130,27 +148,47 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
                             ))
                           ],
                         ),
-                        ListComponent(
-                          data: {
-                            'Started at':
-                                '${_workout!.createdAt.hour}:${_workout!.createdAt.minute.toString().padLeft(2, '0')}',
-                            'Calories burnt':
-                                '${formatNumber(_workout!.calories ?? 0)} kcal',
-                            'Duration': parseDuration(_workout!.duration),
-                            'Distance': parseDistance(
-                                (_workout!.distance ?? 0).toDouble()),
-                          },
-                          summary:
-                              '${formatNumber(_workout!.points)} finpoints',
+                        SizedBox(
+                          height: 32,
                         ),
-                        // MainButton(
-                        //     label: 'Share',
-                        //     backgroundColor: colors.secondary,
-                        //     textColor: colors.primary,
-                        //     onPressed: () {
-                        //       Share.share(
-                        //           "Check out my workout session on ${getDayName(_daysAgo)}, ${getDayNumber(_daysAgo)} ${getDayMonth(_daysAgo)} ${getDayYear(_daysAgo)}!");
-                        //     })
+                        Expanded(
+                          child: Column(
+                            children: [
+                              ListComponent(
+                                data: {
+                                  'Started at':
+                                      '${_workout!.createdAt.hour}:${_workout!.createdAt.minute.toString().padLeft(2, '0')}',
+                                  'Calories burnt':
+                                      '${formatNumber(_workout!.calories ?? 0)} kcal',
+                                  'Duration': parseDuration(_workout!.duration),
+                                  'Distance': parseDistance(
+                                      (_workout!.distance ?? 0).toDouble()),
+                                },
+                                summary:
+                                    '${formatNumber(_workout!.points)} finpoints',
+                              ),
+                            ],
+                          ),
+                        ),
+                        MainButton(
+                            label: 'Open Apple Health',
+                            backgroundColor: colors.error.withAlpha(150),
+                            textColor: colors.primary,
+                            icon: 'assets/svg/heart.svg',
+                            onPressed: () {
+                              openAppleHealth();
+                            }),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        MainButton(
+                            label: 'Share',
+                            backgroundColor: colors.secondary,
+                            textColor: colors.primary,
+                            onPressed: () {
+                              Share.share(
+                                  "Check out my workout session on ${getDayName(_daysAgo)}, ${getDayNumber(_daysAgo)} ${getDayMonth(_daysAgo)} ${getDayYear(_daysAgo)}!");
+                            })
                       ],
                     ))),
     );

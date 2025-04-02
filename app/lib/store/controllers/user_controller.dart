@@ -1,12 +1,9 @@
 import 'dart:convert';
 import 'dart:math';
-
 import 'package:excerbuys/store/persistence/storage_controller.dart';
 import 'package:excerbuys/store/selectors/user.dart';
 import 'package:excerbuys/types/user.dart';
-import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/utils/fetching/utils.dart';
 import 'package:excerbuys/utils/user/requests.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -86,7 +83,7 @@ class UserController {
       }
 
       final bool successfulUpdate =
-          await updateUserImageRequest(currentUser!.id, imageSeed);
+          await updateUserImageRequest(currentUser!.uuid, imageSeed);
 
       if (successfulUpdate == true) {
         updateUserImage(imageSeed);
@@ -102,7 +99,7 @@ class UserController {
   Future<bool> updateUserPointsScore(int pointsToAdd) async {
     if (currentUser != null && pointsToAdd > 0) {
       final bool updateResult =
-          await updatePointsScoreRequest(currentUser!.id, pointsToAdd);
+          await updatePointsScoreRequest(currentUser!.uuid, pointsToAdd);
 
       return updateResult;
     } else {
@@ -114,7 +111,7 @@ class UserController {
     if (currentUser != null && pointsToAdd > 0) {
       final bool updateResult =
           await updatePointsScoreWithUpdateTimestampRequest(
-              currentUser!.id, pointsToAdd);
+              currentUser!.uuid, pointsToAdd);
 
       if (updateResult) {
         setUserUpdatedAt(DateTime.now());

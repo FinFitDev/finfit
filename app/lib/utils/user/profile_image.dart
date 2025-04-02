@@ -88,3 +88,25 @@ String randomLightColor(Random random) {
       g.toRadixString(16).padLeft(2, '0') +
       b.toRadixString(16).padLeft(2, '0');
 }
+
+// used for profile image generation
+class ShapeModel {
+  final Color color;
+  final double x;
+  final double y;
+  final double w;
+  final double h;
+  final double angle;
+  final CustomPainter Function(Color, double, double, double, double, double)
+      painter;
+
+  ShapeModel({
+    required this.color,
+    required this.x,
+    required this.y,
+    required this.w,
+    required this.h,
+    required this.angle,
+    required this.painter,
+  });
+}

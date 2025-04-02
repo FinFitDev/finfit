@@ -19,8 +19,8 @@ class ListEntry extends StatelessWidget {
           style: TextStyle(
               fontSize: 13,
               color: isFeatured == true
-                  ? colors.secondary.withAlpha(150)
-                  : colors.tertiaryContainer.withAlpha(150),
+                  ? colors.secondary.withAlpha(200)
+                  : colors.tertiaryContainer.withAlpha(200),
               fontWeight: FontWeight.w400),
         ),
         Text(label,

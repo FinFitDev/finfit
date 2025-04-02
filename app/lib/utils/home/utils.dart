@@ -1,4 +1,5 @@
 import 'package:excerbuys/types/activity.dart';
+import 'package:excerbuys/types/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 

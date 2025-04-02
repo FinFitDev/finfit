@@ -19,14 +19,7 @@ Future<List<User>?> loadSendUsersRequest(
 
     final List content = res['content'];
     for (final el in content) {
-      result.add(User(
-          id: el['id'],
-          points: (el['points'] as int).toDouble(),
-          username: el['username'],
-          email: el['email'],
-          image: el['image'],
-          createdAt: DateTime.parse(el['created_at']).toLocal(),
-          stepsUpdatedAt: DateTime.parse(el['steps_updated_at']).toLocal()));
+      result.add(User.fromJson(el));
     }
     return result;
   } catch (error) {

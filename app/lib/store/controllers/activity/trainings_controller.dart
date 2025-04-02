@@ -3,6 +3,7 @@ import 'package:excerbuys/store/controllers/app_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
+import 'package:excerbuys/utils/activity/requests.dart';
 import 'package:excerbuys/utils/activity/steps.dart';
 import 'package:excerbuys/utils/activity/trainings.dart';
 import 'package:flutter/material.dart';
@@ -116,9 +117,11 @@ class TrainingsController {
         }
       }
 
-      if (userController.currentUser?.id != null) {
+      if (userController.currentUser?.uuid != null) {
         parsedTrainingData = await loadTrainingsRequest(
-                userController.currentUser!.id, TRAINING_DATA_CHUNK_SIZE, 0) ??
+                userController.currentUser!.uuid,
+                TRAINING_DATA_CHUNK_SIZE,
+                0) ??
             [];
 
         Set<String> unique = {};
@@ -152,14 +155,14 @@ class TrainingsController {
 
   Future<void> lazyLoadMoreTrainings() async {
     try {
-      if (userController.currentUser?.id == null) {
+      if (userController.currentUser?.uuid == null) {
         throw Exception('Current user is null');
       }
       setLoadingMoreData(true);
       await Future.delayed(Duration(milliseconds: 3000));
 
       List<ITrainingEntry> parsedTrainingData = await loadTrainingsRequest(
-              userController.currentUser!.id,
+              userController.currentUser!.uuid,
               TRAINING_DATA_CHUNK_SIZE,
               lazyLoadOffset.content) ??
           [];

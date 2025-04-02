@@ -11,9 +11,11 @@ import 'package:excerbuys/store/controllers/activity/steps_controller.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
+import 'package:excerbuys/store/controllers/shop/products_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
+import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/wrappers/refresh_wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -39,7 +41,7 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    await userController.getCurrentUser(userController.currentUser!.id);
+    await userController.getCurrentUser(userController.currentUser!.uuid);
 
     _scrollController.animateTo(
       0,
@@ -107,10 +109,34 @@ class _HomePageState extends State<HomePage> {
                             NewsContainer(
                                 // isLoading: true,
                                 ),
-                            AvailableOffers(
-                                // isLoading: true,
-                                ),
-                            ProgressOffersContainer(),
+                            StreamBuilder<
+                                    ContentWithLoading<List<IProductEntry>>>(
+                                stream: productsController
+                                    .affordableHomeProductsStream,
+                                builder: (context, snapshot) {
+                                  if (snapshot.data == null ||
+                                      snapshot.data!.content.isEmpty) {
+                                    return SizedBox.shrink();
+                                  }
+                                  return AvailableOffers(
+                                    products: snapshot.data!.content,
+                                    isLoading: snapshot.data?.isLoading,
+                                  );
+                                }),
+                            StreamBuilder<
+                                    ContentWithLoading<List<IProductEntry>>>(
+                                stream: productsController
+                                    .nearlyAffordableHomeProducts,
+                                builder: (context, snapshot) {
+                                  if (snapshot.data == null ||
+                                      snapshot.data!.content.isEmpty) {
+                                    return SizedBox.shrink();
+                                  }
+                                  return ProgressOffersContainer(
+                                    products: snapshot.data!.content,
+                                    isLoading: snapshot.data?.isLoading,
+                                  );
+                                }),
                             StreamBuilder<ContentWithLoading<IStoreStepsData>>(
                                 stream: stepsController.userStepsStream,
                                 builder: (context, stepsSnapshot) {

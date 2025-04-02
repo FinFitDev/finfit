@@ -40,9 +40,9 @@ class StepsController {
     final lastUpdated = userController.currentUser?.stepsUpdatedAt ?? now;
 
     final Duration difference = now.difference(lastUpdated);
-    final Duration minDifference = Duration(days: 6);
+    final Duration minDifference = Duration(days: 7);
 
-    // Use the larger of the two: the actual difference or 6 days
+    // Use the larger of the two: the actual difference or 6 (full by day number) days
     final Duration limitedDifference =
         difference < minDifference ? minDifference : difference;
 

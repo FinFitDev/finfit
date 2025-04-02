@@ -1,11 +1,4 @@
-import 'package:excerbuys/types/general.dart';
 import 'package:flutter/material.dart';
-
-enum STEPS_AGGREGATION_TYPE { HOURLY, DAILY, MONTHLY }
-
-enum STEPS_AGGREGATION_VALUE { TOTAL, MEAN }
-
-enum ACTIVITY_TYPE { WALKING, RUNNING, BIKE_RIDING, SWIMMING }
 
 class ActivityMetadata {
   final String icon;

@@ -35,23 +35,31 @@ class _RegenerateImageModalState extends State<RegenerateImageModal> {
             topLeft: Radius.circular(MODAL_BORDER_RADIUS),
             topRight: Radius.circular(MODAL_BORDER_RADIUS)),
         child: Container(
+            height: MediaQuery.sizeOf(context).height * 0.9,
             color: colors.primary,
             width: double.infinity,
             padding: EdgeInsets.only(
                 left: HORIZOTAL_PADDING,
                 right: HORIZOTAL_PADDING,
                 bottom: layoutController.bottomPadding + HORIZOTAL_PADDING),
-            child: Wrap(
-              runSpacing: 12,
-              alignment: WrapAlignment.center,
+            child: Column(
               children: [
                 ModalHeader(
                     title: 'Regenerate profile image',
                     subtitle: 'Keep the one you like'),
-                ProfileImageGenerator(
-                    seed: _seed,
-                    size: MediaQuery.sizeOf(context).width -
-                        2 * HORIZOTAL_PADDING),
+                SizedBox(
+                  height: 16,
+                ),
+                Expanded(
+                  child: Column(
+                    children: [
+                      ProfileImageGenerator(
+                          seed: _seed,
+                          size: MediaQuery.sizeOf(context).width -
+                              2 * HORIZOTAL_PADDING),
+                    ],
+                  ),
+                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [

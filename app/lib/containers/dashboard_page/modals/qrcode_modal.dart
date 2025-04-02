@@ -20,37 +20,45 @@ class QrcodeModal extends StatelessWidget {
           topLeft: Radius.circular(MODAL_BORDER_RADIUS),
           topRight: Radius.circular(MODAL_BORDER_RADIUS)),
       child: Container(
+        height: MediaQuery.sizeOf(context).height * 0.9,
         color: colors.primary,
         width: double.infinity,
         padding: EdgeInsets.only(
             left: HORIZOTAL_PADDING,
             right: HORIZOTAL_PADDING,
             bottom: layoutController.bottomPadding + HORIZOTAL_PADDING),
-        child: Wrap(
+        child: Column(
           children: [
             ModalHeader(
                 title: 'Receive finpoints',
                 subtitle: 'Scan code with another device'),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: QrImageView(
-                data: userController.currentUser!.id,
-                version: QrVersions.auto,
-                dataModuleStyle: QrDataModuleStyle(
-                  dataModuleShape: QrDataModuleShape.circle,
-                  color: colors.primaryFixed,
-                ),
-                eyeStyle: QrEyeStyle(
-                  eyeShape: QrEyeShape.square,
-                  color: colors.primaryFixed,
-                ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: QrImageView(
+                      data: userController.currentUser!.uuid,
+                      version: QrVersions.auto,
+                      dataModuleStyle: QrDataModuleStyle(
+                        dataModuleShape: QrDataModuleShape.circle,
+                        color: colors.primaryFixed,
+                      ),
+                      eyeStyle: QrEyeStyle(
+                        eyeShape: QrEyeShape.square,
+                        color: colors.primaryFixed,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            Container(
-              height: 32,
+            SizedBox(
+              height: 8,
             ),
-            CopyText(textToCopy: userController.currentUser?.id ?? ''),
-            Container(
+            CopyText(textToCopy: userController.currentUser?.uuid ?? ''),
+            SizedBox(
               height: 8,
             ),
             MainButton(
@@ -59,7 +67,7 @@ class QrcodeModal extends StatelessWidget {
                 textColor: colors.primary,
                 onPressed: () {
                   Share.share(
-                      "My FinFit id is ${userController.currentUser?.id}");
+                      "My FinFit id is ${userController.currentUser?.uuid}");
                 })
           ],
         ),

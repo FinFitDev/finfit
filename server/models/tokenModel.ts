@@ -1,10 +1,7 @@
-import { QueryResult } from "pg";
 import {
   IAccessToken,
   IEmailVerificationToken,
   IRefreshToken,
-  IUser,
-  IUserNoPassword,
 } from "../shared/types";
 import { pool } from "../shared/utils/db";
 import jwt from "jsonwebtoken";

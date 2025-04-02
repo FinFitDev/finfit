@@ -66,3 +66,7 @@ class Debouncer {
     _timer?.cancel();
   }
 }
+
+bool isNetworkImage(String imageUrl) {
+  return imageUrl.contains('http://') || imageUrl.contains('https://');
+}

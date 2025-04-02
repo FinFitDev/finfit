@@ -10,7 +10,7 @@ import 'package:health/health.dart';
 List<IHourlyStepsEntry>? convertStepsToRequest(
     Map<String, HealthDataPoint> stepsData,
     Map<String, ITrainingEntry> trainingsData) {
-  final String? userId = userController.currentUser?.id;
+  final String? userId = userController.currentUser?.uuid;
   try {
     if (userId == null) {
       throw Exception('Not authorized');

@@ -1,4 +1,4 @@
-import 'package:excerbuys/components/auth_page/logo.dart';
+import 'package:excerbuys/components/rive/logo_rive.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/store/controllers/auth_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
@@ -6,7 +6,6 @@ import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:rive/rive.dart' as rive;
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -40,40 +39,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 Expanded(
                     child: Column(
                   children: [
-                    Stack(
-                      children: [
-                        Positioned(
-                          left: 0,
-                          top: 100,
-                          child: Opacity(
-                            opacity: 0.2,
-                            child: SizedBox(
-                                height: 180,
-                                width: 180,
-                                child: Transform.rotate(
-                                  angle: 0.1,
-                                  child: rive.RiveAnimation.asset(
-                                    'assets/rive/dolphin.riv',
-                                    fit: BoxFit.contain,
-                                  ),
-                                )),
-                          ),
-                        ),
-                        Positioned(
-                          child: Container(
-                              margin: EdgeInsets.only(top: 30),
-                              height: 250,
-                              width: 250,
-                              child: Transform.rotate(
-                                angle: 0.5,
-                                child: rive.RiveAnimation.asset(
-                                  'assets/rive/dolphin.riv',
-                                  fit: BoxFit.contain,
-                                ),
-                              )),
-                        ),
-                      ],
-                    ),
+                    LogoRive(),
                     SizedBox(
                       height: 12,
                     ),

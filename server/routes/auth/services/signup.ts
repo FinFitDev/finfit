@@ -34,29 +34,16 @@ export const signUpUser = async (
   if (takenEmail.rows.length > 0)
     throw new ErrorWithCode("Email is taken", 400, "email");
 
-  let takenId = true;
-  let user_id = uuidv4();
-  let tries = 0;
-  // ensure the uuid is unique
-  while (takenId) {
-    if (tries > 10) {
-      throw new ErrorWithCode("Couldn't generate an unique id", 400, "email");
-    }
-    user_id = uuidv4();
-    const userById = await fetchUserById(user_id);
-    takenId = userById.rows.length > 0;
-    tries++;
-  }
-
+  let uuid;
   // user creates an account with google signin
   if (isUserGoogleSignup(user)) {
-    await insertGoogleAuthUser(
-      user_id,
+    const goolgeResponse = await insertGoogleAuthUser(
       username,
       email,
       user.google_id,
       generateSeed()
     );
+    uuid = goolgeResponse.rows[0].uuid;
   } else {
     const takenUsername = await fetchUserByUsername(username);
     if (takenUsername.rows.length > 0)
@@ -65,11 +52,17 @@ export const signUpUser = async (
     const salt = await bcrypt.genSalt(10);
     const hashed_password = await bcrypt.hash(user.password, salt);
 
-    await insertUser(user_id, username, email, hashed_password, generateSeed());
+    const response = await insertUser(
+      username,
+      email,
+      hashed_password,
+      generateSeed()
+    );
+    uuid = response.rows[0].uuid;
 
-    const emailVerificationToken = generateEmailVerificationToken(user_id);
+    const emailVerificationToken = generateEmailVerificationToken(uuid);
     await sendVerificationEmail(email, emailVerificationToken, username);
   }
 
-  return { user_id };
+  return { user_id: uuid };
 };

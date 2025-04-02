@@ -2,7 +2,7 @@ import { pool } from "../shared/utils/db";
 
 export const fetchAllUsers = async (limit: number, offset: number) => {
   const response = await pool.query(
-    "SELECT id, username, email, image, created_at, points, steps_updated_at FROM users LIMIT $1 OFFSET $2",
+    "SELECT uuid, username, email, image, created_at, points, steps_updated_at FROM users LIMIT $1 OFFSET $2",
     [limit, offset]
   );
 
@@ -17,7 +17,7 @@ export const fetchUsersByRegex = async (
   const formattedRegex = `%${regex.toLowerCase()}%`;
 
   const response = await pool.query(
-    "SELECT id, username, email, image, created_at, points, steps_updated_at FROM users u WHERE LOWER(u.username) LIKE $1 LIMIT $2 OFFSET $3",
+    "SELECT uuid, username, email, image, created_at, points, steps_updated_at FROM users u WHERE LOWER(u.username) LIKE $1 LIMIT $2 OFFSET $3",
     [formattedRegex, limit, offset]
   );
   return response;
@@ -25,7 +25,7 @@ export const fetchUsersByRegex = async (
 
 export const fetchUserById = async (id: string) => {
   const response = await pool.query(
-    "SELECT id, username, email, image, created_at, points, steps_updated_at, verified FROM users WHERE users.id = $1",
+    "SELECT uuid, username, email, image, created_at, points, steps_updated_at, verified FROM users WHERE users.uuid = $1",
     [id]
   );
 
@@ -33,31 +33,29 @@ export const fetchUserById = async (id: string) => {
 };
 
 export const insertUser = async (
-  id: string,
   username: string,
   email: string,
   password: string,
   image: string
 ) => {
   const response = await pool.query(
-    "INSERT INTO users (id, username, email, password, image) VALUES ($1, $2, $3, $4, $5)",
-    [id, username, email, password, image]
+    "INSERT INTO users (username, email, password, image) VALUES ($1, $2, $3, $4) RETURNING uuid",
+    [username, email, password, image]
   );
 
   return response;
 };
 
 export const insertGoogleAuthUser = async (
-  id: string,
   username: string,
   email: string,
   google_id: string,
   image: string
 ) => {
   const response = await pool.query(
-    "INSERT INTO users (id, username, email, google_id, image, verified) VALUES ($1, $2, $3, $4, $5, $6)",
+    "INSERT INTO users (username, email, google_id, image, verified) VALUES ($1, $2, $3, $4, $5) RETURNING uuid",
     // the user is verified if google verified the email
-    [id, username, email, google_id, image, true]
+    [username, email, google_id, image, true]
   );
 
   return response;
@@ -92,7 +90,7 @@ export const fetchUserByUsernameOrEmail = async (login: string) => {
 
 export const updateImageSeed = async (user_id: string, image: string) => {
   const response = await pool.query(
-    "UPDATE users SET image = $1 WHERE id = $2;",
+    "UPDATE users SET image = $1 WHERE uuid = $2;",
     [image, user_id]
   );
 
@@ -104,7 +102,7 @@ export const updateUserPassword = async (
   hashed_password: string
 ) => {
   const response = await pool.query(
-    "UPDATE users SET password = $1 WHERE id = $2;",
+    "UPDATE users SET password = $1 WHERE uuid = $2;",
     [hashed_password, user_id]
   );
 
@@ -113,7 +111,7 @@ export const updateUserPassword = async (
 
 export const updateVerifyUser = async (user_id: string) => {
   const response = await pool.query(
-    "UPDATE users SET verified = $1 WHERE id = $2;",
+    "UPDATE users SET verified = $1 WHERE uuid = $2;",
     [true, user_id]
   );
   return response;
@@ -121,7 +119,7 @@ export const updateVerifyUser = async (user_id: string) => {
 
 export const updatePointsScore = async (user_id: string, points: number) => {
   const response = await pool.query(
-    "UPDATE users SET points = points + $1 WHERE id = $2;",
+    "UPDATE users SET points = points + $1 WHERE uuid = $2;",
     [points, user_id]
   );
 
@@ -134,7 +132,7 @@ export const updatePointsScoreWithUpdateTimestamp = async (
   steps_updated_at: string
 ) => {
   const response = await pool.query(
-    "UPDATE users SET points = points + $1, steps_updated_at = $2 WHERE id = $3;",
+    "UPDATE users SET points = points + $1, steps_updated_at = $2 WHERE uuid = $3;",
     [points, steps_updated_at, user_id]
   );
 
@@ -157,7 +155,7 @@ export const transferPointsTransaction = async (
         WITH users AS (
           UPDATE users
           SET points = points - $1
-          WHERE id = $2
+          WHERE uuid = $2
           RETURNING points
         )
         SELECT points FROM users
@@ -177,7 +175,7 @@ export const transferPointsTransaction = async (
         `
           UPDATE users
           SET points = points + $1
-          WHERE id = $2
+          WHERE uuid = $2
         `,
         [fractionAmount, recipientId]
       );

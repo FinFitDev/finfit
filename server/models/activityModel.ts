@@ -106,7 +106,7 @@ export const insertNewTrainingsPointsUpdateTransaction = async (
       `
       UPDATE users
       SET points = points + $1
-      WHERE id = $2;
+      WHERE uuid = $2;
     `,
       [totalAddedPoints, userId]
     );

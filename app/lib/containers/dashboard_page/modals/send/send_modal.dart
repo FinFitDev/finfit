@@ -34,7 +34,7 @@ class _SendModalState extends State<SendModal> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.sizeOf(context).height * 0.8,
+      height: MediaQuery.sizeOf(context).height * 0.9,
       child: AnimatedSwitcher(
           duration: Duration(milliseconds: 250),
           switchInCurve: Curves.decelerate,

@@ -13,6 +13,7 @@ import {
   addTrainings,
   getUserTrainings,
 } from "./services/activityService";
+import { getHomeProducts } from "./services/productsService";
 
 const apiRouter: Router = express.Router();
 
@@ -169,6 +170,25 @@ apiRouter.post("/trainings", async (req: Request, res: Response) => {
   }
 });
 
+apiRouter.get(
+  "/products/:id",
+  async (req: RequestWithPayload<undefined, { id: string }>, res: Response) => {
+    try {
+      const userId = req.params.id as string;
+
+      const response = await getHomeProducts(userId);
+
+      res
+        .status(200)
+        .json({ message: "Home products found", content: response });
+    } catch (error: any) {
+      res.status(error.statusCode ?? 404).json({
+        message: "Something went wrong when fetching products",
+        error: error.message,
+      });
+    }
+  }
+);
 // apiRouter.get(
 //   "/steps/:id",
 //   async (req: RequestWithPayload<undefined, { id: string }>, res: Response) => {

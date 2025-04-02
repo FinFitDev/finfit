@@ -1,6 +1,4 @@
-import 'dart:collection';
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/store/persistence/storage_controller.dart';
@@ -8,7 +6,6 @@ import 'package:excerbuys/store/selectors/send.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/home/send/requests.dart';
 import 'package:excerbuys/utils/user/requests.dart';
 import 'package:flutter/material.dart';
@@ -191,10 +188,10 @@ class SendController {
 
       Set<String> unique = {};
       foundUsers =
-          foundUsers.where((element) => unique.add(element.id)).toList();
+          foundUsers.where((element) => unique.add(element.uuid)).toList();
 
       Map<String, User> values = {
-        for (var el in foundUsers) el.id: el,
+        for (var el in foundUsers) el.uuid: el,
       };
 
       addUsersToList(values);
@@ -212,9 +209,9 @@ class SendController {
       User? foundUser = await fetchUserByIdRequest(userId, cancelToken);
 
       if (foundUser != null) {
-        addUsersToList({foundUser.id: foundUser});
-        if (!chosenUsersIds.contains(foundUser.id)) {
-          proccessSelectUser(foundUser.id);
+        addUsersToList({foundUser.uuid: foundUser});
+        if (!chosenUsersIds.contains(foundUser.uuid)) {
+          proccessSelectUser(foundUser.uuid);
         }
       }
     } catch (error) {
@@ -227,7 +224,7 @@ class SendController {
   Future<void> sendPoints() async {
     try {
       final totalAmount = await totalAmountStream.first;
-      if (userController.currentUser?.id == null ||
+      if (userController.currentUser?.uuid == null ||
           chosenUsersIds.isEmpty ||
           totalAmount <= 0) {
         throw 'Invalid data';
@@ -236,7 +233,7 @@ class SendController {
       await Future.delayed(Duration(seconds: 1));
 
       int? remainingPoints = await resolveSendPointsRequest(
-          userController.currentUser!.id, chosenUsersIds, totalAmount);
+          userController.currentUser!.uuid, chosenUsersIds, totalAmount);
 
       if (remainingPoints != null) {
         userController.setUserBalance(remainingPoints.toDouble());
