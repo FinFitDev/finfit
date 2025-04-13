@@ -34,10 +34,10 @@ class QrcodeModal extends StatelessWidget {
                 subtitle: 'Scan code with another device'),
             Expanded(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
                     child: QrImageView(
                       data: userController.currentUser!.uuid,
                       version: QrVersions.auto,
@@ -50,6 +50,15 @@ class QrcodeModal extends StatelessWidget {
                         color: colors.primaryFixed,
                       ),
                     ),
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Text(
+                    'Use the scanner option in the send modal on another device to scan this code. You will then need to refresh the app to see the received points.',
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(color: colors.primaryFixedDim, fontSize: 13),
                   ),
                 ],
               ),

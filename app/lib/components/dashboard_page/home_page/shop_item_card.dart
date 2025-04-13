@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:excerbuys/components/rive/saletag_rive.dart';
+import 'package:excerbuys/components/shared/image_component.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
@@ -16,7 +17,8 @@ class ShopItemCard extends StatefulWidget {
   final int discount;
   final int points;
   final String name;
-  final String seller;
+  final String sellerName;
+  final String? sellerImage;
   final double? pointsLeft;
 
   const ShopItemCard({
@@ -27,7 +29,8 @@ class ShopItemCard extends StatefulWidget {
     required this.discount,
     required this.points,
     required this.name,
-    required this.seller,
+    required this.sellerName,
+    this.sellerImage,
     this.pointsLeft,
   });
 
@@ -71,7 +74,7 @@ class _ShopItemCardState extends State<ShopItemCard> {
                                 filter:
                                     ImageFilter.blur(sigmaX: 50, sigmaY: 50),
                                 child: Container(
-                                  color: colors.primary.withAlpha(170),
+                                  color: colors.primary.withAlpha(190),
                                   padding: EdgeInsets.symmetric(
                                       vertical: 8, horizontal: 12),
                                   height: 55,
@@ -97,14 +100,29 @@ class _ShopItemCardState extends State<ShopItemCard> {
                                                 color: colors.tertiary,
                                               ),
                                             ),
-                                            Text(
-                                              widget.seller,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.w300,
-                                                color: colors.tertiary,
-                                              ),
+                                            Row(
+                                              children: [
+                                                ImageComponent(
+                                                  size: 14,
+                                                  image: widget.sellerImage,
+                                                  filterColor: isProgress
+                                                      ? Colors.grey
+                                                      : Colors.transparent,
+                                                ),
+                                                SizedBox(
+                                                  width: 4,
+                                                ),
+                                                Text(
+                                                  widget.sellerName,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.w300,
+                                                    color: colors.tertiary,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         ),

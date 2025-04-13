@@ -8,6 +8,7 @@ import 'package:excerbuys/store/controllers/activity/activity_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/products_controller.dart';
+import 'package:excerbuys/store/controllers/shop/transactions_controller.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
@@ -29,6 +30,7 @@ class _DashboardPageState extends State<DashboardPage> {
       await activityController.checkHealthConnectSdk();
     }
     await activityController.fetchActivity();
+    await transactionsController.fetchTransactions();
     await productsController.fetchHomeProducts();
   }
 

@@ -172,7 +172,7 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
                         ),
                         MainButton(
                             label: 'Open Apple Health',
-                            backgroundColor: colors.error.withAlpha(150),
+                            backgroundColor: colors.error,
                             textColor: colors.primary,
                             icon: 'assets/svg/heart.svg',
                             onPressed: () {

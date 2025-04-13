@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:excerbuys/components/dashboard_page/home_page/shop_item_card.dart';
 import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/components/shared/indicators/current_item/current_item_indicator.dart';
@@ -91,7 +93,8 @@ class _AvailableOffersState extends State<AvailableOffers> {
                               discount: entry.discount.round(),
                               points: entry.finpointsPrice.round(),
                               name: entry.name,
-                              seller: entry.owner,
+                              sellerName: entry.owner.name,
+                              sellerImage: entry.owner.image,
                               isLast: index == widget.products.length - 1,
                             );
                           },

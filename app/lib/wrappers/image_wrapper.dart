@@ -16,13 +16,11 @@ class ImageHelper {
     stream.addListener(
       ImageStreamListener(
         (info, synchronousCall) {
-          print('Success');
           if (!completer.isCompleted) {
             completer.complete(imageProvider);
           }
         },
         onError: (error, stackTrace) {
-          print('Error, loading fallback image');
           ImageProvider fallbackImage = isNetworkImage(placeholderImage)
               ? NetworkImage(placeholderImage)
               : AssetImage(placeholderImage) as ImageProvider;

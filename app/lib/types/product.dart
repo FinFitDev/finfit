@@ -1,11 +1,12 @@
 import 'package:excerbuys/types/enums.dart';
+import 'package:excerbuys/types/owner.dart';
 import 'package:excerbuys/utils/shop/product/utils.dart';
 
 class IProductEntry {
   final String uuid;
   final String name;
   final String description;
-  final String owner;
+  final IProductOwnerEntry owner;
   final double originalPrice;
   final double finpointsPrice;
   final double discount;
@@ -37,7 +38,7 @@ class IProductEntry {
       'uuid': uuid,
       'name': name,
       'description': description,
-      'owner': owner,
+      'owner': owner.toJson(),
       'original_price': originalPrice,
       'finpoints_price': finpointsPrice,
       'discount': discount,
@@ -55,7 +56,7 @@ class IProductEntry {
       uuid: json['uuid'],
       name: json['name'],
       description: json['description'],
-      owner: json['owner'],
+      owner: IProductOwnerEntry.fromJson(json['product_owner']),
       originalPrice: (json['original_price'] as num).toDouble(),
       finpointsPrice: (json['finpoints_price'] as num).toDouble(),
       discount: (json['discount'] as num).toDouble(),

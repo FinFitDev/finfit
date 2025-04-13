@@ -95,7 +95,8 @@ class _ProgressOffersContainerState extends State<ProgressOffersContainer> {
                               discount: entry.discount.round(),
                               points: entry.finpointsPrice.round(),
                               name: entry.name,
-                              seller: entry.owner,
+                              sellerName: entry.owner.name,
+                              sellerImage: entry.owner.image,
                               pointsLeft: entry.finpointsPrice -
                                   (userController.userBalance ?? 0),
                               isLast: index == widget.products.length - 1,

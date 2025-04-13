@@ -1,15 +1,14 @@
 import 'dart:convert';
-
 import 'package:excerbuys/utils/parsers/parsers.dart';
-import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/user/utils.dart';
 
 class User {
   final String uuid;
   final String username;
   final String email;
-  final DateTime createdAt;
-  final double points;
-  final DateTime stepsUpdatedAt;
+  final DateTime? createdAt;
+  final double? points;
+  final DateTime? stepsUpdatedAt;
   final String? image;
   final bool? verified;
 
@@ -60,8 +59,8 @@ class User {
       "uuid": uuid,
       "username": username,
       "email": email,
-      "createdAt": createdAt.toIso8601String(),
-      "stepsUpdatedAt": stepsUpdatedAt.toIso8601String(),
+      "createdAt": createdAt?.toIso8601String(),
+      "stepsUpdatedAt": stepsUpdatedAt?.toIso8601String(),
       "points": points.toString(),
       "image": image,
       'verified': verified
@@ -91,12 +90,12 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
         uuid: json['uuid'],
-        points: parseInt(json['points'] as int).toDouble(),
+        points: parseInt(json['points'] ?? '0').toDouble(),
         username: json['username'],
         email: json['email'],
         image: json['image'],
-        createdAt: DateTime.parse(json['created_at']).toLocal(),
-        stepsUpdatedAt: DateTime.parse(json['steps_updated_at']).toLocal(),
+        createdAt: dateTimeParseNullish(json['created_at']),
+        stepsUpdatedAt: dateTimeParseNullish(json['steps_updated_at']),
         verified: json['verified']);
   }
 }

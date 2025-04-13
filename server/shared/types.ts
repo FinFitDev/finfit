@@ -76,3 +76,10 @@ export interface IProduct {
   total_transactions: number;
   isAffordable?: boolean;
 }
+
+export interface ITransactionInsert {
+  amount_finpoints: number;
+  user_id: string;
+  second_user_ids?: string[];
+  product_ids?: string[];
+}

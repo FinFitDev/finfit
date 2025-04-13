@@ -21,8 +21,9 @@ export const fetchAffordableProducts = async (
 ) => {
   const response = await pool.query(
     `
-        SELECT *
+        SELECT p.*,to_json(po) AS product_owner
         FROM products p
+        LEFT JOIN product_owners po ON p.owner_id = po.uuid
         WHERE p.finpoints_price <= $1
         ORDER BY p.total_transactions DESC
         LIMIT $2
@@ -36,8 +37,9 @@ export const fetchAffordableProducts = async (
 export const fetchNearlyAfforableProducts = async (points: number) => {
   const response = await pool.query(
     `
-        SELECT *
+        SELECT p.*, to_json(po) AS product_owner
         FROM products p
+        LEFT JOIN product_owners po ON p.owner_id = po.uuid
         WHERE p.finpoints_price > $1
         ORDER BY (p.finpoints_price - $1) ASC, p.total_transactions DESC
         LIMIT 10

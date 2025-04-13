@@ -14,6 +14,10 @@ import {
   getUserTrainings,
 } from "./services/activityService";
 import { getHomeProducts } from "./services/productsService";
+import {
+  addTransactionsToDb,
+  getTransactions,
+} from "./services/transactionsService";
 
 const apiRouter: Router = express.Router();
 
@@ -184,6 +188,43 @@ apiRouter.get(
     } catch (error: any) {
       res.status(error.statusCode ?? 404).json({
         message: "Something went wrong when fetching products",
+        error: error.message,
+      });
+    }
+  }
+);
+
+apiRouter.post("/transactions", async (req: Request, res: Response) => {
+  try {
+    const transactions = req.body.transactions;
+    const response = await addTransactionsToDb(transactions);
+    res.status(200).json({ message: "Transactions added", content: response });
+  } catch (error: any) {
+    res.status(error.statusCode ?? 404).json({
+      message: "Something went wrong when adding transactions",
+      error: error.message,
+    });
+  }
+});
+
+apiRouter.get(
+  "/transactions/:user_id",
+  async (
+    req: RequestWithPayload<undefined, { user_id: string }>,
+    res: Response
+  ) => {
+    try {
+      const userId = req.params.user_id as string;
+      const limit = req.query.limit as string;
+      const offset = req.query.offset as string;
+      const response = await getTransactions(userId, limit, offset);
+
+      res
+        .status(200)
+        .json({ message: "Transactions found", content: response });
+    } catch (error: any) {
+      res.status(error.statusCode ?? 404).json({
+        message: "Something went wrong when fetching transactions",
         error: error.message,
       });
     }
