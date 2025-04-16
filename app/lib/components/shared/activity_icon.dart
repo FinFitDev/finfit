@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class ActivityIcon extends StatelessWidget {
+class IconContainer extends StatelessWidget {
   final String icon;
   final double size;
-  const ActivityIcon({super.key, required this.icon, required this.size});
+  final Color? backgroundColor;
+  const IconContainer(
+      {super.key,
+      required this.icon,
+      required this.size,
+      this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +20,8 @@ class ActivityIcon extends StatelessWidget {
       width: size,
       padding: EdgeInsets.all(5),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100), color: colors.secondary),
+          borderRadius: BorderRadius.circular(100),
+          color: backgroundColor ?? colors.secondary),
       child: Center(
         child: SizedBox(
           width: size / 2,

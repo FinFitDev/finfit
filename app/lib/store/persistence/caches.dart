@@ -1,7 +1,3 @@
-import 'package:excerbuys/types/user.dart';
-import 'package:excerbuys/utils/backend/utils.dart';
-import 'package:excerbuys/utils/fetching/utils.dart';
-
 class Cache<T> {
   final Map<String, T> _cache = {};
 

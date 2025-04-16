@@ -30,9 +30,9 @@ export const resolveSendResetPasswordMail = async (email: string) => {
   const salt = await bcrypt.genSalt(10);
   const hashed_code = await bcrypt.hash(code, salt);
 
-  await insertCodeToDb(hashed_code, foundUser.rows[0].id);
+  await insertCodeToDb(hashed_code, foundUser.rows[0].uuid);
 
-  return foundUser.rows[0].id;
+  return foundUser.rows[0].uuid;
 };
 
 export const generatePasswordResetEmail = async (

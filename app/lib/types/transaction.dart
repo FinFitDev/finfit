@@ -1,11 +1,10 @@
-import 'package:excerbuys/types/owner.dart';
 import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/types/user.dart';
 
 class ITransactionEntry {
   final String uuid;
   final String type;
-  final String createdAt;
+  final DateTime createdAt;
   final double? amountFinpoints;
   final IProductEntry? product;
   final User? secondUser;
@@ -38,7 +37,7 @@ class ITransactionEntry {
           ? User.fromJson(json['second_user'])
           : null,
       amountFinpoints: (json['amount_finpoints'] as num?)?.toDouble(),
-      createdAt: json['created_at'],
+      createdAt: DateTime.parse(json['created_at']),
       product: json['product'] != null
           ? IProductEntry.fromJson(json['product'])
           : null,

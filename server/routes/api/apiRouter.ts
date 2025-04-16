@@ -142,11 +142,11 @@ apiRouter.get(
   "/trainings/:id",
   async (req: RequestWithPayload<undefined, { id: string }>, res: Response) => {
     try {
-      const user_id = req.params.id;
+      const userId = req.params.id;
       const limit = req.query.limit;
       const offset = req.query.offset;
       const response = await getUserTrainings(
-        user_id,
+        userId,
         limit ? +limit : undefined,
         offset ? +offset : undefined
       );
@@ -217,7 +217,11 @@ apiRouter.get(
       const userId = req.params.user_id as string;
       const limit = req.query.limit as string;
       const offset = req.query.offset as string;
-      const response = await getTransactions(userId, limit, offset);
+      const response = await getTransactions(
+        userId,
+        limit ? +limit : undefined,
+        offset ? +offset : undefined
+      );
 
       res
         .status(200)

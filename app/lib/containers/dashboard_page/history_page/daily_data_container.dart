@@ -1,13 +1,17 @@
 import 'package:excerbuys/components/dashboard_page/history_page/calendar.dart';
 import 'package:excerbuys/components/dashboard_page/home_page/activity_card/steps_activity_card.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/recent_training_section.dart';
+import 'package:excerbuys/containers/dashboard_page/home_page/transactions_section.dart';
 import 'package:excerbuys/store/controllers/activity/steps_controller.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard/history_controller.dart';
+import 'package:excerbuys/store/controllers/shop/transactions_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
+import 'package:excerbuys/types/transaction.dart';
 import 'package:excerbuys/utils/activity/steps.dart';
 import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -54,22 +58,36 @@ class _DailyDataContainerState extends State<DailyDataContainer> {
                             stream: trainingsController.userTrainingsStream,
                             builder: (context, snapshot) {
                               final Map<String, ITrainingEntry> trainings =
-                                  snapshot.hasData
-                                      ? Map.fromEntries(
-                                          snapshot.data!.content.entries
-                                              .toList()
-                                              .where((element) =>
-                                                  areDatesEqualRespectToDay(
-                                                      element.value.createdAt,
-                                                      DateTime.now().subtract(
-                                                          Duration(
-                                                              days: daysSnapshot
-                                                                      .data ??
-                                                                  0)))))
-                                      : {};
+                                  getFilteredEntries(
+                                      snapshot.data?.content,
+                                      (element) => areDatesEqualRespectToDay(
+                                          element.value.createdAt,
+                                          DateTime.now().subtract(Duration(
+                                              days: daysSnapshot.data ?? 0))));
+
                               return RecentTrainingSection(
                                 isLoading: snapshot.data?.isLoading ?? false,
                                 recentTraining: trainings,
+                                isDaily: true,
+                              );
+                            }),
+                        StreamBuilder<
+                                ContentWithLoading<
+                                    Map<String, ITransactionEntry>>>(
+                            stream:
+                                transactionsController.allTransactionsStream,
+                            builder: (context, snapshot) {
+                              final Map<String, ITransactionEntry>
+                                  transactions = getFilteredEntries(
+                                      snapshot.data?.content,
+                                      (element) => areDatesEqualRespectToDay(
+                                          element.value.createdAt,
+                                          DateTime.now().subtract(Duration(
+                                              days: daysSnapshot.data ?? 0))));
+
+                              return TransactionsSection(
+                                isLoading: snapshot.data?.isLoading ?? false,
+                                recentTransactions: transactions,
                                 isDaily: true,
                               );
                             }),

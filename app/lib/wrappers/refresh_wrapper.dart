@@ -5,8 +5,12 @@ import 'package:flutter/material.dart';
 class RefreshWrapper extends StatefulWidget {
   final Future<void> Function() onRefresh;
   final Widget child;
+  final double? edgeOffset;
   const RefreshWrapper(
-      {super.key, required this.onRefresh, required this.child});
+      {super.key,
+      required this.onRefresh,
+      required this.child,
+      this.edgeOffset});
 
   @override
   State<RefreshWrapper> createState() => _RefreshWrapperState();
@@ -38,7 +42,7 @@ class _RefreshWrapperState extends State<RefreshWrapper> {
             limitRefresh();
           }
         },
-        edgeOffset: 16,
+        edgeOffset: widget.edgeOffset ?? 16,
         color: Theme.of(context).colorScheme.secondary,
         child: widget.child);
   }

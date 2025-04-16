@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:math';
 
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -69,4 +71,22 @@ class Debouncer {
 
 bool isNetworkImage(String imageUrl) {
   return imageUrl.contains('http://') || imageUrl.contains('https://');
+}
+
+Map<String, T> getTopRecentEntries<T extends Object>(Map<String, T>? data,
+    int Function(MapEntry<String, T>, MapEntry<String, T>) sortFunc, int n) {
+  if (data == null) return {};
+
+  final entries = data.entries.toList()..sort(sortFunc);
+
+  return Map.fromEntries(entries.take(n));
+}
+
+Map<String, T> getFilteredEntries<T extends Object>(
+    Map<String, T>? data, bool Function(MapEntry<String, T>) filterFunc) {
+  if (data == null) return {};
+
+  final entries = data.entries.toList().where(filterFunc);
+
+  return Map.fromEntries(entries);
 }

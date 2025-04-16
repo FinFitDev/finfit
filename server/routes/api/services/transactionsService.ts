@@ -1,8 +1,13 @@
 import {
+  fetchRecentUserTransactions,
   fetchTransactions,
   insertTransactions,
 } from "../../../models/transactionsModel";
-import { ITransactionInsert } from "../../../shared/types";
+import {
+  ITrainingEntryResponse,
+  ITransactionEntryResponse,
+  ITransactionInsert,
+} from "../../../shared/types";
 
 export const addTransactionsToDb = async (
   transactions: ITransactionInsert[]
@@ -17,18 +22,34 @@ export const addTransactionsToDb = async (
 
 export const getTransactions = async (
   userId: string,
-  limit?: string,
-  offset?: string
+  limit?: number,
+  offset?: number
 ) => {
   if (!userId) {
     throw new Error("No userId provided");
   }
 
-  const response = await fetchTransactions(
-    userId,
-    +(limit ?? 20),
-    +(offset ?? 0)
-  );
+  // Fetch recent trainings if no offset or offset is 0
+  let foundTransactions =
+    !offset || offset === 0
+      ? await fetchRecentUserTransactions(userId)
+      : undefined;
 
-  return response.rows;
+  // If offset exists or we need more data based on row count
+  if (offset || (foundTransactions?.rowCount ?? 0) < (limit ?? 0)) {
+    const local = await fetchTransactions(
+      userId,
+      (limit ?? 0) - (foundTransactions?.rowCount ?? 0),
+      (offset ?? 0) + (foundTransactions?.rowCount ?? 0)
+    );
+    foundTransactions = foundTransactions
+      ? {
+          ...foundTransactions,
+          rows: [...foundTransactions.rows, ...local.rows],
+          rowCount: (foundTransactions.rowCount ?? 0) + (local.rowCount ?? 0),
+        }
+      : local;
+  }
+
+  return foundTransactions?.rows as ITransactionEntryResponse[];
 };

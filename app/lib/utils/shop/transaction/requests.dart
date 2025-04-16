@@ -2,12 +2,13 @@ import 'package:excerbuys/types/transaction.dart';
 import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
 
-Future<List<ITransactionEntry>?> loadTransactionRequest(String userId) async {
+Future<List<ITransactionEntry>?> loadTransactionRequest(
+    String userId, int? limit, int? offset) async {
   final List<ITransactionEntry> result = [];
   try {
     final res = await handleBackendRequests(
       method: HTTP_METHOD.GET,
-      endpoint: 'api/v1/transactions/$userId',
+      endpoint: 'api/v1/transactions/$userId?limit=$limit&offset=$offset',
     );
 
     if (res['error'] != null) {

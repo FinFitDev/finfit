@@ -119,7 +119,7 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
                       children: [
                         Row(
                           children: [
-                            ActivityIcon(
+                            IconContainer(
                                 icon: _activityMetadata!.icon, size: 80),
                             SizedBox(
                               width: 16,

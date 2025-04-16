@@ -65,7 +65,7 @@ export interface IProduct {
   uuid: string;
   name: string;
   description: string;
-  owner: string;
+  owner: IProductOwner;
   original_price: number;
   finpoints_price: number;
   discount: number;
@@ -77,9 +77,27 @@ export interface IProduct {
   isAffordable?: boolean;
 }
 
+export interface IProductOwner {
+  uuid: string;
+  name: string;
+  description: string;
+  createdAt: string;
+  link?: string;
+  image?: string;
+}
+
 export interface ITransactionInsert {
   amount_finpoints: number;
   user_id: string;
   second_user_ids?: string[];
   product_ids?: string[];
+}
+
+export interface ITransactionEntryResponse {
+  uuid: number;
+  created_at: string;
+  amount_finpoints?: number;
+  second_user?: Partial<IUser>;
+  product?: IProduct;
+  user_id?: number;
 }

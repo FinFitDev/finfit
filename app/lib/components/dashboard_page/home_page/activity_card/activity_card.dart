@@ -12,7 +12,6 @@ class ActivityCard extends StatefulWidget {
   final ACTIVITY_TYPE activityType;
   final int points;
   final String date;
-  final bool? isPurchase;
   final int? calories;
   final int? duration;
 
@@ -21,7 +20,6 @@ class ActivityCard extends StatefulWidget {
     required this.activityType,
     required this.date,
     required this.points,
-    this.isPurchase,
     this.calories,
     this.duration,
     required this.onPressed,
@@ -39,7 +37,6 @@ class _ActivityCardState extends State<ActivityCard> {
 
     final ActivityMetadata activityMetadata =
         getActivityMetadata(widget.activityType);
-    final color = widget.points >= 0 ? colors.secondary : colors.error;
 
     return RippleWrapper(
       onPressed: () {
@@ -47,15 +44,11 @@ class _ActivityCardState extends State<ActivityCard> {
       },
       child: Container(
         height: 75,
-        padding: EdgeInsets.all(10),
         color: Colors.transparent,
+        padding: EdgeInsets.all(10),
         child: Row(
           children: [
-            widget.isPurchase == true
-                ? SizedBox(
-                    height: 36,
-                  )
-                : ActivityIcon(icon: activityMetadata.icon, size: 50),
+            IconContainer(icon: activityMetadata.icon, size: 50),
             SizedBox(
               width: 12,
             ),
@@ -73,11 +66,9 @@ class _ActivityCardState extends State<ActivityCard> {
                             builder: (context, snapshot) {
                               final bool isHidden = snapshot.data ?? false;
                               return Text(
-                                  isHidden
-                                      ? '***** finpoints'
-                                      : '${widget.points.abs().toString()} finpoints',
+                                  'Earned ${isHidden ? '***** finpoints' : '${widget.points.abs().toString()} finpoints'}',
                                   style: texts.headlineMedium?.copyWith(
-                                    color: color,
+                                    color: colors.secondary,
                                   ));
                             }),
                       ),

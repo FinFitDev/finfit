@@ -77,58 +77,51 @@ class _ShopItemCardState extends State<ShopItemCard> {
                                   color: colors.primary.withAlpha(190),
                                   padding: EdgeInsets.symmetric(
                                       vertical: 8, horizontal: 12),
-                                  height: 55,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                  height: 62,
+                                  child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Expanded(
-                                        flex: 2,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                      Text(
+                                        widget.name,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: texts.headlineMedium?.copyWith(
+                                          color: colors.tertiary,
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 2),
+                                        decoration: BoxDecoration(
+                                            color:
+                                                colors.tertiary.withAlpha(10),
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        child: Row(
                                           children: [
+                                            ImageComponent(
+                                              size: 14,
+                                              image: widget.sellerImage,
+                                              filterColor: isProgress
+                                                  ? Colors.grey
+                                                  : Colors.transparent,
+                                            ),
+                                            SizedBox(
+                                              width: 4,
+                                            ),
                                             Text(
-                                              widget.name,
+                                              widget.sellerName,
                                               overflow: TextOverflow.ellipsis,
-                                              style: texts.headlineMedium
-                                                  ?.copyWith(
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w300,
                                                 color: colors.tertiary,
                                               ),
                                             ),
-                                            Row(
-                                              children: [
-                                                ImageComponent(
-                                                  size: 14,
-                                                  image: widget.sellerImage,
-                                                  filterColor: isProgress
-                                                      ? Colors.grey
-                                                      : Colors.transparent,
-                                                ),
-                                                SizedBox(
-                                                  width: 4,
-                                                ),
-                                                Text(
-                                                  widget.sellerName,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    fontSize: 11,
-                                                    fontWeight: FontWeight.w300,
-                                                    color: colors.tertiary,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
                                           ],
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
                                       ),
                                     ],
                                   ),

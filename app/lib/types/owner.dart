@@ -1,6 +1,3 @@
-import 'package:excerbuys/types/enums.dart';
-import 'package:excerbuys/utils/shop/product/utils.dart';
-
 class IProductOwnerEntry {
   final String uuid;
   final String name;

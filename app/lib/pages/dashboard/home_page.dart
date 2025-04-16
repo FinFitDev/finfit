@@ -6,16 +6,20 @@ import 'package:excerbuys/containers/dashboard_page/home_page/available_offers_c
 import 'package:excerbuys/containers/dashboard_page/home_page/balance_container.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/news_container.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/progress_offers_container.dart';
+import 'package:excerbuys/containers/dashboard_page/home_page/transactions_section.dart';
 import 'package:excerbuys/store/controllers/activity/activity_controller.dart';
 import 'package:excerbuys/store/controllers/activity/steps_controller.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/products_controller.dart';
+import 'package:excerbuys/store/controllers/shop/transactions_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/product.dart';
+import 'package:excerbuys/types/transaction.dart';
+import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/refresh_wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -156,29 +160,32 @@ class _HomePageState extends State<HomePage> {
                                 stream: trainingsController.userTrainingsStream,
                                 builder: (context, snapshot) {
                                   final Map<String, ITrainingEntry> trainings =
-                                      snapshot.hasData
-                                          ? Map.fromEntries(
-                                              (snapshot.data!.content.entries
-                                                      .toList()
-                                                    ..sort((a, b) => b
-                                                        .value.createdAt
-                                                        .compareTo(
-                                                            a.value.createdAt)))
-                                                  .sublist(
-                                                0,
-                                                min(
-                                                    snapshot.data!.content
-                                                        .values.length,
-                                                    5),
-                                              ),
-                                            )
-                                          : {};
+                                      getTopRecentEntries(
+                                          snapshot.data?.content,
+                                          (a, b) => b.value.createdAt
+                                              .compareTo(a.value.createdAt),
+                                          5);
 
                                   return RecentTrainingSection(
                                       isLoading:
                                           snapshot.data?.isLoading ?? false,
                                       recentTraining: trainings);
                                 }),
+                            StreamBuilder<
+                                    ContentWithLoading<
+                                        Map<String, ITransactionEntry>>>(
+                                stream: transactionsController
+                                    .allTransactionsStream,
+                                builder: (context, snapshot) {
+                                  final Map<String, ITransactionEntry>
+                                      transactions = getTopRecentEntries(
+                                          snapshot.data?.content,
+                                          (a, b) => b.value.createdAt
+                                              .compareTo(a.value.createdAt),
+                                          5);
+                                  return TransactionsSection(
+                                      recentTransactions: transactions);
+                                })
                           ],
                         ),
                       ),

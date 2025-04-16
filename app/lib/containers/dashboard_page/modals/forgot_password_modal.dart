@@ -1,16 +1,12 @@
 import 'package:excerbuys/components/input_with_icon.dart';
 import 'package:excerbuys/components/modal/modal_header.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
-import 'package:excerbuys/components/shared/profile_image_generator.dart';
 import 'package:excerbuys/store/controllers/auth_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
-import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/utils/user/profile_image.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 class ForgotPasswordModal extends StatefulWidget {
   const ForgotPasswordModal({super.key});

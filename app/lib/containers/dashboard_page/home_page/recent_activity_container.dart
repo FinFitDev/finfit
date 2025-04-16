@@ -20,66 +20,6 @@ class RecentActivityContainer extends StatefulWidget {
 }
 
 class _RecentActivityContainerState extends State<RecentActivityContainer> {
-  final Widget loadingContainer =
-      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-    Padding(
-      padding: const EdgeInsets.only(top: 0),
-      child: UniversalLoaderBox(height: 25, width: 100),
-    ),
-    Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: UniversalLoaderBox(
-          height: 200, width: layoutController.relativeContentWidth),
-    ),
-    Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: UniversalLoaderBox(height: 25, width: 100),
-    ),
-    Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: UniversalLoaderBox(
-          height: 50, width: layoutController.relativeContentWidth),
-    ),
-    Padding(
-      padding: const EdgeInsets.only(top: 5),
-      child: UniversalLoaderBox(
-          height: 50, width: layoutController.relativeContentWidth),
-    ),
-    Padding(
-      padding: const EdgeInsets.only(top: 5),
-      child: UniversalLoaderBox(
-          height: 50, width: layoutController.relativeContentWidth),
-    ),
-  ]);
-
-  final Widget emptyActivity = Builder(builder: (BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-
-    return Container(
-      margin: EdgeInsets.only(top: 30),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            margin: EdgeInsets.only(bottom: 12),
-            child: Text(
-              'No activity yet',
-              style: TextStyle(color: colors.tertiary, fontSize: 16),
-            ),
-          ),
-          Text(
-            textAlign: TextAlign.center,
-            'Start working out to earn fitness points and claim your discounts in the shop!',
-            style: TextStyle(
-              color: colors.tertiaryContainer,
-            ),
-          ),
-        ],
-      ),
-    );
-  });
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -145,4 +85,64 @@ class _RecentActivityContainerState extends State<RecentActivityContainer> {
       ),
     );
   }
+
+  final Widget loadingContainer =
+      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    Padding(
+      padding: const EdgeInsets.only(top: 0),
+      child: UniversalLoaderBox(height: 25, width: 100),
+    ),
+    Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: UniversalLoaderBox(
+          height: 200, width: layoutController.relativeContentWidth),
+    ),
+    Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: UniversalLoaderBox(height: 25, width: 100),
+    ),
+    Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: UniversalLoaderBox(
+          height: 50, width: layoutController.relativeContentWidth),
+    ),
+    Padding(
+      padding: const EdgeInsets.only(top: 5),
+      child: UniversalLoaderBox(
+          height: 50, width: layoutController.relativeContentWidth),
+    ),
+    Padding(
+      padding: const EdgeInsets.only(top: 5),
+      child: UniversalLoaderBox(
+          height: 50, width: layoutController.relativeContentWidth),
+    ),
+  ]);
+
+  final Widget emptyActivity = Builder(builder: (BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+
+    return Container(
+      margin: EdgeInsets.only(top: 30),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            margin: EdgeInsets.only(bottom: 12),
+            child: Text(
+              'No activity yet',
+              style: TextStyle(color: colors.tertiary, fontSize: 16),
+            ),
+          ),
+          Text(
+            textAlign: TextAlign.center,
+            'Start working out to earn fitness points and claim your discounts in the shop!',
+            style: TextStyle(
+              color: colors.tertiaryContainer,
+            ),
+          ),
+        ],
+      ),
+    );
+  });
 }
