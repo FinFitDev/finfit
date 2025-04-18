@@ -1,4 +1,5 @@
 import { pool } from "../shared/utils/db";
+import { insertTransactions } from "./transactionsModel";
 
 export const fetchAllUsers = async (limit: number, offset: number) => {
   const response = await pool.query(
@@ -180,6 +181,17 @@ export const transferPointsTransaction = async (
         [fractionAmount, recipientId]
       );
     }
+
+    await insertTransactions(
+      [
+        {
+          second_user_ids: recipientsIds,
+          user_id: userId,
+          amount_finpoints: fractionAmount,
+        },
+      ],
+      client
+    );
 
     await client.query("COMMIT");
 

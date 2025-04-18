@@ -63,9 +63,10 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
 
   @override
   void initState() {
+    super.initState();
+
     updateTotalSteps();
     updateStepsData();
-    super.initState();
   }
 
   @override

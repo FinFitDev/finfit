@@ -40,6 +40,7 @@ class _MainButtonState extends State<MainButton> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1200),

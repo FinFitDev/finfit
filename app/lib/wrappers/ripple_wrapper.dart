@@ -34,6 +34,7 @@ class _RippleWrapperState extends State<RippleWrapper>
   @override
   void initState() {
     super.initState();
+
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 150),
@@ -70,11 +71,11 @@ class _RippleWrapperState extends State<RippleWrapper>
 
   void pressEndCallback() {
     Future.delayed(const Duration(milliseconds: 200), () {
-      if (!isLongPress) {
+      if (!isLongPress && mounted) {
         setState(() {
           isPressed = false;
         });
-        _controller.reverse(); // Animate back to normal size and opacity
+        _controller.reverse();
       }
     });
   }

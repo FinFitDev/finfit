@@ -21,6 +21,7 @@ class _RegenerateImageModalState extends State<RegenerateImageModal> {
   @override
   void initState() {
     super.initState();
+
     setState(() {
       _seed = userController.currentUser?.image;
     });

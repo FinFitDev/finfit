@@ -27,6 +27,7 @@ class _ChooseRecipientsModalState extends State<ChooseRecipientsModal> {
   @override
   void initState() {
     super.initState();
+
     sendController.loadRecentRecipients();
   }
 

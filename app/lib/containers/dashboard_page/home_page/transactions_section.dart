@@ -1,9 +1,11 @@
 import 'package:excerbuys/components/dashboard_page/home_page/transaction_card/transaction_card.dart';
 import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/info/transaction_info_modal.dart';
 import 'package:excerbuys/types/transaction.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/shop/transaction/utils.dart';
+import 'package:excerbuys/wrappers/modal_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class TransactionsSection extends StatefulWidget {
@@ -58,8 +60,9 @@ class _TransactionsSectionState extends State<TransactionsSection> {
 
   @override
   void initState() {
-    groupData();
     super.initState();
+
+    groupData();
   }
 
   @override
@@ -76,7 +79,7 @@ class _TransactionsSectionState extends State<TransactionsSection> {
     final texts = Theme.of(context).textTheme;
 
     return Builder(builder: (BuildContext context) {
-      if (widget.recentTransactions.isEmpty) {
+      if (widget.recentTransactions.isEmpty && widget.isLoading != true) {
         return emptyActivity(
             colors, texts, widget.isDaily ?? false, widget.hideTitle ?? false);
       }
@@ -96,7 +99,7 @@ class _TransactionsSectionState extends State<TransactionsSection> {
                 ),
           Builder(builder: (context) {
             if (widget.isLoading == true) {
-              return loadingWorkouts();
+              return loadingTransactions(widget.hideTitle ?? false);
             }
             return ListView.builder(
               padding: EdgeInsets.only(top: widget.hideTitle == true ? 0 : 16),
@@ -161,7 +164,12 @@ class _TransactionsSectionState extends State<TransactionsSection> {
                                       transactionData.product?.finpointsPrice
                                           .round() ??
                                       0,
-                              onPressed: () {},
+                              onPressed: () {
+                                openModal(
+                                    context,
+                                    TransactionInfoModal(
+                                        transactionId: transactionData.uuid));
+                              },
                               date: parseDate(transactionData.createdAt),
                               type: transactionTypeStringToEnum(
                                   transactionData.type),
@@ -221,52 +229,53 @@ Widget emptyActivity(
   );
 }
 
-Widget loadingWorkouts() {
+Widget loadingTransactions(bool hideTitle) {
   return Container(
+      margin: EdgeInsets.only(top: hideTitle ? 0 : 24),
       child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      UniversalLoaderBox(
-        height: 20,
-        width: 200,
-      ),
-      SizedBox(
-        height: 8,
-      ),
-      UniversalLoaderBox(height: 70),
-      SizedBox(
-        height: 16,
-      ),
-      UniversalLoaderBox(
-        height: 20,
-        width: 150,
-      ),
-      SizedBox(
-        height: 8,
-      ),
-      UniversalLoaderBox(height: 70),
-      SizedBox(
-        height: 16,
-      ),
-      UniversalLoaderBox(
-        height: 20,
-        width: 250,
-      ),
-      SizedBox(
-        height: 8,
-      ),
-      UniversalLoaderBox(height: 70),
-      SizedBox(
-        height: 16,
-      ),
-      UniversalLoaderBox(
-        height: 20,
-        width: 150,
-      ),
-      SizedBox(
-        height: 8,
-      ),
-      UniversalLoaderBox(height: 70),
-    ],
-  ));
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          UniversalLoaderBox(
+            height: 20,
+            width: 200,
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          UniversalLoaderBox(height: 70),
+          SizedBox(
+            height: 16,
+          ),
+          UniversalLoaderBox(
+            height: 20,
+            width: 150,
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          UniversalLoaderBox(height: 70),
+          SizedBox(
+            height: 16,
+          ),
+          UniversalLoaderBox(
+            height: 20,
+            width: 250,
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          UniversalLoaderBox(height: 70),
+          SizedBox(
+            height: 16,
+          ),
+          UniversalLoaderBox(
+            height: 20,
+            width: 150,
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          UniversalLoaderBox(height: 70),
+        ],
+      ));
 }

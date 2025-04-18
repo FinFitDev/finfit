@@ -21,6 +21,7 @@ class _UniversalLoaderBoxState extends State<UniversalLoaderBox>
   @override
   void initState() {
     super.initState();
+
     Random random = Random();
 
     _animationController = AnimationController(

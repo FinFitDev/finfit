@@ -66,7 +66,7 @@ class _ActivityCardState extends State<ActivityCard> {
                             builder: (context, snapshot) {
                               final bool isHidden = snapshot.data ?? false;
                               return Text(
-                                  'Earned ${isHidden ? '***** finpoints' : '${widget.points.abs().toString()} finpoints'}',
+                                  '+${isHidden ? '***** finpoints' : '${widget.points.abs().toString()} finpoints'}',
                                   style: texts.headlineMedium?.copyWith(
                                     color: colors.secondary,
                                   ));

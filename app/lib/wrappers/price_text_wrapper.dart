@@ -38,6 +38,7 @@ class _PriceTextWrapperState extends State<PriceTextWrapper> {
   @override
   void initState() {
     super.initState();
+
     splitPrice(widget.price);
   }
 

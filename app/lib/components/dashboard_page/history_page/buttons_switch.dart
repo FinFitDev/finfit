@@ -32,9 +32,9 @@ class ButtonsSwitch extends StatelessWidget {
                   child: CategoryButton(
                     title: item['title'],
                     icon: item['icon'],
-                    activeBackgroundColor: colors.primary,
-                    backgroundColor: colors.primaryContainer,
-                    activeTextColor: colors.secondary,
+                    activeBackgroundColor: colors.primaryContainer,
+                    backgroundColor: colors.primary,
+                    activeTextColor: colors.tertiaryContainer,
                     textColor: colors.tertiaryContainer,
                     onPressed: () {
                       onPressed(item);

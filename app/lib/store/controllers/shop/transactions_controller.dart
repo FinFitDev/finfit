@@ -5,12 +5,17 @@ import 'package:excerbuys/utils/shop/transaction/requests.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
-const TRANSACTION_DATA_CHUNK_SIZE = 5;
+const TRANSACTION_DATA_CHUNK_SIZE = 5; // TODO change
 
 class TransactionsController {
   reset() {
     _allTransactions.add(ContentWithLoading(content: {}));
     setTransactionsLoading(false);
+  }
+
+  refresh() {
+    _allTransactions.add(ContentWithLoading(content: {}));
+    fetchTransactions();
   }
 
   final BehaviorSubject<ContentWithLoading<Map<String, ITransactionEntry>>>
@@ -66,6 +71,7 @@ class TransactionsController {
       }
 
       setTransactionsLoading(true);
+      await Future.delayed(Duration(milliseconds: 2000)); // TODO remove
 
       final List<ITransactionEntry>? fetchedTransactions =
           await loadTransactionRequest(
@@ -94,13 +100,12 @@ class TransactionsController {
   }
 
   Future<void> lazyLoadMoreTransactions() async {
-    print('fetching more');
     try {
       if (userController.currentUser?.uuid == null) {
         throw Exception('Current user is null');
       }
       setLoadingMoreData(true);
-      await Future.delayed(Duration(milliseconds: 3000));
+      await Future.delayed(Duration(milliseconds: 2000)); // TODO remove
 
       List<ITransactionEntry> parsedTransactionData =
           await loadTransactionRequest(userController.currentUser!.uuid,
@@ -128,7 +133,6 @@ class TransactionsController {
     } catch (error) {
       debugPrint("Exception while lazy loading more transaction data: $error");
     } finally {
-      print('this finished');
       setLoadingMoreData(false);
     }
   }

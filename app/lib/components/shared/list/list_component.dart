@@ -2,7 +2,7 @@ import 'package:excerbuys/components/shared/list/list_entry.dart';
 import 'package:flutter/material.dart';
 
 class ListComponent extends StatelessWidget {
-  final Map<String, String> data;
+  final Map<String, Object> data;
   final String? summary;
   final Color? summaryColor;
 
@@ -25,7 +25,13 @@ class ListComponent extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: ListEntry(title: entry.key, label: entry.value),
+                    child: ListEntry(
+                      title: entry.key,
+                      label:
+                          entry.value is String ? entry.value as String : null,
+                      component:
+                          entry.value is Widget ? entry.value as Widget : null,
+                    ),
                   ),
                   Container(
                     margin: EdgeInsets.symmetric(vertical: 12),
@@ -41,7 +47,7 @@ class ListComponent extends StatelessWidget {
                     child: ListEntry(
                       title: 'Summary',
                       label: summary!,
-                      isFeatured: true,
+                      textColor: summaryColor,
                     ),
                   )
                 : SizedBox.shrink()

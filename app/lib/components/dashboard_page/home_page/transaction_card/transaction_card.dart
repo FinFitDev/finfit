@@ -61,129 +61,105 @@ class _TransactionCardState extends State<TransactionCard> {
         : colors.secondary;
 
     return RippleWrapper(
-        child: Container(
-            color: Colors.transparent,
-            height: 75,
-            padding: EdgeInsets.all(10),
-            child: Row(
-              children: [
-                widget.type == TRANSACTION_TYPE.PURCHASE
-                    ? ImageComponent(
-                        size: 50,
-                        image: widget.productImage,
-                      )
-                    : IconContainer(
-                        icon: widget.type == TRANSACTION_TYPE.RECEIVE
-                            ? 'assets/svg/receiveArrow.svg'
-                            : 'assets/svg/sendArrow.svg',
-                        size: 50,
-                        backgroundColor: color,
-                      ),
-                SizedBox(
-                  width: 12,
-                ),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(right: 6),
-                            child: StreamBuilder<bool>(
-                                stream: dashboardController.balanceHiddenStream,
-                                builder: (context, snapshot) {
-                                  final bool isHidden = snapshot.data ?? false;
-                                  return Text(
-                                      '${getTransactionTypeText(widget.type)} ${isHidden ? '***** finpoints' : '${widget.points.abs().toString()} finpoints'}',
-                                      style: texts.headlineMedium?.copyWith(
-                                        color: color,
-                                      ));
-                                }),
-                          ),
-                          Text(
-                            widget.date
-                                .split(' ')[widget.date.split(' ').length - 1],
-                            style: TextStyle(
-                                color: colors.tertiaryContainer, fontSize: 12),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Row(
-                        children: [
-                          widget.type == TRANSACTION_TYPE.PURCHASE
-                              ? Text(
-                                  'Payed ${widget.productPrice?.toStringAsFixed(2)} PLN',
-                                  style: TextStyle(
-                                    color: colors.tertiaryContainer,
-                                    fontSize: 13,
-                                  ),
-                                )
-                              : widget.type == TRANSACTION_TYPE.RECEIVE ||
-                                      widget.type == TRANSACTION_TYPE.SEND
-                                  ? Row(
-                                      children: [
-                                        Text(
-                                          widget.type ==
-                                                  TRANSACTION_TYPE.RECEIVE
-                                              ? 'From:'
-                                              : 'To:',
-                                          style: TextStyle(
-                                            color: colors.tertiaryContainer,
-                                            fontSize: 13,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 4,
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 8, vertical: 2),
-                                          decoration: BoxDecoration(
-                                              color:
-                                                  colors.tertiary.withAlpha(10),
-                                              borderRadius:
-                                                  BorderRadius.circular(5)),
-                                          child: Row(
-                                            children: [
-                                              ProfileImageGenerator(
-                                                size: 13,
-                                                seed: widget.userImage,
-                                              ),
-                                              SizedBox(
-                                                width: 4,
-                                              ),
-                                              Text(
-                                                widget.username ?? 'Unknown',
-                                                style: TextStyle(
-                                                  color:
-                                                      colors.tertiaryContainer,
-                                                  fontSize: 13,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : Text(
-                                      'No additional data',
-                                      style: TextStyle(
-                                        color: colors.tertiaryContainer,
-                                        fontSize: 13,
-                                      ),
+      onPressed: widget.onPressed,
+      child: Container(
+          color: Colors.transparent,
+          height: 75,
+          padding: EdgeInsets.all(10),
+          child: Row(
+            children: [
+              Stack(
+                children: [
+                  widget.type == TRANSACTION_TYPE.PURCHASE
+                      ? ImageComponent(
+                          size: 50,
+                          image: widget.productImage,
+                        )
+                      : ProfileImageGenerator(
+                          size: 50,
+                          seed: widget.userImage,
+                        ),
+                  widget.type != TRANSACTION_TYPE.PURCHASE
+                      ? Positioned(
+                          right: 0,
+                          bottom: 0,
+                          child: IconContainer(
+                            icon: widget.type == TRANSACTION_TYPE.RECEIVE
+                                ? 'assets/svg/receiveArrow.svg'
+                                : 'assets/svg/sendArrow.svg',
+                            size: 20,
+                            backgroundColor: color,
+                          ))
+                      : SizedBox.shrink()
+                ],
+              ),
+              SizedBox(
+                width: 12,
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(right: 6),
+                          child: StreamBuilder<bool>(
+                              stream: dashboardController.balanceHiddenStream,
+                              builder: (context, snapshot) {
+                                final bool isHidden = snapshot.data ?? false;
+                                return Text(
+                                    '${widget.type == TRANSACTION_TYPE.RECEIVE ? '+' : '-'}${isHidden ? '***** finpoints' : '${widget.points.abs().toString()} finpoints'}',
+                                    style: texts.headlineMedium?.copyWith(
+                                      color: color,
+                                    ));
+                              }),
+                        ),
+                        Text(
+                          widget.date
+                              .split(' ')[widget.date.split(' ').length - 1],
+                          style: TextStyle(
+                              color: colors.tertiaryContainer, fontSize: 12),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 4,
+                    ),
+                    Row(
+                      children: [
+                        widget.type == TRANSACTION_TYPE.PURCHASE
+                            ? Text(
+                                'Payed ${widget.productPrice?.toStringAsFixed(2)} PLN',
+                                style: TextStyle(
+                                  color: colors.tertiaryContainer,
+                                  fontSize: 13,
+                                ),
+                              )
+                            : widget.type == TRANSACTION_TYPE.RECEIVE ||
+                                    widget.type == TRANSACTION_TYPE.SEND
+                                ? Text(
+                                    widget.username ?? 'Unknown',
+                                    style: TextStyle(
+                                      color: colors.tertiaryContainer,
+                                      fontSize: 13,
                                     ),
-                        ],
-                      )
-                    ],
-                  ),
-                )
-              ],
-            )),
-        onPressed: () {});
+                                  )
+                                : Text(
+                                    'No additional data',
+                                    style: TextStyle(
+                                      color: colors.tertiaryContainer,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                      ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          )),
+    );
   }
 }

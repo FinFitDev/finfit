@@ -31,6 +31,7 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   void initState() {
     super.initState();
+
     loadApp();
   }
 

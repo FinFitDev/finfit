@@ -25,6 +25,11 @@ class TrainingsController {
     _lazyLoadOffset.add(newLazyLoadData);
   }
 
+  refresh() {
+    reset();
+    fetchTrainings();
+  }
+
   final BehaviorSubject<ContentWithLoading<Map<String, ITrainingEntry>>>
       _userTrainings = BehaviorSubject.seeded(ContentWithLoading(content: {}));
   Stream<ContentWithLoading<Map<String, ITrainingEntry>>>
@@ -76,6 +81,8 @@ class TrainingsController {
 
     setTrainingsLoading(true);
     setLoadingMoreData(false);
+
+    await Future.delayed(Duration(milliseconds: 2000)); // TODO remove
 
     final now = DateTime.now();
     final userCreated = userController.currentUser?.createdAt ?? now;
@@ -159,7 +166,7 @@ class TrainingsController {
         throw Exception('Current user is null');
       }
       setLoadingMoreData(true);
-      await Future.delayed(Duration(milliseconds: 3000));
+      await Future.delayed(Duration(milliseconds: 2000)); // TODO remove
 
       List<ITrainingEntry> parsedTrainingData = await loadTrainingsRequest(
               userController.currentUser!.uuid,

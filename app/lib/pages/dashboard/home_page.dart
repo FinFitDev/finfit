@@ -36,8 +36,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    widget.fetchActivity();
     super.initState();
+
+    widget.fetchActivity();
   }
 
   Future<void> onRefresh() async {
@@ -184,7 +185,9 @@ class _HomePageState extends State<HomePage> {
                                               .compareTo(a.value.createdAt),
                                           5);
                                   return TransactionsSection(
-                                      recentTransactions: transactions);
+                                    recentTransactions: transactions,
+                                    isLoading: snapshot.data?.isLoading,
+                                  );
                                 })
                           ],
                         ),

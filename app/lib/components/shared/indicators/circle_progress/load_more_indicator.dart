@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 class LoadMoreIndicator extends StatelessWidget {
   final double? scrollLoadMoreProgress;
   final String? text;
+  final bool? disableText;
 
-  const LoadMoreIndicator({super.key, this.scrollLoadMoreProgress, this.text});
+  const LoadMoreIndicator(
+      {super.key, this.scrollLoadMoreProgress, this.text, this.disableText});
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +25,12 @@ class LoadMoreIndicator extends StatelessWidget {
           SizedBox(
             height: 8,
           ),
-          Text(
-            text ?? 'Load more data',
-            style: TextStyle(fontSize: 13, color: colors.secondary),
-          )
+          disableText != true
+              ? Text(
+                  text ?? 'Load more data',
+                  style: TextStyle(fontSize: 13, color: colors.secondary),
+                )
+              : SizedBox.shrink()
         ],
       ),
     );

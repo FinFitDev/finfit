@@ -1,7 +1,9 @@
 import 'package:excerbuys/store/controllers/activity/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/shop/transactions_controller.dart';
+import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/types/general.dart';
+import 'package:excerbuys/types/transaction.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HisotryController {
@@ -31,13 +33,17 @@ class HisotryController {
   }
 
   Stream<RECENT_DATA_CATEGORY> recentPageUpdateTrigger() {
-    return Rx.combineLatest3(
+    return Rx.combineLatest5(
       historyController.activeCategoryRecentDataStream,
       transactionsController.lazyLoadOffsetStream,
       trainingsController.lazyLoadOffsetStream,
+      trainingsController.userTrainingsStream,
+      transactionsController.allTransactionsStream,
       (RECENT_DATA_CATEGORY category,
           ContentWithLoading<int> transactionsOffset,
-          ContentWithLoading<int> trainingsOffset) {
+          ContentWithLoading<int> trainingsOffset,
+          ContentWithLoading<Map<String, ITrainingEntry>> trainings,
+          ContentWithLoading<Map<String, ITransactionEntry>> transactions) {
         return category;
       },
     );

@@ -230,7 +230,7 @@ class SendController {
         throw 'Invalid data';
       }
 
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(Duration(milliseconds: 2000)); // TODO remove
 
       int? remainingPoints = await resolveSendPointsRequest(
           userController.currentUser!.uuid, chosenUsersIds, totalAmount);

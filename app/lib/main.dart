@@ -38,7 +38,7 @@ class _HealthAppState extends State<HealthApp> {
                 secondaryContainer: Color.fromARGB(255, 7, 66, 114),
                 tertiary: const Color.fromARGB(255, 0, 0, 0),
                 tertiaryContainer: Color.fromARGB(255, 184, 184, 184),
-                error: Color(0xFFFA6161)),
+                error: Color.fromARGB(255, 255, 132, 132)),
             textTheme: TextTheme(
                 headlineLarge: TextStyle(
                   fontSize: 20,

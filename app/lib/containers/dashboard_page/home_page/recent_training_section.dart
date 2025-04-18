@@ -62,8 +62,9 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
 
   @override
   void initState() {
-    groupData();
     super.initState();
+
+    groupData();
   }
 
   @override
@@ -80,7 +81,7 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
     final texts = Theme.of(context).textTheme;
 
     return Builder(builder: (BuildContext context) {
-      if (widget.recentTraining.isEmpty) {
+      if (widget.recentTraining.isEmpty && widget.isLoading != true) {
         return emptyActivity(
             colors, texts, widget.isDaily ?? false, widget.hideTitle ?? false);
       }
@@ -101,7 +102,7 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
                 ),
           Builder(builder: (context) {
             if (widget.isLoading == true) {
-              return loadingWorkouts();
+              return loadingWorkouts(widget.hideTitle ?? false);
             }
             return ListView.builder(
               padding: EdgeInsets.only(top: widget.hideTitle == true ? 0 : 16),
@@ -222,9 +223,9 @@ Widget emptyActivity(
   );
 }
 
-Widget loadingWorkouts() {
+Widget loadingWorkouts(bool hideTitle) {
   return Container(
-      margin: EdgeInsets.only(top: 24),
+      margin: EdgeInsets.only(top: hideTitle ? 0 : 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

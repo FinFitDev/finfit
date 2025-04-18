@@ -25,6 +25,7 @@ class _ProgressOffersContainerState extends State<ProgressOffersContainer> {
   @override
   void initState() {
     super.initState();
+
     _scrollController.addListener(_onScroll);
   }
 

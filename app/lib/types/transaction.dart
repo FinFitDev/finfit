@@ -37,7 +37,7 @@ class ITransactionEntry {
           ? User.fromJson(json['second_user'])
           : null,
       amountFinpoints: (json['amount_finpoints'] as num?)?.toDouble(),
-      createdAt: DateTime.parse(json['created_at']),
+      createdAt: DateTime.parse(json['created_at']).toLocal(),
       product: json['product'] != null
           ? IProductEntry.fromJson(json['product'])
           : null,

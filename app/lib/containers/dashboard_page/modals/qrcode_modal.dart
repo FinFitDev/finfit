@@ -42,7 +42,7 @@ class QrcodeModal extends StatelessWidget {
                       data: userController.currentUser!.uuid,
                       version: QrVersions.auto,
                       dataModuleStyle: QrDataModuleStyle(
-                        dataModuleShape: QrDataModuleShape.circle,
+                        dataModuleShape: QrDataModuleShape.square,
                         color: colors.primaryFixed,
                       ),
                       eyeStyle: QrEyeStyle(

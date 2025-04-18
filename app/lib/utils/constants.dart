@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 
 const String APP_TITLE = 'FinFit';
-const String BACKEND_BASE_URL = 'http://192.168.2.100:3000/';
+const String BACKEND_BASE_URL = 'http://192.168.1.8:3000/';
 GlobalKey<NavigatorState> NAVIGATOR_KEY = GlobalKey<NavigatorState>();
 RegExp EMAIL_REGEX = RegExp(r'^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$');
 const String WEB_CLIENT_GOOGLE_ID =

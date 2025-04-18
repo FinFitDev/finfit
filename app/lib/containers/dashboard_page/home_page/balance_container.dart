@@ -23,10 +23,11 @@ class _BalanceContainerState extends State<BalanceContainer> {
 
   @override
   void initState() {
+    super.initState();
+
     setState(() {
       _balance = widget.balance;
     });
-    super.initState();
   }
 
   @override

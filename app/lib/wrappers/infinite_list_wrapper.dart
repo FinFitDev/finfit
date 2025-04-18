@@ -33,6 +33,8 @@ class InfiniteListWrapper extends StatefulWidget {
 class _InfiniteListWrapperState extends State<InfiniteListWrapper>
     with TickerProviderStateMixin {
   final ValueNotifier<double> scrollMoreProgress = ValueNotifier(0.0);
+  final ValueNotifier<double> refreshProgress = ValueNotifier(0.0);
+
   final ValueNotifier<bool> isScrolling = ValueNotifier(false);
   final ScrollController _scrollController = ScrollController();
   late final AnimationController _animationController;
@@ -46,6 +48,16 @@ class _InfiniteListWrapperState extends State<InfiniteListWrapper>
 
     scrollMoreProgress.value = (_scrollController.position.pixels -
         _scrollController.position.maxScrollExtent);
+  }
+
+  void setRefreshProgress() {
+    if (!_scrollController.hasClients) return;
+
+    if (widget.isRefreshing == true) {
+      return;
+    }
+
+    refreshProgress.value = -(_scrollController.position.pixels);
   }
 
   @override
@@ -66,17 +78,22 @@ class _InfiniteListWrapperState extends State<InfiniteListWrapper>
     // Ensure ScrollController is attached before accessing position
     if (mounted && _scrollController.hasClients) {
       _scrollController.removeListener(setLoadMoreDataProgressIndicator);
+      _scrollController.removeListener(setRefreshProgress);
+
       if (widget.on) {
         _scrollController.addListener(setLoadMoreDataProgressIndicator);
+        _scrollController.addListener(setRefreshProgress);
       }
     }
   }
 
   @override
   void dispose() {
-    super.dispose();
     _scrollController.removeListener(setLoadMoreDataProgressIndicator);
+    _scrollController.removeListener(setRefreshProgress);
     _scrollController.dispose();
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -84,56 +101,83 @@ class _InfiniteListWrapperState extends State<InfiniteListWrapper>
     final colors = Theme.of(context).colorScheme;
 
     return Listener(
-      onPointerUp: (event) {
-        isScrolling.value = false;
+        onPointerUp: (event) {
+          isScrolling.value = false;
 
-        if (!widget.on) {
-          return;
-        }
-        // if the progress indicator for load more data is full and we relase the scrollview
-        if (scrollMoreProgress.value > 100) {
-          triggerVibrate(FeedbackType.light);
-          if (widget.canFetchMore == true) {
-            scrollMoreProgress.value = 0;
-            widget.onLoadMore?.call();
+          if (!widget.on) {
+            return;
           }
-        } else if (_scrollController.position.pixels < -50) {}
-      },
-      onPointerDown: (event) {
-        isScrolling.value = true;
-      },
-      child: SingleChildScrollView(
+          // if the progress indicator for load more data is full and we relase the scrollview
+          if (scrollMoreProgress.value > 100) {
+            triggerVibrate(FeedbackType.light);
+            if (widget.canFetchMore == true) {
+              scrollMoreProgress.value = 0;
+              widget.onLoadMore?.call();
+            }
+          } else if (refreshProgress.value > 100) {
+            triggerVibrate(FeedbackType.light);
+            if (widget.isRefreshing == false) {
+              refreshProgress.value = 0;
+              widget.onRefresh?.call();
+            }
+          }
+        },
+        onPointerDown: (event) {
+          isScrolling.value = true;
+        },
+        child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           controller: _scrollController,
           padding: widget.padding ?? EdgeInsets.all(0),
-          child: Column(
+          child: Stack(
             children: [
-              widget.child,
+              Column(
+                children: [
+                  widget.child,
+                  widget.on
+                      ? Container(
+                          margin: EdgeInsets.only(
+                              top: widget.isLoadingMoreData == true ? 20 : 0,
+                              bottom:
+                                  widget.isLoadingMoreData == true ? 40 : 0),
+                          child: widget.isLoadingMoreData == true
+                              ? SpinKitCircle(
+                                  color: colors.secondary,
+                                  size: 30.0,
+                                  controller: _animationController,
+                                )
+                              : widget.canFetchMore == true
+                                  ? ValueListenableBuilder<double>(
+                                      valueListenable: scrollMoreProgress,
+                                      builder: (context, value, child) {
+                                        return LoadMoreIndicator(
+                                          scrollLoadMoreProgress:
+                                              min(max(value, 0), 100),
+                                        );
+                                      })
+                                  : SizedBox.shrink(),
+                        )
+                      : SizedBox.shrink(),
+                ],
+              ),
               widget.on
-                  ? Container(
-                      margin: EdgeInsets.only(
-                          top: widget.isLoadingMoreData == true ? 20 : 0,
-                          bottom: widget.isLoadingMoreData == true ? 40 : 0),
-                      child: widget.isLoadingMoreData == true
-                          ? SpinKitCircle(
-                              color: colors.secondary,
-                              size: 30.0,
-                              controller: _animationController,
-                            )
-                          : widget.canFetchMore == true
-                              ? ValueListenableBuilder<double>(
-                                  valueListenable: scrollMoreProgress,
-                                  builder: (context, value, child) {
-                                    return LoadMoreIndicator(
-                                      scrollLoadMoreProgress:
-                                          min(max(value, 0), 100),
-                                    );
-                                  })
-                              : SizedBox.shrink(),
-                    )
+                  ? ValueListenableBuilder<double>(
+                      valueListenable: refreshProgress,
+                      builder: (context, value, child) {
+                        return Positioned(
+                          top: 40,
+                          child: Container(
+                              width: MediaQuery.sizeOf(context).width,
+                              padding: EdgeInsets.symmetric(vertical: 20),
+                              child: LoadMoreIndicator(
+                                scrollLoadMoreProgress: min(max(value, 0), 100),
+                                disableText: true,
+                              )),
+                        );
+                      })
                   : SizedBox.shrink(),
             ],
-          )),
-    );
+          ),
+        ));
   }
 }

@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import { ITransactionInsert } from "../shared/types";
 import { pool } from "../shared/utils/db";
 
@@ -109,7 +110,9 @@ export const fetchRecentUserTransactions = async (userId: string) => {
 };
 
 export const insertTransactions = async (
-  transactions: ITransactionInsert[]
+  transactions: ITransactionInsert[],
+  // if we want to use the model inside the sql transaction
+  poolClient?: PoolClient
 ) => {
   // Build the VALUES clause dynamically for bulk insert
   const values: any[] = [];
@@ -129,8 +132,6 @@ export const insertTransactions = async (
         })),
       ];
 
-      console.log(secondPartyIds);
-
       return secondPartyIds.map(({ user_id, product_id }) => {
         values.push(
           transaction.amount_finpoints,
@@ -140,14 +141,14 @@ export const insertTransactions = async (
         );
 
         const base = offset;
-        offset += 5;
+        offset += 4;
 
         return `($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4})`;
       });
     })
     .join(", ");
 
-  const response = await pool.query(
+  const response = await (poolClient ?? pool).query(
     `INSERT INTO transactions (amount_finpoints, user_id, second_user_id, product_id)
       VALUES ${placeholders}`,
     values

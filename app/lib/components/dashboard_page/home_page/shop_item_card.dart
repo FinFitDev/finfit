@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:excerbuys/components/rive/saletag_rive.dart';
 import 'package:excerbuys/components/shared/image_component.dart';
+import 'package:excerbuys/components/shared/positions/position_with_background.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
@@ -91,37 +92,9 @@ class _ShopItemCardState extends State<ShopItemCard> {
                                           color: colors.tertiary,
                                         ),
                                       ),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 8, vertical: 2),
-                                        decoration: BoxDecoration(
-                                            color:
-                                                colors.tertiary.withAlpha(10),
-                                            borderRadius:
-                                                BorderRadius.circular(5)),
-                                        child: Row(
-                                          children: [
-                                            ImageComponent(
-                                              size: 14,
-                                              image: widget.sellerImage,
-                                              filterColor: isProgress
-                                                  ? Colors.grey
-                                                  : Colors.transparent,
-                                            ),
-                                            SizedBox(
-                                              width: 4,
-                                            ),
-                                            Text(
-                                              widget.sellerName,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.w300,
-                                                color: colors.tertiary,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                      PositionWithBackground(
+                                        name: widget.sellerName,
+                                        image: widget.sellerImage,
                                       ),
                                     ],
                                   ),

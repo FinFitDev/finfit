@@ -51,6 +51,7 @@ class _ProfileImageGeneratorState extends State<ProfileImageGenerator> {
   @override
   void initState() {
     super.initState();
+
     parseSeed();
   }
 

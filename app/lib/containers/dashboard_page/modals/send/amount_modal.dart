@@ -33,6 +33,7 @@ class _AmountModalState extends State<AmountModal> {
   @override
   void initState() {
     super.initState();
+
     _totalAmountSubscription = sendController.totalAmountStream.listen((data) {
       setState(() {
         _balanceError = (userController.userBalance ?? 0) - data < 0;
@@ -42,8 +43,8 @@ class _AmountModalState extends State<AmountModal> {
 
   @override
   void dispose() {
-    super.dispose();
     _totalAmountSubscription.cancel();
+    super.dispose();
   }
 
   @override

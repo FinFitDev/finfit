@@ -24,6 +24,7 @@ class _AvailableOffersState extends State<AvailableOffers> {
   @override
   void initState() {
     super.initState();
+
     _scrollController.addListener(_onScroll);
   }
 

@@ -155,6 +155,12 @@ String parseDistance(double meters) {
   return '${kilometers.toStringAsFixed(1)} km';
 }
 
+String capitalizeFirst(String? text) {
+  if (text == null) return '';
+  if (text.isEmpty) return text;
+  return text[0].toUpperCase() + text.substring(1).toLowerCase();
+}
+
 // String encodeBase36(String input) {
 //   BigInt num = BigInt.zero;
 //   for (int i = 0; i < input.length; i++) {

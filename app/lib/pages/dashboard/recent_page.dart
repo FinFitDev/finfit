@@ -36,9 +36,8 @@ class _RecentPageState extends State<RecentPage> {
         builder: (context, snapshot) {
           return InfiniteListWrapper(
               on: snapshot.data != RECENT_DATA_CATEGORY.DAILY,
-              padding: EdgeInsets.only(
-                  top: layoutController.statusBarHeight + MAIN_HEADER_HEIGHT,
-                  bottom: APPBAR_HEIGHT + HORIZOTAL_PADDING),
+              padding:
+                  EdgeInsets.only(bottom: APPBAR_HEIGHT + HORIZOTAL_PADDING),
               canFetchMore: snapshot.data == RECENT_DATA_CATEGORY.WORKOUTS
                   ? trainingsController.canFetchMore
                   : transactionsController.canFetchMore,
@@ -48,9 +47,19 @@ class _RecentPageState extends State<RecentPage> {
               isLoadingMoreData: snapshot.data == RECENT_DATA_CATEGORY.WORKOUTS
                   ? trainingsController.lazyLoadOffset.isLoading
                   : transactionsController.lazyLoadOffset.isLoading,
+              onRefresh: snapshot.data == RECENT_DATA_CATEGORY.WORKOUTS
+                  ? trainingsController.refresh
+                  : transactionsController.refresh,
+              isRefreshing: snapshot.data == RECENT_DATA_CATEGORY.WORKOUTS
+                  ? trainingsController.userTrainings.isLoading
+                  : transactionsController.allTransactions.isLoading,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  SizedBox(
+                    height:
+                        layoutController.statusBarHeight + MAIN_HEADER_HEIGHT,
+                  ),
                   // buttons switch between daily data and all historical data
                   ButtonsSwitch(onPressed: (item) {
                     historyController.setActiveCategory(item['category']);

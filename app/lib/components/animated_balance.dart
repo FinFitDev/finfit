@@ -145,9 +145,10 @@ class _AnimatedBalanceState extends State<AnimatedBalance> {
 
   @override
   void initState() {
+    super.initState();
+
     // initial char pairs generation
     getCharsPairs(widget.balance, widget.balance);
-    super.initState();
   }
 
   @override
