@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
 class LayoutController {
@@ -31,6 +32,20 @@ class LayoutController {
   setRelativeConetntWidth(double val) {
     _relativeContentWidth.add(val);
   }
+
+  // final BehaviorSubject<FocusNode> _focusNode =
+  //     BehaviorSubject.seeded(FocusNode());
+  // Stream<FocusNode> get focusNodeStream => _focusNode.stream;
+  // FocusNode get focusNode => _focusNode.value;
+  // setFocusNode(FocusNode node) {
+  //   _focusNode.add(node);
+  // }
+
+  // unfocusNode() {
+  //   if (_focusNode.value.hasFocus) {
+  //     _focusNode.value.unfocus();
+  //   }
+  // }
 }
 
 LayoutController layoutController = LayoutController();

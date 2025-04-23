@@ -35,6 +35,13 @@ class _AvailableOffersState extends State<AvailableOffers> {
     super.dispose();
   }
 
+  @override
+  void didUpdateWidget(covariant AvailableOffers oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    print(widget.products);
+  }
+
   void _onScroll() {
     final itemWidth = layoutController.relativeContentWidth;
     final scrollOffset = _scrollController.offset;
@@ -46,7 +53,7 @@ class _AvailableOffersState extends State<AvailableOffers> {
 
   Widget get loadingContainer {
     return Container(
-      margin: EdgeInsets.only(top: 30),
+      margin: EdgeInsets.only(top: 20),
       padding: const EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING),
       child: UniversalLoaderBox(
           height: 220,

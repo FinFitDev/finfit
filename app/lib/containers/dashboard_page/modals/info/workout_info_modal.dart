@@ -175,7 +175,8 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
                                                 .toDouble()),
                                       },
                                       summary:
-                                          '+${isHidden ? '*****' : formatNumber(_workout!.points)} finpoints',
+                                          '${isHidden ? '*****' : '+${formatNumber(_workout!.points)}'} finpoints',
+                                      summaryColor: colors.secondary,
                                     );
                                   }),
                             ],

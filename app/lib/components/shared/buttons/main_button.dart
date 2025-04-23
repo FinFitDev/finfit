@@ -16,6 +16,7 @@ class MainButton extends StatefulWidget {
   final bool? isDisabled;
   final bool? loading;
   final bool? holdToConfirm;
+  final double? height;
 
   const MainButton({
     super.key,
@@ -27,6 +28,7 @@ class MainButton extends StatefulWidget {
     this.loading,
     this.holdToConfirm,
     this.icon,
+    this.height,
   });
 
   @override
@@ -82,7 +84,7 @@ class _MainButtonState extends State<MainButton> with TickerProviderStateMixin {
     final texts = Theme.of(context).textTheme;
 
     return SizedBox(
-      height: 60,
+      height: widget.height ?? 60,
       child: GestureDetector(
         onLongPressStart: (e) {
           if (widget.holdToConfirm != true || widget.isDisabled == true) {

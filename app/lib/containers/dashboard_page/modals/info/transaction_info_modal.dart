@@ -5,22 +5,16 @@ import 'package:excerbuys/components/shared/image_component.dart';
 import 'package:excerbuys/components/shared/list/list_component.dart';
 import 'package:excerbuys/components/shared/positions/position_with_background.dart';
 import 'package:excerbuys/components/shared/profile_image_generator.dart';
-import 'package:excerbuys/store/controllers/activity/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/transactions_controller.dart';
-import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/types/transaction.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/utils/home/utils.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/shop/transaction/utils.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:health/health.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class TransactionInfoModal extends StatefulWidget {
   final String transactionId;
@@ -102,6 +96,7 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
               child: _error
                   ? emptyMetadata(colors, texts)
                   : Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Row(
                           children: [
@@ -214,16 +209,27 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                                           ),
                                       },
                                       summary:
-                                          '${_transactionType == TRANSACTION_TYPE.RECEIVE ? '+' : '-'}${isHidden ? '*****' : formatNumber(_transaction?.amountFinpoints?.round() ?? _transaction?.product?.finpointsPrice.round() ?? 0)} finpoints',
+                                          '${isHidden ? '*****' : '${_transactionType == TRANSACTION_TYPE.RECEIVE ? '+' : '-'}${formatNumber(_transaction?.amountFinpoints?.round() ?? _transaction?.product?.finpointsPrice.round() ?? 0)}'} finpoints',
                                       summaryColor: color,
                                     );
                                   }),
                             ],
                           ),
                         ),
-                        CopyText(textToCopy: _transaction?.uuid ?? ''),
+                        Text(
+                          'Transaction ID',
+                          style: TextStyle(
+                            color: colors.tertiaryContainer,
+                            fontSize: 14,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
                         SizedBox(
                           height: 8,
+                        ),
+                        CopyText(textToCopy: _transaction?.uuid ?? ''),
+                        SizedBox(
+                          height: 24,
                         ),
                         MainButton(
                             label: 'Close',

@@ -2,6 +2,8 @@ import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 Future<T?> openModal<T>(BuildContext context, Widget component) {
+  FocusScope.of(context).requestFocus(FocusNode());
+
   return showModalBottomSheet<T>(
       context: context,
       isScrollControlled: true,

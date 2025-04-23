@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:excerbuys/store/controllers/shop/transactions_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/store/persistence/storage_controller.dart';
 import 'package:excerbuys/store/selectors/send.dart';
@@ -237,6 +238,7 @@ class SendController {
 
       if (remainingPoints != null) {
         userController.setUserBalance(remainingPoints.toDouble());
+        transactionsController.refresh();
       }
     } catch (error) {
       debugPrint("Exception while sending points: $error");

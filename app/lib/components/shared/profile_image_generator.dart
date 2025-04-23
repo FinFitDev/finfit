@@ -24,20 +24,21 @@ class _ProfileImageGeneratorState extends State<ProfileImageGenerator> {
 
     final List<String> seedParts = widget.seed!.split('|');
     setState(() {
-      backgroundColor = Color(parseInt('0x${seedParts[1]}'));
+      backgroundColor = Color(parseInt('0x${seedParts[1]}') ?? 0);
 
       shapesList = seedParts.sublist(2).map((shape) {
         final List<String> shapeProps = shape.split("_");
         return ShapeModel(
             color: Color(parseInt(
-                '0x${shapeProps[0].substring(0, 2)}FF${shapeProps[0].substring(2)}')),
+                    '0x${shapeProps[0].substring(0, 2)}FF${shapeProps[0].substring(2)}') ??
+                0),
             x: double.parse(shapeProps[1]),
             y: double.parse(shapeProps[2]),
             w: double.parse(shapeProps[3]),
             h: double.parse(shapeProps[4]),
             angle: double.parse(shapeProps[5]),
             painter: (color, x, y, w, h, angle) => getShapePainterForType(
-                parseInt(seedParts[0]), color, x, y, w, h, angle));
+                parseInt(seedParts[0]) ?? 0, color, x, y, w, h, angle));
       }).toList();
     });
   }

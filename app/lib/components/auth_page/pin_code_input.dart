@@ -1,4 +1,7 @@
+import 'package:excerbuys/components/shared/buttons/main_button.dart';
+import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class PinCodeInput extends StatefulWidget {
@@ -11,6 +14,8 @@ class PinCodeInput extends StatefulWidget {
 }
 
 class _PinCodeInputState extends State<PinCodeInput> {
+  final TextEditingController _pinController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -24,6 +29,7 @@ class _PinCodeInputState extends State<PinCodeInput> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         PinCodeTextField(
+          controller: _pinController,
           length: 6,
           obscureText: false,
           pinTheme: PinTheme(
@@ -61,6 +67,20 @@ class _PinCodeInputState extends State<PinCodeInput> {
                 ),
               )
             : SizedBox.shrink(),
+        // MainButton(
+        //     label: 'Paste',
+        //     height: 45,
+        //     backgroundColor: colors.tertiaryContainer.withAlpha(80),
+        //     textColor: colors.primaryFixedDim,
+        //     onPressed: () async {
+        //       final clipboardData = await Clipboard.getData('text/plain');
+
+        //       if (clipboardData != null &&
+        //           clipboardData.text != null &&
+        //           parseInt(clipboardData.text!.substring(0, 6)) != null) {
+        //         _pinController.text = clipboardData.text!.substring(0, 6);
+        //       }
+        //     })
       ],
     );
   }

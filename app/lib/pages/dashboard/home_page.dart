@@ -24,8 +24,8 @@ import 'package:excerbuys/wrappers/refresh_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  final Future<void> Function() fetchActivity;
-  const HomePage({super.key, required this.fetchActivity});
+  final Future<void> Function() fetchData;
+  const HomePage({super.key, required this.fetchData});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    widget.fetchActivity();
+    widget.fetchData();
   }
 
   Future<void> onRefresh() async {
@@ -119,12 +119,13 @@ class _HomePageState extends State<HomePage> {
                                 stream: productsController
                                     .affordableHomeProductsStream,
                                 builder: (context, snapshot) {
-                                  if (snapshot.data == null ||
-                                      snapshot.data!.content.isEmpty) {
+                                  if ((snapshot.data == null ||
+                                          snapshot.data!.content.isEmpty) &&
+                                      snapshot.data?.isLoading != true) {
                                     return SizedBox.shrink();
                                   }
                                   return AvailableOffers(
-                                    products: snapshot.data!.content,
+                                    products: snapshot.data?.content ?? [],
                                     isLoading: snapshot.data?.isLoading,
                                   );
                                 }),
@@ -133,12 +134,13 @@ class _HomePageState extends State<HomePage> {
                                 stream: productsController
                                     .nearlyAffordableHomeProducts,
                                 builder: (context, snapshot) {
-                                  if (snapshot.data == null ||
-                                      snapshot.data!.content.isEmpty) {
+                                  if ((snapshot.data == null ||
+                                          snapshot.data!.content.isEmpty) &&
+                                      snapshot.data?.isLoading != true) {
                                     return SizedBox.shrink();
                                   }
                                   return ProgressOffersContainer(
-                                    products: snapshot.data!.content,
+                                    products: snapshot.data?.content ?? [],
                                     isLoading: snapshot.data?.isLoading,
                                   );
                                 }),

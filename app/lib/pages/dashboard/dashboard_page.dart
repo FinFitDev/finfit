@@ -23,15 +23,16 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  Future<void> fetchActivity() async {
+  Future<void> fetchData() async {
     Health().configure();
     await activityController.authorize();
     if (Platform.isAndroid) {
       await activityController.checkHealthConnectSdk();
     }
-    await activityController.fetchActivity();
-    await transactionsController.fetchTransactions();
-    await productsController.fetchHomeProducts();
+    activityController.fetchActivity();
+
+    transactionsController.fetchTransactions();
+    productsController.fetchHomeProducts();
   }
 
   @override
@@ -48,7 +49,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   return IndexedStack(
                     index: snapshot.data,
                     children: [
-                      HomePage(fetchActivity: fetchActivity),
+                      HomePage(fetchData: fetchData),
                       ShopPage(),
                       RecentPage(),
                       ProfilePage()
