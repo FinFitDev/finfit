@@ -1,5 +1,6 @@
 import {
   fetchAffordableProducts,
+  fetchMaxPriceRanges,
   fetchNearlyAfforableProducts,
 } from "../../../models/productModel";
 import { fetchUserById } from "../../../models/userModel";
@@ -61,4 +62,20 @@ export const getHomeProducts = async (userId: string) => {
   const nearly_affordable = await getNearlyAffordableProducts(points);
 
   return { affordable, nearly_affordable };
+};
+
+export const getMaxPriceRanges = async () => {
+  const response = await fetchMaxPriceRanges();
+
+  if (response.rowCount && response.rowCount > 0)
+    return {
+      max_price: response.rows[0].max_price,
+      max_finpoints: response.rows[0].max_finpoints_price,
+    };
+  else {
+    return {
+      max_price: 1000,
+      max_finpoints: 1000000,
+    };
+  }
 };

@@ -9,12 +9,20 @@ const TRANSACTION_DATA_CHUNK_SIZE = 5; // TODO change
 
 class TransactionsController {
   reset() {
-    _allTransactions.add(ContentWithLoading(content: {}));
-    setTransactionsLoading(false);
+    final newData =
+        ContentWithLoading(content: Map<String, ITransactionEntry>());
+    newData.isLoading = allTransactions.isLoading;
+    _allTransactions.add(newData);
+
+    _canFetchMore.add(true);
+
+    final newLazyLoadData = ContentWithLoading(content: 0);
+    newData.isLoading = lazyLoadOffset.isLoading;
+    _lazyLoadOffset.add(newLazyLoadData);
   }
 
   refresh() {
-    _allTransactions.add(ContentWithLoading(content: {}));
+    reset();
     fetchTransactions();
   }
 

@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:excerbuys/components/rive/saletag_rive.dart';
-import 'package:excerbuys/components/shared/image_component.dart';
 import 'package:excerbuys/components/shared/positions/position_with_background.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
@@ -11,7 +10,7 @@ import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart' as Rive;
 
-class ShopItemCard extends StatefulWidget {
+class FeaturedProductCard extends StatefulWidget {
   final bool? isLast;
   final String? image;
   final double originalPrice;
@@ -22,7 +21,7 @@ class ShopItemCard extends StatefulWidget {
   final String? sellerImage;
   final double? pointsLeft;
 
-  const ShopItemCard({
+  const FeaturedProductCard({
     super.key,
     this.isLast,
     required this.image,
@@ -36,10 +35,10 @@ class ShopItemCard extends StatefulWidget {
   });
 
   @override
-  State<ShopItemCard> createState() => _ShopItemCardState();
+  State<FeaturedProductCard> createState() => _FeaturedProductCardState();
 }
 
-class _ShopItemCardState extends State<ShopItemCard> {
+class _FeaturedProductCardState extends State<FeaturedProductCard> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -67,7 +66,7 @@ class _ShopItemCardState extends State<ShopItemCard> {
                         margin: EdgeInsets.all(10),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10),
@@ -75,13 +74,14 @@ class _ShopItemCardState extends State<ShopItemCard> {
                                 filter:
                                     ImageFilter.blur(sigmaX: 50, sigmaY: 50),
                                 child: Container(
-                                  color: colors.primary.withAlpha(190),
+                                  width: MediaQuery.sizeOf(context).width / 1.8,
+                                  color: colors.primary.withAlpha(250),
                                   padding: EdgeInsets.symmetric(
                                       vertical: 8, horizontal: 12),
-                                  height: 62,
+                                  height: 68,
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
@@ -89,7 +89,7 @@ class _ShopItemCardState extends State<ShopItemCard> {
                                         widget.name,
                                         overflow: TextOverflow.ellipsis,
                                         style: texts.headlineMedium?.copyWith(
-                                          color: colors.tertiary,
+                                          color: colors.primaryFixed,
                                         ),
                                       ),
                                       PositionWithBackground(

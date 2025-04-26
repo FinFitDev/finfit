@@ -186,7 +186,8 @@ class _LoginContainerState extends State<LoginContainer> {
                     ),
                   ),
                   onPressed: () {
-                    openModal(context, ForgotPasswordModal());
+                    openModal(context, ForgotPasswordModal(),
+                        isFullHeight: false);
                   }),
               MainButton(
                 label: 'Log in',

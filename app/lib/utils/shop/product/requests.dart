@@ -26,3 +26,23 @@ Future<List<IProductEntry>?> loadHomeProductsRequest(String userId) async {
     rethrow;
   }
 }
+
+Future<Map<String, double>> loadMaxPriceRanges() async {
+  try {
+    final res = await handleBackendRequests(
+      method: HTTP_METHOD.GET,
+      endpoint: 'api/v1/product_ranges',
+    );
+
+    if (res['error'] != null) {
+      throw res['error'];
+    }
+
+    final Map<String, dynamic> content = res['content'];
+    return Map.fromEntries(
+        content.entries.map((e) => MapEntry(e.key, e.value.toDouble())));
+  } catch (error) {
+    print('Error loading product price ranges $error');
+    rethrow;
+  }
+}

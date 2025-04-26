@@ -11,10 +11,12 @@ class UserController {
   final BehaviorSubject<User?> _currentUser = BehaviorSubject.seeded(null);
   Stream<User?> get currentUserStream => _currentUser.stream;
   User? get currentUser => _currentUser.value;
-  setCurrentUser(User? user) {
+  setCurrentUser(User? user, {bool saveToStorage = true}) {
     if (user != null) {
       _currentUser.add(user);
-      storageController.saveStateLocal(CURRENT_USER_KEY, user.toString());
+      if (saveToStorage) {
+        storageController.saveStateLocal(CURRENT_USER_KEY, user.toString());
+      }
     }
   }
 
@@ -56,7 +58,9 @@ class UserController {
           await storageController.loadStateLocal(CURRENT_USER_KEY);
 
       if (currentUserSaved != null && currentUserSaved.isNotEmpty) {
-        setCurrentUser(User.fromMap(jsonDecode(currentUserSaved)));
+        // don't save to storage again
+        setCurrentUser(User.fromMap(jsonDecode(currentUserSaved)),
+            saveToStorage: false);
       }
     } catch (err) {
       print('Loading data from storage failed $err');

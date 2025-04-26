@@ -5,9 +5,11 @@ import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/utils/activity/steps.dart';
 import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class StepsActivityCard extends StatefulWidget {
@@ -193,7 +195,8 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
                     'y': (point.y ?? 0) as int
                   };
 
-                  if (trackballPositionNotifier.value != position) {
+                  if (trackballPositionNotifier.value['x'] != position['x']) {
+                    triggerVibrate(FeedbackType.selection);
                     trackballPositionNotifier.value = position;
                   }
                 }

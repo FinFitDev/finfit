@@ -48,3 +48,15 @@ export const fetchNearlyAfforableProducts = async (points: number) => {
   );
   return response;
 };
+
+export const fetchMaxPriceRanges = async () => {
+  const response = await pool.query(
+    `
+      SELECT 
+        MAX(original_price) AS max_price,
+        MAX(finpoints_price) AS max_finpoints_price
+      FROM products;
+      `
+  );
+  return response;
+};

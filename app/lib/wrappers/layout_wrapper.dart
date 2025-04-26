@@ -28,6 +28,21 @@ class _LayoutWrapperState extends State<LayoutWrapper>
     return SizedBox(
         height: MediaQuery.sizeOf(context).height,
         // color: Theme.of(context).colorScheme.secondary.withAlpha(40),
-        child: widget.child);
+        child: Stack(
+          children: [
+            StreamBuilder<bool>(
+                stream: layoutController.isModalOpenStream,
+                builder: (context, snapshot) {
+                  return AnimatedScale(
+                      scale: snapshot.data == true ? 0.90 : 1,
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.decelerate,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                              snapshot.data == true ? 20 : 0),
+                          child: widget.child));
+                }),
+          ],
+        ));
   }
 }

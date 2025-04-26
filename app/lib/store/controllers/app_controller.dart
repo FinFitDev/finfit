@@ -1,4 +1,5 @@
 import 'package:excerbuys/store/controllers/auth_controller.dart';
+import 'package:excerbuys/store/controllers/shop_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/store/persistence/storage_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
@@ -9,6 +10,7 @@ class AppController {
   restoreStateFromStorage() async {
     await authController.restoreAuthStateFromStorage();
     await userController.restoreCurrentUserStateFromStorage();
+    await shopController.restoreMaxRangesStateFromStorage();
   }
 
   final BehaviorSubject<String> _deviceId =

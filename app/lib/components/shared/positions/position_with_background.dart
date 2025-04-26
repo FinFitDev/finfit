@@ -7,20 +7,24 @@ class PositionWithBackground extends StatelessWidget {
   final String? image;
   final double? imageSize;
   final TextStyle? textStyle;
+  final EdgeInsetsGeometry? padding;
+  final Color? backgroundColor;
   const PositionWithBackground(
       {super.key,
       required this.name,
       this.image,
       this.imageSize,
-      this.textStyle});
+      this.textStyle,
+      this.padding,
+      this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      padding: padding ?? EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-          color: colors.tertiary.withAlpha(10),
+          color: backgroundColor ?? colors.tertiary.withAlpha(10),
           borderRadius: BorderRadius.circular(5)),
       child: Row(
         children: [

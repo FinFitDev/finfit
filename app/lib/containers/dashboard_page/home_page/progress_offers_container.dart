@@ -1,4 +1,4 @@
-import 'package:excerbuys/components/dashboard_page/home_page/shop_item_card.dart';
+import 'package:excerbuys/components/dashboard_page/shop_page/featured_product_card.dart';
 import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/components/shared/indicators/current_item/current_item_indicator.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
@@ -90,7 +90,7 @@ class _ProgressOffersContainerState extends State<ProgressOffersContainer> {
                           itemBuilder: (context, index) {
                             final entry = widget.products.elementAt(index);
 
-                            return ShopItemCard(
+                            return FeaturedProductCard(
                               image: entry.image,
                               originalPrice: entry.originalPrice,
                               discount: entry.discount.round(),

@@ -1,4 +1,6 @@
 import 'package:excerbuys/containers/dashboard_page/modals/dropdown_options_modal.dart';
+import 'package:excerbuys/store/controllers/shop_controller.dart';
+import 'package:excerbuys/utils/shop/constants.dart';
 import 'package:excerbuys/wrappers/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -22,18 +24,27 @@ class _DropdownTriggerState extends State<DropdownTrigger> {
         setState(() {
           _isActive = true;
         });
-        await openModal(context, DropdownOptionsModal(
-          onSelect: (option) {
-            print(option);
-            if (Navigator.canPop(context)) {
-              Navigator.pop(context);
-            }
-          },
-        ));
-        // runs after modal is closed
-        setState(() {
-          _isActive = false;
-        });
+        openModal(
+            context,
+            StreamBuilder<int>(
+                stream: shopController.activeShopCategoryStream,
+                builder: (context, snapshot) {
+                  return DropdownOptionsModal(
+                    onSelect: (option) {
+                      shopController.setActiveShopCategory(option);
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      }
+                    },
+                    activeOptionIndex: snapshot.data ?? 0,
+                    options: SHOP_CATEGORIES,
+                  );
+                }), onClose: () {
+          // runs after modal is closed
+          setState(() {
+            _isActive = false;
+          });
+        }, isFullHeight: false);
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
@@ -45,13 +56,17 @@ class _DropdownTriggerState extends State<DropdownTrigger> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Memberships',
-              style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: colors.primaryFixedDim),
-            ),
+            StreamBuilder<int>(
+                stream: shopController.activeShopCategoryStream,
+                builder: (context, snapshot) {
+                  return Text(
+                    SHOP_CATEGORIES[snapshot.data ?? 0],
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: colors.primaryFixedDim),
+                  );
+                }),
             Transform.rotate(
               angle: (_isActive ? 180 : 0) * 3.14 / 180,
               child: SvgPicture.asset(

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:excerbuys/components/shared/indicators/circle_progress/load_more_indicator.dart';
+import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -42,7 +43,9 @@ class _InfiniteListWrapperState extends State<InfiniteListWrapper>
   void setLoadMoreDataProgressIndicator() {
     if (!_scrollController.hasClients) return;
 
-    if (widget.canFetchMore != true || widget.isLoadingMoreData == true) {
+    if (widget.canFetchMore != true ||
+        widget.isLoadingMoreData == true ||
+        widget.isRefreshing == true) {
       return;
     }
 
@@ -74,7 +77,6 @@ class _InfiniteListWrapperState extends State<InfiniteListWrapper>
   @override
   void didUpdateWidget(covariant InfiniteListWrapper oldWidget) {
     super.didUpdateWidget(oldWidget);
-
     // Ensure ScrollController is attached before accessing position
     if (mounted && _scrollController.hasClients) {
       _scrollController.removeListener(setLoadMoreDataProgressIndicator);
@@ -134,7 +136,7 @@ class _InfiniteListWrapperState extends State<InfiniteListWrapper>
               Column(
                 children: [
                   widget.child,
-                  widget.on
+                  widget.on && !widget.isRefreshing!
                       ? Container(
                           margin: EdgeInsets.only(
                               top: widget.isLoadingMoreData == true ? 20 : 0,
@@ -160,7 +162,7 @@ class _InfiniteListWrapperState extends State<InfiniteListWrapper>
                       : SizedBox.shrink(),
                 ],
               ),
-              widget.on
+              widget.on && !widget.isRefreshing!
                   ? ValueListenableBuilder<double>(
                       valueListenable: refreshProgress,
                       builder: (context, value, child) {

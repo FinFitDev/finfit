@@ -33,6 +33,13 @@ class LayoutController {
     _relativeContentWidth.add(val);
   }
 
+  final BehaviorSubject<bool> _isModalOpen = BehaviorSubject.seeded(false);
+  Stream<bool> get isModalOpenStream => _isModalOpen.stream;
+  bool get isModalOpen => _isModalOpen.value;
+  setIsModalOpen(bool val) {
+    _isModalOpen.add(val);
+  }
+
   // final BehaviorSubject<FocusNode> _focusNode =
   //     BehaviorSubject.seeded(FocusNode());
   // Stream<FocusNode> get focusNodeStream => _focusNode.stream;

@@ -13,7 +13,7 @@ import {
   addTrainings,
   getUserTrainings,
 } from "./services/activityService";
-import { getHomeProducts } from "./services/productsService";
+import { getHomeProducts, getMaxPriceRanges } from "./services/productsService";
 import {
   addTransactionsToDb,
   getTransactions,
@@ -193,6 +193,21 @@ apiRouter.get(
     }
   }
 );
+
+apiRouter.get("/product_ranges", async (req: Request, res: Response) => {
+  try {
+    const response = await getMaxPriceRanges();
+
+    res
+      .status(200)
+      .json({ message: "Max price ranges found", content: response });
+  } catch (error: any) {
+    res.status(error.statusCode ?? 404).json({
+      message: "Something went wrong when fetching max price ranges",
+      error: error.message,
+    });
+  }
+});
 
 apiRouter.post("/transactions", async (req: Request, res: Response) => {
   try {

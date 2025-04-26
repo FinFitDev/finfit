@@ -110,7 +110,9 @@ class _TransactionCardState extends State<TransactionCard> {
                               builder: (context, snapshot) {
                                 final bool isHidden = snapshot.data ?? false;
                                 return Text(
-                                    '${isHidden ? '***** finpoints' : '${widget.type == TRANSACTION_TYPE.RECEIVE ? '+' : '-'}${widget.points.abs().toString()} finpoints'}',
+                                    isHidden
+                                        ? '***** finpoints'
+                                        : '${widget.type == TRANSACTION_TYPE.RECEIVE ? '+' : '-'}${widget.points.abs().toString()} finpoints',
                                     style: texts.headlineMedium?.copyWith(
                                       color: color,
                                     ));
@@ -131,7 +133,7 @@ class _TransactionCardState extends State<TransactionCard> {
                       children: [
                         widget.type == TRANSACTION_TYPE.PURCHASE
                             ? Text(
-                                'Payed ${widget.productPrice?.toStringAsFixed(2)} PLN',
+                                'Paid ${widget.productPrice?.toStringAsFixed(2)} PLN',
                                 style: TextStyle(
                                   color: colors.tertiaryContainer,
                                   fontSize: 13,

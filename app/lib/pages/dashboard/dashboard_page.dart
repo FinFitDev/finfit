@@ -25,14 +25,14 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   Future<void> fetchData() async {
     Health().configure();
+    transactionsController.fetchTransactions();
+    productsController.fetchHomeProducts();
+
     await activityController.authorize();
     if (Platform.isAndroid) {
       await activityController.checkHealthConnectSdk();
     }
     activityController.fetchActivity();
-
-    transactionsController.fetchTransactions();
-    productsController.fetchHomeProducts();
   }
 
   @override
