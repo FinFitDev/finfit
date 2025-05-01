@@ -7,17 +7,18 @@ import {
   updateUserPointsScore,
   updateUserPointsScoreWithUpdateTimestamp,
 } from "./services/userService";
-import { IUserNoPassword, RequestWithPayload } from "../../shared/types";
+import { RequestWithPayload } from "../../shared/types";
+import { addTrainings, getUserTrainings } from "./services/activityService";
 import {
-  addStepsData,
-  addTrainings,
-  getUserTrainings,
-} from "./services/activityService";
-import { getHomeProducts, getMaxPriceRanges } from "./services/productsService";
+  getHomeProducts,
+  getMaxPriceRanges,
+  getProductsBySearch,
+} from "./services/productsService";
 import {
   addTransactionsToDb,
   getTransactions,
 } from "./services/transactionsService";
+import { getProductOwnersBySearch } from "./services/productOwnerService";
 
 const apiRouter: Router = express.Router();
 
@@ -194,6 +195,29 @@ apiRouter.get(
   }
 );
 
+apiRouter.get("/products", async (req: Request, res: Response) => {
+  try {
+    const search = req.query.search as string;
+    const limit = req.query.limit;
+    const offset = req.query.offset;
+
+    const response = await getProductsBySearch(
+      +(limit ?? 10),
+      +(offset ?? 0),
+      search
+    );
+
+    res
+      .status(200)
+      .json({ message: "Products found for search", content: response });
+  } catch (error: any) {
+    res.status(error.statusCode ?? 404).json({
+      message: "Something went wrong when fetching products for search",
+      error: error.message,
+    });
+  }
+});
+
 apiRouter.get("/product_ranges", async (req: Request, res: Response) => {
   try {
     const response = await getMaxPriceRanges();
@@ -204,6 +228,30 @@ apiRouter.get("/product_ranges", async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(error.statusCode ?? 404).json({
       message: "Something went wrong when fetching max price ranges",
+      error: error.message,
+    });
+  }
+});
+
+apiRouter.get("/product_owners", async (req: Request, res: Response) => {
+  try {
+    const search = req.query.search as string;
+    const limit = req.query.limit;
+    const offset = req.query.offset;
+
+    const response = await getProductOwnersBySearch(
+      +(limit ?? 10),
+      +(offset ?? 0),
+      search
+    );
+
+    res.status(200).json({
+      message: `Owners found for search ${search}`,
+      content: response,
+    });
+  } catch (error: any) {
+    res.status(error.statusCode ?? 404).json({
+      message: "Something went wrong when fetching product owners",
       error: error.message,
     });
   }

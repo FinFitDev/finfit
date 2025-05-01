@@ -1,10 +1,11 @@
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/product.dart';
+import 'package:excerbuys/utils/debug.dart';
 
 ContentWithLoading<Map<String, IProductEntry>> getAffordableProducts(
-    ContentWithLoading<Map<String, IProductEntry>> data) {
+    ContentWithLoading<Map<String, IProductEntry>> data, double? userBalance) {
   final filteredEntries = data.content.entries
-      .where((entry) => entry.value.isAffordable == true)
+      .where((entry) => entry.value.finpointsPrice <= (userBalance ?? 0))
       .toList();
 
   final sortedContent = Map<String, IProductEntry>.fromEntries(filteredEntries);
@@ -13,9 +14,9 @@ ContentWithLoading<Map<String, IProductEntry>> getAffordableProducts(
 }
 
 ContentWithLoading<Map<String, IProductEntry>> getNonAffordableProducts(
-    ContentWithLoading<Map<String, IProductEntry>> data) {
+    ContentWithLoading<Map<String, IProductEntry>> data, double? userBalance) {
   final filteredEntries = data.content.entries
-      .where((entry) => entry.value.isAffordable != true)
+      .where((entry) => entry.value.finpointsPrice > (userBalance ?? 0))
       .toList();
 
   final sortedContent = Map<String, IProductEntry>.fromEntries(filteredEntries);
@@ -39,8 +40,10 @@ ContentWithLoading<List<IProductEntry>> getAffordableHomeProducts(
 }
 
 ContentWithLoading<List<IProductEntry>> getHomeNearlyAffordableProducts(
-    ContentWithLoading<Map<String, IProductEntry>> data, int limit) {
-  final notAffordable = getNonAffordableProducts(data)
+    ContentWithLoading<Map<String, IProductEntry>> data,
+    double? userBalance,
+    int limit) {
+  final notAffordable = getNonAffordableProducts(data, userBalance)
       .content
       .values
       .toList()

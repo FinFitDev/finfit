@@ -27,6 +27,28 @@ Future<List<IProductEntry>?> loadHomeProductsRequest(String userId) async {
   }
 }
 
+Future<List<IProductEntry>?> loadProductsBySearchRequest(
+    String search, int limit, int offset) async {
+  try {
+    final res = await handleBackendRequests(
+      method: HTTP_METHOD.GET,
+      endpoint: 'api/v1/products?search=$search&limit=$limit&offset=$offset',
+    );
+
+    if (res['error'] != null) {
+      throw res['error'];
+    }
+
+    final content = res['content'] as List<dynamic>;
+    return content
+        .map((item) => IProductEntry.fromJson(item as Map<String, dynamic>))
+        .toList();
+  } catch (error) {
+    print('Error loading home products from database $error');
+    rethrow;
+  }
+}
+
 Future<Map<String, double>> loadMaxPriceRanges() async {
   try {
     final res = await handleBackendRequests(

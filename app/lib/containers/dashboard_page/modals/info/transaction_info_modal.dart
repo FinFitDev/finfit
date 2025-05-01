@@ -2,6 +2,7 @@ import 'package:excerbuys/components/shared/activity_icon.dart';
 import 'package:excerbuys/components/shared/buttons/copy_text.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/components/shared/image_component.dart';
+import 'package:excerbuys/components/shared/indicators/labels/empty_data_modal.dart';
 import 'package:excerbuys/components/shared/list/list_component.dart';
 import 'package:excerbuys/components/shared/positions/position_with_background.dart';
 import 'package:excerbuys/components/shared/profile_image_generator.dart';
@@ -94,7 +95,9 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                   right: HORIZOTAL_PADDING,
                   bottom: layoutController.bottomPadding + HORIZOTAL_PADDING),
               child: _error
-                  ? emptyMetadata(colors, texts)
+                  ? EmptyDataModal(
+                      message: "Couldn't find transaction data",
+                    )
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -245,28 +248,4 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                     ))),
     );
   }
-}
-
-Widget emptyMetadata(ColorScheme colors, TextTheme texts) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      Container(
-        margin: EdgeInsets.only(bottom: 12),
-        child: Text(
-          "Couldn't find transaction data",
-          textAlign: TextAlign.start,
-          style: texts.headlineLarge,
-        ),
-      ),
-      Text(
-        textAlign: TextAlign.start,
-        "Close the modal and try again",
-        style: TextStyle(
-          color: colors.primaryFixedDim,
-        ),
-      ),
-    ],
-  );
 }

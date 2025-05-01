@@ -12,6 +12,8 @@ class ProductCard extends StatelessWidget {
   final String name;
   final String sellerName;
   final String? sellerImage;
+  final void Function() onPressed;
+
   const ProductCard(
       {super.key,
       this.image,
@@ -20,14 +22,15 @@ class ProductCard extends StatelessWidget {
       required this.points,
       required this.name,
       required this.sellerName,
-      this.sellerImage});
+      this.sellerImage,
+      required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
     return RippleWrapper(
-      onPressed: () {},
+      onPressed: onPressed,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -75,13 +78,34 @@ class ProductCard extends StatelessWidget {
               ],
             ),
             Positioned(
-                right: -8,
-                top: -8,
-                height: 90,
-                width: 90,
-                child: SaletagRive(
-                  discount: discount,
-                )),
+                left: 8,
+                top: 8,
+                child: Container(
+                  width: 70,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    gradient: LinearGradient(colors: [
+                      colors.primaryFixedDim,
+                      colors.tertiary,
+                    ]),
+                  ),
+                  child: Center(
+                    child: Text(
+                      '$discount% off',
+                      style: TextStyle(
+                          color: colors.primary,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13),
+                    ),
+                  ),
+                )
+                // SaletagRive(
+                //   discount: widget.discount,
+                //   isProgress: isProgress,
+                // )
+
+                ),
           ],
         ),
       ),

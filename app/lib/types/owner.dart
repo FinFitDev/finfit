@@ -3,6 +3,7 @@ class IProductOwnerEntry {
   final String name;
   final String description;
   final String createdAt;
+  final int totalTransactions;
   final String? link;
   final String? image;
 
@@ -11,6 +12,7 @@ class IProductOwnerEntry {
     required this.name,
     required this.description,
     required this.createdAt,
+    required this.totalTransactions,
     this.link,
     this.image,
   });
@@ -21,6 +23,7 @@ class IProductOwnerEntry {
       'name': name,
       'description': description,
       'created_at': createdAt,
+      'total_transactions': totalTransactions,
       'link': link,
       'image': image,
     };
@@ -32,6 +35,7 @@ class IProductOwnerEntry {
       name: json['name'],
       description: json['description'],
       createdAt: json['created_at'],
+      totalTransactions: json['total_transactions'],
       link: json['link'],
       image: json['image'],
     );

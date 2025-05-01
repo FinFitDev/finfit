@@ -1,3 +1,4 @@
+import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
@@ -51,7 +52,7 @@ class _RangeSliderComponentState extends State<RangeSliderComponent> {
                   height: 4,
                 ),
                 Text(
-                  '${(widget.values?.start as num).toStringAsFixed(0)} ${widget.suffix ?? ''} - ${(widget.values?.end as num).toStringAsFixed(0)} ${widget.suffix ?? ''}',
+                  '${(formatNumber((widget.values?.start as num).round()))} ${widget.suffix ?? ''} - ${formatNumber((widget.values?.end as num).round())} ${widget.suffix ?? ''}',
                   style: TextStyle(
                       color: colors.secondary,
                       fontSize: 14,

@@ -1,14 +1,21 @@
+import 'dart:async';
+
 import 'package:excerbuys/components/dashboard_page/shop_page/filters_button.dart';
 import 'package:excerbuys/components/dashboard_page/shop_page/product_card.dart';
 import 'package:excerbuys/components/input_with_icon.dart';
 import 'package:excerbuys/components/shared/buttons/dropdown_trigger.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/available_offers_container.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/info/product_info_modal.dart';
 import 'package:excerbuys/containers/dashboard_page/shop_page/partners_container.dart';
+import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
+import 'package:excerbuys/store/controllers/shop/product_owners_controller.dart';
 import 'package:excerbuys/store/controllers/shop/products_controller.dart';
 import 'package:excerbuys/types/general.dart';
+import 'package:excerbuys/types/owner.dart';
 import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/wrappers/modal_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:payu/payu.dart';
 
@@ -31,6 +38,30 @@ class ShopPage extends StatefulWidget {
 }
 
 class _ShopPageState extends State<ShopPage> {
+  late StreamSubscription _activePageSubscription; // Declare the subscription
+  @override
+  void initState() {
+    super.initState();
+    _activePageSubscription =
+        dashboardController.activePageStream.listen((activePage) {
+      if (activePage == 1) {
+        if (productsController.allProducts.content.length <= 10) {
+          productsController.fetchProductsBySearch();
+        }
+
+        if (productOwnersController.allProductOwners.content.isEmpty) {
+          productOwnersController.fetchProductOwners();
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _activePageSubscription.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
@@ -64,7 +95,21 @@ class _ShopPageState extends State<ShopPage> {
                   isLoading: snapshot.data?.isLoading,
                 );
               }),
-          PartnersContainer(),
+          StreamBuilder<ContentWithLoading<Map<String, IProductOwnerEntry>>>(
+              stream: productOwnersController.searchProductOwners,
+              builder: (context, snapshot) {
+                if (snapshot.data?.content == null ||
+                    snapshot.data!.content.isEmpty) {
+                  return SizedBox.shrink();
+                }
+
+                return PartnersContainer(
+                  isLoading:
+                      snapshot.connectionState == ConnectionState.waiting ||
+                          snapshot.data?.isLoading == true,
+                  owners: snapshot.data!.content,
+                );
+              }),
           SizedBox(
             height: 24,
           ),
@@ -86,118 +131,42 @@ class _ShopPageState extends State<ShopPage> {
           Padding(
             padding: const EdgeInsets.only(
                 left: HORIZOTAL_PADDING, right: HORIZOTAL_PADDING, top: 24),
-            child: Wrap(spacing: 8, runSpacing: 16, children: [
-              SizedBox(
-                width: (MediaQuery.of(context).size.width -
-                        2 * HORIZOTAL_PADDING -
-                        8) /
-                    2,
-                child: ProductCard(
-                  originalPrice: 12,
-                  discount: 15,
-                  points: 25000,
-                  name: "Product name",
-                  sellerName: 'Seller name',
-                  image:
-                      'https://play-lh.googleusercontent.com/Vkr8u7qdY--dP5UnKsmw63Lgl3vRpmTpw37OCH0SSu7IOZqviEvKyma2OTQuiuVTapkW',
-                ),
-              ),
-              SizedBox(
-                width: (MediaQuery.of(context).size.width -
-                        2 * HORIZOTAL_PADDING -
-                        8) /
-                    2,
-                child: ProductCard(
-                  originalPrice: 12,
-                  discount: 15,
-                  points: 25000,
-                  name: "Product name",
-                  sellerName: 'Seller name',
-                  image: 'https://i.ytimg.com/vi/CLPzTF6tRCc/maxresdefault.jpg',
-                ),
-              ),
-              SizedBox(
-                width: (MediaQuery.of(context).size.width -
-                        2 * HORIZOTAL_PADDING -
-                        8) /
-                    2,
-                child: ProductCard(
-                  originalPrice: 12,
-                  discount: 15,
-                  points: 25000,
-                  name: "Product name",
-                  sellerName: 'Seller name',
-                  image:
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw7FTZRAx716uMLTlDXzbUu1XSB8yO7n3v8g&s',
-                ),
-              ),
-              SizedBox(
-                width: (MediaQuery.of(context).size.width -
-                        2 * HORIZOTAL_PADDING -
-                        8) /
-                    2,
-                child: ProductCard(
-                  originalPrice: 12,
-                  discount: 15,
-                  points: 25000,
-                  name: "Product name",
-                  sellerName: 'Seller name',
-                  image:
-                      'https://activezone.fit/wp-content/themes/activeTheme/assets/img/hero_banner_lg.webp',
-                ),
-              )
-            ]),
+            child:
+                StreamBuilder<ContentWithLoading<Map<String, IProductEntry>>>(
+                    stream: productsController.allProductsStream,
+                    builder: (context, snapshot) {
+                      return Wrap(
+                          spacing: 8,
+                          runSpacing: 16,
+                          children: (snapshot.data?.content ?? {})
+                              .entries
+                              .map((element) {
+                            final value = element.value;
+                            final key = element.key;
+                            final width = (MediaQuery.of(context).size.width -
+                                    2 * HORIZOTAL_PADDING -
+                                    8) /
+                                2;
+
+                            return SizedBox(
+                              width: width,
+                              child: ProductCard(
+                                originalPrice: value.originalPrice,
+                                discount: value.discount.round(),
+                                points: value.finpointsPrice.round(),
+                                name: value.name,
+                                sellerName: value.owner.name,
+                                sellerImage: value.owner.image,
+                                onPressed: () {
+                                  openModal(context,
+                                      ProductInfoModal(productId: key));
+                                },
+                                image: value.image,
+                              ),
+                            );
+                          }).toList());
+                    }),
           )
-
-          // GridView.count(
-          //   padding: const EdgeInsets.only(
-          //       top: 24, left: HORIZOTAL_PADDING, right: HORIZOTAL_PADDING),
-          //   crossAxisCount: 2,
-          //   crossAxisSpacing: 8,
-          //   childAspectRatio: 4 / 5, // <<< width / height ratio
-
-          //   mainAxisSpacing: 16,
-          //   shrinkWrap: true,
-          //   physics: NeverScrollableScrollPhysics(),
-          //   children: [
-          //     ProductCard(
-          //       originalPrice: 12,
-          //       discount: 15,
-          //       points: 25000,
-          //       name: "Product name",
-          //       sellerName: 'Seller name',
-          //       image:
-          //           'https://play-lh.googleusercontent.com/Vkr8u7qdY--dP5UnKsmw63Lgl3vRpmTpw37OCH0SSu7IOZqviEvKyma2OTQuiuVTapkW',
-          //     ),
-          //     ProductCard(
-          //       originalPrice: 12,
-          //       discount: 15,
-          //       points: 25000,
-          //       name: "Product name",
-          //       sellerName: 'Seller name',
-          //       image: 'https://i.ytimg.com/vi/CLPzTF6tRCc/maxresdefault.jpg',
-          //     ),
-          //     ProductCard(
-          //       originalPrice: 12,
-          //       discount: 15,
-          //       points: 25000,
-          //       name: "Product name",
-          //       sellerName: 'Seller name',
-          //       image:
-          //           'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw7FTZRAx716uMLTlDXzbUu1XSB8yO7n3v8g&s',
-          //     ),
-          //     ProductCard(
-          //       originalPrice: 12,
-          //       discount: 15,
-          //       points: 25000,
-          //       name: "Product name",
-          //       sellerName: 'Seller name',
-          //       image:
-          //           'https://play-lh.googleusercontent.com/Vkr8u7qdY--dP5UnKsmw63Lgl3vRpmTpw37OCH0SSu7IOZqviEvKyma2OTQuiuVTapkW',
-          //     )
-          //     // etc.
-          //   ],
-          // ),
 
           // RippleWrapper(
           //     child: Text('auth'),

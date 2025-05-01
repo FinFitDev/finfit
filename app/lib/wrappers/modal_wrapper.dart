@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 Future<T?> openModal<T>(BuildContext context, Widget component,
     {void Function()? onClose, bool isFullHeight = true}) async {
-  if (isFullHeight) layoutController.setIsModalOpen(true);
+  if (isFullHeight) layoutController.addModalOpenCount();
 
   FocusScope.of(context).requestFocus(FocusNode());
 
@@ -20,7 +20,7 @@ Future<T?> openModal<T>(BuildContext context, Widget component,
     builder: (ctx) => component,
   );
 
-  if (isFullHeight) layoutController.setIsModalOpen(false);
+  if (isFullHeight) layoutController.subtractModalOpenCount();
   onClose?.call();
   return result;
 }

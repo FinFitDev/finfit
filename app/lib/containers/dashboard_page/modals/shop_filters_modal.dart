@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:excerbuys/components/modal/modal_header.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/components/shared/buttons/radio_button.dart';
@@ -22,6 +24,7 @@ class ShopFiltersModal extends StatefulWidget {
 }
 
 class _ShopFiltersModalState extends State<ShopFiltersModal> {
+  StreamSubscription? _subscription;
   SORTING_ORDER? _sortingOrder = null;
   String? _sortByCategory = null;
   final ValueNotifier<SfRangeValues> _currentPriceRange =
@@ -67,13 +70,20 @@ class _ShopFiltersModalState extends State<ShopFiltersModal> {
     if (shopController.maxPriceRanges.isEmpty) {
       shopController.fetchMaxRanges();
     }
-
-    setState(() {
-      _sortByCategory = shopController.sortBy?.category;
-      _sortingOrder = shopController.sortBy?.sortingOrder;
+    _subscription = shopController.numberOfActiveFiltersStream.listen((event) {
+      setState(() {
+        _sortByCategory = shopController.sortBy?.category;
+        _sortingOrder = shopController.sortBy?.sortingOrder;
+      });
+      _currentPriceRange.value = shopController.currentPriceRange;
+      _currentFinpointsCost.value = shopController.currentFinpointsCost;
     });
-    _currentPriceRange.value = shopController.currentPriceRange;
-    _currentFinpointsCost.value = shopController.currentFinpointsCost;
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -123,7 +133,7 @@ class _ShopFiltersModalState extends State<ShopFiltersModal> {
                                       range: {'min': 0, 'max': maxRange},
                                       values: value,
                                       suffix: 'PLN',
-                                      stepSize: 5,
+                                      stepSize: (maxRange / 10).roundToDouble(),
                                       onChanged: (SfRangeValues newValues) {
                                         _currentPriceRange.value = newValues;
                                       },
@@ -146,7 +156,8 @@ class _ShopFiltersModalState extends State<ShopFiltersModal> {
                                       label: 'Finpoints cost',
                                       range: {'min': 0, 'max': maxRange},
                                       values: value,
-                                      stepSize: 500,
+                                      stepSize:
+                                          (maxRange / 100).roundToDouble(),
                                       suffix: 'finpoints',
                                       onChanged: (SfRangeValues newValues) {
                                         _currentFinpointsCost.value = newValues;

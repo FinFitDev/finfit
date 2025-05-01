@@ -2,6 +2,8 @@ import {
   fetchAffordableProducts,
   fetchMaxPriceRanges,
   fetchNearlyAfforableProducts,
+  fetchProducts,
+  fetchProductsByRegex,
 } from "../../../models/productModel";
 import { fetchUserById } from "../../../models/userModel";
 import { IProduct } from "../../../shared/types";
@@ -56,7 +58,7 @@ export const getHomeProducts = async (userId: string) => {
   // static limit for home products
   const { products: affordable, points } = await getAffordableProducts(
     userId,
-    10,
+    5,
     0
   );
   const nearly_affordable = await getNearlyAffordableProducts(points);
@@ -77,5 +79,20 @@ export const getMaxPriceRanges = async () => {
       max_price: 1000,
       max_finpoints: 1000000,
     };
+  }
+};
+
+export const getProductsBySearch = async (
+  limit: number,
+  offset: number,
+  regex?: string
+) => {
+  // if empty string it will fetch all products
+  const foundProducts = await fetchProductsByRegex(regex ?? "", limit, offset);
+
+  if (foundProducts.rowCount && foundProducts.rowCount > 0) {
+    return foundProducts.rows as IProduct[];
+  } else {
+    return [];
   }
 };

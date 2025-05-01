@@ -72,9 +72,8 @@ class ShopController {
 
   setMaxRanges(IStoreMaxRanges ranges, {bool saveToStorage = true}) {
     _maxPriceRanges.add(ranges);
-    setCurrentPriceRange(SfRangeValues(0.0, ranges['max_price'] ?? 1000.0));
-    setCurrentFinpointsCost(
-        SfRangeValues(0.0, ranges['max_finpoints'] ?? 100000.0));
+    setCurrentPriceRange(SfRangeValues(0.0, ranges['max_price'] ?? 0.0));
+    setCurrentFinpointsCost(SfRangeValues(0.0, ranges['max_finpoints'] ?? 0.0));
     if (saveToStorage) {
       storageController.saveStateLocal(
           MAX_PRICE_RANGES_KEY, jsonEncode(ranges));

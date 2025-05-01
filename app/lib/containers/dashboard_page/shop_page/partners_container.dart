@@ -1,11 +1,15 @@
+import 'package:excerbuys/components/dashboard_page/shop_page/partner_card.dart';
 import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
+import 'package:excerbuys/store/controllers/shop/product_owners_controller.dart';
+import 'package:excerbuys/types/general.dart';
+import 'package:excerbuys/types/owner.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class PartnersContainer extends StatefulWidget {
   final bool? isLoading;
-  const PartnersContainer({super.key, this.isLoading});
+  final Map<String, IProductOwnerEntry> owners;
+  const PartnersContainer({super.key, this.isLoading, required this.owners});
 
   @override
   State<PartnersContainer> createState() => _PartnersContainerState();
@@ -32,130 +36,49 @@ class _PartnersContainerState extends State<PartnersContainer> {
             ),
           ),
           SizedBox(
-            height: 133,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: 6,
-              itemBuilder: (context, index) {
-                return _buildPartnerItemCard(index, colors, widget.isLoading);
-              },
-            ),
-          ),
+              height: 133,
+              child: widget.isLoading == true
+                  ? loadingContainer()
+                  : ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: widget.owners.values.toList().length,
+                      itemBuilder: (context, index) {
+                        final owner = widget.owners.values.toList()[index];
+
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              left: index == 0 ? 10 : 0,
+                              right: index ==
+                                      widget.owners.values.toList().length - 1
+                                  ? 10
+                                  : 0),
+                          child: PartnerCard(
+                            onPressed: () {
+                              // Your tap action
+                            },
+                            name: owner.name,
+                            image: owner.image,
+                          ),
+                        );
+                      })),
         ],
       ),
     );
   }
-}
 
-Widget partnerCard(
-    int index, ColorScheme colors, String name, void Function() onPressed) {
-  return RippleWrapper(
-    onPressed: onPressed,
-    child: Container(
-      width: 90,
-      padding: EdgeInsets.symmetric(vertical: HORIZOTAL_PADDING),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Stack(
-            children: [
-              Container(
-                width: 70,
-                height: 70,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    gradient: LinearGradient(
-                        colors: [Colors.blue, Colors.pinkAccent],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight)),
-              ),
-              Positioned(
-                left: 2.5,
-                top: 2.5,
-                child: Container(
-                  width: 65,
-                  height: 65,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: colors.primaryContainer),
-                ),
-              )
-            ],
-          ),
-          SizedBox(
-            height: 12,
-          ),
-          Text(
-            name,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 13),
-          )
-        ],
-      ),
-    ),
-  );
-}
-
-Widget partnerCardWithLoaderWrapper(bool? isLoading, Widget partnerCard) {
-  return isLoading == true
-      ? Container(
-          margin: EdgeInsets.symmetric(vertical: HORIZOTAL_PADDING),
-          width: 90,
-          child: Column(
-            children: [
-              UniversalLoaderBox(
-                height: 70,
-                width: 70,
-                borderRadius: 100,
-              ),
-              SizedBox(
-                height: 12,
-              ),
-              UniversalLoaderBox(
-                height: 15,
-                width: 65,
-              )
-            ],
-          ),
-        )
-      : partnerCard;
-}
-
-Widget _buildPartnerItemCard(int index, ColorScheme colors, bool? isLoading) {
-  switch (index) {
-    case 0:
-      return Row(
-        children: [
-          SizedBox(
-            width: 6,
-          ),
-          partnerCardWithLoaderWrapper(
-              isLoading, partnerCard(0, colors, 'SFD INC', () {})),
-        ],
-      );
-    case 1:
-      return partnerCardWithLoaderWrapper(
-          isLoading, partnerCard(1, colors, 'Gymrt', () {}));
-    case 2:
-      return partnerCardWithLoaderWrapper(
-          isLoading, partnerCard(2, colors, 'WheyKingdom', () {}));
-    case 3:
-      return partnerCardWithLoaderWrapper(
-          isLoading, partnerCard(3, colors, 'Beam', () {}));
-    case 4:
-      return partnerCardWithLoaderWrapper(
-          isLoading, partnerCard(4, colors, 'KD sp. z.o.o', () {}));
-    case 5:
-      return Row(
-        children: [
-          partnerCardWithLoaderWrapper(
-              isLoading, partnerCard(5, colors, 'Blog', () {})),
-          SizedBox(
-            width: 6,
-          )
-        ],
-      );
-    default:
-      return const SizedBox.shrink();
+  Widget loadingContainer() {
+    return ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: 5,
+        itemBuilder: (context, index) {
+          return Padding(
+              padding: EdgeInsets.only(
+                  left: index == 0 ? 10 : 0, right: index == 4 ? 10 : 0),
+              child: PartnerCard(
+                onPressed: () {},
+                name: '',
+                isLoading: true,
+              ));
+        });
   }
 }

@@ -1,0 +1,27 @@
+import 'package:excerbuys/types/owner.dart';
+import 'package:excerbuys/utils/backend/utils.dart';
+import 'package:excerbuys/utils/fetching/utils.dart';
+
+Future<List<IProductOwnerEntry>?> loadProductOwnersBySearchRequest(
+    String search, int limit, int offset) async {
+  try {
+    final res = await handleBackendRequests(
+      method: HTTP_METHOD.GET,
+      endpoint:
+          'api/v1/product_owners?search=$search&limit=$limit&offset=$offset',
+    );
+
+    if (res['error'] != null) {
+      throw res['error'];
+    }
+
+    final content = res['content'] as List<dynamic>;
+    return content
+        .map(
+            (item) => IProductOwnerEntry.fromJson(item as Map<String, dynamic>))
+        .toList();
+  } catch (error) {
+    print('Error loading home product owners from database $error');
+    rethrow;
+  }
+}

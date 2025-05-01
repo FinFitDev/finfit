@@ -14,6 +14,7 @@ import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/products_controller.dart';
 import 'package:excerbuys/store/controllers/shop/transactions_controller.dart';
+import 'package:excerbuys/store/controllers/shop_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
@@ -56,7 +57,10 @@ class _HomePageState extends State<HomePage> {
 
     await Future.delayed(Duration(milliseconds: 300));
 
-    await activityController.fetchActivity();
+    await stepsController.fetchsSteps();
+
+    // we do it to force refetch on modal init state
+    shopController.setMaxRanges({});
   }
 
   @override

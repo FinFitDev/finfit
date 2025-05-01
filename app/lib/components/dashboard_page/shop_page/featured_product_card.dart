@@ -20,6 +20,7 @@ class FeaturedProductCard extends StatefulWidget {
   final String sellerName;
   final String? sellerImage;
   final double? pointsLeft;
+  final void Function() onPressed;
 
   const FeaturedProductCard({
     super.key,
@@ -32,6 +33,7 @@ class FeaturedProductCard extends StatefulWidget {
     required this.sellerName,
     this.sellerImage,
     this.pointsLeft,
+    required this.onPressed,
   });
 
   @override
@@ -51,7 +53,7 @@ class _FeaturedProductCardState extends State<FeaturedProductCard> {
         height: 100,
         padding: EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING),
         child: RippleWrapper(
-            onPressed: () {},
+            onPressed: widget.onPressed,
             child: Column(
               children: [
                 Stack(
@@ -77,7 +79,7 @@ class _FeaturedProductCardState extends State<FeaturedProductCard> {
                                   width: MediaQuery.sizeOf(context).width / 1.8,
                                   color: colors.primary.withAlpha(250),
                                   padding: EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 12),
+                                      vertical: 10, horizontal: 12),
                                   height: 68,
                                   child: Column(
                                     crossAxisAlignment:
@@ -109,14 +111,33 @@ class _FeaturedProductCardState extends State<FeaturedProductCard> {
                       ),
                     ),
                     Positioned(
-                        right: -10,
-                        top: -20,
-                        height: 120,
-                        width: 120,
-                        child: SaletagRive(
-                          discount: widget.discount,
-                          isProgress: isProgress,
-                        )),
+                        left: 10,
+                        top: 10,
+                        child: Container(
+                          width: 80,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            gradient: LinearGradient(colors: [
+                              colors.primaryFixedDim,
+                              colors.tertiary,
+                            ]),
+                          ),
+                          child: Center(
+                            child: Text(
+                              '${widget.discount}% off',
+                              style: TextStyle(
+                                  color: colors.primary,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        )
+                        // SaletagRive(
+                        //   discount: widget.discount,
+                        //   isProgress: isProgress,
+                        // )
+
+                        ),
                   ],
                 ),
                 isProgress
@@ -170,7 +191,9 @@ class ImageBox extends StatelessWidget {
               child: Container(
                 height: 220,
                 decoration: BoxDecoration(
-                    color: colors.primary,
+                    color: colors.primaryContainer,
+                    border:
+                        Border.all(color: colors.tertiaryContainer, width: 0.5),
                     borderRadius: BorderRadius.circular(10),
                     image: snapshot.data),
               ),

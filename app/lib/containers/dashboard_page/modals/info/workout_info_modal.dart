@@ -2,6 +2,7 @@ import 'package:excerbuys/components/input_with_icon.dart';
 import 'package:excerbuys/components/modal/modal_header.dart';
 import 'package:excerbuys/components/shared/activity_icon.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
+import 'package:excerbuys/components/shared/indicators/labels/empty_data_modal.dart';
 import 'package:excerbuys/components/shared/list/list_component.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/auth_controller.dart';
@@ -116,7 +117,9 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
                   right: HORIZOTAL_PADDING,
                   bottom: layoutController.bottomPadding + HORIZOTAL_PADDING),
               child: _error
-                  ? emptyMetadata(colors, texts)
+                  ? EmptyDataModal(
+                      message: "Couldn't find workout data",
+                    )
                   : Column(
                       children: [
                         Row(
@@ -218,28 +221,4 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
                     ))),
     );
   }
-}
-
-Widget emptyMetadata(ColorScheme colors, TextTheme texts) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      Container(
-        margin: EdgeInsets.only(bottom: 12),
-        child: Text(
-          "Couldn't find workout data",
-          textAlign: TextAlign.start,
-          style: texts.headlineLarge,
-        ),
-      ),
-      Text(
-        textAlign: TextAlign.start,
-        "Close the modal adn try again",
-        style: TextStyle(
-          color: colors.primaryFixedDim,
-        ),
-      ),
-    ],
-  );
 }

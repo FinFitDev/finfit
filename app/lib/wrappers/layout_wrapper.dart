@@ -30,16 +30,16 @@ class _LayoutWrapperState extends State<LayoutWrapper>
         // color: Theme.of(context).colorScheme.secondary.withAlpha(40),
         child: Stack(
           children: [
-            StreamBuilder<bool>(
-                stream: layoutController.isModalOpenStream,
+            StreamBuilder<int>(
+                stream: layoutController.modalOpenCountStream,
                 builder: (context, snapshot) {
                   return AnimatedScale(
-                      scale: snapshot.data == true ? 0.90 : 1,
+                      scale: (snapshot.data ?? 0) > 0 ? 0.90 : 1,
                       duration: const Duration(milliseconds: 250),
                       curve: Curves.decelerate,
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(
-                              snapshot.data == true ? 20 : 0),
+                              (snapshot.data ?? 0) > 0 ? 20 : 0),
                           child: widget.child));
                 }),
           ],
