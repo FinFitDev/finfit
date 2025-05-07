@@ -1,9 +1,10 @@
+import 'package:excerbuys/store/controllers/shop/products_controller.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/utils/debug.dart';
 
-ContentWithLoading<Map<String, IProductEntry>> getAffordableProducts(
-    ContentWithLoading<Map<String, IProductEntry>> data, double? userBalance) {
+IAllProductsData getAffordableProducts(
+    IAllProductsData data, double? userBalance) {
   final filteredEntries = data.content.entries
       .where((entry) => entry.value.finpointsPrice <= (userBalance ?? 0))
       .toList();
@@ -13,10 +14,12 @@ ContentWithLoading<Map<String, IProductEntry>> getAffordableProducts(
   return data.copyWith(content: sortedContent);
 }
 
-ContentWithLoading<Map<String, IProductEntry>> getNonAffordableProducts(
-    ContentWithLoading<Map<String, IProductEntry>> data, double? userBalance) {
+IAllProductsData getNearlyAffordableProducts(
+    IAllProductsData data, double? userBalance) {
   final filteredEntries = data.content.entries
-      .where((entry) => entry.value.finpointsPrice > (userBalance ?? 0))
+      .where((entry) =>
+          entry.value.finpointsPrice < (userBalance ?? 0) - 5000 &&
+          entry.value.finpointsPrice > (userBalance ?? 0))
       .toList();
 
   final sortedContent = Map<String, IProductEntry>.fromEntries(filteredEntries);
@@ -25,7 +28,7 @@ ContentWithLoading<Map<String, IProductEntry>> getNonAffordableProducts(
 }
 
 ContentWithLoading<List<IProductEntry>> getAffordableHomeProducts(
-    ContentWithLoading<Map<String, IProductEntry>> affordable, int limit) {
+    IAllProductsData affordable, int limit) {
   final affordableProducts =
       affordable.content.values.toList().take(limit).toList();
 
@@ -40,10 +43,8 @@ ContentWithLoading<List<IProductEntry>> getAffordableHomeProducts(
 }
 
 ContentWithLoading<List<IProductEntry>> getHomeNearlyAffordableProducts(
-    ContentWithLoading<Map<String, IProductEntry>> data,
-    double? userBalance,
-    int limit) {
-  final notAffordable = getNonAffordableProducts(data, userBalance)
+    IAllProductsData data, double? userBalance, int limit) {
+  final notAffordable = getNearlyAffordableProducts(data, userBalance)
       .content
       .values
       .toList()
@@ -58,4 +59,16 @@ ContentWithLoading<List<IProductEntry>> getHomeNearlyAffordableProducts(
   newData.isLoading = data.isLoading;
 
   return newData;
+}
+
+IAllProductsData getProductsMatchingSearch(
+    IAllProductsData data, String? search) {
+  final filteredEntries = data.content.entries
+      .where((entry) =>
+          entry.value.name.toLowerCase().contains((search ?? '').toLowerCase()))
+      .toList();
+
+  final sortedContent = Map<String, IProductEntry>.fromEntries(filteredEntries);
+
+  return data.copyWith(content: sortedContent);
 }

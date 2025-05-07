@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 import 'package:rxdart/rxdart.dart';
 
-const TRAINING_DATA_CHUNK_SIZE = 5;
+const TRAINING_DATA_CHUNK_SIZE = 5; // TODO change
 
 class TrainingsController {
   reset() {

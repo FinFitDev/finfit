@@ -1,26 +1,27 @@
 import 'dart:math';
 
 import 'package:excerbuys/components/shared/indicators/circle_progress/load_more_indicator.dart';
+import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 
-class InfiniteListWrapper extends StatefulWidget {
+class InfiniteListWrapperV2 extends StatefulWidget {
   final bool on;
   final EdgeInsets? padding;
-  final Widget child;
+  final List<Widget> children;
   final bool? isLoadingMoreData;
   final bool? isRefreshing;
   final bool? canFetchMore;
   final void Function()? onLoadMore;
   final void Function()? onRefresh;
-  const InfiniteListWrapper(
+  const InfiniteListWrapperV2(
       {super.key,
       required this.on,
       this.padding,
-      required this.child,
+      required this.children,
       this.isLoadingMoreData,
       this.isRefreshing,
       this.canFetchMore,
@@ -28,10 +29,10 @@ class InfiniteListWrapper extends StatefulWidget {
       this.onRefresh});
 
   @override
-  State<InfiniteListWrapper> createState() => _InfiniteListWrapperState();
+  State<InfiniteListWrapperV2> createState() => _InfiniteListWrapperV2State();
 }
 
-class _InfiniteListWrapperState extends State<InfiniteListWrapper>
+class _InfiniteListWrapperV2State extends State<InfiniteListWrapperV2>
     with TickerProviderStateMixin {
   final ValueNotifier<double> scrollMoreProgress = ValueNotifier(0.0);
   final ValueNotifier<double> refreshProgress = ValueNotifier(0.0);
@@ -75,7 +76,7 @@ class _InfiniteListWrapperState extends State<InfiniteListWrapper>
   }
 
   @override
-  void didUpdateWidget(covariant InfiniteListWrapper oldWidget) {
+  void didUpdateWidget(covariant InfiniteListWrapperV2 oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Ensure ScrollController is attached before accessing position
     if (mounted && _scrollController.hasClients) {
@@ -131,60 +132,53 @@ class _InfiniteListWrapperState extends State<InfiniteListWrapper>
             physics: const AlwaysScrollableScrollPhysics(),
             controller: _scrollController,
             padding: widget.padding ?? EdgeInsets.all(0),
-            itemCount: 1,
+            itemCount: widget.children.length + 2,
             itemBuilder: (context, index) {
-              return Stack(
-                children: [
-                  Column(
-                    children: [
-                      widget.child,
-                      widget.on && !widget.isRefreshing!
-                          ? Container(
-                              margin: EdgeInsets.only(
-                                  top:
-                                      widget.isLoadingMoreData == true ? 20 : 0,
-                                  bottom: widget.isLoadingMoreData == true
-                                      ? 40
-                                      : 0),
-                              child: widget.isLoadingMoreData == true
-                                  ? SpinKitCircle(
-                                      color: colors.secondary,
-                                      size: 30.0,
-                                      controller: _animationController,
-                                    )
-                                  : widget.canFetchMore == true
-                                      ? ValueListenableBuilder<double>(
-                                          valueListenable: scrollMoreProgress,
-                                          builder: (context, value, child) {
-                                            return LoadMoreIndicator(
-                                              scrollLoadMoreProgress:
-                                                  min(max(value, 0), 100),
-                                            );
-                                          })
-                                      : SizedBox.shrink(),
-                            )
-                          : SizedBox.shrink(),
-                    ],
-                  ),
-                  widget.on && !widget.isRefreshing!
-                      ? ValueListenableBuilder<double>(
-                          valueListenable: refreshProgress,
-                          builder: (context, value, child) {
-                            return Positioned(
-                              top: 40,
-                              child: Container(
-                                  width: MediaQuery.sizeOf(context).width,
-                                  padding: EdgeInsets.symmetric(vertical: 20),
-                                  child: LoadMoreIndicator(
-                                    scrollLoadMoreProgress:
-                                        min(max(value, 0), 100),
-                                    disableText: true,
-                                  )),
-                            );
-                          })
-                      : SizedBox.shrink(),
-                ],
-              );
+              if (index == 0) {
+                return widget.on && !widget.isRefreshing!
+                    ? ValueListenableBuilder<double>(
+                        valueListenable: refreshProgress,
+                        builder: (context, value, child) {
+                          return Container(
+                            width: MediaQuery.sizeOf(context).width,
+                            padding: EdgeInsets.symmetric(vertical: 20),
+                            child: LoadMoreIndicator(
+                              scrollLoadMoreProgress: min(max(value, 0), 100),
+                              disableText: true,
+                            ),
+                          );
+                        })
+                    : SizedBox(
+                        height: APPBAR_HEIGHT,
+                      );
+              }
+
+              if (index == widget.children.length + 1) {
+                return widget.on && !widget.isRefreshing!
+                    ? Container(
+                        margin: EdgeInsets.only(
+                            top: widget.isLoadingMoreData == true ? 20 : 0,
+                            bottom: widget.isLoadingMoreData == true ? 40 : 0),
+                        child: widget.isLoadingMoreData == true
+                            ? SpinKitCircle(
+                                color: colors.secondary,
+                                size: 30.0,
+                                controller: _animationController,
+                              )
+                            : widget.canFetchMore == true
+                                ? ValueListenableBuilder<double>(
+                                    valueListenable: scrollMoreProgress,
+                                    builder: (context, value, child) {
+                                      return LoadMoreIndicator(
+                                        scrollLoadMoreProgress:
+                                            min(max(value, 0), 100),
+                                      );
+                                    })
+                                : SizedBox.shrink(),
+                      )
+                    : SizedBox.shrink();
+              }
+              return widget.children[index - 1];
             }));
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,13 +14,46 @@ class CopyText extends StatefulWidget {
 }
 
 class _CopyTextState extends State<CopyText> {
+  String _text = '';
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _text = widget.textToCopy;
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant CopyText oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    setState(() {
+      _text = widget.textToCopy;
+    });
+  }
+
+  void onCopy() async {
+    Clipboard.setData(ClipboardData(text: widget.textToCopy));
+    if (_text == 'Copied!') {
+      return;
+    }
+
+    setState(() {
+      _text = 'Copied!';
+    });
+    await Future.delayed(Duration(seconds: 2));
+    setState(() {
+      _text = widget.textToCopy;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
     return RippleWrapper(
       onPressed: () {
-        Clipboard.setData(ClipboardData(text: widget.textToCopy));
+        onCopy();
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -29,7 +64,7 @@ class _CopyTextState extends State<CopyText> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              widget.textToCopy,
+              _text,
               style: TextStyle(
                   fontSize: 12,
                   color: colors.primaryFixedDim,

@@ -1,6 +1,7 @@
 import 'dart:ui';
 
-import 'package:excerbuys/components/rive/saletag_rive.dart';
+import 'package:excerbuys/components/dashboard_page/shop_page/saletag.dart';
+import 'package:excerbuys/components/shared/images/image_box.dart';
 import 'package:excerbuys/components/shared/positions/position_with_background.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
@@ -58,7 +59,12 @@ class _FeaturedProductCardState extends State<FeaturedProductCard> {
               children: [
                 Stack(
                   children: [
-                    ImageBox(isProgress: isProgress, image: widget.image),
+                    ImageBox(
+                      border: true,
+                      isProgress: isProgress,
+                      image: widget.image,
+                      height: 220,
+                    ),
                     Container(
                       height: 220,
                       decoration: BoxDecoration(
@@ -113,25 +119,7 @@ class _FeaturedProductCardState extends State<FeaturedProductCard> {
                     Positioned(
                         left: 10,
                         top: 10,
-                        child: Container(
-                          width: 80,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            gradient: LinearGradient(colors: [
-                              colors.primaryFixedDim,
-                              colors.tertiary,
-                            ]),
-                          ),
-                          child: Center(
-                            child: Text(
-                              '${widget.discount}% off',
-                              style: TextStyle(
-                                  color: colors.primary,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        )
+                        child: Saletag(discount: widget.discount)
                         // SaletagRive(
                         //   discount: widget.discount,
                         //   isProgress: isProgress,
@@ -168,38 +156,6 @@ class _FeaturedProductCardState extends State<FeaturedProductCard> {
                     : SizedBox.shrink(),
               ],
             )));
-  }
-}
-
-class ImageBox extends StatelessWidget {
-  final bool isProgress;
-  final String? image;
-  const ImageBox({super.key, required this.isProgress, required this.image});
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    return FutureBuilder(
-        future: ImageHelper.getDecorationImage(image),
-        builder: (context, snapshot) {
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: ColorFiltered(
-              colorFilter: ColorFilter.mode(
-                  isProgress ? Colors.grey : Colors.transparent,
-                  BlendMode.saturation),
-              child: Container(
-                height: 220,
-                decoration: BoxDecoration(
-                    color: colors.primaryContainer,
-                    border:
-                        Border.all(color: colors.tertiaryContainer, width: 0.5),
-                    borderRadius: BorderRadius.circular(10),
-                    image: snapshot.data),
-              ),
-            ),
-          );
-        });
   }
 }
 

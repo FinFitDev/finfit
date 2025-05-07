@@ -38,6 +38,7 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         height: layoutController.relativeContentHeight,
         color: Theme.of(context).colorScheme.primary,

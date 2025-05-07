@@ -1,17 +1,22 @@
-import 'package:excerbuys/store/controllers/user_controller.dart';
+import 'package:dio/dio.dart';
+import 'package:excerbuys/store/controllers/shop_controller.dart';
 import 'package:excerbuys/store/selectors/shop/product_owners.dart';
-import 'package:excerbuys/store/selectors/shop/products.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/owner.dart';
-import 'package:excerbuys/types/product.dart';
-import 'package:excerbuys/utils/shop/product/requests.dart';
 import 'package:excerbuys/utils/shop/product_owner/requests.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ProductOwnersController {
+  CancelToken cancelToken = CancelToken();
+
   reset() {
     _allProductOwners.add(ContentWithLoading(content: {}));
     setProductOwnersLoading(false);
+  }
+
+  refresh() {
+    reset();
+    handleOnSearch(shopController.searchValue);
   }
 
   final BehaviorSubject<ContentWithLoading<Map<String, IProductOwnerEntry>>>
@@ -24,7 +29,8 @@ class ProductOwnersController {
 
   Stream<ContentWithLoading<Map<String, IProductOwnerEntry>>>
       get searchProductOwners => Rx.combineLatest2(allProductOwnersStream,
-          BehaviorSubject.seeded("").stream, getSearchProductOwners);
+              shopController.searchValueStream, getSearchProductOwners)
+          .shareReplay(maxSize: 1);
 
   addProductOwners(Map<String, IProductOwnerEntry> owners) {
     Map<String, IProductOwnerEntry> newProductOwners = {
@@ -41,16 +47,21 @@ class ProductOwnersController {
     _allProductOwners.add(allProductOwners);
   }
 
-  Future<void> fetchProductOwners() async {
-    try {
-      if (allProductOwners.isLoading) {
-        return;
-      }
+  Future<void> handleOnSearch(String? search) async {
+    if (allProductOwners.isLoading) {
+      cancelToken.cancel();
+    }
+    cancelToken = CancelToken();
+    fetchProductOwners(search);
+  }
 
+  Future<void> fetchProductOwners(String? search) async {
+    try {
       setProductOwnersLoading(true);
 
       final List<IProductOwnerEntry>? fetchedProductOwners =
-          await loadProductOwnersBySearchRequest('', 10, 0);
+          await loadProductOwnersBySearchRequest(
+              search ?? '', 50, 0, cancelToken);
 
       if (fetchedProductOwners == null || fetchedProductOwners.isEmpty) {
         throw 'No product owners found';

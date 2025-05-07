@@ -1,10 +1,16 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
+import 'package:excerbuys/store/controllers/shop/product_owners_controller.dart';
+import 'package:excerbuys/store/controllers/shop/products_controller.dart';
 import 'package:excerbuys/store/persistence/storage_controller.dart';
 import 'package:excerbuys/store/selectors/shop/shop.dart';
 import 'package:excerbuys/types/enums.dart';
+import 'package:excerbuys/types/general.dart';
+import 'package:excerbuys/types/owner.dart';
 import 'package:excerbuys/types/shop.dart';
 import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/shop/product/requests.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
@@ -80,6 +86,27 @@ class ShopController {
     }
   }
 
+  final BehaviorSubject<String?> _searchValue = BehaviorSubject.seeded("");
+  Stream<String?> get searchValueStream => _searchValue.stream;
+  String? get searchValue => _searchValue.value;
+
+  final BehaviorSubject<String?> _previousSearchValue =
+      BehaviorSubject.seeded(null);
+  String? get previousSearchValue => _previousSearchValue.value;
+  setPreviousSearchValue(String? value) {
+    _previousSearchValue.add(value);
+  }
+
+  // its debounced so we can fetch on update
+  setSearchValue(String? value) {
+    _previousSearchValue.add(searchValue);
+    _searchValue.add(value?.trim() ?? '');
+    if (value?.trim() != previousSearchValue) {
+      productsController.handleOnSearch(value?.trim() ?? '');
+      productOwnersController.handleOnSearch(value?.trim() ?? '');
+    }
+  }
+
   restoreMaxRangesStateFromStorage() async {
     try {
       final String? maxRangesSaved =
@@ -111,6 +138,21 @@ class ShopController {
     } catch (error) {
       print(error);
     }
+  }
+
+  Stream<String?> shopPageUpdateTrigger() {
+    return Rx.combineLatest4(
+      productOwnersController.allProductOwnersStream,
+      productsController.allProductsStream,
+      productsController.lazyLoadOffsetStream,
+      searchValueStream,
+      (ContentWithLoading<Map<String, IProductOwnerEntry>> owners,
+          IAllProductsData products,
+          ContentWithLoading<int> offset,
+          String? searchValue) {
+        return searchValue;
+      },
+    );
   }
 }
 

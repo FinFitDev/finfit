@@ -2,10 +2,10 @@ import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/owner.dart';
 
 ContentWithLoading<Map<String, IProductOwnerEntry>> getSearchProductOwners(
-    ContentWithLoading<Map<String, IProductOwnerEntry>> data, String search) {
+    ContentWithLoading<Map<String, IProductOwnerEntry>> data, String? search) {
   final filteredEntries = data.content.entries
       .where((entry) =>
-          entry.value.name.toLowerCase().contains(search.toLowerCase()))
+          entry.value.name.toLowerCase().contains(search?.toLowerCase() ?? ''))
       .toList();
 
   final sortedContent =

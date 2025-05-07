@@ -196,27 +196,35 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
                         // SizedBox(
                         //   height: 8,
                         // ),
-                        MainButton(
-                            label: 'Share',
-                            backgroundColor: colors.secondary,
-                            textColor: colors.primary,
-                            onPressed: () {
-                              Share.share(
-                                  "Check out my workout session on ${getDayName(_daysAgo)}, ${getDayNumber(_daysAgo)} ${getDayMonth(_daysAgo)} ${getDayYear(_daysAgo)}!");
-                            }),
-                        SizedBox(
-                          height: 8,
+                        Row(
+                          children: [
+                            Expanded(
+                              child: MainButton(
+                                  label: 'Close',
+                                  backgroundColor:
+                                      colors.tertiaryContainer.withAlpha(80),
+                                  textColor: colors.primaryFixedDim,
+                                  onPressed: () {
+                                    if (Navigator.canPop(context)) {
+                                      Navigator.pop(context);
+                                    }
+                                  }),
+                            ),
+                            SizedBox(
+                              width: 16,
+                            ),
+                            Expanded(
+                              child: MainButton(
+                                  label: 'Share',
+                                  backgroundColor: colors.secondary,
+                                  textColor: colors.primary,
+                                  onPressed: () {
+                                    Share.share(
+                                        "Check out my workout session on ${getDayName(_daysAgo)}, ${getDayNumber(_daysAgo)} ${getDayMonth(_daysAgo)} ${getDayYear(_daysAgo)}!");
+                                  }),
+                            ),
+                          ],
                         ),
-                        MainButton(
-                            label: 'Close',
-                            backgroundColor:
-                                colors.tertiaryContainer.withAlpha(80),
-                            textColor: colors.primaryFixedDim,
-                            onPressed: () {
-                              if (Navigator.canPop(context)) {
-                                Navigator.pop(context);
-                              }
-                            })
                       ],
                     ))),
     );

@@ -27,7 +27,7 @@ class MainHeader extends StatelessWidget {
                         pageSnapshot.data != 0;
 
                 return AnimatedPositioned(
-                  top: isActive ? 0 : -50,
+                  top: isActive ? 0 : -70,
                   duration: const Duration(milliseconds: 200),
                   child: Stack(
                     children: [
@@ -71,10 +71,7 @@ class MainHeader extends StatelessWidget {
                                             style: texts.headlineMedium
                                                 ?.copyWith(
                                                     color: colors
-                                                        .primaryFixedDim
-                                                        .withAlpha(isActive
-                                                            ? 255
-                                                            : 0)));
+                                                        .primaryFixedDim));
                                       }),
                                   StreamBuilder<double?>(
                                       stream:

@@ -1,7 +1,4 @@
 import 'package:excerbuys/components/dashboard_page/shop_page/partner_card.dart';
-import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
-import 'package:excerbuys/store/controllers/shop/product_owners_controller.dart';
-import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/owner.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';

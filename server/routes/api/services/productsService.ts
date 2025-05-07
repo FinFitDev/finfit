@@ -89,7 +89,6 @@ export const getProductsBySearch = async (
 ) => {
   // if empty string it will fetch all products
   const foundProducts = await fetchProductsByRegex(regex ?? "", limit, offset);
-
   if (foundProducts.rowCount && foundProducts.rowCount > 0) {
     return foundProducts.rows as IProduct[];
   } else {

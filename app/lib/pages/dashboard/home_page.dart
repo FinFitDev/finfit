@@ -16,6 +16,7 @@ import 'package:excerbuys/store/controllers/shop/products_controller.dart';
 import 'package:excerbuys/store/controllers/shop/transactions_controller.dart';
 import 'package:excerbuys/store/controllers/shop_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
+import 'package:excerbuys/store/persistence/cache.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/product.dart';
@@ -61,6 +62,9 @@ class _HomePageState extends State<HomePage> {
 
     // we do it to force refetch on modal init state
     shopController.setMaxRanges({});
+
+    // TODO fix refactor remove featured products cache
+    Cache.removeKeysByPattern(RegExp(r'.*/api/v1/products/[a-zA-Z0-9\-]+$'));
   }
 
   @override

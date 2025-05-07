@@ -16,7 +16,8 @@ ContentWithLoading<Map<String, User>> getUsersForSearch(
       if (search == null || search.isEmpty) {
         return recentRecipients.contains(user.key);
       }
-      return user.value.username.toLowerCase().contains(search.toLowerCase());
+      return user.value.username.toLowerCase().contains(search.toLowerCase()) ||
+          user.value.email.toLowerCase().contains(search.toLowerCase());
     }),
   );
 

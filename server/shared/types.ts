@@ -65,7 +65,7 @@ export interface IProduct {
   uuid: string;
   name: string;
   description: string;
-  owner: IProductOwner;
+  product_owner: IProductOwner;
   original_price: number;
   finpoints_price: number;
   discount: number;

@@ -1,15 +1,16 @@
+import 'package:dio/dio.dart';
 import 'package:excerbuys/types/owner.dart';
 import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
 
 Future<List<IProductOwnerEntry>?> loadProductOwnersBySearchRequest(
-    String search, int limit, int offset) async {
+    String search, int limit, int offset, CancelToken cancelToken) async {
   try {
     final res = await handleBackendRequests(
-      method: HTTP_METHOD.GET,
-      endpoint:
-          'api/v1/product_owners?search=$search&limit=$limit&offset=$offset',
-    );
+        method: HTTP_METHOD.GET,
+        endpoint:
+            'api/v1/product_owners?search=$search&limit=$limit&offset=$offset',
+        cancelToken: cancelToken);
 
     if (res['error'] != null) {
       throw res['error'];

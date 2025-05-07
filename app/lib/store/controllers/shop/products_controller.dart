@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+import 'package:excerbuys/store/controllers/shop_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/store/selectors/shop/products.dart';
 import 'package:excerbuys/types/general.dart';
@@ -5,33 +7,79 @@ import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/utils/shop/product/requests.dart';
 import 'package:rxdart/rxdart.dart';
 
+const PRODUCTS_DATA_CHUNK_SIZE = 6; // TODO change
+const HOME_PRODUCTS_DATA_LENGTH = 5; // TODO change
+
+typedef IAllProductsData = ContentWithLoading<Map<String, IProductEntry>>;
+
 class ProductsController {
+  CancelToken cancelToken = CancelToken();
+
   reset() {
     _allProducts.add(ContentWithLoading(content: {}));
+    setLazyLoadOffset(0);
+    setCanFetchMore(true);
     setProductsLoading(false);
   }
 
-  final BehaviorSubject<ContentWithLoading<Map<String, IProductEntry>>>
-      _allProducts = BehaviorSubject.seeded(ContentWithLoading(content: {}));
-  Stream<ContentWithLoading<Map<String, IProductEntry>>>
-      get allProductsStream => _allProducts.stream;
-  ContentWithLoading<Map<String, IProductEntry>> get allProducts =>
-      _allProducts.value;
+  refresh() {
+    reset();
+    handleOnSearch(shopController.searchValue);
+  }
 
-  Stream<ContentWithLoading<Map<String, IProductEntry>>>
-      get affordableProductsStream => Rx.combineLatest2(allProductsStream,
-          userController.userBalanceStream, getAffordableProducts);
+//  home products
+  final BehaviorSubject<IAllProductsData> _homeProducts =
+      BehaviorSubject.seeded(ContentWithLoading(content: {}));
+  Stream<IAllProductsData> get homeProductsStream => _homeProducts.stream;
+  IAllProductsData get homeProducts => _homeProducts.value;
+
+  addHomeProducts(Map<String, IProductEntry> products) {
+    Map<String, IProductEntry> newProducts = {
+      ...homeProducts.content,
+      ...products
+    };
+    final newData = ContentWithLoading(content: newProducts);
+    newData.isLoading = allProducts.isLoading;
+    _homeProducts.add(newData);
+  }
+
+  setHomeProductsLoading(bool loading) {
+    homeProducts.isLoading = loading;
+    _homeProducts.add(homeProducts);
+  }
+
+  Stream<IAllProductsData> get affordableProductsStream => Rx.combineLatest2(
+      homeProductsStream,
+      userController.userBalanceStream,
+      getAffordableProducts);
 
   Stream<ContentWithLoading<List<IProductEntry>>>
-      get affordableHomeProductsStream => affordableProductsStream
-          .map((entry) => getAffordableHomeProducts(entry, 5));
+      get affordableHomeProductsStream =>
+          affordableProductsStream.map((entry) =>
+              getAffordableHomeProducts(entry, HOME_PRODUCTS_DATA_LENGTH));
 
   Stream<ContentWithLoading<List<IProductEntry>>>
       get nearlyAffordableHomeProducts => Rx.combineLatest2(
-          allProductsStream,
+          homeProductsStream,
           userController.userBalanceStream,
-          (entry, balance) =>
-              getHomeNearlyAffordableProducts(entry, balance, 5));
+          (entry, balance) => getHomeNearlyAffordableProducts(
+              entry, balance, HOME_PRODUCTS_DATA_LENGTH));
+
+// all products
+
+  final BehaviorSubject<IAllProductsData> _allProducts =
+      BehaviorSubject.seeded(ContentWithLoading(content: {}));
+  Stream<IAllProductsData> get allProductsStream => _allProducts.stream;
+  IAllProductsData get allProducts => _allProducts.value;
+
+  Stream<IAllProductsData> get productsForSearchStream => Rx.combineLatest2(
+      allProductsStream,
+      shopController.searchValueStream,
+      getProductsMatchingSearch);
+
+  setProducts(Map<String, IProductEntry> products) {
+    _allProducts.add(ContentWithLoading(content: products));
+  }
 
   addProducts(Map<String, IProductEntry> products) {
     Map<String, IProductEntry> newProducts = {
@@ -71,13 +119,20 @@ class ProductsController {
     _canFetchMore.add(canFetchMore);
   }
 
+  final BehaviorSubject<bool> _loadingForSearch = BehaviorSubject.seeded(false);
+  Stream<bool> get loadingForSearchStream => _loadingForSearch.stream;
+  bool get loadingForSearch => _loadingForSearch.value;
+  setIsLoadingForSearch(bool isLoading) {
+    _loadingForSearch.add(isLoading);
+  }
+
   Future<void> fetchHomeProducts() async {
     try {
       if (allProducts.isLoading) {
         return;
       }
 
-      setProductsLoading(true);
+      setHomeProductsLoading(true);
 
       final List<IProductEntry>? fetchedProducts =
           await loadHomeProductsRequest(userController.currentUser!.uuid);
@@ -86,31 +141,55 @@ class ProductsController {
         throw 'No products found';
       }
 
-      final Map<String, IProductEntry> prodcustMap = {
+      final Map<String, IProductEntry> productsMap = {
         for (final el in fetchedProducts) el.uuid: el
       };
 
-      addProducts(prodcustMap);
+      addHomeProducts(productsMap);
     } catch (error) {
       print(error);
     } finally {
-      setProductsLoading(false);
+      setHomeProductsLoading(false);
     }
   }
 
-  Future<void> fetchProductsBySearch() async {
+  Future<void> handleOnSearch(String? search) async {
+    if (!cancelToken.isCancelled) {
+      cancelToken.cancel();
+    }
+    cancelToken = CancelToken();
+    fetchProductsBySearch(search);
+  }
+
+  Future<void> fetchProductsBySearch(String? search) async {
     try {
-      if (allProducts.isLoading) {
-        return;
+      if (search != shopController.previousSearchValue) {
+        setProducts({});
+        setLazyLoadOffset(0);
+        setCanFetchMore(true);
+        // now the value is the same
+        shopController.setPreviousSearchValue(search);
       }
 
-      // setProductsLoading(true);
+      // fetching more data
+      if (lazyLoadOffset.content > 0 &&
+          shopController.previousSearchValue == shopController.searchValue) {
+        setLoadingMoreData(true);
+        // fetching first chunk for search
+      } else {
+        setIsLoadingForSearch(true);
+      }
 
       final List<IProductEntry>? fetchedProducts =
-          await loadProductsBySearchRequest('', 10, 0);
+          await loadProductsBySearchRequest(
+              search ?? '',
+              PRODUCTS_DATA_CHUNK_SIZE,
+              lazyLoadOffset.content ?? 0,
+              cancelToken);
 
       if (fetchedProducts == null || fetchedProducts.isEmpty) {
-        throw 'No products found';
+        setCanFetchMore(false);
+        throw 'No new products found for search $search';
       }
 
       final Map<String, IProductEntry> prodcustMap = {
@@ -118,10 +197,16 @@ class ProductsController {
       };
 
       addProducts(prodcustMap);
+      setLazyLoadOffset(allProducts.content.length);
+
+      if (prodcustMap.length < PRODUCTS_DATA_CHUNK_SIZE) {
+        setCanFetchMore(false);
+      }
     } catch (error) {
       print(error);
     } finally {
-      // setProductsLoading(false);
+      setLoadingMoreData(false);
+      setIsLoadingForSearch(false);
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
+import 'package:excerbuys/components/shared/images/image_box.dart';
 import 'package:excerbuys/components/shared/indicators/labels/empty_data_modal.dart';
 import 'package:excerbuys/components/shared/list/list_component.dart';
 import 'package:excerbuys/components/shared/positions/position_with_background.dart';
@@ -28,7 +29,8 @@ class _ProductInfoModalState extends State<ProductInfoModal> {
 
   void getProductMetadata() {
     final foundProduct =
-        productsController.allProducts.content[widget.productId];
+        productsController.allProducts.content[widget.productId] ??
+            productsController.homeProducts.content[widget.productId];
     if (foundProduct == null) {
       setState(() {
         _error = true;
@@ -91,22 +93,11 @@ class _ProductInfoModalState extends State<ProductInfoModal> {
                                   crossAxisAlignment:
                                       CrossAxisAlignment.stretch,
                                   children: [
-                                    FutureBuilder(
-                                        future: ImageHelper.getDecorationImage(
-                                            _product?.image),
-                                        builder: (context, snapshot) {
-                                          return Container(
-                                            height: 280,
-                                            decoration: BoxDecoration(
-                                                color: colors.primary,
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(20),
-                                                    topRight:
-                                                        Radius.circular(20)),
-                                                image: snapshot.data),
-                                          );
-                                        }),
+                                    ImageBox(
+                                      image: _product?.image,
+                                      height: 280,
+                                      borderRadius: 0,
+                                    ),
                                     Padding(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: HORIZOTAL_PADDING,

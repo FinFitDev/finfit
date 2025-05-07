@@ -18,7 +18,7 @@ export const fetchUsersByRegex = async (
   const formattedRegex = `%${regex.toLowerCase()}%`;
 
   const response = await pool.query(
-    "SELECT uuid, username, email, image, created_at, points, steps_updated_at FROM users u WHERE LOWER(u.username) LIKE $1 LIMIT $2 OFFSET $3",
+    "SELECT uuid, username, email, image, created_at, points, steps_updated_at FROM users u WHERE LOWER(u.username) LIKE $1 OR LOWER(u.email) LIKE $1 LIMIT $2 OFFSET $3",
     [formattedRegex, limit, offset]
   );
   return response;

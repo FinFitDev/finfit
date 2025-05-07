@@ -1,3 +1,4 @@
+import 'package:excerbuys/store/controllers/shop/products_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/transaction.dart';
@@ -66,7 +67,6 @@ class TransactionsController {
   }
 
   final BehaviorSubject<bool> _canFetchMore = BehaviorSubject.seeded(true);
-  Stream<bool> get canFetchMoreStream => _canFetchMore.stream;
   bool get canFetchMore => _canFetchMore.value;
   setCanFetchMore(bool canFetchMore) {
     _canFetchMore.add(canFetchMore);
@@ -92,8 +92,12 @@ class TransactionsController {
       final Map<String, ITransactionEntry> transactionsMap = {
         for (final el in fetchedTransactions) el.uuid: el
       };
-
       addTransactions(transactionsMap);
+      productsController.addProducts({
+        for (final entry in transactionsMap.entries)
+          if (entry.value.product != null)
+            entry.value.product!.uuid: entry.value.product!
+      });
 
       // it means we are at the end of the data
       if (transactionsMap.length < TRANSACTION_DATA_CHUNK_SIZE) {
@@ -131,6 +135,11 @@ class TransactionsController {
 
       if (values.isNotEmpty) {
         addTransactions(values);
+        productsController.addProducts({
+          for (final entry in values.entries)
+            if (entry.value.product != null)
+              entry.value.product!.uuid: entry.value.product!
+        });
         setLazyLoadOffset(allTransactions.content.length);
       }
 

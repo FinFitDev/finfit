@@ -6,6 +6,7 @@ import 'package:excerbuys/components/shared/indicators/labels/empty_data_modal.d
 import 'package:excerbuys/components/shared/list/list_component.dart';
 import 'package:excerbuys/components/shared/positions/position_with_background.dart';
 import 'package:excerbuys/components/shared/profile_image_generator.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/info/product_info_modal.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/transactions_controller.dart';
@@ -14,6 +15,7 @@ import 'package:excerbuys/types/transaction.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/shop/transaction/utils.dart';
+import 'package:excerbuys/wrappers/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -194,7 +196,20 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                                           'Product': Row(
                                             children: [
                                               RippleWrapper(
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  if (Navigator.canPop(
+                                                      context)) {
+                                                    Navigator.pop(context);
+                                                  }
+
+                                                  openModal(
+                                                      context,
+                                                      ProductInfoModal(
+                                                          productId:
+                                                              _transaction!
+                                                                  .product!
+                                                                  .uuid));
+                                                },
                                                 child: PositionWithBackground(
                                                   name: _transaction
                                                           ?.product?.name ??

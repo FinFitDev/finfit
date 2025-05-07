@@ -11,12 +11,13 @@ export const fetchProductsByRegex = async (
     `SELECT p.*, to_json(po) AS product_owner
      FROM products p
      LEFT JOIN product_owners po ON p.owner_id = po.uuid
-     WHERE LOWER(p.name) LIKE $1
+     WHERE LOWER(p.name) ILIKE $1
      ORDER BY p.total_transactions DESC
      LIMIT $2
      OFFSET $3`,
     [formattedRegex, limit, offset]
   );
+
   return response;
 };
 

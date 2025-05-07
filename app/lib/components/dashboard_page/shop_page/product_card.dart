@@ -1,10 +1,11 @@
-import 'package:excerbuys/components/rive/saletag_rive.dart';
+import 'package:excerbuys/components/dashboard_page/shop_page/saletag.dart';
+import 'package:excerbuys/components/shared/images/image_box.dart';
 import 'package:excerbuys/components/shared/positions/position_with_background.dart';
 import 'package:excerbuys/wrappers/image_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 
-class ProductCard extends StatelessWidget {
+class ProductCard extends StatefulWidget {
   final String? image;
   final double originalPrice;
   final int discount;
@@ -26,11 +27,16 @@ class ProductCard extends StatelessWidget {
       required this.onPressed});
 
   @override
+  State<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
+  @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
     return RippleWrapper(
-      onPressed: onPressed,
+      onPressed: widget.onPressed,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -40,19 +46,19 @@ class ProductCard extends StatelessWidget {
           children: [
             Column(
               children: [
-                ImageBox(image: image),
+                ImageBox(image: widget.image),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(name,
+                      Text(widget.name,
                           textAlign: TextAlign.left,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(fontWeight: FontWeight.w500)),
                       PositionWithBackground(
-                        name: sellerName,
-                        image: sellerImage,
+                        name: widget.sellerName,
+                        image: widget.sellerImage,
                         padding:
                             EdgeInsets.symmetric(horizontal: 0, vertical: 2),
                         backgroundColor: Colors.transparent,
@@ -65,7 +71,7 @@ class ProductCard extends StatelessWidget {
                         height: 4,
                       ),
                       Text(
-                        '${points.round().toString()} finpoints',
+                        '${widget.points.round().toString()} finpoints',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 12,
@@ -80,26 +86,11 @@ class ProductCard extends StatelessWidget {
             Positioned(
                 left: 8,
                 top: 8,
-                child: Container(
-                  width: 70,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    gradient: LinearGradient(colors: [
-                      colors.primaryFixedDim,
-                      colors.tertiary,
-                    ]),
-                  ),
-                  child: Center(
-                    child: Text(
-                      '$discount% off',
-                      style: TextStyle(
-                          color: colors.primary,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13),
-                    ),
-                  ),
+                child: Saletag(
+                  discount: widget.discount,
+                  scale: 0.8,
                 )
+
                 // SaletagRive(
                 //   discount: widget.discount,
                 //   isProgress: isProgress,
@@ -110,29 +101,5 @@ class ProductCard extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class ImageBox extends StatelessWidget {
-  final String? image;
-  const ImageBox({super.key, required this.image});
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    return FutureBuilder(
-        future: ImageHelper.getDecorationImage(image),
-        builder: (context, snapshot) {
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Container(
-              height: 140,
-              decoration: BoxDecoration(
-                  color: colors.primary,
-                  borderRadius: BorderRadius.circular(10),
-                  image: snapshot.data),
-            ),
-          );
-        });
   }
 }
