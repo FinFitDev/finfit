@@ -49,17 +49,21 @@ class _ShopFiltersModalState extends State<ShopFiltersModal> {
 
   void setFilters() {
     if (_sortByCategory != null &&
-        _sortByCategory != shopController.sortBy?.category) {
+        _sortByCategory !=
+            shopController.allShopFilters?.sortByData?.category) {
       shopController.setSortByCategory(_sortByCategory!);
     }
     if (_sortingOrder != null &&
-        _sortingOrder != shopController.sortBy?.sortingOrder) {
+        _sortingOrder !=
+            shopController.allShopFilters?.sortByData?.sortingOrder) {
       shopController.setSortingOrder(_sortingOrder!);
     }
-    if (_currentPriceRange.value != shopController.currentPriceRange) {
+    if (_currentPriceRange.value !=
+        shopController.allShopFilters?.currentPriceRange) {
       shopController.setCurrentPriceRange(_currentPriceRange.value);
     }
-    if (_currentFinpointsCost.value != shopController.currentFinpointsCost) {
+    if (_currentFinpointsCost.value !=
+        shopController.allShopFilters?.currentFinpointsRange) {
       shopController.setCurrentFinpointsCost(_currentFinpointsCost.value);
     }
   }
@@ -70,13 +74,18 @@ class _ShopFiltersModalState extends State<ShopFiltersModal> {
     if (shopController.maxPriceRanges.isEmpty) {
       shopController.fetchMaxRanges();
     }
+
     _subscription = shopController.numberOfActiveFiltersStream.listen((event) {
       setState(() {
-        _sortByCategory = shopController.sortBy?.category;
-        _sortingOrder = shopController.sortBy?.sortingOrder;
+        _sortByCategory = shopController.allShopFilters?.sortByData?.category;
+        _sortingOrder = shopController.allShopFilters?.sortByData?.sortingOrder;
       });
-      _currentPriceRange.value = shopController.currentPriceRange;
-      _currentFinpointsCost.value = shopController.currentFinpointsCost;
+      if (shopController.allShopFilters != null) {
+        _currentPriceRange.value =
+            shopController.allShopFilters!.currentPriceRange;
+        _currentFinpointsCost.value =
+            shopController.allShopFilters!.currentFinpointsRange;
+      }
     });
   }
 
@@ -133,7 +142,7 @@ class _ShopFiltersModalState extends State<ShopFiltersModal> {
                                       range: {'min': 0, 'max': maxRange},
                                       values: value,
                                       suffix: 'PLN',
-                                      stepSize: (maxRange / 10).roundToDouble(),
+                                      stepSize: (maxRange / 30).roundToDouble(),
                                       onChanged: (SfRangeValues newValues) {
                                         _currentPriceRange.value = newValues;
                                       },

@@ -1,12 +1,13 @@
 import {
   fetchAffordableProducts,
+  fetchAllAvailableCategories,
   fetchMaxPriceRanges,
   fetchNearlyAfforableProducts,
   fetchProducts,
-  fetchProductsByRegex,
+  fetchProductsByFilters,
 } from "../../../models/productModel";
 import { fetchUserById } from "../../../models/userModel";
-import { IProduct } from "../../../shared/types";
+import { IFiltersQuery, IProduct } from "../../../shared/types";
 
 export const getAffordableProducts = async (
   userId: string,
@@ -82,13 +83,15 @@ export const getMaxPriceRanges = async () => {
   }
 };
 
-export const getProductsBySearch = async (
-  limit: number,
-  offset: number,
-  regex?: string
-) => {
+export const getAllAvailableCategories = async () => {
+  const response = await fetchAllAvailableCategories();
+
+  return response.rows;
+};
+
+export const getProductsByFilters = async (query: IFiltersQuery) => {
   // if empty string it will fetch all products
-  const foundProducts = await fetchProductsByRegex(regex ?? "", limit, offset);
+  const foundProducts = await fetchProductsByFilters(query);
   if (foundProducts.rowCount && foundProducts.rowCount > 0) {
     return foundProducts.rows as IProduct[];
   } else {

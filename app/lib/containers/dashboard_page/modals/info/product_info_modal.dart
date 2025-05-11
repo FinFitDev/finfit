@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/components/shared/images/image_box.dart';
+import 'package:excerbuys/components/shared/indicators/carousel/carousel_counter.dart';
 import 'package:excerbuys/components/shared/indicators/labels/empty_data_modal.dart';
 import 'package:excerbuys/components/shared/list/list_component.dart';
 import 'package:excerbuys/components/shared/positions/position_with_background.dart';
@@ -9,7 +12,6 @@ import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
-import 'package:excerbuys/wrappers/image_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +27,6 @@ class ProductInfoModal extends StatefulWidget {
 class _ProductInfoModalState extends State<ProductInfoModal> {
   bool _error = false;
   IProductEntry? _product;
-  ScrollController _scrollController = ScrollController();
 
   void getProductMetadata() {
     final foundProduct =
@@ -93,11 +94,49 @@ class _ProductInfoModalState extends State<ProductInfoModal> {
                                   crossAxisAlignment:
                                       CrossAxisAlignment.stretch,
                                   children: [
-                                    ImageBox(
-                                      image: _product?.image,
-                                      height: 280,
-                                      borderRadius: 0,
+                                    // TODO multiple images carousel
+                                    Stack(
+                                      children: [
+                                        ImageBox(
+                                          image: _product?.image,
+                                          height: 280,
+                                          borderRadius: 0,
+                                        ),
+                                        Positioned(
+                                            bottom: 8,
+                                            left: 0,
+                                            right: 0,
+                                            child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                    child: BackdropFilter(
+                                                      filter: ImageFilter.blur(
+                                                          sigmaX: 30,
+                                                          sigmaY: 30),
+                                                      child: Container(
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                                  horizontal:
+                                                                      10,
+                                                                  vertical: 6),
+                                                          color: colors.primary
+                                                              .withAlpha(190),
+                                                          child:
+                                                              CarouselCounter(
+                                                                  dataLength: 4,
+                                                                  scrollPercent:
+                                                                      0)),
+                                                    ),
+                                                  ),
+                                                ]))
+                                      ],
                                     ),
+
                                     Padding(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: HORIZOTAL_PADDING,

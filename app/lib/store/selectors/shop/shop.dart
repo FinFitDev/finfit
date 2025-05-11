@@ -1,21 +1,38 @@
 import 'package:excerbuys/types/shop.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
-int getNumberOfActiveFilters(SortByData? sortBy, SfRangeValues priceRange,
-    SfRangeValues finpointsRange, IStoreMaxRanges maxRanges) {
+int getNumberOfActiveFilters(ShopFilters? filters, IStoreMaxRanges maxRanges) {
   var sum = 0;
   if (maxRanges.isEmpty) {
     return sum;
   }
-  if (sortBy != null) {
+  if (filters?.sortByData != null) {
     sum++;
   }
-  if (priceRange.start != 0 || priceRange.end != maxRanges['max_price']) {
+  if (filters?.currentPriceRange.start != 0 ||
+      filters?.currentPriceRange.end != maxRanges['max_price']) {
     sum++;
   }
-  if (finpointsRange.start != 0 ||
-      finpointsRange.end != maxRanges['max_finpoints']) {
+  if (filters?.currentFinpointsRange.start != 0 ||
+      filters?.currentFinpointsRange.end != maxRanges['max_finpoints']) {
     sum++;
   }
   return sum;
+}
+
+ShopFilters getShopFiltersValues(
+  String? search,
+  SfRangeValues finpointsRange,
+  SfRangeValues priceRange,
+  SortByData? sortBy,
+  int activeCategory,
+) {
+  final filters = ShopFilters(
+      activeShopCategory: activeCategory,
+      currentFinpointsRange: finpointsRange,
+      currentPriceRange: priceRange,
+      search: search,
+      sortByData: sortBy);
+
+  return filters;
 }

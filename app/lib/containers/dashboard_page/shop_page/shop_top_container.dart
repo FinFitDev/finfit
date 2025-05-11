@@ -83,9 +83,7 @@ class _ShopTopContainerState extends State<ShopTopContainer>
               return Padding(
                 padding: const EdgeInsets.only(bottom: 24),
                 child: PartnersContainer(
-                  isLoading:
-                      snapshot.connectionState == ConnectionState.waiting ||
-                          snapshot.data?.isLoading == true,
+                  isLoading: snapshot.data?.isLoading == true,
                   owners: snapshot.data!.content,
                 ),
               );

@@ -62,6 +62,7 @@ class _HomePageState extends State<HomePage> {
 
     // we do it to force refetch on modal init state
     shopController.setMaxRanges({});
+    shopController.setAvailableCategories([]);
 
     // TODO fix refactor remove featured products cache
     Cache.removeKeysByPattern(RegExp(r'.*/api/v1/products/[a-zA-Z0-9\-]+$'));

@@ -34,6 +34,7 @@ class SendController {
   Stream<String?> get searchValueStream => _searchValue.stream;
   String? get searchValue => _searchValue.value;
 
+// TODO add cache
 // for optimization (dont fetch the same endpoint multiple times)
   final BehaviorSubject<List<String>> _alreadyFetchedQueries =
       BehaviorSubject.seeded([]);

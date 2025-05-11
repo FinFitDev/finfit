@@ -19,65 +19,73 @@ class _DropdownTriggerState extends State<DropdownTrigger> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
-    return RippleWrapper(
-      onPressed: () async {
-        setState(() {
-          _isActive = true;
-        });
-        openModal(
-            context,
-            StreamBuilder<int>(
-                stream: shopController.activeShopCategoryStream,
-                builder: (context, snapshot) {
-                  return DropdownOptionsModal(
-                    onSelect: (option) {
-                      shopController.setActiveShopCategory(option);
-                      if (Navigator.canPop(context)) {
-                        Navigator.pop(context);
-                      }
-                    },
-                    activeOptionIndex: snapshot.data ?? 0,
-                    options: SHOP_CATEGORIES,
-                  );
-                }), onClose: () {
-          // runs after modal is closed
-          setState(() {
-            _isActive = false;
-          });
-        }, isFullHeight: false);
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        height: 45,
-        decoration: BoxDecoration(
-          color: colors.primaryContainer,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            StreamBuilder<int>(
-                stream: shopController.activeShopCategoryStream,
-                builder: (context, snapshot) {
-                  return Text(
-                    SHOP_CATEGORIES[snapshot.data ?? 0],
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: colors.primaryFixedDim),
-                  );
-                }),
-            Transform.rotate(
-              angle: (_isActive ? 180 : 0) * 3.14 / 180,
-              child: SvgPicture.asset(
-                'assets/svg/dropdown_arrow_down.svg',
-                colorFilter:
-                    ColorFilter.mode(colors.primaryFixedDim, BlendMode.srcIn),
+    return StreamBuilder<List<String>>(
+        stream: shopController.availableCategoriesStream,
+        builder: (context, allCategories) {
+          final List<String> categoriesFilled = [
+            'All products',
+            ...(allCategories.data ?? [])
+          ];
+          return RippleWrapper(
+            onPressed: () async {
+              setState(() {
+                _isActive = true;
+              });
+              openModal(
+                  context,
+                  StreamBuilder<int>(
+                      stream: shopController.activeShopCategoryStream,
+                      builder: (context, snapshot) {
+                        return DropdownOptionsModal(
+                          onSelect: (option) {
+                            shopController.setActiveShopCategory(option);
+                            if (Navigator.canPop(context)) {
+                              Navigator.pop(context);
+                            }
+                          },
+                          activeOptionIndex: snapshot.data ?? 0,
+                          options: categoriesFilled,
+                        );
+                      }), onClose: () {
+                // runs after modal is closed
+                setState(() {
+                  _isActive = false;
+                });
+              }, isFullHeight: false);
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              height: 45,
+              decoration: BoxDecoration(
+                color: colors.primaryContainer,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  StreamBuilder<int>(
+                      stream: shopController.activeShopCategoryStream,
+                      builder: (context, snapshot) {
+                        return Text(
+                          categoriesFilled[snapshot.data ?? 0],
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: colors.primaryFixedDim),
+                        );
+                      }),
+                  Transform.rotate(
+                    angle: (_isActive ? 180 : 0) * 3.14 / 180,
+                    child: SvgPicture.asset(
+                      'assets/svg/dropdown_arrow_down.svg',
+                      colorFilter: ColorFilter.mode(
+                          colors.primaryFixedDim, BlendMode.srcIn),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
+        });
   }
 }

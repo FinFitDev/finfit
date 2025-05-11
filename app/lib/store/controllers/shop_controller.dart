@@ -12,64 +12,111 @@ import 'package:excerbuys/types/shop.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/shop/product/requests.dart';
+import 'package:excerbuys/utils/utils.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class ShopController {
-  final BehaviorSubject<int> _activeShopCategory = BehaviorSubject.seeded(0);
-  Stream<int> get activeShopCategoryStream => _activeShopCategory.stream;
-  int get activeShopCategory => _activeShopCategory.value;
-  setActiveShopCategory(int category) {
-    _activeShopCategory.add(category);
+  final BehaviorSubject<ShopFilters?> _allShopFilters = BehaviorSubject.seeded(
+      ShopFilters(
+          currentFinpointsRange: SfRangeValues(0, 0),
+          currentPriceRange: SfRangeValues(0, 0),
+          activeShopCategory: 0));
+  Stream<ShopFilters?> get allShopFiltersStream => _allShopFilters.stream;
+  ShopFilters? get allShopFilters => _allShopFilters.value;
+  setAllShopFilters(ShopFilters? filters) {
+    _allShopFilters.add(filters);
   }
 
-  final BehaviorSubject<SortByData?> _sortBy = BehaviorSubject.seeded(null);
-  Stream<SortByData?> get sortByStream => _sortBy.stream;
-  SortByData? get sortBy => _sortBy.value;
+  setActiveShopCategory(int category) {
+    final currentFilters = allShopFilters;
+    if (currentFilters != null) {
+      final newFilters = currentFilters.copyWith(
+          activeShopCategory: Nullable.present(category));
+      setAllShopFilters(newFilters);
+    }
+  }
+
   setSortByCategory(String category) {
-    var currentSortBy = _sortBy.value;
-    _sortBy.add(SortByData(
-      category: category,
-      sortingOrder: currentSortBy?.sortingOrder ?? SORTING_ORDER.ASCENDING,
-    ));
+    final currentFilters = allShopFilters;
+    if (currentFilters != null) {
+      final currentSortBy = allShopFilters!.sortByData;
+
+      final newFilters = currentFilters.copyWith(
+          sortByData: Nullable.present(SortByData(
+        category: category,
+        sortingOrder: currentSortBy?.sortingOrder ?? SORTING_ORDER.ASCENDING,
+      )));
+      setAllShopFilters(newFilters);
+    }
   }
 
   setSortingOrder(SORTING_ORDER sortingOrder) {
-    var currentSortBy = _sortBy.value;
+    final currentFilters = allShopFilters;
+    if (currentFilters != null) {
+      final currentSortBy = allShopFilters!.sortByData;
 
-    _sortBy.add(SortByData(
-      category: currentSortBy?.category ?? '',
-      sortingOrder: sortingOrder,
-    ));
+      final newFilters = currentFilters.copyWith(
+          sortByData: Nullable.present(SortByData(
+        category: currentSortBy?.category ?? '',
+        sortingOrder: sortingOrder,
+      )));
+      setAllShopFilters(newFilters);
+    }
   }
 
   resetCurrentSortBy() {
-    _sortBy.add(null);
+    final currentFilters = allShopFilters;
+    if (currentFilters != null) {
+      final newFilters =
+          currentFilters.copyWith(sortByData: Nullable.present(null));
+      setAllShopFilters(newFilters);
+    }
   }
 
-  final BehaviorSubject<SfRangeValues> _currentPriceRange =
-      BehaviorSubject.seeded(SfRangeValues(0.0, 0.0));
-  Stream<SfRangeValues> get currentPriceRangeStream =>
-      _currentPriceRange.stream;
-  SfRangeValues get currentPriceRange => _currentPriceRange.value;
   setCurrentPriceRange(SfRangeValues range) {
-    _currentPriceRange.add(range);
+    final currentFilters = allShopFilters;
+    if (currentFilters != null) {
+      final newFilters =
+          currentFilters.copyWith(currentPriceRange: Nullable.present(range));
+      setAllShopFilters(newFilters);
+    }
   }
 
-  final BehaviorSubject<SfRangeValues> _currentFinpointsCost =
-      BehaviorSubject.seeded(SfRangeValues(0.0, 0.0));
-  Stream<SfRangeValues> get currentFinpointsCostStream =>
-      _currentFinpointsCost.stream;
-  SfRangeValues get currentFinpointsCost => _currentFinpointsCost.value;
   setCurrentFinpointsCost(SfRangeValues range) {
-    _currentFinpointsCost.add(range);
+    final currentFilters = allShopFilters;
+    if (currentFilters != null) {
+      final newFilters = currentFilters.copyWith(
+          currentFinpointsRange: Nullable.present(range));
+      setAllShopFilters(newFilters);
+    }
   }
 
-  Stream<int> get numberOfActiveFiltersStream => Rx.combineLatest3(
-      sortByStream,
-      currentPriceRangeStream,
-      currentFinpointsCostStream,
-      (a, b, c) => getNumberOfActiveFilters(a, b, c, maxPriceRanges));
+  setSearchValue(String? value) {
+    final currentFilters = allShopFilters;
+    if (currentFilters != null) {
+      if (value?.trim() != currentFilters.search) {
+        productOwnersController.handleOnSearch(value?.trim() ?? '');
+      }
+      final newFilters =
+          currentFilters.copyWith(search: Nullable.present(value));
+      setAllShopFilters(newFilters);
+    }
+  }
+
+  Stream<int> get numberOfActiveFiltersStream => allShopFiltersStream
+      .map((a) => getNumberOfActiveFilters(a, maxPriceRanges));
+
+  Stream<String?> get searchValueStream =>
+      allShopFiltersStream.map((data) => data?.search ?? '');
+
+  Stream<int> get activeShopCategoryStream =>
+      allShopFiltersStream.map((data) => data?.activeShopCategory ?? 0);
+
+  restoreFilterOptionsFromStorage() {
+    restoreMaxRangesStateFromStorage();
+    restoreAvailableCategoriesFromStorage();
+  }
 
   final BehaviorSubject<IStoreMaxRanges> _maxPriceRanges =
       BehaviorSubject.seeded({});
@@ -83,27 +130,6 @@ class ShopController {
     if (saveToStorage) {
       storageController.saveStateLocal(
           MAX_PRICE_RANGES_KEY, jsonEncode(ranges));
-    }
-  }
-
-  final BehaviorSubject<String?> _searchValue = BehaviorSubject.seeded("");
-  Stream<String?> get searchValueStream => _searchValue.stream;
-  String? get searchValue => _searchValue.value;
-
-  final BehaviorSubject<String?> _previousSearchValue =
-      BehaviorSubject.seeded(null);
-  String? get previousSearchValue => _previousSearchValue.value;
-  setPreviousSearchValue(String? value) {
-    _previousSearchValue.add(value);
-  }
-
-  // its debounced so we can fetch on update
-  setSearchValue(String? value) {
-    _previousSearchValue.add(searchValue);
-    _searchValue.add(value?.trim() ?? '');
-    if (value?.trim() != previousSearchValue) {
-      productsController.handleOnSearch(value?.trim() ?? '');
-      productOwnersController.handleOnSearch(value?.trim() ?? '');
     }
   }
 
@@ -140,17 +166,63 @@ class ShopController {
     }
   }
 
-  Stream<String?> shopPageUpdateTrigger() {
+  final BehaviorSubject<List<String>> _availableCategories =
+      BehaviorSubject.seeded([]);
+  Stream<List<String>> get availableCategoriesStream =>
+      _availableCategories.stream;
+  List<String> get availableCategories => _availableCategories.value;
+
+  setAvailableCategories(List<String> categories, {bool saveToStorage = true}) {
+    _availableCategories.add(categories);
+
+    if (saveToStorage) {
+      storageController.saveStateLocal(
+          AVAILABLE_SHOP_CATEGORIES_KEY, jsonEncode(categories));
+    }
+  }
+
+  restoreAvailableCategoriesFromStorage() async {
+    try {
+      final String? availableCategoriesSaved =
+          await storageController.loadStateLocal(AVAILABLE_SHOP_CATEGORIES_KEY);
+
+      if (availableCategoriesSaved != null &&
+          availableCategoriesSaved.isNotEmpty) {
+        // don't save to storage again
+        setAvailableCategories(
+            (jsonDecode(availableCategoriesSaved) as List<dynamic>)
+                .map((el) => el.toString())
+                .toList(),
+            saveToStorage: false);
+      }
+    } catch (err) {
+      print('Loading data from storage failed $err');
+    }
+  }
+
+  Future<void> fetchAvailableCategories() async {
+    try {
+      final List<String> fetchedCategories = await loadAvailableCategories();
+      if (fetchedCategories.isEmpty) {
+        throw 'No categories found';
+      }
+      setAvailableCategories(fetchedCategories);
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Stream<ShopFilters?> shopPageUpdateTrigger() {
     return Rx.combineLatest4(
       productOwnersController.allProductOwnersStream,
       productsController.allProductsStream,
       productsController.lazyLoadOffsetStream,
-      searchValueStream,
+      allShopFiltersStream.distinct(),
       (ContentWithLoading<Map<String, IProductOwnerEntry>> owners,
           IAllProductsData products,
           ContentWithLoading<int> offset,
-          String? searchValue) {
-        return searchValue;
+          ShopFilters? filters) {
+        return filters;
       },
     );
   }

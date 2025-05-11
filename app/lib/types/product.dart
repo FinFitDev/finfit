@@ -1,6 +1,4 @@
-import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/types/owner.dart';
-import 'package:excerbuys/utils/shop/product/utils.dart';
 
 class IProductEntry {
   final String uuid;
@@ -13,7 +11,7 @@ class IProductEntry {
   final String createdAt;
   final String? link;
   final String? image;
-  final PRODUCT_CATEGORY category;
+  final String category;
   final int totalTransactions;
   final bool? isAffordable;
 
@@ -63,7 +61,7 @@ class IProductEntry {
       createdAt: json['created_at'],
       link: json['link'],
       image: json['image'],
-      category: productCategoryStringToEnum(json['category']),
+      category: json['category'],
       totalTransactions: json['total_transactions'],
       isAffordable: json['is_affordable'],
     );

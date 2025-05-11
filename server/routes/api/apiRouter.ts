@@ -10,9 +10,10 @@ import {
 import { RequestWithPayload } from "../../shared/types";
 import { addTrainings, getUserTrainings } from "./services/activityService";
 import {
+  getAllAvailableCategories,
   getHomeProducts,
   getMaxPriceRanges,
-  getProductsBySearch,
+  getProductsByFilters,
 } from "./services/productsService";
 import {
   addTransactionsToDb,
@@ -197,15 +198,7 @@ apiRouter.get(
 
 apiRouter.get("/products", async (req: Request, res: Response) => {
   try {
-    const search = req.query.search as string;
-    const limit = req.query.limit;
-    const offset = req.query.offset;
-
-    const response = await getProductsBySearch(
-      +(limit ?? 10),
-      +(offset ?? 0),
-      search
-    );
+    const response = await getProductsByFilters(req.query);
 
     res
       .status(200)
@@ -228,6 +221,21 @@ apiRouter.get("/product_ranges", async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(error.statusCode ?? 404).json({
       message: "Something went wrong when fetching max price ranges",
+      error: error.message,
+    });
+  }
+});
+
+apiRouter.get("/product_categories", async (req: Request, res: Response) => {
+  try {
+    const response = await getAllAvailableCategories();
+
+    res
+      .status(200)
+      .json({ message: "Available categories found", content: response });
+  } catch (error: any) {
+    res.status(error.statusCode ?? 404).json({
+      message: "Something went wrong when fetching available categories",
       error: error.message,
     });
   }

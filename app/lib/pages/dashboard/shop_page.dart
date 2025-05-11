@@ -6,10 +6,14 @@ import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/product_owners_controller.dart';
 import 'package:excerbuys/store/controllers/shop/products_controller.dart';
 import 'package:excerbuys/store/controllers/shop_controller.dart';
+import 'package:excerbuys/types/product.dart';
+import 'package:excerbuys/types/shop.dart';
 import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/wrappers/infinite_list_wrapper_v2.dart';
 import 'package:flutter/material.dart';
 import 'package:payu/payu.dart';
+import 'package:rxdart/rxdart.dart';
 
 String apiBaseUrl(Environment environment) {
   switch (environment) {
@@ -30,18 +34,24 @@ class ShopPage extends StatefulWidget {
 }
 
 class _ShopPageState extends State<ShopPage> {
-  late StreamSubscription _activePageSubscription; // Declare the subscription
+  late StreamSubscription _activePageSubscription;
+  late StreamSubscription _shopFiltersSubscription;
 
   @override
   void initState() {
     super.initState();
+    if (shopController.availableCategories.isEmpty) {
+      shopController.fetchAvailableCategories();
+    }
     _activePageSubscription =
         dashboardController.activePageStream.listen((activePage) {
       if (activePage == 1) {
-        // fetch first chunk
-        if (productsController.lazyLoadOffset.content == 0) {
-          productsController.fetchProductsBySearch('');
-        }
+        _shopFiltersSubscription = shopController.allShopFiltersStream
+            .debounceTime(Duration(milliseconds: 100))
+            .distinct()
+            .listen((data) {
+          productsController.handleOnChangeFilters(data);
+        });
 
         if (productOwnersController.allProductOwners.content.isEmpty) {
           productOwnersController.fetchProductOwners('');
@@ -52,6 +62,7 @@ class _ShopPageState extends State<ShopPage> {
 
   @override
   void dispose() {
+    _shopFiltersSubscription.cancel();
     _activePageSubscription.cancel();
     super.dispose();
   }
@@ -73,9 +84,9 @@ class _ShopPageState extends State<ShopPage> {
                 ? List.generate(10, (index) => null)
                 : (snapshot.data?.content ?? {}).entries.toList();
 
-            return StreamBuilder<String?>(
+            return StreamBuilder<ShopFilters?>(
               stream: shopController.shopPageUpdateTrigger(),
-              builder: (context, searchSnapshot) {
+              builder: (context, filtersSnapshot) {
                 return InfiniteListWrapperV2(
                   on: true,
                   isLoadingMoreData:
@@ -90,7 +101,7 @@ class _ShopPageState extends State<ShopPage> {
                   },
                   onLoadMore: () {
                     productsController
-                        .handleOnSearch(shopController.searchValue);
+                        .fetchProductsWithFilters(filtersSnapshot.data);
                   },
                   padding: EdgeInsets.only(
                       bottom: APPBAR_HEIGHT + layoutController.bottomPadding),
@@ -102,15 +113,17 @@ class _ShopPageState extends State<ShopPage> {
                     if (data.isEmpty)
                       emptyProducts(colors, texts)
                     else
-                      // Your generated rows in pairs:
+                      // generated rows in pairs:
                       for (int i = 0; i < data.length; i += 2)
                         Builder(builder: (context) {
                           final entry = data[i];
                           final nextEntry =
                               i + 1 < data.length ? data[i + 1] : null;
 
-                          final current = entry;
-                          final next = nextEntry;
+                          final MapEntry<String, IProductEntry>? current =
+                              entry;
+                          final MapEntry<String, IProductEntry>? next =
+                              nextEntry;
 
                           return ProductsRowContainer(
                               first: current, second: next);

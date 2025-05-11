@@ -10,7 +10,7 @@ class AppController {
   restoreStateFromStorage() async {
     await authController.restoreAuthStateFromStorage();
     await userController.restoreCurrentUserStateFromStorage();
-    await shopController.restoreMaxRangesStateFromStorage();
+    await shopController.restoreFilterOptionsFromStorage();
   }
 
   final BehaviorSubject<String> _deviceId =

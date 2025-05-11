@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:excerbuys/store/persistence/cache.dart';
 import 'package:excerbuys/types/product.dart';
+import 'package:excerbuys/types/shop.dart';
 import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
+import 'package:excerbuys/utils/shop/product/utils.dart';
 
 Future<List<IProductEntry>?> loadHomeProductsRequest(String userId) async {
   // request handler to use instead of cache
@@ -41,12 +43,13 @@ Future<List<IProductEntry>?> loadHomeProductsRequest(String userId) async {
           }).toList());
 }
 
-Future<List<IProductEntry>?> loadProductsBySearchRequest(
-    String search, int limit, int offset, CancelToken cancelToken) async {
+Future<List<IProductEntry>?> loadProductsBySearchRequest(ShopFilters? filters,
+    int limit, int offset, CancelToken cancelToken) async {
   try {
     final res = await handleBackendRequests(
         method: HTTP_METHOD.GET,
-        endpoint: 'api/v1/products?search=$search&limit=$limit&offset=$offset',
+        endpoint: generateUrlEndpointFromFilters(filters,
+            limit: limit, offset: offset),
         cancelToken: cancelToken);
 
     if (res['error'] != null) {
@@ -79,6 +82,27 @@ Future<Map<String, double>> loadMaxPriceRanges() async {
         content.entries.map((e) => MapEntry(e.key, e.value.toDouble())));
   } catch (error) {
     print('Error loading product price ranges $error');
+    rethrow;
+  }
+}
+
+Future<List<String>> loadAvailableCategories() async {
+  try {
+    final res = await handleBackendRequests(
+      method: HTTP_METHOD.GET,
+      endpoint: 'api/v1/product_categories',
+    );
+
+    if (res['error'] != null) {
+      throw res['error'];
+    }
+    final List<dynamic> content = res['content'];
+    final List<String> categories =
+        content.map((el) => el['category'] as String).toList();
+
+    return categories;
+  } catch (error) {
+    print('Error loading product categories $error');
     rethrow;
   }
 }

@@ -90,3 +90,14 @@ Map<String, T> getFilteredEntries<T extends Object>(
 
   return Map.fromEntries(entries);
 }
+
+class Nullable<T> {
+  final bool isPresent;
+  final T? value;
+
+  const Nullable.absent()
+      : isPresent = false,
+        value = null;
+
+  const Nullable.present(this.value) : isPresent = true;
+}

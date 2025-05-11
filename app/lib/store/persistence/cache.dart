@@ -11,7 +11,6 @@ class Cache {
     final keys = await storageController.getAllKeys() ?? {};
     for (final key in keys) {
       if (regex.hasMatch(key)) {
-        print(key);
         responses.add(await storageController.removeStateLocal(key));
       }
     }

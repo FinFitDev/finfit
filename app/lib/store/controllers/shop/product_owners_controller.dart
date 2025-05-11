@@ -16,7 +16,7 @@ class ProductOwnersController {
 
   refresh() {
     reset();
-    handleOnSearch(shopController.searchValue);
+    handleOnSearch(shopController.allShopFilters?.search ?? '');
   }
 
   final BehaviorSubject<ContentWithLoading<Map<String, IProductOwnerEntry>>>

@@ -34,6 +34,15 @@ class _ImageBoxState extends State<ImageBox> {
     _loadImage();
   }
 
+  @override
+  void didUpdateWidget(covariant ImageBox oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.image != widget.image) {
+      _isImageLoaded = false;
+      _loadImage();
+    }
+  }
+
   void _loadImage() async {
     final image = await ImageHelper.getDecorationImage(widget.image);
     if (mounted) {
@@ -68,7 +77,7 @@ class _ImageBoxState extends State<ImageBox> {
               ),
               child: AnimatedOpacity(
                 opacity: _isImageLoaded ? 1.0 : 0.0,
-                duration: const Duration(milliseconds: 300),
+                duration: const Duration(milliseconds: 500),
                 curve: Curves.easeInOut,
                 child: Container(
                   decoration: BoxDecoration(

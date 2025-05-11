@@ -93,12 +93,6 @@ class TransactionsController {
         for (final el in fetchedTransactions) el.uuid: el
       };
       addTransactions(transactionsMap);
-      productsController.addProducts({
-        for (final entry in transactionsMap.entries)
-          if (entry.value.product != null)
-            entry.value.product!.uuid: entry.value.product!
-      });
-
       // it means we are at the end of the data
       if (transactionsMap.length < TRANSACTION_DATA_CHUNK_SIZE) {
         setCanFetchMore(false);

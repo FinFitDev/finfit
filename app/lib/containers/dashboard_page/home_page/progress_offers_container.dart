@@ -1,6 +1,6 @@
 import 'package:excerbuys/components/dashboard_page/shop_page/featured_product_card.dart';
 import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
-import 'package:excerbuys/components/shared/indicators/current_item/current_item_indicator.dart';
+import 'package:excerbuys/components/shared/indicators/carousel/current_item_indicator.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/product_info_modal.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller.dart';

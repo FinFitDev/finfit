@@ -9,6 +9,7 @@ import 'package:excerbuys/components/shared/profile_image_generator.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/product_info_modal.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller.dart';
+import 'package:excerbuys/store/controllers/shop/products_controller.dart';
 import 'package:excerbuys/store/controllers/shop/transactions_controller.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/types/transaction.dart';
@@ -36,6 +37,13 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
   void getTransactionMetadata() {
     final foundTransaction =
         transactionsController.allTransactions.content[widget.transactionId];
+
+    // add product that are referenced in a transaction
+    if (foundTransaction?.product != null) {
+      productsController.addProducts(
+          {foundTransaction!.product!.uuid: foundTransaction.product!});
+    }
+
     if (foundTransaction == null) {
       setState(() {
         _error = true;

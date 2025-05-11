@@ -149,7 +149,7 @@ class _InfiniteListWrapperV2State extends State<InfiniteListWrapperV2>
                           );
                         })
                     : SizedBox(
-                        height: APPBAR_HEIGHT,
+                        height: 78,
                       );
               }
 

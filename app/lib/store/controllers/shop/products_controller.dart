@@ -4,6 +4,7 @@ import 'package:excerbuys/store/controllers/user_controller.dart';
 import 'package:excerbuys/store/selectors/shop/products.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/product.dart';
+import 'package:excerbuys/types/shop.dart';
 import 'package:excerbuys/utils/shop/product/requests.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -16,7 +17,7 @@ class ProductsController {
   CancelToken cancelToken = CancelToken();
 
   reset() {
-    _allProducts.add(ContentWithLoading(content: {}));
+    setProducts({});
     setLazyLoadOffset(0);
     setCanFetchMore(true);
     setProductsLoading(false);
@@ -24,7 +25,7 @@ class ProductsController {
 
   refresh() {
     reset();
-    handleOnSearch(shopController.searchValue);
+    handleOnChangeFilters(shopController.allShopFilters);
   }
 
 //  home products
@@ -66,7 +67,6 @@ class ProductsController {
               entry, balance, HOME_PRODUCTS_DATA_LENGTH));
 
 // all products
-
   final BehaviorSubject<IAllProductsData> _allProducts =
       BehaviorSubject.seeded(ContentWithLoading(content: {}));
   Stream<IAllProductsData> get allProductsStream => _allProducts.stream;
@@ -74,8 +74,8 @@ class ProductsController {
 
   Stream<IAllProductsData> get productsForSearchStream => Rx.combineLatest2(
       allProductsStream,
-      shopController.searchValueStream,
-      getProductsMatchingSearch);
+      shopController.allShopFiltersStream.distinct(),
+      getProductsMatchingFilters);
 
   setProducts(Map<String, IProductEntry> products) {
     _allProducts.add(ContentWithLoading(content: products));
@@ -153,43 +153,38 @@ class ProductsController {
     }
   }
 
-  Future<void> handleOnSearch(String? search) async {
+  Future<void> handleOnChangeFilters(ShopFilters? filters) async {
     if (!cancelToken.isCancelled) {
       cancelToken.cancel();
     }
     cancelToken = CancelToken();
-    fetchProductsBySearch(search);
+
+    setProducts({});
+    setLazyLoadOffset(0);
+    setCanFetchMore(true);
+    fetchProductsWithFilters(filters, reset: true);
   }
 
-  Future<void> fetchProductsBySearch(String? search) async {
+  Future<void> fetchProductsWithFilters(ShopFilters? filters,
+      {bool reset = false}) async {
     try {
-      if (search != shopController.previousSearchValue) {
-        setProducts({});
-        setLazyLoadOffset(0);
-        setCanFetchMore(true);
-        // now the value is the same
-        shopController.setPreviousSearchValue(search);
+      // fetching first chunk or new filters
+      if (reset) {
+        setIsLoadingForSearch(true);
+        // fetching more data
+      } else {
+        setLoadingMoreData(true);
       }
 
-      // fetching more data
-      if (lazyLoadOffset.content > 0 &&
-          shopController.previousSearchValue == shopController.searchValue) {
-        setLoadingMoreData(true);
-        // fetching first chunk for search
-      } else {
-        setIsLoadingForSearch(true);
-      }
+      final offset = reset ? 0 : lazyLoadOffset.content;
 
       final List<IProductEntry>? fetchedProducts =
           await loadProductsBySearchRequest(
-              search ?? '',
-              PRODUCTS_DATA_CHUNK_SIZE,
-              lazyLoadOffset.content ?? 0,
-              cancelToken);
+              filters, PRODUCTS_DATA_CHUNK_SIZE, offset, cancelToken);
 
       if (fetchedProducts == null || fetchedProducts.isEmpty) {
         setCanFetchMore(false);
-        throw 'No new products found for search $search';
+        throw 'No new products found for filters';
       }
 
       final Map<String, IProductEntry> prodcustMap = {

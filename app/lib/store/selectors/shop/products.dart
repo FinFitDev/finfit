@@ -1,7 +1,10 @@
 import 'package:excerbuys/store/controllers/shop/products_controller.dart';
+import 'package:excerbuys/store/controllers/shop_controller.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/product.dart';
+import 'package:excerbuys/types/shop.dart';
 import 'package:excerbuys/utils/debug.dart';
+import 'package:excerbuys/utils/shop/product/utils.dart';
 
 IAllProductsData getAffordableProducts(
     IAllProductsData data, double? userBalance) {
@@ -61,12 +64,41 @@ ContentWithLoading<List<IProductEntry>> getHomeNearlyAffordableProducts(
   return newData;
 }
 
-IAllProductsData getProductsMatchingSearch(
-    IAllProductsData data, String? search) {
-  final filteredEntries = data.content.entries
-      .where((entry) =>
-          entry.value.name.toLowerCase().contains((search ?? '').toLowerCase()))
-      .toList();
+IAllProductsData getProductsMatchingFilters(
+    IAllProductsData data, ShopFilters? filters) {
+  if (filters == null) {
+    return IAllProductsData(content: {});
+  }
+  final filteredEntries = data.content.entries.where((entry) {
+    final product = entry.value;
+
+    final matchesSearch = product.name
+        .toLowerCase()
+        .contains((filters.search ?? '').toLowerCase());
+
+    // Category filter 0 == 'ALL'
+
+    final matchesCategory = (filters.activeShopCategory == 0) ||
+        product.category ==
+            shopController.availableCategories[filters.activeShopCategory - 1];
+
+    // Price range filter
+    final price = product.originalPrice;
+    final matchesPrice = price >= filters.currentPriceRange.start &&
+        price <= filters.currentPriceRange.end;
+
+    // Finpoints range filter
+    final finpoints = product.finpointsPrice;
+    final matchesFinpoints = finpoints >= filters.currentFinpointsRange.start &&
+        finpoints <= filters.currentFinpointsRange.end;
+
+    return matchesSearch && matchesCategory && matchesPrice && matchesFinpoints;
+  }).toList();
+
+  // Sort (optional)
+  if (filters.sortByData != null) {
+    sortProductEntries(filteredEntries, filters.sortByData!);
+  }
 
   final sortedContent = Map<String, IProductEntry>.fromEntries(filteredEntries);
 
