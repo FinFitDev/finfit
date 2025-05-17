@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:excerbuys/components/shared/indicators/circle_progress/load_more_indicator.dart';
@@ -33,6 +34,9 @@ class InfiniteListWrapper extends StatefulWidget {
 
 class _InfiniteListWrapperState extends State<InfiniteListWrapper>
     with TickerProviderStateMixin {
+  Timer? progressTimer;
+  bool canRefresh = true;
+
   final ValueNotifier<double> scrollMoreProgress = ValueNotifier(0.0);
   final ValueNotifier<double> refreshProgress = ValueNotifier(0.0);
 
@@ -61,6 +65,20 @@ class _InfiniteListWrapperState extends State<InfiniteListWrapper>
     }
 
     refreshProgress.value = -(_scrollController.position.pixels + 50);
+  }
+
+  void limitRefresh() {
+    if (mounted) {
+      setState(() {
+        canRefresh = false;
+      });
+    }
+    // TODO change refresh timeout
+    progressTimer = Timer(Duration(seconds: 5), () {
+      setState(() {
+        canRefresh = true;
+      });
+    });
   }
 
   @override
@@ -116,11 +134,12 @@ class _InfiniteListWrapperState extends State<InfiniteListWrapper>
               scrollMoreProgress.value = 0;
               widget.onLoadMore?.call();
             }
-          } else if (refreshProgress.value > 100) {
+          } else if (refreshProgress.value > 100 && canRefresh) {
             triggerVibrate(FeedbackType.light);
             if (widget.isRefreshing == false) {
               refreshProgress.value = 0;
               widget.onRefresh?.call();
+              limitRefresh();
             }
           }
         },

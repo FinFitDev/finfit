@@ -1,7 +1,7 @@
 import 'package:excerbuys/components/auth_page/logo.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
-import 'package:excerbuys/store/controllers/auth_controller.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
+import 'package:excerbuys/store/controllers/auth_controller/auth_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';

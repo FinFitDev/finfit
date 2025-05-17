@@ -88,6 +88,8 @@ export interface IProductOwner {
   description: string;
   createdAt: string;
   total_transactions: number;
+  total_products: number;
+  banner_image?: string;
   link?: string;
   image?: string;
 }

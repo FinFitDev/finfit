@@ -1,5 +1,6 @@
 import 'package:excerbuys/store/persistence/storage_controller.dart';
 import 'package:excerbuys/types/general.dart';
+import 'package:excerbuys/utils/debug.dart';
 
 class Cache {
   static Future<bool> clearCache() async {
@@ -28,8 +29,12 @@ class Cache {
   }
 
   static Future<void> set<T>(
-      String url, T data, Object Function(T content) serializer) async {
-    final payload = ContentWithTimestamp(content: data);
+      String url, T data, Object Function(T content) serializer,
+      {int? validFor}) async {
+    var payload = ContentWithTimestamp(content: data);
+    if (validFor != null) {
+      payload = ContentWithTimestamp(content: data, validFor: validFor);
+    }
     await storageController.saveStateLocal(url, payload.toJson(serializer));
   }
 
@@ -37,17 +42,21 @@ class Cache {
       String url,
       Future<T?> Function() requestFunction,
       Object Function(T content) serializer,
-      T Function(Object jsonData) deserializer) async {
+      T Function(Object jsonData) deserializer,
+      {int? validFor}) async {
     try {
       final cacheResponse = await Cache.get<T>(url, deserializer);
 
       if (cacheResponse != null && !cacheResponse.isExpired()) {
+        print('Cache hit for $url');
         return cacheResponse.content;
       }
 
       final response = await requestFunction();
+      print('fetch hit for $url');
+
       if (response != null) {
-        await Cache.set(url, response, serializer);
+        await Cache.set(url, response, serializer, validFor: validFor);
       }
 
       return response;

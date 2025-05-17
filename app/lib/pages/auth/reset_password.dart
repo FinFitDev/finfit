@@ -1,6 +1,6 @@
 import 'package:excerbuys/containers/auth_page/reset_password_container.dart';
-import 'package:excerbuys/store/controllers/auth_controller.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
+import 'package:excerbuys/store/controllers/auth_controller/auth_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

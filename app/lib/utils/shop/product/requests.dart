@@ -14,7 +14,7 @@ Future<List<IProductEntry>?> loadHomeProductsRequest(String userId) async {
     try {
       final res = await handleBackendRequests(
         method: HTTP_METHOD.GET,
-        endpoint: 'api/v1/products/$userId',
+        endpoint: 'api/v1/products/featured/$userId',
       );
 
       if (res['error'] != null) {
@@ -35,7 +35,7 @@ Future<List<IProductEntry>?> loadHomeProductsRequest(String userId) async {
   }
 
   return await Cache.fetch<List<IProductEntry>>(
-      "${BACKEND_BASE_URL}api/v1/products/$userId",
+      "${BACKEND_BASE_URL}api/v1/products/featured/$userId",
       () async => await handler(userId),
       (list) => list.map((e) => e.toJson()).toList(),
       (data) => (data as List<dynamic>).map((e) {
@@ -43,66 +43,71 @@ Future<List<IProductEntry>?> loadHomeProductsRequest(String userId) async {
           }).toList());
 }
 
-Future<List<IProductEntry>?> loadProductsBySearchRequest(ShopFilters? filters,
+Future<List<IProductEntry>?> loadProductsByFiltersRequest(ShopFilters? filters,
     int limit, int offset, CancelToken cancelToken) async {
-  try {
-    final res = await handleBackendRequests(
-        method: HTTP_METHOD.GET,
-        endpoint: generateUrlEndpointFromFilters(filters,
-            limit: limit, offset: offset),
-        cancelToken: cancelToken);
+  // request handler to use instead of cache
+  Future<List<IProductEntry>?> handler(ShopFilters? filters, int limit,
+      int offset, CancelToken cancelToken) async {
+    try {
+      final res = await handleBackendRequests(
+          method: HTTP_METHOD.GET,
+          endpoint: generateUrlEndpointFromFilters(filters,
+              limit: limit, offset: offset),
+          cancelToken: cancelToken);
 
-    if (res['error'] != null) {
-      throw res['error'];
+      if (res['error'] != null) {
+        throw res['error'];
+      }
+
+      final content = res['content'] as List<dynamic>;
+      return content
+          .map((item) => IProductEntry.fromJson(item as Map<String, dynamic>))
+          .toList();
+    } catch (error) {
+      print('Error loading search products from database $error');
+      rethrow;
     }
-
-    final content = res['content'] as List<dynamic>;
-    return content
-        .map((item) => IProductEntry.fromJson(item as Map<String, dynamic>))
-        .toList();
-  } catch (error) {
-    print('Error loading search products from database $error');
-    rethrow;
   }
+
+  return await Cache.fetch<List<IProductEntry>>(
+      "${BACKEND_BASE_URL}${generateUrlEndpointFromFilters(filters, limit: limit, offset: offset)}",
+      () async => await handler(filters, limit, offset, cancelToken),
+      (list) => list.map((e) => e.toJson()).toList(),
+      (data) => (data as List<dynamic>).map((e) {
+            return IProductEntry.fromJson(e);
+          }).toList());
 }
 
-Future<Map<String, double>> loadMaxPriceRanges() async {
-  try {
-    final res = await handleBackendRequests(
-      method: HTTP_METHOD.GET,
-      endpoint: 'api/v1/product_ranges',
-    );
+Future<List<IProductEntry>?> loadProductsForProductOwnerRequest(
+    String? id, int limit, int offset, CancelToken cancelToken) async {
+  // request handler to use instead of cache
+  Future<List<IProductEntry>?> handler(
+      String? id, int limit, int offset, CancelToken cancelToken) async {
+    try {
+      final res = await handleBackendRequests(
+          method: HTTP_METHOD.GET,
+          endpoint: 'api/v1/products/$id?limit=$limit&offset=$offset',
+          cancelToken: cancelToken);
 
-    if (res['error'] != null) {
-      throw res['error'];
+      if (res['error'] != null) {
+        throw res['error'];
+      }
+
+      final content = res['content'] as List<dynamic>;
+      return content
+          .map((item) => IProductEntry.fromJson(item as Map<String, dynamic>))
+          .toList();
+    } catch (error) {
+      print('Error loading search products from database $error');
+      rethrow;
     }
-
-    final Map<String, dynamic> content = res['content'];
-    return Map.fromEntries(
-        content.entries.map((e) => MapEntry(e.key, e.value.toDouble())));
-  } catch (error) {
-    print('Error loading product price ranges $error');
-    rethrow;
   }
-}
 
-Future<List<String>> loadAvailableCategories() async {
-  try {
-    final res = await handleBackendRequests(
-      method: HTTP_METHOD.GET,
-      endpoint: 'api/v1/product_categories',
-    );
-
-    if (res['error'] != null) {
-      throw res['error'];
-    }
-    final List<dynamic> content = res['content'];
-    final List<String> categories =
-        content.map((el) => el['category'] as String).toList();
-
-    return categories;
-  } catch (error) {
-    print('Error loading product categories $error');
-    rethrow;
-  }
+  return await Cache.fetch<List<IProductEntry>>(
+      "${BACKEND_BASE_URL}api/v1/products/$id?limit=$limit&offset=$offset",
+      () async => await handler(id, limit, offset, cancelToken),
+      (list) => list.map((e) => e.toJson()).toList(),
+      (data) => (data as List<dynamic>).map((e) {
+            return IProductEntry.fromJson(e);
+          }).toList());
 }

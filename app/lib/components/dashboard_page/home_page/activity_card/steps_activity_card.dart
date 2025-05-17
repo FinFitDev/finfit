@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
-import 'package:excerbuys/store/controllers/dashboard_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/utils/activity/steps.dart';
 import 'package:excerbuys/utils/constants.dart';

@@ -1,8 +1,8 @@
 import 'package:excerbuys/components/shared/indicators/circle_progress/circle_progress_indicator.dart';
 import 'package:excerbuys/components/shared/indicators/circle_progress/load_more_indicator.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/transactions_section.dart';
-import 'package:excerbuys/store/controllers/dashboard/history_controller.dart';
-import 'package:excerbuys/store/controllers/shop/transactions_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard/history_controller/history_controller.dart';
+import 'package:excerbuys/store/controllers/shop/transactions_controller/transactions_controller.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/transaction.dart';

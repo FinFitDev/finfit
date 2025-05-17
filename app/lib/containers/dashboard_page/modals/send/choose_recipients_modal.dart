@@ -4,8 +4,8 @@ import 'package:excerbuys/components/input_with_icon.dart';
 import 'package:excerbuys/components/modal/modal_header.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/send/qrscanner_modal.dart';
-import 'package:excerbuys/store/controllers/dashboard/send_controller.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard/send_controller/send_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/constants.dart';
@@ -27,8 +27,9 @@ class _ChooseRecipientsModalState extends State<ChooseRecipientsModal> {
   @override
   void initState() {
     super.initState();
-
-    sendController.loadRecentRecipients();
+    if (sendController.recentRecipientsIds.isEmpty) {
+      sendController.loadRecentRecipients();
+    }
   }
 
   @override

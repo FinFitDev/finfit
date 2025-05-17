@@ -26,7 +26,7 @@ class ContentWithTimestamp<T> {
 
   ContentWithTimestamp({
     required this.content,
-    this.validFor = DEFAULT_CACHE_VALIDITY_PERIOD,
+    this.validFor = ONE_HOUR_CACHE_VALIDITY_PERIOD,
     DateTime? timestamp,
   }) : timestamp = timestamp ?? DateTime.now();
 

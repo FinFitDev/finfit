@@ -8,7 +8,7 @@ import {
   insertUser,
 } from "../../../models/userModel";
 import { IGoogleSignUpPayload, ISignupPayload } from "../types";
-import { generateSeed, isUserGoogleSignup } from "../../../shared/utils";
+import { isUserGoogleSignup } from "../../../shared/utils";
 import { v4 as uuidv4 } from "uuid";
 import { sendVerificationEmail } from "../../../shared/utils/email";
 import { generateEmailVerificationToken } from "../../../models/tokenModel";
@@ -41,7 +41,7 @@ export const signUpUser = async (
       username,
       email,
       user.google_id,
-      generateSeed()
+      uuidv4()
     );
     uuid = goolgeResponse.rows[0].uuid;
   } else {
@@ -56,7 +56,7 @@ export const signUpUser = async (
       username,
       email,
       hashed_password,
-      generateSeed()
+      uuidv4()
     );
     uuid = response.rows[0].uuid;
 

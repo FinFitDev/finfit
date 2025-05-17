@@ -7,16 +7,14 @@ import 'package:excerbuys/containers/dashboard_page/home_page/balance_container.
 import 'package:excerbuys/containers/dashboard_page/home_page/news_container.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/progress_offers_container.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/transactions_section.dart';
-import 'package:excerbuys/store/controllers/activity/activity_controller.dart';
-import 'package:excerbuys/store/controllers/activity/steps_controller.dart';
-import 'package:excerbuys/store/controllers/activity/trainings_controller.dart';
-import 'package:excerbuys/store/controllers/dashboard_controller.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
-import 'package:excerbuys/store/controllers/shop/products_controller.dart';
-import 'package:excerbuys/store/controllers/shop/transactions_controller.dart';
-import 'package:excerbuys/store/controllers/shop_controller.dart';
-import 'package:excerbuys/store/controllers/user_controller.dart';
-import 'package:excerbuys/store/persistence/cache.dart';
+import 'package:excerbuys/store/controllers/activity/steps_controller/steps_controller.dart';
+import 'package:excerbuys/store/controllers/activity/trainings_controller/trainings_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard/send_controller/send_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
+import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
+import 'package:excerbuys/store/controllers/shop/transactions_controller/transactions_controller.dart';
+import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/product.dart';
@@ -60,12 +58,8 @@ class _HomePageState extends State<HomePage> {
 
     await stepsController.fetchsSteps();
 
-    // we do it to force refetch on modal init state
-    shopController.setMaxRanges({});
-    shopController.setAvailableCategories([]);
-
-    // TODO fix refactor remove featured products cache
-    Cache.removeKeysByPattern(RegExp(r'.*/api/v1/products/[a-zA-Z0-9\-]+$'));
+    await productsController.refreshHomeProducts();
+    await sendController.refresh();
   }
 
   @override

@@ -5,6 +5,7 @@ import {
   fetchNearlyAfforableProducts,
   fetchProducts,
   fetchProductsByFilters,
+  fetchProductsForProductOwner,
 } from "../../../models/productModel";
 import { fetchUserById } from "../../../models/userModel";
 import { IFiltersQuery, IProduct } from "../../../shared/types";
@@ -95,6 +96,24 @@ export const getProductsByFilters = async (query: IFiltersQuery) => {
   if (foundProducts.rowCount && foundProducts.rowCount > 0) {
     return foundProducts.rows as IProduct[];
   } else {
+    return [];
+  }
+};
+
+export const getProductsForProductOwner = async (
+  owner_id: string,
+  limit: number,
+  offset: number
+) => {
+  const foundProducts = await fetchProductsForProductOwner(
+    owner_id,
+    limit,
+    offset
+  );
+
+  if (foundProducts.rowCount && foundProducts.rowCount > 0)
+    return foundProducts.rows as IProduct[];
+  else {
     return [];
   }
 };

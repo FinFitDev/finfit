@@ -5,7 +5,7 @@ import 'package:excerbuys/components/shared/indicators/carousel/carousel_counter
 import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/components/shared/indicators/carousel/current_item_indicator.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/product_info_modal.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/modal_wrapper.dart';

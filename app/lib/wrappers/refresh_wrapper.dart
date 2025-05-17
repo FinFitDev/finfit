@@ -26,6 +26,7 @@ class _RefreshWrapperState extends State<RefreshWrapper> {
         canRefresh = false;
       });
     }
+    // TODO change refresh timeout
     progressTimer = Timer(Duration(seconds: 5), () {
       setState(() {
         canRefresh = true;

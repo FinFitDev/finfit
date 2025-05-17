@@ -1,6 +1,5 @@
 import 'package:excerbuys/containers/dashboard_page/modals/dropdown_options_modal.dart';
-import 'package:excerbuys/store/controllers/shop_controller.dart';
-import 'package:excerbuys/utils/shop/constants.dart';
+import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/wrappers/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';

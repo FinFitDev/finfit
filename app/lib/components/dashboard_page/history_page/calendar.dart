@@ -1,4 +1,4 @@
-import 'package:excerbuys/store/controllers/dashboard/history_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard/history_controller/history_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';

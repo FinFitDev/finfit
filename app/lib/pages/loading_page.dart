@@ -1,7 +1,7 @@
-import 'package:excerbuys/store/controllers/app_controller.dart';
-import 'package:excerbuys/store/controllers/auth_controller.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
-import 'package:excerbuys/store/controllers/user_controller.dart';
+import 'package:excerbuys/store/controllers/app_controller/app_controller.dart';
+import 'package:excerbuys/store/controllers/auth_controller/auth_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
+import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +42,7 @@ class _LoadingPageState extends State<LoadingPage> {
     return Scaffold(
       body: Container(
         height: 300,
-        color: Colors.red,
+        color: Colors.blue,
       ),
     );
   }

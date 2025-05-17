@@ -1,11 +1,11 @@
 import 'package:excerbuys/components/modal/modal_header.dart';
 import 'package:excerbuys/components/shared/buttons/copy_text.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
-import 'package:excerbuys/store/controllers/user_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
+import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:share_plus/share_plus.dart';
 
 class QrcodeModal extends StatelessWidget {
@@ -37,20 +37,16 @@ class QrcodeModal extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: QrImageView(
-                      data: userController.currentUser!.uuid,
-                      version: QrVersions.auto,
-                      dataModuleStyle: QrDataModuleStyle(
-                        dataModuleShape: QrDataModuleShape.square,
-                        color: colors.primaryFixed,
-                      ),
-                      eyeStyle: QrEyeStyle(
-                        eyeShape: QrEyeShape.square,
-                        color: colors.primaryFixed,
-                      ),
-                    ),
-                  ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 16),
+                      child: PrettyQrView.data(
+                        data: userController.currentUser!.uuid,
+                        // decoration: const PrettyQrDecoration(
+                        //   image: PrettyQrDecorationImage(
+                        //     image: AssetImage('assets/images/logo.png'),
+                        //   ),
+                        // ),
+                      )),
                   SizedBox(
                     height: 16,
                   ),

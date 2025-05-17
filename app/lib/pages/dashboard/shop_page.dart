@@ -1,15 +1,16 @@
 import 'dart:async';
+import 'package:excerbuys/containers/dashboard_page/shop_page/product_owner_header_container.dart';
 import 'package:excerbuys/containers/dashboard_page/shop_page/products_row_container.dart';
 import 'package:excerbuys/containers/dashboard_page/shop_page/shop_top_container.dart';
-import 'package:excerbuys/store/controllers/dashboard_controller.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
-import 'package:excerbuys/store/controllers/shop/product_owners_controller.dart';
-import 'package:excerbuys/store/controllers/shop/products_controller.dart';
-import 'package:excerbuys/store/controllers/shop_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
+import 'package:excerbuys/store/controllers/shop/product_owners_controller/product_owners_controller.dart';
+import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
+import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/types/shop.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/utils/debug.dart';
+import 'package:excerbuys/wrappers/animated_switcher_wrapper.dart';
 import 'package:excerbuys/wrappers/infinite_list_wrapper_v2.dart';
 import 'package:flutter/material.dart';
 import 'package:payu/payu.dart';
@@ -36,13 +37,19 @@ class ShopPage extends StatefulWidget {
 class _ShopPageState extends State<ShopPage> {
   late StreamSubscription _activePageSubscription;
   late StreamSubscription _shopFiltersSubscription;
+  late StreamSubscription _selectedProductOwnerSubscription;
+  Timer? animationProgressTimer;
+
+  bool _isAnimating = false;
+  ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    if (shopController.availableCategories.isEmpty) {
-      shopController.fetchAvailableCategories();
-    }
+    // its cached
+    shopController.fetchMaxRanges();
+    shopController.fetchAvailableCategories();
+
     _activePageSubscription =
         dashboardController.activePageStream.listen((activePage) {
       if (activePage == 1) {
@@ -51,6 +58,20 @@ class _ShopPageState extends State<ShopPage> {
             .distinct()
             .listen((data) {
           productsController.handleOnChangeFilters(data);
+        });
+
+        _selectedProductOwnerSubscription =
+            shopController.selectedProductOwnerStream.distinct().listen((data) {
+          setState(() {
+            setState(() {
+              _isAnimating = true;
+            });
+            animationProgressTimer = Timer(Duration(milliseconds: 250), () {
+              setState(() {
+                _isAnimating = false;
+              });
+            });
+          });
         });
 
         if (productOwnersController.allProductOwners.content.isEmpty) {
@@ -64,6 +85,9 @@ class _ShopPageState extends State<ShopPage> {
   void dispose() {
     _shopFiltersSubscription.cancel();
     _activePageSubscription.cancel();
+    _selectedProductOwnerSubscription.cancel();
+    animationProgressTimer?.cancel();
+
     super.dispose();
   }
 
@@ -88,6 +112,7 @@ class _ShopPageState extends State<ShopPage> {
               stream: shopController.shopPageUpdateTrigger(),
               builder: (context, filtersSnapshot) {
                 return InfiniteListWrapperV2(
+                  scrollController: scrollController,
                   on: true,
                   isLoadingMoreData:
                       productsController.lazyLoadOffset.isLoading,
@@ -100,13 +125,38 @@ class _ShopPageState extends State<ShopPage> {
                     productOwnersController.refresh();
                   },
                   onLoadMore: () {
-                    productsController
-                        .fetchProductsWithFilters(filtersSnapshot.data);
+                    productsController.loadMoreData();
                   },
                   padding: EdgeInsets.only(
                       bottom: APPBAR_HEIGHT + layoutController.bottomPadding),
                   children: [
-                    ShopTopContainer(),
+                    AnimatedSwitcherWrapper(
+                        child: shopController.selectedProductOwner != null
+                            ? Container(
+                                constraints: BoxConstraints(
+                                    minHeight: _isAnimating ? 15000 : 0),
+                                key: ValueKey('BaseData'),
+                                child: ProductOwnerHeaderContainer(
+                                  productOwnerId:
+                                      shopController.selectedProductOwner,
+                                  onBackPressed: () {
+                                    productsController
+                                        .handleOnClickProductOwner(null);
+                                    scrollController.jumpTo(0);
+                                  },
+                                ))
+                            : Container(
+                                constraints: BoxConstraints(
+                                    minHeight: _isAnimating ? 15000 : 0),
+                                key: ValueKey('ProductOwnerData'),
+                                child: ShopTopContainer(
+                                  onPressPartner: (String? uuid) {
+                                    productsController
+                                        .handleOnClickProductOwner(uuid);
+                                    scrollController.jumpTo(0);
+                                  },
+                                ),
+                              )),
                     SizedBox(
                       height: 16,
                     ),

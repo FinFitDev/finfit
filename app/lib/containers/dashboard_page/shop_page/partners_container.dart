@@ -6,7 +6,12 @@ import 'package:flutter/material.dart';
 class PartnersContainer extends StatefulWidget {
   final bool? isLoading;
   final Map<String, IProductOwnerEntry> owners;
-  const PartnersContainer({super.key, this.isLoading, required this.owners});
+  final void Function(String?) onPressPartner;
+  const PartnersContainer(
+      {super.key,
+      this.isLoading,
+      required this.owners,
+      required this.onPressPartner});
 
   @override
   State<PartnersContainer> createState() => _PartnersContainerState();
@@ -51,7 +56,7 @@ class _PartnersContainerState extends State<PartnersContainer> {
                                   : 0),
                           child: PartnerCard(
                             onPressed: () {
-                              // Your tap action
+                              widget.onPressPartner(owner.uuid);
                             },
                             name: owner.name,
                             image: owner.image,

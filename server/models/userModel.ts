@@ -33,6 +33,15 @@ export const fetchUserById = async (id: string) => {
   return response;
 };
 
+export const fetchUsersByIds = async (ids: string[]) => {
+  const response = await pool.query(
+    "SELECT uuid, username, email, image, created_at, points, steps_updated_at, verified FROM users WHERE users.uuid = ANY($1)",
+    [ids]
+  );
+
+  return response;
+};
+
 export const insertUser = async (
   username: string,
   email: string,

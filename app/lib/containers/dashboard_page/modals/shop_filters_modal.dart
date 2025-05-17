@@ -5,8 +5,9 @@ import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/components/shared/buttons/radio_button.dart';
 import 'package:excerbuys/components/shared/indicators/sliders/range_slider.dart';
 import 'package:excerbuys/components/shared/positions/position.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
-import 'package:excerbuys/store/controllers/shop_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
+
+import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/types/shop.dart';
 import 'package:excerbuys/utils/constants.dart';

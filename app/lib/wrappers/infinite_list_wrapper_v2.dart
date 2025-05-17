@@ -1,8 +1,7 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:excerbuys/components/shared/indicators/circle_progress/load_more_indicator.dart';
-import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -17,6 +16,7 @@ class InfiniteListWrapperV2 extends StatefulWidget {
   final bool? canFetchMore;
   final void Function()? onLoadMore;
   final void Function()? onRefresh;
+  final ScrollController scrollController;
   const InfiniteListWrapperV2(
       {super.key,
       required this.on,
@@ -26,7 +26,8 @@ class InfiniteListWrapperV2 extends StatefulWidget {
       this.isRefreshing,
       this.canFetchMore,
       this.onLoadMore,
-      this.onRefresh});
+      this.onRefresh,
+      required this.scrollController});
 
   @override
   State<InfiniteListWrapperV2> createState() => _InfiniteListWrapperV2State();
@@ -34,15 +35,17 @@ class InfiniteListWrapperV2 extends StatefulWidget {
 
 class _InfiniteListWrapperV2State extends State<InfiniteListWrapperV2>
     with TickerProviderStateMixin {
+  Timer? progressTimer;
+  bool canRefresh = true;
+
   final ValueNotifier<double> scrollMoreProgress = ValueNotifier(0.0);
   final ValueNotifier<double> refreshProgress = ValueNotifier(0.0);
 
   final ValueNotifier<bool> isScrolling = ValueNotifier(false);
-  final ScrollController _scrollController = ScrollController();
   late final AnimationController _animationController;
 
   void setLoadMoreDataProgressIndicator() {
-    if (!_scrollController.hasClients) return;
+    if (!widget.scrollController.hasClients) return;
 
     if (widget.canFetchMore != true ||
         widget.isLoadingMoreData == true ||
@@ -50,18 +53,32 @@ class _InfiniteListWrapperV2State extends State<InfiniteListWrapperV2>
       return;
     }
 
-    scrollMoreProgress.value = (_scrollController.position.pixels -
-        _scrollController.position.maxScrollExtent);
+    scrollMoreProgress.value = (widget.scrollController.position.pixels -
+        widget.scrollController.position.maxScrollExtent);
   }
 
   void setRefreshProgress() {
-    if (!_scrollController.hasClients) return;
+    if (!widget.scrollController.hasClients) return;
 
     if (widget.isRefreshing == true) {
       return;
     }
 
-    refreshProgress.value = -(_scrollController.position.pixels + 50);
+    refreshProgress.value = -(widget.scrollController.position.pixels + 50);
+  }
+
+  void limitRefresh() {
+    if (mounted) {
+      setState(() {
+        canRefresh = false;
+      });
+    }
+    // TODO change refresh timeout
+    progressTimer = Timer(Duration(seconds: 5), () {
+      setState(() {
+        canRefresh = true;
+      });
+    });
   }
 
   @override
@@ -79,22 +96,22 @@ class _InfiniteListWrapperV2State extends State<InfiniteListWrapperV2>
   void didUpdateWidget(covariant InfiniteListWrapperV2 oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Ensure ScrollController is attached before accessing position
-    if (mounted && _scrollController.hasClients) {
-      _scrollController.removeListener(setLoadMoreDataProgressIndicator);
-      _scrollController.removeListener(setRefreshProgress);
+    if (mounted && widget.scrollController.hasClients) {
+      widget.scrollController.removeListener(setLoadMoreDataProgressIndicator);
+      widget.scrollController.removeListener(setRefreshProgress);
 
       if (widget.on) {
-        _scrollController.addListener(setLoadMoreDataProgressIndicator);
-        _scrollController.addListener(setRefreshProgress);
+        widget.scrollController.addListener(setLoadMoreDataProgressIndicator);
+        widget.scrollController.addListener(setRefreshProgress);
       }
     }
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(setLoadMoreDataProgressIndicator);
-    _scrollController.removeListener(setRefreshProgress);
-    _scrollController.dispose();
+    widget.scrollController.removeListener(setLoadMoreDataProgressIndicator);
+    widget.scrollController.removeListener(setRefreshProgress);
+    widget.scrollController.dispose();
     _animationController.dispose();
     super.dispose();
   }
@@ -117,11 +134,12 @@ class _InfiniteListWrapperV2State extends State<InfiniteListWrapperV2>
               scrollMoreProgress.value = 0;
               widget.onLoadMore?.call();
             }
-          } else if (refreshProgress.value > 100) {
+          } else if (refreshProgress.value > 100 && canRefresh) {
             triggerVibrate(FeedbackType.light);
             if (widget.isRefreshing == false) {
               refreshProgress.value = 0;
               widget.onRefresh?.call();
+              limitRefresh();
             }
           }
         },
@@ -130,7 +148,7 @@ class _InfiniteListWrapperV2State extends State<InfiniteListWrapperV2>
         },
         child: ListView.builder(
             physics: const AlwaysScrollableScrollPhysics(),
-            controller: _scrollController,
+            controller: widget.scrollController,
             padding: widget.padding ?? EdgeInsets.all(0),
             itemCount: widget.children.length + 2,
             itemBuilder: (context, index) {

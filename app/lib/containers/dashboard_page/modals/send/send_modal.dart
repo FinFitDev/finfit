@@ -1,6 +1,6 @@
 import 'package:excerbuys/containers/dashboard_page/modals/send/amount_modal.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/send/choose_recipients_modal.dart';
-import 'package:excerbuys/store/controllers/dashboard/send_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard/send_controller/send_controller.dart';
 import 'package:flutter/material.dart';
 
 class SendModal extends StatefulWidget {

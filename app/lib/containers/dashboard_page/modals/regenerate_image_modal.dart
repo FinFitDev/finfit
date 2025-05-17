@@ -1,12 +1,11 @@
 import 'package:excerbuys/components/modal/modal_header.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/components/shared/profile_image_generator.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
-import 'package:excerbuys/store/controllers/user_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
+import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/utils/user/profile_image.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
+import 'package:uuid/v4.dart';
 
 class RegenerateImageModal extends StatefulWidget {
   const RegenerateImageModal({super.key});
@@ -74,7 +73,7 @@ class _RegenerateImageModalState extends State<RegenerateImageModal> {
                         textColor: colors.primaryFixedDim,
                         onPressed: () {
                           setState(() {
-                            _seed = generateSeed();
+                            _seed = UuidV4().generate();
                           });
                         }),
                     SizedBox(

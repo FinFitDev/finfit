@@ -163,3 +163,23 @@ export const fetchAllAvailableCategories = async () => {
   );
   return response;
 };
+
+export const fetchProductsForProductOwner = async (
+  owner_id: string,
+  limit: number,
+  offset: number
+) => {
+  const response = await pool.query(
+    `
+        SELECT p.*,to_json(po) AS product_owner
+        FROM products p
+        LEFT JOIN product_owners po ON p.owner_id = po.uuid
+        WHERE po.uuid = $1
+        ORDER BY p.total_transactions DESC
+        LIMIT $2
+        OFFSET $3
+    `,
+    [owner_id, limit, offset]
+  );
+  return response;
+};

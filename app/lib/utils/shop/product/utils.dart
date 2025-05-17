@@ -1,4 +1,4 @@
-import 'package:excerbuys/store/controllers/shop_controller.dart';
+import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/types/shop.dart';
@@ -101,6 +101,5 @@ String generateUrlEndpointFromFilters(ShopFilters? filters,
       .map((e) =>
           '${Uri.encodeQueryComponent(e.key)}=${Uri.encodeQueryComponent(e.value)}')
       .join('&');
-  print('api/v1/products?$query');
   return 'api/v1/products?$query';
 }
