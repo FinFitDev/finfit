@@ -42,6 +42,7 @@ class _ShopPageState extends State<ShopPage> {
 
   bool _isAnimating = false;
   ScrollController scrollController = ScrollController();
+  bool _shopPageInitialized = false;
 
   @override
   void initState() {
@@ -52,7 +53,9 @@ class _ShopPageState extends State<ShopPage> {
 
     _activePageSubscription =
         dashboardController.activePageStream.listen((activePage) {
-      if (activePage == 1) {
+      if (activePage == 1 && !_shopPageInitialized) {
+        _shopPageInitialized = true;
+
         _shopFiltersSubscription = shopController.allShopFiltersStream
             .debounceTime(Duration(milliseconds: 100))
             .distinct()
@@ -63,13 +66,11 @@ class _ShopPageState extends State<ShopPage> {
         _selectedProductOwnerSubscription =
             shopController.selectedProductOwnerStream.distinct().listen((data) {
           setState(() {
+            _isAnimating = true;
+          });
+          animationProgressTimer = Timer(Duration(milliseconds: 250), () {
             setState(() {
-              _isAnimating = true;
-            });
-            animationProgressTimer = Timer(Duration(milliseconds: 250), () {
-              setState(() {
-                _isAnimating = false;
-              });
+              _isAnimating = false;
             });
           });
         });
@@ -151,6 +152,8 @@ class _ShopPageState extends State<ShopPage> {
                                 key: ValueKey('ProductOwnerData'),
                                 child: ShopTopContainer(
                                   onPressPartner: (String? uuid) {
+                                    shopController.resetShopFilters();
+
                                     productsController
                                         .handleOnClickProductOwner(uuid);
                                     scrollController.jumpTo(0);

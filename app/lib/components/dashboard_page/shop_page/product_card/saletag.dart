@@ -12,9 +12,9 @@ class Saletag extends StatelessWidget {
       constraints: BoxConstraints(minWidth: 80 * (scale ?? 1)),
       child: Container(
         height: 40 * (scale ?? 1),
-        padding: EdgeInsets.symmetric(horizontal: 8),
+        padding: EdgeInsets.symmetric(horizontal: 12),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular((scale ?? 1) * 10),
           gradient: LinearGradient(colors: [
             colors.primaryFixedDim,
             colors.tertiary,
@@ -22,7 +22,7 @@ class Saletag extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            '$discount% off',
+            'Aż $discount% taniej',
             style: TextStyle(
                 color: colors.primary,
                 fontWeight: FontWeight.w600,

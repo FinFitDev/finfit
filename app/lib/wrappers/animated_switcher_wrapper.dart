@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 
 class AnimatedSwitcherWrapper extends StatelessWidget {
   final Widget child;
-  const AnimatedSwitcherWrapper({super.key, required this.child});
+  final int? duration;
+  const AnimatedSwitcherWrapper({
+    super.key,
+    required this.child,
+    this.duration,
+  });
 
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: Duration(milliseconds: 200),
+      duration: Duration(milliseconds: duration ?? 200),
       switchInCurve: Curves.decelerate,
       switchOutCurve: Curves.decelerate,
       transitionBuilder: (Widget child, Animation<double> animation) {

@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void navigate({required String route, BuildContext? context}) {
   if (context != null) {
@@ -100,4 +101,24 @@ class Nullable<T> {
         value = null;
 
   const Nullable.present(this.value) : isPresent = true;
+}
+
+String capitalizeWord(String word) {
+  if (word.isEmpty) return word;
+  return '${word[0].toUpperCase()}${word.substring(1)}';
+}
+
+Map<String, T> lowercaseKeys<T>(Map<String, T> map) {
+  return Map.fromEntries(
+    map.entries.map((entry) => MapEntry(entry.key.toLowerCase(), entry.value)),
+  );
+}
+
+void launchURL(String urlString) async {
+  final url = Uri.parse(urlString);
+  if (await canLaunchUrl(url)) {
+    await launchUrl(url, mode: LaunchMode.externalApplication);
+  } else {
+    throw 'Could not launch $url';
+  }
 }

@@ -41,7 +41,9 @@ extension ProductsControllerMutations on ProductsController {
       cancelToken.cancel();
     }
     cancelToken = CancelToken();
-
+    if (shopController.selectedProductOwner != null) {
+      return;
+    }
     setProducts({});
     setLazyLoadOffset(0);
     setCanFetchMore(true);

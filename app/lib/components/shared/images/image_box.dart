@@ -9,6 +9,8 @@ class ImageBox extends StatefulWidget {
   final double? borderRadius;
   final Color? filterColor;
   final bool? border;
+  final Border? borderStyle;
+  final String? placeholderImage;
 
   const ImageBox(
       {super.key,
@@ -18,7 +20,9 @@ class ImageBox extends StatefulWidget {
       this.borderRadius,
       this.width,
       this.filterColor,
-      this.border});
+      this.border,
+      this.placeholderImage,
+      this.borderStyle});
 
   @override
   State<ImageBox> createState() => _ImageBoxState();
@@ -44,7 +48,10 @@ class _ImageBoxState extends State<ImageBox> {
   }
 
   void _loadImage() async {
-    final image = await ImageHelper.getDecorationImage(widget.image);
+    final image = widget.placeholderImage != null
+        ? await ImageHelper.getDecorationImage(widget.image,
+            placeholderImage: widget.placeholderImage!)
+        : await ImageHelper.getDecorationImage(widget.image);
     if (mounted) {
       setState(() {
         _decorationImage = image;
@@ -84,7 +91,9 @@ class _ImageBoxState extends State<ImageBox> {
                     borderRadius:
                         BorderRadius.circular(widget.borderRadius ?? 10),
                     border: widget.border == true
-                        ? Border.all(width: 1, color: colors.tertiaryContainer)
+                        ? widget.borderStyle ??
+                            Border.all(
+                                width: 1, color: colors.tertiaryContainer)
                         : null,
                     image: _decorationImage,
                   ),

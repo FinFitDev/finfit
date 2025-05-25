@@ -66,6 +66,14 @@ export interface IDailyStepEntry {
 
 export type IResetPasswordCode = string;
 
+export interface IProductVariant {
+  id: string;
+  discount: number;
+  price: number;
+  available: boolean;
+  attributes: Record<string, string>;
+}
+
 export interface IProduct {
   uuid: string;
   name: string;
@@ -80,6 +88,8 @@ export interface IProduct {
   category: string;
   total_transactions: number;
   isAffordable?: boolean;
+  variants: IProductVariant[];
+  images?: string[];
 }
 
 export interface IProductOwner {

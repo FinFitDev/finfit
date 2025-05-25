@@ -1,6 +1,11 @@
 part of 'shop_controller.dart';
 
 extension ShopControllerMutations on ShopController {
+  resetShopFilters() {
+    resetCurrentSortBy();
+    setSearchValue(null);
+  }
+
   setAllShopFilters(ShopFilters? filters) {
     _allShopFilters.add(filters);
   }

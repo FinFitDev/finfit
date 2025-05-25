@@ -14,6 +14,8 @@ class IProductEntry {
   final String category;
   final int totalTransactions;
   final bool? isAffordable;
+  final List<IProductVariant>? variants;
+  final List<String>? images;
 
   IProductEntry({
     required this.uuid,
@@ -29,6 +31,8 @@ class IProductEntry {
     required this.category,
     required this.totalTransactions,
     this.isAffordable,
+    this.variants,
+    this.images,
   });
 
   Map<String, dynamic> toJson() {
@@ -46,6 +50,8 @@ class IProductEntry {
       'category': category.toString(),
       'total_transactions': totalTransactions,
       'isAffordable': isAffordable,
+      'variants': variants?.map((variant) => variant.toJson()).toList(),
+      'images': images,
     };
   }
 
@@ -64,6 +70,55 @@ class IProductEntry {
       category: json['category'],
       totalTransactions: json['total_transactions'],
       isAffordable: json['is_affordable'],
+      variants: (json['variants'] as List<dynamic>?)
+          ?.map((variant) => IProductVariant.fromJson(variant))
+          .toList(),
+      images: json['images'] != null ? List<String>.from(json['images']) : null,
     );
+  }
+}
+
+class IProductVariant {
+  final String id;
+  final double discount;
+  final double price;
+  final bool available;
+  final Map<String, String> attributes;
+
+  IProductVariant({
+    required this.id,
+    required this.discount,
+    required this.price,
+    required this.available,
+    required this.attributes,
+  });
+
+  factory IProductVariant.fromJson(Map<String, dynamic> json) {
+    return IProductVariant(
+      id: json['id'],
+      discount: (json['discount'] as num).toDouble(),
+      price: (json['price'] as num).toDouble(),
+      available: json['available'],
+      attributes: Map<String, String>.from(json['attributes'] ?? {}),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'discount': discount,
+      'price': price,
+      'available': available,
+      'attributes': attributes,
+    };
+  }
+
+  bool hasSameAttributes(Map<String, String> otherAttributes) {
+    if (attributes.length != otherAttributes.length) return false;
+    for (final key in attributes.keys) {
+      if (attributes[key] != otherAttributes[key]) return false;
+    }
+
+    return true;
   }
 }

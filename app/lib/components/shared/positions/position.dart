@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 
-class Position extends StatelessWidget {
+class Position<T> extends StatelessWidget {
   final void Function() onPress;
-  final String optionName;
+  final T optionName;
   final bool? isSelected;
   const Position(
       {super.key,
@@ -32,7 +32,7 @@ class Position extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              optionName,
+              optionName.toString(),
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,

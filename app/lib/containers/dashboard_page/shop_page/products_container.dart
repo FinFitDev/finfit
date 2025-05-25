@@ -1,4 +1,4 @@
-import 'package:excerbuys/components/dashboard_page/shop_page/product_card.dart';
+import 'package:excerbuys/components/dashboard_page/shop_page/product_card/product_card.dart';
 import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/product_info_modal.dart';
 import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';

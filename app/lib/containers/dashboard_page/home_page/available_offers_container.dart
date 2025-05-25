@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:excerbuys/components/dashboard_page/shop_page/featured_product_card.dart';
+import 'package:excerbuys/components/dashboard_page/shop_page/product_card/featured_product_card.dart';
 import 'package:excerbuys/components/shared/indicators/carousel/carousel_counter.dart';
 import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/components/shared/indicators/carousel/current_item_indicator.dart';

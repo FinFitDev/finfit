@@ -1,7 +1,6 @@
-import 'package:excerbuys/components/dashboard_page/shop_page/saletag.dart';
+import 'package:excerbuys/components/dashboard_page/shop_page/product_card/saletag.dart';
 import 'package:excerbuys/components/shared/images/image_box.dart';
 import 'package:excerbuys/components/shared/positions/position_with_background.dart';
-import 'package:excerbuys/wrappers/image_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -83,20 +82,20 @@ class _ProductCardState extends State<ProductCard> {
                 )
               ],
             ),
-            Positioned(
-                left: 8,
-                top: 8,
-                child: Saletag(
-                  discount: widget.discount,
-                  scale: 0.8,
-                )
+            // Positioned(
+            //     left: 8,
+            //     top: 8,
+            //     child: Saletag(
+            //       discount: widget.discount,
+            //       scale: 0.7,
+            //     )
 
-                // SaletagRive(
-                //   discount: widget.discount,
-                //   isProgress: isProgress,
-                // )
+            //     // SaletagRive(
+            //     //   discount: widget.discount,
+            //     //   isProgress: isProgress,
+            //     // )
 
-                ),
+            //     ),
           ],
         ),
       ),

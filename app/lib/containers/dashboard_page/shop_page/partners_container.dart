@@ -1,4 +1,4 @@
-import 'package:excerbuys/components/dashboard_page/shop_page/partner_card.dart';
+import 'package:excerbuys/components/dashboard_page/shop_page/product_owner/partner_card.dart';
 import 'package:excerbuys/types/owner.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';

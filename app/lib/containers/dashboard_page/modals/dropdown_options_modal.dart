@@ -3,9 +3,9 @@ import 'package:excerbuys/store/controllers/layout_controller/layout_controller.
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
 
-class DropdownOptionsModal extends StatelessWidget {
+class DropdownOptionsModal<T> extends StatelessWidget {
   final void Function(int) onSelect;
-  final List<String> options;
+  final List<T> options;
   final int activeOptionIndex;
   const DropdownOptionsModal(
       {required this.onSelect,

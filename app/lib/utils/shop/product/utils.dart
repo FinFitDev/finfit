@@ -103,3 +103,25 @@ String generateUrlEndpointFromFilters(ShopFilters? filters,
       .join('&');
   return 'api/v1/products?$query';
 }
+
+IProductVariantsSet buildVariantsSet(List<IProductVariant> variants) {
+  final Map<String, Set<String>> optionsMap = {};
+  final categories = optionsMap.keys.toList();
+
+  for (final variant in variants) {
+    variant.attributes.forEach((key, value) {
+      optionsMap.putIfAbsent(key, () => <String>{});
+      optionsMap[key]!.add(value);
+    });
+  }
+
+  final Map<String, List<String>> groupedOptions = {
+    for (var entry in optionsMap.entries) entry.key: entry.value.toList()
+  };
+
+  return IProductVariantsSet(
+    categories: categories,
+    options: groupedOptions,
+    variants: variants,
+  );
+}
