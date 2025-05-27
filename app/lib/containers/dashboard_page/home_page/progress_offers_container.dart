@@ -6,7 +6,7 @@ import 'package:excerbuys/store/controllers/layout_controller/layout_controller.
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/wrappers/modal_wrapper.dart';
+import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class ProgressOffersContainer extends StatefulWidget {

@@ -1,5 +1,6 @@
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class EmptyDataModal extends StatelessWidget {
@@ -43,9 +44,7 @@ class EmptyDataModal extends StatelessWidget {
               backgroundColor: colors.tertiaryContainer.withAlpha(80),
               textColor: colors.primaryFixedDim,
               onPressed: () {
-                if (Navigator.canPop(context)) {
-                  Navigator.pop(context);
-                }
+                closeModal(context);
               })
         ],
       ),

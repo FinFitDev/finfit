@@ -205,9 +205,7 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
                                       colors.tertiaryContainer.withAlpha(80),
                                   textColor: colors.primaryFixedDim,
                                   onPressed: () {
-                                    if (Navigator.canPop(context)) {
-                                      Navigator.pop(context);
-                                    }
+                                    closeModal(context);
                                   }),
                             ),
                             SizedBox(

@@ -15,6 +15,7 @@ class ProductInfoImagesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Container(
       margin: EdgeInsets.only(bottom: 16),
       height: 50, // Provide a fixed height
@@ -34,7 +35,8 @@ class ProductInfoImagesList extends StatelessWidget {
                     image: images[index],
                     borderRadius: 8,
                     border: images[index] == selectedImage,
-                    borderStyle: Border.all(color: Colors.amber, width: 2)),
+                    borderStyle:
+                        Border.all(color: colors.errorContainer, width: 2)),
               ),
             ),
           );

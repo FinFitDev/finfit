@@ -1,4 +1,5 @@
 import 'package:excerbuys/types/owner.dart';
+import 'package:excerbuys/utils/parsers/parsers.dart';
 
 class IProductEntry {
   final String uuid;
@@ -120,5 +121,12 @@ class IProductVariant {
     }
 
     return true;
+  }
+
+  String createAttributesString() {
+    return attributes.entries
+        .map((e) =>
+            '${capitalizeFirst(e.key.toLowerCase())}: ${capitalizeFirst(e.value.toLowerCase())}')
+        .join(' | ');
   }
 }

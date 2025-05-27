@@ -8,7 +8,7 @@ import 'package:excerbuys/containers/dashboard_page/modals/info/product_info_mod
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/wrappers/modal_wrapper.dart';
+import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class AvailableOffers extends StatefulWidget {

@@ -71,9 +71,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                 Row(children: [
                   IconButton(
                       onPressed: () {
-                        if (Navigator.canPop(context)) {
-                          Navigator.pop(context);
-                        }
+                        closeModal(context);
                       },
                       icon: SvgPicture.asset('assets/svg/arrowBack.svg',
                           height: 30,

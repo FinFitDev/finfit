@@ -7,8 +7,13 @@ class ModalHeader extends StatelessWidget {
   final String title;
   final String subtitle;
   final void Function()? goBack;
+  final void Function()? onClose;
   const ModalHeader(
-      {super.key, required this.title, required this.subtitle, this.goBack});
+      {super.key,
+      required this.title,
+      required this.subtitle,
+      this.goBack,
+      this.onClose});
 
   @override
   Widget build(BuildContext context) {
@@ -18,15 +23,23 @@ class ModalHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        goBack != null
-            ? RippleWrapper(
-                onPressed: goBack!,
+        onClose != null
+            ? Opacity(
+                opacity: 0,
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 12),
                   child: SvgPicture.asset('assets/svg/arrow_left.svg'),
                 ),
               )
-            : SizedBox.shrink(),
+            : goBack != null
+                ? RippleWrapper(
+                    onPressed: goBack!,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      child: SvgPicture.asset('assets/svg/arrow_left.svg'),
+                    ),
+                  )
+                : SizedBox.shrink(),
         Column(
           children: [
             SizedBox(
@@ -49,7 +62,19 @@ class ModalHeader extends StatelessWidget {
                   child: SvgPicture.asset('assets/svg/arrow_left.svg'),
                 ),
               )
-            : SizedBox.shrink(),
+            : onClose != null
+                ? RippleWrapper(
+                    onPressed: onClose!,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                      child: SvgPicture.asset(
+                        'assets/svg/close.svg',
+                        colorFilter: ColorFilter.mode(
+                            colors.primaryFixedDim, BlendMode.srcIn),
+                      ),
+                    ),
+                  )
+                : SizedBox.shrink(),
       ],
     );
   }

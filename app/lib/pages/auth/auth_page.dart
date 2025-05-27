@@ -5,6 +5,7 @@ import 'package:excerbuys/store/controllers/auth_controller/auth_controller.dart
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -45,9 +46,7 @@ class _AuthPageState extends State<AuthPage> {
                                         FocusScope.of(context)
                                             .requestFocus(FocusNode());
 
-                                        if (Navigator.canPop(context)) {
-                                          Navigator.pop(context);
-                                        }
+                                        closeModal(context);
                                       },
                                       icon: SvgPicture.asset(
                                           'assets/svg/arrowBack.svg',

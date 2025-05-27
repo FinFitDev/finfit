@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
@@ -22,6 +23,12 @@ void navigateWithClear({required String route, BuildContext? context}) {
   } else {
     NAVIGATOR_KEY.currentState
         ?.pushNamedAndRemoveUntil(route, (Route<dynamic> route) => false);
+  }
+}
+
+void closeModal(BuildContext context) {
+  if (Navigator.canPop(context)) {
+    Navigator.pop(context);
   }
 }
 
@@ -121,4 +128,8 @@ void launchURL(String urlString) async {
   } else {
     throw 'Could not launch $url';
   }
+}
+
+int countQuantity<T extends HasQuantity>(List<T> items) {
+  return items.fold(0, (count, item) => count + item.quantity);
 }

@@ -112,9 +112,7 @@ class _ShopTopContainerState extends State<ShopTopContainer>
                                 options: categoriesFilled,
                                 onSelect: (int option) {
                                   shopController.setActiveShopCategory(option);
-                                  if (Navigator.canPop(context)) {
-                                    Navigator.pop(context);
-                                  }
+                                  closeModal(context);
                                 },
                                 activeOptionIndex: snapshot.data ?? 0,
                               );

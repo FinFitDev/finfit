@@ -1,8 +1,9 @@
 import 'package:excerbuys/types/enums.dart';
+import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/product.dart';
-import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
+import 'package:uuid/v4.dart';
 
 class SortByData {
   String category;
@@ -98,11 +99,21 @@ class IProductVariantsSet {
     );
   }
 
-  /// Find variant by selected attributes
   IProductVariant? findVariant(Map<String, String> selectedAttributes) {
-    return variants.firstWhere(
-      (variant) => _attributesMatch(variant.attributes, selectedAttributes),
-    );
+    return variants
+        .where(
+          (variant) => _attributesMatch(variant.attributes, selectedAttributes),
+        )
+        .firstOrNull;
+  }
+
+  String? findVariantId(Map<String, String> selectedAttributes) {
+    final variant = findVariant(selectedAttributes);
+    return variant?.id;
+  }
+
+  IProductVariant? findVariantById(String variantId) {
+    return variants.where((variant) => variant.id == variantId).firstOrNull;
   }
 
   bool _attributesMatch(
@@ -126,8 +137,6 @@ class IProductVariantsSet {
 
   bool _anyAttributeMatches(
       Map<String, String> variantAttrs, Map<String, String> selectedAttr) {
-    // print("Selected Attributes: $selectedAttr");
-    // print("Variant Attributes: $variantAttrs");
     for (final key in selectedAttr.keys) {
       if (variantAttrs[key] == selectedAttr[key]) {
         return true;
@@ -185,5 +194,56 @@ class IProductVariantsSet {
       for (final entry in unavailableAttributesMap.entries)
         entry.key: entry.value.toList()
     };
+  }
+}
+
+class ICartItem implements HasQuantity {
+  final String? uuid;
+  final IProductEntry product;
+  final IProductVariant? variant;
+  int quantity;
+  final bool? notEligible;
+
+  ICartItem({
+    required this.product,
+    this.variant,
+    this.quantity = 1,
+    this.notEligible,
+    String? uuid,
+  }) : uuid = uuid ?? UuidV4().generate();
+
+  ICartItem copyWith(
+      {IProductEntry? product,
+      IProductVariant? variant,
+      int? quantity,
+      bool? notEligible}) {
+    return ICartItem(
+        product: product ?? this.product,
+        variant: variant ?? this.variant,
+        quantity: quantity ?? this.quantity,
+        notEligible: notEligible ?? this.notEligible,
+        uuid: this.uuid);
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ICartItem &&
+          runtimeType == other.runtimeType &&
+          uuid == other.uuid;
+
+  bool isEqualParamsSet(ICartItem other) {
+    return product.uuid == other.product.uuid &&
+        variant?.id == other.variant?.id;
+  }
+
+  void increaseQuantity() {
+    quantity++;
+  }
+
+  void decreaseQuantity() {
+    if (quantity > 1) {
+      quantity--;
+    }
   }
 }

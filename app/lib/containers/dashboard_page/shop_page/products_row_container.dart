@@ -3,7 +3,7 @@ import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/product_info_modal.dart';
 import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/wrappers/modal_wrapper.dart';
+import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class ProductsRowContainer extends StatelessWidget {

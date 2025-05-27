@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:excerbuys/store/controllers/shop/product_owners_controller/product_owners_controller.dart';
 import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
+import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/store/selectors/shop/shop.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/types/general.dart';
@@ -39,6 +42,11 @@ class ShopController {
   Stream<List<String>> get availableCategoriesStream =>
       _availableCategories.stream;
   List<String> get availableCategories => _availableCategories.value;
+
+  final BehaviorSubject<List<ICartItem>> _cartItems =
+      BehaviorSubject.seeded([]);
+  Stream<List<ICartItem>> get cartItemsStream => _cartItems.stream;
+  List<ICartItem> get cartItems => _cartItems.value;
 }
 
 ShopController shopController = ShopController();

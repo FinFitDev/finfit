@@ -1,6 +1,6 @@
 import 'package:excerbuys/containers/dashboard_page/modals/shop_filters_modal.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
-import 'package:excerbuys/wrappers/modal_wrapper.dart';
+import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';

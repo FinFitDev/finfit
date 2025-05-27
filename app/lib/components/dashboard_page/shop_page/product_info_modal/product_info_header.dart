@@ -2,6 +2,7 @@ import 'package:excerbuys/components/shared/positions/position_with_background.d
 import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
 import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -27,9 +28,8 @@ class ProductInfoHeader extends StatelessWidget {
           ),
           RippleWrapper(
             onPressed: () {
-              if (Navigator.canPop(context)) {
-                Navigator.pop(context);
-              }
+              closeModal(context);
+
               productsController.handleOnClickProductOwner(product?.owner.uuid);
             },
             child: PositionWithBackground(

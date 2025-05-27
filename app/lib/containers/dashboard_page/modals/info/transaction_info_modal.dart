@@ -16,7 +16,8 @@ import 'package:excerbuys/types/transaction.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/shop/transaction/utils.dart';
-import 'package:excerbuys/wrappers/modal_wrapper.dart';
+import 'package:excerbuys/utils/utils.dart';
+import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -205,10 +206,7 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                                             children: [
                                               RippleWrapper(
                                                 onPressed: () {
-                                                  if (Navigator.canPop(
-                                                      context)) {
-                                                    Navigator.pop(context);
-                                                  }
+                                                  closeModal(context);
 
                                                   openModal(
                                                       context,
@@ -263,9 +261,7 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                                 colors.tertiaryContainer.withAlpha(80),
                             textColor: colors.primaryFixedDim,
                             onPressed: () {
-                              if (Navigator.canPop(context)) {
-                                Navigator.pop(context);
-                              }
+                              closeModal(context);
                             })
                       ],
                     ))),

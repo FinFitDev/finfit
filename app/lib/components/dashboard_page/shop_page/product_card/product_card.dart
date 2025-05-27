@@ -82,6 +82,7 @@ class _ProductCardState extends State<ProductCard> {
                 )
               ],
             ),
+            // TODO find a way to show discount
             // Positioned(
             //     left: 8,
             //     top: 8,

@@ -61,3 +61,7 @@ class ContentWithTimestamp<T> {
     return jsonEncode(map);
   }
 }
+
+abstract class HasQuantity {
+  int get quantity;
+}

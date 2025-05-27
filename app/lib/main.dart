@@ -29,16 +29,18 @@ class _HealthAppState extends State<HealthApp> {
         theme: ThemeData(
             scaffoldBackgroundColor: Color.fromARGB(255, 255, 255, 255),
             colorScheme: ColorScheme.fromSeed(
-                seedColor: Color.fromARGB(255, 255, 255, 255),
-                primary: Color.fromARGB(255, 255, 255, 255),
-                primaryFixed: Color(0xFF191D23),
-                primaryContainer: Color.fromARGB(255, 250, 250, 250),
-                primaryFixedDim: const Color(0xFF999191),
-                secondary: Color.fromARGB(255, 108, 180, 238),
-                secondaryContainer: Color.fromARGB(255, 7, 66, 114),
-                tertiary: const Color.fromARGB(255, 0, 0, 0),
-                tertiaryContainer: Color.fromARGB(255, 184, 184, 184),
-                error: Color.fromARGB(255, 255, 132, 132)),
+              seedColor: Color.fromARGB(255, 255, 255, 255),
+              primary: Color.fromARGB(255, 255, 255, 255),
+              primaryFixed: Color(0xFF191D23),
+              primaryContainer: Color.fromARGB(255, 250, 250, 250),
+              primaryFixedDim: const Color(0xFF999191),
+              secondary: Color.fromARGB(255, 108, 180, 238),
+              secondaryContainer: Color.fromARGB(255, 7, 66, 114),
+              tertiary: const Color.fromARGB(255, 0, 0, 0),
+              tertiaryContainer: Color.fromARGB(255, 184, 184, 184),
+              error: Color.fromARGB(255, 255, 132, 132),
+              errorContainer: Color.fromARGB(255, 255, 195, 83),
+            ),
             textTheme: TextTheme(
                 headlineLarge: TextStyle(
                   fontSize: 20,

@@ -13,19 +13,19 @@ import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/animated_switcher_wrapper.dart';
 import 'package:excerbuys/wrappers/infinite_list_wrapper_v2.dart';
 import 'package:flutter/material.dart';
-import 'package:payu/payu.dart';
+// import 'package:payu/payu.dart';
 import 'package:rxdart/rxdart.dart';
 
-String apiBaseUrl(Environment environment) {
-  switch (environment) {
-    case Environment.production:
-      return 'https://secure.payu.com/';
-    case Environment.sandbox:
-      return 'https://secure.snd.payu.com/';
-    case Environment.sandboxBeta:
-      return 'https://secure.sndbeta.payu.com/';
-  }
-}
+// String apiBaseUrl(Environment environment) {
+//   switch (environment) {
+//     case Environment.production:
+//       return 'https://secure.payu.com/';
+//     case Environment.sandbox:
+//       return 'https://secure.snd.payu.com/';
+//     case Environment.sandboxBeta:
+//       return 'https://secure.sndbeta.payu.com/';
+//   }
+// }
 
 class ShopPage extends StatefulWidget {
   const ShopPage({super.key});

@@ -125,3 +125,10 @@ IProductVariantsSet buildVariantsSet(List<IProductVariant> variants) {
     variants: variants,
   );
 }
+
+double getCartItemPrice(ICartItem item) {
+  return (item.variant?.price ?? item.product.originalPrice) *
+      ((item.notEligible == true)
+          ? 1
+          : (100 - (item.variant?.discount ?? item.product.discount)) / 100);
+}
