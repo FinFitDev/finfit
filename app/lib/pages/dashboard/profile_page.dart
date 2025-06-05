@@ -1,15 +1,15 @@
 import 'package:excerbuys/components/shared/postition.dart';
 import 'package:excerbuys/components/shared/profile_image_generator.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/regenerate_image_modal.dart';
-import 'package:excerbuys/store/controllers/activity/activity_controller.dart';
-import 'package:excerbuys/store/controllers/auth_controller.dart';
-import 'package:excerbuys/store/controllers/dashboard_controller.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
-import 'package:excerbuys/store/controllers/user_controller.dart';
+import 'package:excerbuys/store/controllers/activity/activity_controller/activity_controller.dart';
+import 'package:excerbuys/store/controllers/auth_controller/auth_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
+import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
-import 'package:excerbuys/wrappers/modal_wrapper.dart';
+import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 

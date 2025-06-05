@@ -1,7 +1,7 @@
 import 'package:excerbuys/components/shared/buttons/appbar_icon_button.dart';
-import 'package:excerbuys/store/controllers/dashboard_controller.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
-import 'package:excerbuys/store/controllers/user_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
+import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';

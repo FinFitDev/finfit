@@ -1,5 +1,10 @@
 import { Request } from "express";
 
+export enum ORDER_TYPE {
+  ASCENDING = "ASCENDING",
+  DESCENDING = "DESCENDING",
+}
+
 export type IAccessToken = string;
 export type IRefreshToken = string;
 export type IEmailVerificationToken = string;
@@ -61,20 +66,30 @@ export interface IDailyStepEntry {
 
 export type IResetPasswordCode = string;
 
+export interface IProductVariant {
+  id: string;
+  discount: number;
+  price: number;
+  in_stock: number;
+  images?: string[];
+  attributes: Record<string, string>;
+}
+
 export interface IProduct {
   uuid: string;
   name: string;
   description: string;
-  owner: IProductOwner;
+  product_owner: IProductOwner;
   original_price: number;
   finpoints_price: number;
   discount: number;
   created_at: string;
   link?: string;
-  image?: string;
+  images: string[];
   category: string;
   total_transactions: number;
   isAffordable?: boolean;
+  variants: IProductVariant[];
 }
 
 export interface IProductOwner {
@@ -82,8 +97,12 @@ export interface IProductOwner {
   name: string;
   description: string;
   createdAt: string;
+  total_transactions: number;
+  total_products: number;
+  banner_image?: string;
   link?: string;
   image?: string;
+  reference_id: string;
 }
 
 export interface ITransactionInsert {
@@ -100,4 +119,17 @@ export interface ITransactionEntryResponse {
   second_user?: Partial<IUser>;
   product?: IProduct;
   user_id?: number;
+}
+
+export interface IFiltersQuery {
+  search?: string;
+  category?: string;
+  min_price?: number;
+  max_price?: number;
+  min_finpoints?: number;
+  max_finpoints?: number;
+  sort_by?: string;
+  order?: ORDER_TYPE;
+  limit?: number;
+  offset?: number;
 }

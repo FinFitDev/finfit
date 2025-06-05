@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:excerbuys/components/modal/modal_header.dart';
-import 'package:excerbuys/store/controllers/dashboard/send_controller.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard/send_controller/send_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';

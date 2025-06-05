@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:excerbuys/components/shared/indicators/circle_progress/load_more_indicator.dart';
+import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -32,6 +34,9 @@ class InfiniteListWrapper extends StatefulWidget {
 
 class _InfiniteListWrapperState extends State<InfiniteListWrapper>
     with TickerProviderStateMixin {
+  Timer? progressTimer;
+  bool canRefresh = true;
+
   final ValueNotifier<double> scrollMoreProgress = ValueNotifier(0.0);
   final ValueNotifier<double> refreshProgress = ValueNotifier(0.0);
 
@@ -42,7 +47,9 @@ class _InfiniteListWrapperState extends State<InfiniteListWrapper>
   void setLoadMoreDataProgressIndicator() {
     if (!_scrollController.hasClients) return;
 
-    if (widget.canFetchMore != true || widget.isLoadingMoreData == true) {
+    if (widget.canFetchMore != true ||
+        widget.isLoadingMoreData == true ||
+        widget.isRefreshing == true) {
       return;
     }
 
@@ -57,7 +64,21 @@ class _InfiniteListWrapperState extends State<InfiniteListWrapper>
       return;
     }
 
-    refreshProgress.value = -(_scrollController.position.pixels);
+    refreshProgress.value = -(_scrollController.position.pixels + 50);
+  }
+
+  void limitRefresh() {
+    if (mounted) {
+      setState(() {
+        canRefresh = false;
+      });
+    }
+    // TODO change refresh timeout
+    progressTimer = Timer(Duration(seconds: 5), () {
+      setState(() {
+        canRefresh = true;
+      });
+    });
   }
 
   @override
@@ -74,7 +95,6 @@ class _InfiniteListWrapperState extends State<InfiniteListWrapper>
   @override
   void didUpdateWidget(covariant InfiniteListWrapper oldWidget) {
     super.didUpdateWidget(oldWidget);
-
     // Ensure ScrollController is attached before accessing position
     if (mounted && _scrollController.hasClients) {
       _scrollController.removeListener(setLoadMoreDataProgressIndicator);
@@ -114,70 +134,76 @@ class _InfiniteListWrapperState extends State<InfiniteListWrapper>
               scrollMoreProgress.value = 0;
               widget.onLoadMore?.call();
             }
-          } else if (refreshProgress.value > 100) {
+          } else if (refreshProgress.value > 100 && canRefresh) {
             triggerVibrate(FeedbackType.light);
             if (widget.isRefreshing == false) {
               refreshProgress.value = 0;
               widget.onRefresh?.call();
+              limitRefresh();
             }
           }
         },
         onPointerDown: (event) {
           isScrolling.value = true;
         },
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          controller: _scrollController,
-          padding: widget.padding ?? EdgeInsets.all(0),
-          child: Stack(
-            children: [
-              Column(
+        child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            controller: _scrollController,
+            padding: widget.padding ?? EdgeInsets.all(0),
+            itemCount: 1,
+            itemBuilder: (context, index) {
+              return Stack(
                 children: [
-                  widget.child,
-                  widget.on
-                      ? Container(
-                          margin: EdgeInsets.only(
-                              top: widget.isLoadingMoreData == true ? 20 : 0,
-                              bottom:
-                                  widget.isLoadingMoreData == true ? 40 : 0),
-                          child: widget.isLoadingMoreData == true
-                              ? SpinKitCircle(
-                                  color: colors.secondary,
-                                  size: 30.0,
-                                  controller: _animationController,
-                                )
-                              : widget.canFetchMore == true
-                                  ? ValueListenableBuilder<double>(
-                                      valueListenable: scrollMoreProgress,
-                                      builder: (context, value, child) {
-                                        return LoadMoreIndicator(
-                                          scrollLoadMoreProgress:
-                                              min(max(value, 0), 100),
-                                        );
-                                      })
-                                  : SizedBox.shrink(),
-                        )
+                  Column(
+                    children: [
+                      widget.child,
+                      widget.on && !widget.isRefreshing!
+                          ? Container(
+                              margin: EdgeInsets.only(
+                                  top:
+                                      widget.isLoadingMoreData == true ? 20 : 0,
+                                  bottom: widget.isLoadingMoreData == true
+                                      ? 40
+                                      : 0),
+                              child: widget.isLoadingMoreData == true
+                                  ? SpinKitCircle(
+                                      color: colors.secondary,
+                                      size: 30.0,
+                                      controller: _animationController,
+                                    )
+                                  : widget.canFetchMore == true
+                                      ? ValueListenableBuilder<double>(
+                                          valueListenable: scrollMoreProgress,
+                                          builder: (context, value, child) {
+                                            return LoadMoreIndicator(
+                                              scrollLoadMoreProgress:
+                                                  min(max(value, 0), 100),
+                                            );
+                                          })
+                                      : SizedBox.shrink(),
+                            )
+                          : SizedBox.shrink(),
+                    ],
+                  ),
+                  widget.on && !widget.isRefreshing!
+                      ? ValueListenableBuilder<double>(
+                          valueListenable: refreshProgress,
+                          builder: (context, value, child) {
+                            return Positioned(
+                              top: 40,
+                              child: Container(
+                                  width: MediaQuery.sizeOf(context).width,
+                                  padding: EdgeInsets.symmetric(vertical: 20),
+                                  child: LoadMoreIndicator(
+                                    scrollLoadMoreProgress:
+                                        min(max(value, 0), 100),
+                                    disableText: true,
+                                  )),
+                            );
+                          })
                       : SizedBox.shrink(),
                 ],
-              ),
-              widget.on
-                  ? ValueListenableBuilder<double>(
-                      valueListenable: refreshProgress,
-                      builder: (context, value, child) {
-                        return Positioned(
-                          top: 40,
-                          child: Container(
-                              width: MediaQuery.sizeOf(context).width,
-                              padding: EdgeInsets.symmetric(vertical: 20),
-                              child: LoadMoreIndicator(
-                                scrollLoadMoreProgress: min(max(value, 0), 100),
-                                disableText: true,
-                              )),
-                        );
-                      })
-                  : SizedBox.shrink(),
-            ],
-          ),
-        ));
+              );
+            }));
   }
 }

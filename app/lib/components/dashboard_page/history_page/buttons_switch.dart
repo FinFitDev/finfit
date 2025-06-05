@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:excerbuys/components/shared/buttons/category_button.dart';
-import 'package:excerbuys/store/controllers/dashboard/history_controller.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard/history_controller/history_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/utils/history/constants.dart';
 import 'package:flutter/material.dart';

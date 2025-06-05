@@ -1,5 +1,6 @@
 import 'package:excerbuys/components/shared/buttons/text_button.dart';
-import 'package:excerbuys/store/controllers/auth_controller.dart';
+import 'package:excerbuys/store/controllers/auth_controller/auth_controller.dart';
+import 'package:excerbuys/types/enums.dart';
 import 'package:flutter/material.dart';
 
 class ButtonSwitch extends StatelessWidget {

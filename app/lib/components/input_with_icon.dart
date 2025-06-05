@@ -1,3 +1,4 @@
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -40,6 +41,7 @@ class _InputWithIconState extends State<InputWithIcon> {
   late TextEditingController _controller;
   String _value = '';
   bool _obscureText = true;
+  bool _isFirstRun = false;
 
   @override
   void initState() {
@@ -48,6 +50,12 @@ class _InputWithIconState extends State<InputWithIcon> {
     _controller = TextEditingController(text: widget.initialValue ?? '');
 
     _controller.addListener(() {
+      if (!_isFirstRun) {
+        setState(() {
+          _isFirstRun = true;
+        });
+        return;
+      }
       widget.onChange(_controller.text);
       setState(() {
         _value = _controller.text;

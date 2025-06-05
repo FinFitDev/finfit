@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void navigate({required String route, BuildContext? context}) {
   if (context != null) {
@@ -21,6 +23,12 @@ void navigateWithClear({required String route, BuildContext? context}) {
   } else {
     NAVIGATOR_KEY.currentState
         ?.pushNamedAndRemoveUntil(route, (Route<dynamic> route) => false);
+  }
+}
+
+void closeModal(BuildContext context) {
+  if (Navigator.canPop(context)) {
+    Navigator.pop(context);
   }
 }
 
@@ -89,4 +97,39 @@ Map<String, T> getFilteredEntries<T extends Object>(
   final entries = data.entries.toList().where(filterFunc);
 
   return Map.fromEntries(entries);
+}
+
+class Nullable<T> {
+  final bool isPresent;
+  final T? value;
+
+  const Nullable.absent()
+      : isPresent = false,
+        value = null;
+
+  const Nullable.present(this.value) : isPresent = true;
+}
+
+String capitalizeWord(String word) {
+  if (word.isEmpty) return word;
+  return '${word[0].toUpperCase()}${word.substring(1)}';
+}
+
+Map<String, T> lowercaseKeys<T>(Map<String, T> map) {
+  return Map.fromEntries(
+    map.entries.map((entry) => MapEntry(entry.key.toLowerCase(), entry.value)),
+  );
+}
+
+void launchURL(String urlString) async {
+  final url = Uri.parse(urlString);
+  if (await canLaunchUrl(url)) {
+    await launchUrl(url, mode: LaunchMode.externalApplication);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
+int countQuantity<T extends HasQuantity>(List<T> items) {
+  return items.fold(0, (count, item) => count + item.quantity);
 }

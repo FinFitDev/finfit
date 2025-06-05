@@ -1,7 +1,7 @@
 import 'package:excerbuys/components/shared/activity_icon.dart';
 import 'package:excerbuys/components/shared/image_component.dart';
 import 'package:excerbuys/components/shared/profile_image_generator.dart';
-import 'package:excerbuys/store/controllers/dashboard_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
@@ -110,7 +110,9 @@ class _TransactionCardState extends State<TransactionCard> {
                               builder: (context, snapshot) {
                                 final bool isHidden = snapshot.data ?? false;
                                 return Text(
-                                    '${widget.type == TRANSACTION_TYPE.RECEIVE ? '+' : '-'}${isHidden ? '***** finpoints' : '${widget.points.abs().toString()} finpoints'}',
+                                    isHidden
+                                        ? '***** finpoints'
+                                        : '${widget.type == TRANSACTION_TYPE.RECEIVE ? '+' : '-'}${widget.points.abs().toString()} finpoints',
                                     style: texts.headlineMedium?.copyWith(
                                       color: color,
                                     ));
@@ -131,7 +133,7 @@ class _TransactionCardState extends State<TransactionCard> {
                       children: [
                         widget.type == TRANSACTION_TYPE.PURCHASE
                             ? Text(
-                                'Payed ${widget.productPrice?.toStringAsFixed(2)} PLN',
+                                'Paid ${widget.productPrice?.toStringAsFixed(2)} PLN',
                                 style: TextStyle(
                                   color: colors.tertiaryContainer,
                                   fontSize: 13,

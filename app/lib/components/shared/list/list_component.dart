@@ -20,24 +20,30 @@ class ListComponent extends StatelessWidget {
             color: colors.primaryContainer),
         child: Wrap(
           children: [
-            ...data.entries.map((entry) {
+            ...data.entries.toList().asMap().entries.map((entry) {
+              final index = entry.key;
+              final item = entry.value;
+              final isLast = index == data.length - 1;
+
               return Column(
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: ListEntry(
-                      title: entry.key,
-                      label:
-                          entry.value is String ? entry.value as String : null,
+                      title: item.key,
+                      label: item.value is String ? item.value as String : null,
                       component:
-                          entry.value is Widget ? entry.value as Widget : null,
+                          item.value is Widget ? item.value as Widget : null,
                     ),
                   ),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 12),
-                    height: 2,
-                    color: colors.primary,
-                  ),
+                  if (!isLast ||
+                      summary !=
+                          null) // ✅ only show divider if not last OR summary is not null
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 12),
+                      height: 2,
+                      color: colors.primary,
+                    ),
                 ],
               );
             }),

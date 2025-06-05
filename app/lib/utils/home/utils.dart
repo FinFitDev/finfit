@@ -3,6 +3,7 @@ import 'package:excerbuys/types/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 
+// TODO add all activities
 ActivityMetadata getActivityMetadata(ACTIVITY_TYPE activity) {
   switch (activity) {
     case ACTIVITY_TYPE.WALKING:

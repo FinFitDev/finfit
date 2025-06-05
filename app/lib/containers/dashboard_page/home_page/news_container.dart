@@ -12,6 +12,7 @@ class NewsContainer extends StatefulWidget {
 }
 
 class _NewsContainerState extends State<NewsContainer> {
+  // TODO: Add news items and their actions
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;

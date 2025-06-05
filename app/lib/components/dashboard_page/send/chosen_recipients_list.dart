@@ -1,8 +1,7 @@
 import 'package:excerbuys/components/shared/profile_image_generator.dart';
-import 'package:excerbuys/store/controllers/dashboard/send_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard/send_controller/send_controller.dart';
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class ChosenRecipientsList extends StatefulWidget {

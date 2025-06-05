@@ -1,6 +1,6 @@
 import 'package:excerbuys/components/input_with_icon.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
-import 'package:excerbuys/store/controllers/auth_controller.dart';
+import 'package:excerbuys/store/controllers/auth_controller/auth_controller.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 

@@ -1,3 +1,4 @@
+import 'package:excerbuys/components/shared/images/image_box.dart';
 import 'package:excerbuys/wrappers/image_wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -10,23 +11,11 @@ class ImageComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: ImageHelper.getDecorationImage(image),
-        builder: (context, snapshot) {
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(100),
-            child: ColorFiltered(
-              colorFilter: ColorFilter.mode(
-                  filterColor ?? Colors.transparent, BlendMode.saturation),
-              child: Container(
-                height: size,
-                width: size,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    image: snapshot.data),
-              ),
-            ),
-          );
-        });
+    return ImageBox(
+      image: image,
+      height: size,
+      width: size,
+      borderRadius: 100,
+    );
   }
 }

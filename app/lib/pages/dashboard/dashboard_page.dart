@@ -1,14 +1,14 @@
 import 'package:excerbuys/components/dashboard_page/bottom_appbar.dart';
-import 'package:excerbuys/components/dashboard_page/main_header.dart';
+import 'package:excerbuys/components/main_header/main_header.dart';
 import 'package:excerbuys/pages/dashboard/home_page.dart';
 import 'package:excerbuys/pages/dashboard/profile_page.dart';
 import 'package:excerbuys/pages/dashboard/recent_page.dart';
 import 'package:excerbuys/pages/dashboard/shop_page.dart';
-import 'package:excerbuys/store/controllers/activity/activity_controller.dart';
-import 'package:excerbuys/store/controllers/dashboard_controller.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
-import 'package:excerbuys/store/controllers/shop/products_controller.dart';
-import 'package:excerbuys/store/controllers/shop/transactions_controller.dart';
+import 'package:excerbuys/store/controllers/activity/activity_controller/activity_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
+import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
+import 'package:excerbuys/store/controllers/shop/transactions_controller/transactions_controller.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
@@ -23,20 +23,22 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  Future<void> fetchActivity() async {
+  Future<void> fetchData() async {
     Health().configure();
+    transactionsController.fetchTransactions();
+    productsController.fetchHomeProducts();
+
     await activityController.authorize();
     if (Platform.isAndroid) {
       await activityController.checkHealthConnectSdk();
     }
-    await activityController.fetchActivity();
-    await transactionsController.fetchTransactions();
-    await productsController.fetchHomeProducts();
+    activityController.fetchActivity();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         height: layoutController.relativeContentHeight,
         color: Theme.of(context).colorScheme.primary,
@@ -48,7 +50,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   return IndexedStack(
                     index: snapshot.data,
                     children: [
-                      HomePage(fetchActivity: fetchActivity),
+                      HomePage(fetchData: fetchData),
                       ShopPage(),
                       RecentPage(),
                       ProfilePage()

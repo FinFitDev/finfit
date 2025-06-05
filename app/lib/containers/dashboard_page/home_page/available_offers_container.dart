@@ -1,11 +1,14 @@
 import 'dart:math';
 
-import 'package:excerbuys/components/dashboard_page/home_page/shop_item_card.dart';
+import 'package:excerbuys/components/dashboard_page/shop_page/product_card/featured_product_card.dart';
+import 'package:excerbuys/components/shared/indicators/carousel/carousel_counter.dart';
 import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
-import 'package:excerbuys/components/shared/indicators/current_item/current_item_indicator.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
+import 'package:excerbuys/components/shared/indicators/carousel/current_item_indicator.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/info/product_info_modal.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class AvailableOffers extends StatefulWidget {
@@ -46,7 +49,7 @@ class _AvailableOffersState extends State<AvailableOffers> {
 
   Widget get loadingContainer {
     return Container(
-      margin: EdgeInsets.only(top: 30),
+      margin: EdgeInsets.only(top: 20),
       padding: const EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING),
       child: UniversalLoaderBox(
           height: 220,
@@ -88,8 +91,8 @@ class _AvailableOffersState extends State<AvailableOffers> {
                           itemBuilder: (context, index) {
                             final entry = widget.products.elementAt(index);
 
-                            return ShopItemCard(
-                              image: entry.image,
+                            return FeaturedProductCard(
+                              image: entry.mainImage,
                               originalPrice: entry.originalPrice,
                               discount: entry.discount.round(),
                               points: entry.finpointsPrice.round(),
@@ -97,6 +100,10 @@ class _AvailableOffersState extends State<AvailableOffers> {
                               sellerName: entry.owner.name,
                               sellerImage: entry.owner.image,
                               isLast: index == widget.products.length - 1,
+                              onPressed: () {
+                                openModal(context,
+                                    ProductInfoModal(productId: entry.uuid));
+                              },
                             );
                           },
                         ),
@@ -105,22 +112,9 @@ class _AvailableOffersState extends State<AvailableOffers> {
                     widget.products.length > 1
                         ? Container(
                             margin: EdgeInsets.only(top: 16),
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: List.generate(widget.products.length,
-                                    (index) {
-                                  // 1st one -> 1 - _scrollPercent
-                                  if (index == 0) {
-                                    return CurrentItemIndicator(
-                                        activePercent: 1 - _scrollPercent);
-                                  }
-                                  // others -> _scrollPercent <= index ? _scrollPercent + 1 - index : index + 1 - _scrollPercent
-                                  return CurrentItemIndicator(
-                                      activePercent: _scrollPercent <= index
-                                          ? _scrollPercent + 1 - index
-                                          : 1 + index - _scrollPercent);
-                                })),
-                          )
+                            child: CarouselCounter(
+                                dataLength: widget.products.length,
+                                scrollPercent: _scrollPercent))
                         : SizedBox.shrink()
                   ],
                 ),

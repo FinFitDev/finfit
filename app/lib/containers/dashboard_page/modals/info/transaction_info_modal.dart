@@ -2,25 +2,24 @@ import 'package:excerbuys/components/shared/activity_icon.dart';
 import 'package:excerbuys/components/shared/buttons/copy_text.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/components/shared/image_component.dart';
+import 'package:excerbuys/components/shared/indicators/labels/empty_data_modal.dart';
 import 'package:excerbuys/components/shared/list/list_component.dart';
 import 'package:excerbuys/components/shared/positions/position_with_background.dart';
 import 'package:excerbuys/components/shared/profile_image_generator.dart';
-import 'package:excerbuys/store/controllers/activity/trainings_controller.dart';
-import 'package:excerbuys/store/controllers/dashboard_controller.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
-import 'package:excerbuys/store/controllers/shop/transactions_controller.dart';
-import 'package:excerbuys/types/activity.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/info/product_info_modal.dart';
+import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
+import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
+import 'package:excerbuys/store/controllers/shop/transactions_controller/transactions_controller.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/types/transaction.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/utils/home/utils.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/shop/transaction/utils.dart';
+import 'package:excerbuys/utils/utils.dart';
+import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:health/health.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class TransactionInfoModal extends StatefulWidget {
   final String transactionId;
@@ -39,6 +38,13 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
   void getTransactionMetadata() {
     final foundTransaction =
         transactionsController.allTransactions.content[widget.transactionId];
+
+    // add product that are referenced in a transaction
+    if (foundTransaction?.product != null) {
+      productsController.addProducts(
+          {foundTransaction!.product!.uuid: foundTransaction.product!});
+    }
+
     if (foundTransaction == null) {
       setState(() {
         _error = true;
@@ -100,8 +106,11 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                   right: HORIZOTAL_PADDING,
                   bottom: layoutController.bottomPadding + HORIZOTAL_PADDING),
               child: _error
-                  ? emptyMetadata(colors, texts)
+                  ? EmptyDataModal(
+                      message: "Couldn't find transaction data",
+                    )
                   : Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Row(
                           children: [
@@ -110,7 +119,7 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                                 _transactionType == TRANSACTION_TYPE.PURCHASE
                                     ? ImageComponent(
                                         size: 80,
-                                        image: _transaction?.product?.image,
+                                        image: _transaction?.product?.mainImage,
                                       )
                                     : ProfileImageGenerator(
                                         size: 80,
@@ -196,13 +205,23 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                                           'Product': Row(
                                             children: [
                                               RippleWrapper(
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  closeModal(context);
+
+                                                  openModal(
+                                                      context,
+                                                      ProductInfoModal(
+                                                          productId:
+                                                              _transaction!
+                                                                  .product!
+                                                                  .uuid));
+                                                },
                                                 child: PositionWithBackground(
                                                   name: _transaction
                                                           ?.product?.name ??
                                                       'Unknown',
                                                   image: _transaction
-                                                      ?.product?.image,
+                                                      ?.product?.mainImage,
                                                   textStyle: TextStyle(
                                                     color: colors
                                                         .tertiaryContainer,
@@ -214,16 +233,27 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                                           ),
                                       },
                                       summary:
-                                          '${_transactionType == TRANSACTION_TYPE.RECEIVE ? '+' : '-'}${isHidden ? '*****' : formatNumber(_transaction?.amountFinpoints?.round() ?? _transaction?.product?.finpointsPrice.round() ?? 0)} finpoints',
+                                          '${isHidden ? '*****' : '${_transactionType == TRANSACTION_TYPE.RECEIVE ? '+' : '-'}${formatNumber(_transaction?.amountFinpoints?.round() ?? _transaction?.product?.finpointsPrice.round() ?? 0)}'} finpoints',
                                       summaryColor: color,
                                     );
                                   }),
                             ],
                           ),
                         ),
-                        CopyText(textToCopy: _transaction?.uuid ?? ''),
+                        Text(
+                          'Transaction ID',
+                          style: TextStyle(
+                            color: colors.tertiaryContainer,
+                            fontSize: 14,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
                         SizedBox(
                           height: 8,
+                        ),
+                        CopyText(textToCopy: _transaction?.uuid ?? ''),
+                        SizedBox(
+                          height: 24,
                         ),
                         MainButton(
                             label: 'Close',
@@ -231,36 +261,10 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                                 colors.tertiaryContainer.withAlpha(80),
                             textColor: colors.primaryFixedDim,
                             onPressed: () {
-                              if (Navigator.canPop(context)) {
-                                Navigator.pop(context);
-                              }
+                              closeModal(context);
                             })
                       ],
                     ))),
     );
   }
-}
-
-Widget emptyMetadata(ColorScheme colors, TextTheme texts) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      Container(
-        margin: EdgeInsets.only(bottom: 12),
-        child: Text(
-          "Couldn't find transaction data",
-          textAlign: TextAlign.start,
-          style: texts.headlineLarge,
-        ),
-      ),
-      Text(
-        textAlign: TextAlign.start,
-        "Close the modal and try again",
-        style: TextStyle(
-          color: colors.primaryFixedDim,
-        ),
-      ),
-    ],
-  );
 }

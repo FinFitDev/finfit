@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:excerbuys/store/controllers/layout_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:flutter/material.dart';
 
 class LayoutWrapper extends StatefulWidget {
@@ -28,6 +28,21 @@ class _LayoutWrapperState extends State<LayoutWrapper>
     return SizedBox(
         height: MediaQuery.sizeOf(context).height,
         // color: Theme.of(context).colorScheme.secondary.withAlpha(40),
-        child: widget.child);
+        child: Stack(
+          children: [
+            StreamBuilder<int>(
+                stream: layoutController.modalOpenCountStream,
+                builder: (context, snapshot) {
+                  return AnimatedScale(
+                      scale: (snapshot.data ?? 0) > 0 ? 0.90 : 1,
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.decelerate,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                              (snapshot.data ?? 0) > 0 ? 20 : 0),
+                          child: widget.child));
+                }),
+          ],
+        ));
   }
 }

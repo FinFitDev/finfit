@@ -7,14 +7,15 @@ import 'package:excerbuys/containers/dashboard_page/home_page/balance_container.
 import 'package:excerbuys/containers/dashboard_page/home_page/news_container.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/progress_offers_container.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/transactions_section.dart';
-import 'package:excerbuys/store/controllers/activity/activity_controller.dart';
-import 'package:excerbuys/store/controllers/activity/steps_controller.dart';
-import 'package:excerbuys/store/controllers/activity/trainings_controller.dart';
-import 'package:excerbuys/store/controllers/dashboard_controller.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
-import 'package:excerbuys/store/controllers/shop/products_controller.dart';
-import 'package:excerbuys/store/controllers/shop/transactions_controller.dart';
-import 'package:excerbuys/store/controllers/user_controller.dart';
+import 'package:excerbuys/store/controllers/activity/activity_controller/activity_controller.dart';
+import 'package:excerbuys/store/controllers/activity/steps_controller/steps_controller.dart';
+import 'package:excerbuys/store/controllers/activity/trainings_controller/trainings_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard/send_controller/send_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
+import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
+import 'package:excerbuys/store/controllers/shop/transactions_controller/transactions_controller.dart';
+import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/product.dart';
@@ -24,8 +25,8 @@ import 'package:excerbuys/wrappers/refresh_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  final Future<void> Function() fetchActivity;
-  const HomePage({super.key, required this.fetchActivity});
+  final Future<void> Function() fetchData;
+  const HomePage({super.key, required this.fetchData});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -38,7 +39,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    widget.fetchActivity();
+    widget.fetchData();
   }
 
   Future<void> onRefresh() async {
@@ -55,8 +56,11 @@ class _HomePageState extends State<HomePage> {
     );
 
     await Future.delayed(Duration(milliseconds: 300));
+    activityController.setTodaysPoints(0);
+    await stepsController.fetchsSteps();
 
-    await activityController.fetchActivity();
+    await productsController.refreshHomeProducts();
+    await sendController.refresh();
   }
 
   @override
@@ -119,12 +123,13 @@ class _HomePageState extends State<HomePage> {
                                 stream: productsController
                                     .affordableHomeProductsStream,
                                 builder: (context, snapshot) {
-                                  if (snapshot.data == null ||
-                                      snapshot.data!.content.isEmpty) {
+                                  if ((snapshot.data == null ||
+                                          snapshot.data!.content.isEmpty) &&
+                                      snapshot.data?.isLoading != true) {
                                     return SizedBox.shrink();
                                   }
                                   return AvailableOffers(
-                                    products: snapshot.data!.content,
+                                    products: snapshot.data?.content ?? [],
                                     isLoading: snapshot.data?.isLoading,
                                   );
                                 }),
@@ -133,12 +138,13 @@ class _HomePageState extends State<HomePage> {
                                 stream: productsController
                                     .nearlyAffordableHomeProducts,
                                 builder: (context, snapshot) {
-                                  if (snapshot.data == null ||
-                                      snapshot.data!.content.isEmpty) {
+                                  if ((snapshot.data == null ||
+                                          snapshot.data!.content.isEmpty) &&
+                                      snapshot.data?.isLoading != true) {
                                     return SizedBox.shrink();
                                   }
                                   return ProgressOffersContainer(
-                                    products: snapshot.data!.content,
+                                    products: snapshot.data?.content ?? [],
                                     isLoading: snapshot.data?.isLoading,
                                   );
                                 }),

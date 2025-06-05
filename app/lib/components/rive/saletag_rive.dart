@@ -12,7 +12,9 @@ extension ColorExtension on Artboard {
 class SaletagRive extends StatefulWidget {
   final int discount;
   final bool? isProgress;
-  const SaletagRive({super.key, required this.discount, this.isProgress});
+  final Color? color;
+  const SaletagRive(
+      {super.key, required this.discount, this.isProgress, this.color});
 
   @override
   State<SaletagRive> createState() => _SaletagRiveState();
@@ -21,9 +23,9 @@ class SaletagRive extends StatefulWidget {
 class _SaletagRiveState extends State<SaletagRive> {
   void _onRiveInit(Artboard artboard) {
     final textRun = artboard.textRun('discount')!;
-    if (widget.isProgress == true) {
+    if (widget.isProgress == true || widget.color != null) {
       final boxComponent = artboard.colorChange('box')!;
-      boxComponent.fills.first.paint.color = Colors.grey;
+      boxComponent.fills.first.paint.color = widget.color ?? Colors.grey;
     }
     textRun.text = '-${widget.discount.toString()}%';
   }

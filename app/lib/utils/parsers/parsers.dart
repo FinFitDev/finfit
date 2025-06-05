@@ -73,6 +73,22 @@ String parseDate(DateTime date) {
   return "${padTimeString(date.day.toString())} ${DateFormat('MMM').format(date)} ${padTimeString(date.hour.toString())}:${padTimeString(date.minute.toString())}";
 }
 
+String parseDateYear(DateTime date) {
+  final DateTime now = DateTime.now();
+
+  if (date.year == now.year && date.month == now.month) {
+    if (date.day == now.day) {
+      return "Today ${date.year}";
+    }
+
+    if (date.day == now.day - 1) {
+      return "Yesterday ${date.year}";
+    }
+  }
+
+  return "${padTimeString(date.day.toString())} ${DateFormat('MMM').format(date)} ${date.year}";
+}
+
 String padPriceDecimals(double price) {
   var parts = price.toString().split('.');
   String? main = parts[0];

@@ -2,6 +2,7 @@ import { ErrorWithCode } from "../../../exceptions/errorWithCode";
 import {
   fetchUserByEmail,
   fetchUserById,
+  fetchUsersByIds,
   fetchUsersByRegex,
   transferPointsTransaction,
   updateImageSeed,
@@ -17,6 +18,19 @@ export const getUserById = async (user_id: string) => {
     return foundUser.rows[0] as IUserNoPassword;
   else {
     throw new ErrorWithCode(`No user found with id ${user_id}`, 404);
+  }
+};
+
+export const getUsersByIds = async (user_ids: string[]) => {
+  const foundUser = await fetchUsersByIds(user_ids);
+
+  if (foundUser.rowCount && foundUser.rowCount > 0)
+    return foundUser.rows as IUserNoPassword[];
+  else {
+    throw new ErrorWithCode(
+      `No user found with ids ${user_ids.join(", ")}`,
+      404
+    );
   }
 };
 

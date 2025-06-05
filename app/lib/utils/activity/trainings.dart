@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:excerbuys/store/controllers/app_controller.dart';
-import 'package:excerbuys/store/controllers/user_controller.dart';
+import 'package:excerbuys/store/controllers/app_controller/app_controller.dart';
+import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:health/health.dart';
 

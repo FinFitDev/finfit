@@ -83,6 +83,9 @@ class _RippleWrapperState extends State<RippleWrapper>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior:
+          HitTestBehavior.opaque, // Ensures the whole area captures gestures
+
       onTapCancel: () {
         pressEndCallback();
       },

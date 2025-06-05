@@ -12,6 +12,12 @@ class StorageController {
     return instance!;
   }
 
+  // get all keys from storage
+  Future<Set<String>?> getAllKeys() async {
+    final instance = await getLocalStorageInstance();
+    return instance.getKeys();
+  }
+
   // get hard storage instance (singleton pattern)
   FlutterSecureStorage getHardStorageInstance() {
     hardStorage ??= const FlutterSecureStorage();
@@ -28,6 +34,17 @@ class StorageController {
   Future<String?> loadStateLocal(String key) async {
     final instance = await getLocalStorageInstance();
     return instance.getString(key);
+  }
+
+  // Remove the entry from local storage
+  Future<bool> removeStateLocal(String key) async {
+    final instance = await getLocalStorageInstance();
+    return await instance.remove(key);
+  }
+
+  Future<bool> clearLocalStorage() async {
+    final instance = await storageController.getLocalStorageInstance();
+    return await instance.clear();
   }
 
   // Save the state to local storage

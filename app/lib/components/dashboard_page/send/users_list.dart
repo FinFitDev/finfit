@@ -1,8 +1,7 @@
 import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/components/shared/profile_image_generator.dart';
-import 'package:excerbuys/store/controllers/dashboard/send_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard/send_controller/send_controller.dart';
 import 'package:excerbuys/types/user.dart';
-import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -30,29 +29,36 @@ class UsersList extends StatelessWidget {
                 : StreamBuilder<List<String>>(
                     stream: sendController.chosenUsersIdsStream,
                     builder: (context, snapshot) {
-                      return Column(
-                          children: usersForSearch!.entries.map((el) {
-                        final value = el.value;
-                        final key = el.key;
+                      return StreamBuilder<List<String>>(
+                          stream: sendController.recentRecipientsIdsStream,
+                          builder: (context, recentUsersSnapshot) {
+                            return Column(
+                                children: usersForSearch!.entries.map((el) {
+                              final value = el.value;
+                              final key = el.key;
 
-                        return userCard(colors, texts, value.username,
-                            value.email, value.image, () {
-                          sendController.proccessSelectUser(key);
-                        }, (snapshot.data ?? []).contains(key));
-                      }).toList());
+                              return userCard(colors, texts, value.username,
+                                  value.email, value.image, () {
+                                sendController.proccessSelectUser(key);
+                              },
+                                  (snapshot.data ?? []).contains(key),
+                                  recentUsersSnapshot.data != null &&
+                                      recentUsersSnapshot.data!.contains(key));
+                            }).toList());
+                          });
                     }));
   }
 }
 
 Widget userCard(
-  ColorScheme colors,
-  TextTheme texts,
-  String name,
-  String email,
-  String? image,
-  void Function() onPressed,
-  bool? isSelected,
-) {
+    ColorScheme colors,
+    TextTheme texts,
+    String name,
+    String email,
+    String? image,
+    void Function() onPressed,
+    bool? isSelected,
+    bool? isRecent) {
   return RippleWrapper(
     onPressed: onPressed,
     child: Container(
@@ -98,7 +104,26 @@ Widget userCard(
                   padding: EdgeInsets.all(5),
                   child: SvgPicture.asset('assets/svg/tick.svg'),
                 )
-              : SizedBox.shrink()
+              : isRecent == true
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Recent',
+                          style: TextStyle(
+                              fontSize: 11, color: colors.tertiaryContainer),
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          child: SvgPicture.asset(
+                            'assets/svg/clock.svg',
+                            width: 16,
+                            height: 16,
+                          ),
+                        ),
+                      ],
+                    )
+                  : SizedBox.shrink()
         ],
       ),
     ),

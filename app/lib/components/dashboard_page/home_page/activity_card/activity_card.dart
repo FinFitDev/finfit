@@ -1,5 +1,5 @@
 import 'package:excerbuys/components/shared/activity_icon.dart';
-import 'package:excerbuys/store/controllers/dashboard_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/utils/home/utils.dart';
@@ -66,7 +66,7 @@ class _ActivityCardState extends State<ActivityCard> {
                             builder: (context, snapshot) {
                               final bool isHidden = snapshot.data ?? false;
                               return Text(
-                                  '+${isHidden ? '***** finpoints' : '${widget.points.abs().toString()} finpoints'}',
+                                  '${isHidden ? '***** finpoints' : '+${widget.points.abs().toString()} finpoints'}',
                                   style: texts.headlineMedium?.copyWith(
                                     color: colors.secondary,
                                   ));

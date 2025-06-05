@@ -1,10 +1,12 @@
-import 'package:excerbuys/components/dashboard_page/home_page/shop_item_card.dart';
+import 'package:excerbuys/components/dashboard_page/shop_page/product_card/featured_product_card.dart';
 import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
-import 'package:excerbuys/components/shared/indicators/current_item/current_item_indicator.dart';
-import 'package:excerbuys/store/controllers/layout_controller.dart';
-import 'package:excerbuys/store/controllers/user_controller.dart';
+import 'package:excerbuys/components/shared/indicators/carousel/current_item_indicator.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/info/product_info_modal.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
+import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class ProgressOffersContainer extends StatefulWidget {
@@ -90,8 +92,8 @@ class _ProgressOffersContainerState extends State<ProgressOffersContainer> {
                           itemBuilder: (context, index) {
                             final entry = widget.products.elementAt(index);
 
-                            return ShopItemCard(
-                              image: entry.image,
+                            return FeaturedProductCard(
+                              image: entry.mainImage,
                               originalPrice: entry.originalPrice,
                               discount: entry.discount.round(),
                               points: entry.finpointsPrice.round(),
@@ -101,6 +103,10 @@ class _ProgressOffersContainerState extends State<ProgressOffersContainer> {
                               pointsLeft: entry.finpointsPrice -
                                   (userController.userBalance ?? 0),
                               isLast: index == widget.products.length - 1,
+                              onPressed: () {
+                                openModal(context,
+                                    ProductInfoModal(productId: entry.uuid));
+                              },
                             );
                           },
                         ),
