@@ -14,6 +14,7 @@ import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
+import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/modal/modal_content_wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -53,6 +54,12 @@ class _AmountModalState extends State<AmountModal> {
     final colors = Theme.of(context).colorScheme;
 
     return ModalContentWrapper(
+      title: 'Send finpoints',
+      subtitle: 'Enter amount',
+      onClickBack: widget.previousPage,
+      onClose: () {
+        closeModal(context);
+      },
       padding: EdgeInsets.only(
           bottom: layoutController.bottomPadding + HORIZOTAL_PADDING),
       child: Column(
@@ -62,11 +69,6 @@ class _AmountModalState extends State<AmountModal> {
             padding: EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING),
             child: Column(
               children: [
-                ModalHeader(
-                  title: 'Send finpoints',
-                  subtitle: 'Enter amount',
-                  goBack: widget.previousPage,
-                ),
                 SizedBox(
                   height: 16,
                 ),

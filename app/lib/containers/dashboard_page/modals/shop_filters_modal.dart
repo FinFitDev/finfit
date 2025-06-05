@@ -108,147 +108,153 @@ class _ShopFiltersModalState extends State<ShopFiltersModal> {
             MediaQuery.of(context).viewInsets.bottom, // Adjust with keyboard
       ),
       child: ModalContentWrapper(
+          title: 'Shop filters',
+          subtitle: 'Find what you need',
+          onClose: () {
+            closeModal(context);
+          },
           child: Column(
-        children: [
-          ModalHeader(title: 'Shop filters', subtitle: 'Find what you need'),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(
-                    height: 16,
-                  ),
-                  ValueListenableBuilder(
-                      valueListenable: _currentPriceRange,
-                      builder: (context, value, child) {
-                        return StreamBuilder<IStoreMaxRanges>(
-                            stream: shopController.maxPriceRangesStream,
-                            builder: (context, snapshot) {
-                              final maxRange =
-                                  snapshot.data?['max_price'] ?? 1000;
-                              return RangeSliderComponent(
-                                label: 'Price',
-                                range: {'min': 0, 'max': maxRange},
-                                values: value,
-                                suffix: 'PLN',
-                                stepSize: (maxRange / 30).roundToDouble(),
-                                onChanged: (SfRangeValues newValues) {
-                                  _currentPriceRange.value = newValues;
-                                },
-                              );
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(
+                        height: 16,
+                      ),
+                      ValueListenableBuilder(
+                          valueListenable: _currentPriceRange,
+                          builder: (context, value, child) {
+                            return StreamBuilder<IStoreMaxRanges>(
+                                stream: shopController.maxPriceRangesStream,
+                                builder: (context, snapshot) {
+                                  final maxRange =
+                                      snapshot.data?['max_price'] ?? 1000;
+                                  return RangeSliderComponent(
+                                    label: 'Price',
+                                    range: {'min': 0, 'max': maxRange},
+                                    values: value,
+                                    suffix: 'PLN',
+                                    stepSize: (maxRange / 30).roundToDouble(),
+                                    onChanged: (SfRangeValues newValues) {
+                                      _currentPriceRange.value = newValues;
+                                    },
+                                  );
+                                });
+                          }),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      ValueListenableBuilder(
+                          valueListenable: _currentFinpointsCost,
+                          builder: (context, value, child) {
+                            return StreamBuilder<IStoreMaxRanges>(
+                                stream: shopController.maxPriceRangesStream,
+                                builder: (context, snapshot) {
+                                  final maxRange =
+                                      snapshot.data?['max_finpoints'] ?? 100000;
+                                  return RangeSliderComponent(
+                                    label: 'Finpoints cost',
+                                    range: {'min': 0, 'max': maxRange},
+                                    values: value,
+                                    stepSize: (maxRange / 100).roundToDouble(),
+                                    suffix: 'finpoints',
+                                    onChanged: (SfRangeValues newValues) {
+                                      _currentFinpointsCost.value = newValues;
+                                    },
+                                  );
+                                });
+                          }),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Text(
+                        'Sort by',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Column(
+                          children: List.generate(SHOP_FILTERS.length, (index) {
+                        final el = SHOP_FILTERS[index];
+                        return Position(
+                          onPress: () {
+                            setState(() {
+                              _sortByCategory = el;
+                              _sortingOrder ??= SORTING_ORDER.ASCENDING;
                             });
-                      }),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  ValueListenableBuilder(
-                      valueListenable: _currentFinpointsCost,
-                      builder: (context, value, child) {
-                        return StreamBuilder<IStoreMaxRanges>(
-                            stream: shopController.maxPriceRangesStream,
-                            builder: (context, snapshot) {
-                              final maxRange =
-                                  snapshot.data?['max_finpoints'] ?? 100000;
-                              return RangeSliderComponent(
-                                label: 'Finpoints cost',
-                                range: {'min': 0, 'max': maxRange},
-                                values: value,
-                                stepSize: (maxRange / 100).roundToDouble(),
-                                suffix: 'finpoints',
-                                onChanged: (SfRangeValues newValues) {
-                                  _currentFinpointsCost.value = newValues;
-                                },
-                              );
+                          },
+                          optionName: el,
+                          isSelected: _sortByCategory == el,
+                        );
+                      }).toList()),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      RadioButton(
+                          value: SORTING_ORDER.ASCENDING,
+                          activeValue: _sortingOrder,
+                          onChanged: (SORTING_ORDER? val) {
+                            setState(() {
+                              _sortingOrder = val;
                             });
-                      }),
-                  SizedBox(
-                    height: 16,
+                          },
+                          disabled: _sortByCategory == null,
+                          label: 'Ascending'),
+                      RadioButton(
+                          value: SORTING_ORDER.DESCENDING,
+                          activeValue: _sortingOrder,
+                          onChanged: (SORTING_ORDER? val) {
+                            setState(() {
+                              _sortingOrder = val;
+                            });
+                          },
+                          disabled: _sortByCategory == null,
+                          label: 'Descending'),
+                      SizedBox(
+                        height: 30,
+                      ),
+                    ],
                   ),
-                  Text(
-                    'Sort by',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(
-                    height: 16,
-                  ),
-                  Column(
-                      children: List.generate(SHOP_FILTERS.length, (index) {
-                    final el = SHOP_FILTERS[index];
-                    return Position(
-                      onPress: () {
-                        setState(() {
-                          _sortByCategory = el;
-                          _sortingOrder ??= SORTING_ORDER.ASCENDING;
-                        });
-                      },
-                      optionName: el,
-                      isSelected: _sortByCategory == el,
-                    );
-                  }).toList()),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  RadioButton(
-                      value: SORTING_ORDER.ASCENDING,
-                      activeValue: _sortingOrder,
-                      onChanged: (SORTING_ORDER? val) {
-                        setState(() {
-                          _sortingOrder = val;
-                        });
-                      },
-                      disabled: _sortByCategory == null,
-                      label: 'Ascending'),
-                  RadioButton(
-                      value: SORTING_ORDER.DESCENDING,
-                      activeValue: _sortingOrder,
-                      onChanged: (SORTING_ORDER? val) {
-                        setState(() {
-                          _sortingOrder = val;
-                        });
-                      },
-                      disabled: _sortByCategory == null,
-                      label: 'Descending'),
-                  SizedBox(
-                    height: 30,
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(top: 16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: MainButton(
-                      label: 'Reset',
-                      backgroundColor: colors.tertiaryContainer.withAlpha(80),
-                      textColor: colors.primaryFixedDim,
-                      onPressed: () {
-                        resetFilters();
-                        closeModal(context);
-                      }),
+              Container(
+                padding: EdgeInsets.only(top: 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: MainButton(
+                          label: 'Reset',
+                          backgroundColor:
+                              colors.tertiaryContainer.withAlpha(80),
+                          textColor: colors.primaryFixedDim,
+                          onPressed: () {
+                            resetFilters();
+                            closeModal(context);
+                          }),
+                    ),
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Expanded(
+                      child: MainButton(
+                          label: 'Confirm',
+                          backgroundColor: colors.secondary,
+                          textColor: colors.primary,
+                          onPressed: () {
+                            setFilters();
+                            closeModal(context);
+                          }),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  width: 16,
-                ),
-                Expanded(
-                  child: MainButton(
-                      label: 'Confirm',
-                      backgroundColor: colors.secondary,
-                      textColor: colors.primary,
-                      onPressed: () {
-                        setFilters();
-                        closeModal(context);
-                      }),
-                ),
-              ],
-            ),
-          )
-        ],
-      )),
+              )
+            ],
+          )),
     );
   }
 }

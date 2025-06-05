@@ -93,7 +93,7 @@ class _ProgressOffersContainerState extends State<ProgressOffersContainer> {
                             final entry = widget.products.elementAt(index);
 
                             return FeaturedProductCard(
-                              image: entry.image,
+                              image: entry.mainImage,
                               originalPrice: entry.originalPrice,
                               discount: entry.discount.round(),
                               points: entry.finpointsPrice.round(),

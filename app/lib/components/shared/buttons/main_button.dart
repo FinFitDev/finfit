@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:animated_checkmark/animated_checkmark.dart';
+import 'package:excerbuys/components/shared/indicators/animations/checkmark_with_circle.dart';
 import 'package:excerbuys/components/shared/indicators/circle_progress/circle_progress_indicator.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,7 @@ class MainButton extends StatefulWidget {
   final bool? loading;
   final bool? holdToConfirm;
   final double? height;
+  final bool? isSuccess;
 
   const MainButton({
     super.key,
@@ -29,6 +32,7 @@ class MainButton extends StatefulWidget {
     this.holdToConfirm,
     this.icon,
     this.height,
+    this.isSuccess,
   });
 
   @override
@@ -135,24 +139,32 @@ class _MainButtonState extends State<MainButton> with TickerProviderStateMixin {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          widget.icon != null
-                              ? Container(
-                                  margin: EdgeInsets.only(right: 8),
-                                  child: SvgPicture.asset(
-                                    widget.icon!,
-                                    width: 24,
-                                    height: 24,
-                                    colorFilter: ColorFilter.mode(
-                                        widget.textColor, BlendMode.srcIn),
-                                  ),
-                                )
+                          widget.isSuccess == true
+                              ? CheckmarkWithCircle()
+                              : widget.icon != null
+                                  ? Container(
+                                      margin: EdgeInsets.only(right: 8),
+                                      child: SvgPicture.asset(
+                                        widget.icon!,
+                                        width: 24,
+                                        height: 24,
+                                        colorFilter: ColorFilter.mode(
+                                            widget.isDisabled == true
+                                                ? widget.textColor
+                                                    .withAlpha(155)
+                                                : widget.textColor,
+                                            BlendMode.srcIn),
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                          widget.isSuccess != true
+                              ? Text(widget.label,
+                                  style: texts.headlineMedium?.copyWith(
+                                    color: widget.isDisabled == true
+                                        ? widget.textColor.withAlpha(155)
+                                        : widget.textColor,
+                                  ))
                               : SizedBox.shrink(),
-                          Text(widget.label,
-                              style: texts.headlineMedium?.copyWith(
-                                color: widget.isDisabled == true
-                                    ? widget.textColor.withAlpha(155)
-                                    : widget.textColor,
-                              )),
                         ],
                       );
                     })),

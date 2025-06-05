@@ -26,7 +26,7 @@ Future<List<IProductOwnerEntry>?> loadProductOwnersBySearchRequest(
               IProductOwnerEntry.fromJson(item as Map<String, dynamic>))
           .toList();
     } catch (error) {
-      print('Error loading home product owners from database $error');
+      print('Error loading product owners from database $error');
       rethrow;
     }
   }

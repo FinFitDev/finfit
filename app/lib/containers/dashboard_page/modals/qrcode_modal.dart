@@ -4,6 +4,7 @@ import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/modal/modal_content_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
@@ -17,11 +18,13 @@ class QrcodeModal extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
 
     return ModalContentWrapper(
+      title: 'Receive finpoints',
+      subtitle: 'Scan code',
+      onClose: () {
+        closeModal(context);
+      },
       child: Column(
         children: [
-          ModalHeader(
-              title: 'Receive finpoints',
-              subtitle: 'Scan code with another device'),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,

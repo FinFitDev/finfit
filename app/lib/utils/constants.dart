@@ -27,6 +27,7 @@ const String ACCESS_TOKEN_KEY = 'access_token';
 const String REFRESH_TOKEN_KEY = 'refresh_token';
 const String CURRENT_USER_KEY = 'current_user';
 const String RECENT_RECIPIENTS_KEY = 'recent_recipients';
+const String CART_STATE_KEY = 'cart_state';
 const String MAX_PRICE_RANGES_KEY = 'max_price_ranges';
 const String AVAILABLE_SHOP_CATEGORIES_KEY = 'available_shop_categories';
 

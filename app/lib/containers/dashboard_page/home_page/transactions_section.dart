@@ -173,7 +173,7 @@ class _TransactionsSectionState extends State<TransactionsSection> {
                               date: parseDate(transactionData.createdAt),
                               type: transactionTypeStringToEnum(
                                   transactionData.type),
-                              productImage: transactionData.product?.image,
+                              productImage: transactionData.product?.mainImage,
                               productPrice: transactionData.product != null
                                   ? (transactionData.product!.originalPrice *
                                       (1 -

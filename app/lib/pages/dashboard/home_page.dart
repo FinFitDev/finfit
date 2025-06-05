@@ -7,6 +7,7 @@ import 'package:excerbuys/containers/dashboard_page/home_page/balance_container.
 import 'package:excerbuys/containers/dashboard_page/home_page/news_container.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/progress_offers_container.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/transactions_section.dart';
+import 'package:excerbuys/store/controllers/activity/activity_controller/activity_controller.dart';
 import 'package:excerbuys/store/controllers/activity/steps_controller/steps_controller.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard/send_controller/send_controller.dart';
@@ -55,7 +56,7 @@ class _HomePageState extends State<HomePage> {
     );
 
     await Future.delayed(Duration(milliseconds: 300));
-
+    activityController.setTodaysPoints(0);
     await stepsController.fetchsSteps();
 
     await productsController.refreshHomeProducts();

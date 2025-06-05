@@ -70,7 +70,8 @@ export interface IProductVariant {
   id: string;
   discount: number;
   price: number;
-  available: boolean;
+  in_stock: number;
+  images?: string[];
   attributes: Record<string, string>;
 }
 
@@ -84,12 +85,11 @@ export interface IProduct {
   discount: number;
   created_at: string;
   link?: string;
-  image?: string;
+  images: string[];
   category: string;
   total_transactions: number;
   isAffordable?: boolean;
   variants: IProductVariant[];
-  images?: string[];
 }
 
 export interface IProductOwner {
@@ -102,6 +102,7 @@ export interface IProductOwner {
   banner_image?: string;
   link?: string;
   image?: string;
+  reference_id: string;
 }
 
 export interface ITransactionInsert {

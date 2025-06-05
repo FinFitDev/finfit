@@ -79,9 +79,11 @@ class RegularMainHeaderContent extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(100)),
                               child: Center(
                                 child: Text(
-                                  totalQuantity.toString(),
+                                  totalQuantity > 99
+                                      ? '99+'
+                                      : totalQuantity.toString(),
                                   style: TextStyle(
-                                      fontSize: 10,
+                                      fontSize: totalQuantity > 99 ? 7 : 10,
                                       color: colors.onError,
                                       fontWeight: FontWeight.w700),
                                 ),

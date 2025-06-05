@@ -22,6 +22,7 @@ Future<List<IProductEntry>?> loadHomeProductsRequest(String userId) async {
       }
 
       final content = res['content'];
+
       // add all products together to the all prodcust list
       for (final el in List.from(content['affordable'])
         ..addAll(content['nearly_affordable'])) {

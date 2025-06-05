@@ -8,11 +8,13 @@ import 'package:flutter/material.dart';
 class ProductInfoVariants extends StatefulWidget {
   final List<IProductVariant> productVariants;
   final Function(Map<String, String>) onVariantSelected;
+  final IProductVariant? selectedVariant;
 
   const ProductInfoVariants(
       {super.key,
       required this.productVariants,
-      required this.onVariantSelected});
+      required this.onVariantSelected,
+      this.selectedVariant});
 
   @override
   State<ProductInfoVariants> createState() => _ProductInfoVariantsState();
@@ -54,6 +56,16 @@ class _ProductInfoVariantsState extends State<ProductInfoVariants> {
   }
 
   @override
+  void didUpdateWidget(covariant ProductInfoVariants oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedVariant?.attributes != null) {
+      setState(() {
+        _selectedAttributes = widget.selectedVariant!.attributes;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
@@ -66,7 +78,8 @@ class _ProductInfoVariantsState extends State<ProductInfoVariants> {
           return OptionsSlider(
               optionsList: options,
               title: title,
-              selectedOption: _selectedAttributes[title] ?? '',
+              selectedOption:
+                  widget.selectedVariant?.attributes[title.toLowerCase()] ?? '',
               onOptionSelected: (p0) {
                 setState(() {
                   _selectedAttributes = {

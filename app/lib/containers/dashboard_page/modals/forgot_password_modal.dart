@@ -65,44 +65,63 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
               color: colors.primary,
               width: double.infinity,
               padding: EdgeInsets.only(
-                  left: HORIZOTAL_PADDING,
-                  right: HORIZOTAL_PADDING,
                   bottom: layoutController.bottomPadding + HORIZOTAL_PADDING),
               child: Wrap(
                 runSpacing: 12,
                 alignment: WrapAlignment.center,
                 children: [
                   ModalHeader(
-                      title: 'Forgot password',
-                      subtitle: 'Reset it in the email inbox'),
-                  InputWithIcon(
-                    error: error != null
-                        ? error == RESET_PASSWORD_ERROR.WRONG_EMAIL
-                            ? 'Wrong email'
-                            : 'Server error'
-                        : null,
-                    placeholder: 'Enter email',
-                    onChange: (val) {
-                      setState(() {
-                        _email = val;
-                        error = null;
-                      });
+                    title: 'Forgot password',
+                    subtitle: 'Reset it in the email inbox',
+                    onClose: () {
+                      closeModal(context);
                     },
-                    inputType: TextInputType.emailAddress,
-                    borderRadius: 10,
-                    verticalPadding: 12,
                   ),
-                  Container(
-                    height: 8,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: HORIZOTAL_PADDING,
+                    ),
+                    child: Column(
+                      children: [
+                        InputWithIcon(
+                          error: error != null
+                              ? error == RESET_PASSWORD_ERROR.WRONG_EMAIL
+                                  ? 'Wrong email'
+                                  : 'Server error'
+                              : null,
+                          placeholder: 'Enter email',
+                          onChange: (val) {
+                            setState(() {
+                              _email = val;
+                              error = null;
+                            });
+                          },
+                          inputType: TextInputType.emailAddress,
+                          borderRadius: 10,
+                          verticalPadding: 12,
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        Text(
+                          'Enter an email that is connected with your existing account, and then copy the code that has been sent there.',
+                          style: TextStyle(
+                              fontSize: 12, color: colors.tertiaryContainer),
+                        ),
+                        SizedBox(
+                          height: 24,
+                        ),
+                        MainButton(
+                            isDisabled:
+                                _email.isEmpty || !EMAIL_REGEX.hasMatch(_email),
+                            label: 'Send email',
+                            loading: _loading,
+                            backgroundColor: colors.secondary,
+                            textColor: colors.primary,
+                            onPressed: sendEmail),
+                      ],
+                    ),
                   ),
-                  MainButton(
-                      isDisabled:
-                          _email.isEmpty || !EMAIL_REGEX.hasMatch(_email),
-                      label: 'Send email',
-                      loading: _loading,
-                      backgroundColor: colors.secondary,
-                      textColor: colors.primary,
-                      onPressed: sendEmail),
                 ],
               ))),
     );

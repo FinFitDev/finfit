@@ -34,7 +34,7 @@ class ProductsRowContainer extends StatelessWidget {
                       openModal(
                           context, ProductInfoModal(productId: first!.key));
                     },
-                    image: first!.value.image,
+                    image: first!.value.mainImage,
                   ),
           ),
           SizedBox(width: 8),
@@ -54,7 +54,7 @@ class ProductsRowContainer extends StatelessWidget {
                       openModal(
                           context, ProductInfoModal(productId: second!.key));
                     },
-                    image: second!.value.image,
+                    image: second!.value.mainImage,
                   ),
           ),
         ],

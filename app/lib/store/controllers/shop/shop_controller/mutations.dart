@@ -102,18 +102,50 @@ extension ShopControllerMutations on ShopController {
 
   setCartItems(List<ICartItem> items) {
     _cartItems.add(items);
+    saveCartStateToStorage();
   }
 
   addCartItem(ICartItem item) {
     final currentItems = cartItems;
-    if (!currentItems.any((i) => i == item)) {
+    if (!currentItems.any((i) => i.isEqualParamsSet(item))) {
       _cartItems.add([...currentItems, item]);
+      saveCartStateToStorage();
     }
   }
 
-  removeCartItem(String itemId) {
+  void removeCartItem(String itemId) {
     final currentItems = cartItems;
-    _cartItems.add(currentItems.where((i) => i.uuid != itemId).toList());
+    final itemIndex = currentItems.indexWhere((i) => i.uuid == itemId);
+    if (itemIndex == -1) return;
+
+    final itemToRemove = currentItems[itemIndex];
+
+    userBalanceMinusCartCost.first.then((balanceLeft) {
+      final updatedItems = List<ICartItem>.from(currentItems)
+        ..removeAt(itemIndex);
+
+      // Only refund balance if item was eligible
+      if (itemToRemove.notEligible != true) {
+        final refundAmount =
+            itemToRemove.quantity * itemToRemove.product.finpointsPrice;
+        final simulatedBalance = (balanceLeft ?? 0) + refundAmount;
+
+        final notEligibleItems =
+            currentItems.where((el) => el.notEligible == true).toList();
+
+        final Map<String, int> itemMapToQualify =
+            minimizePrice(simulatedBalance.round(), notEligibleItems);
+
+        convertNotEligibleItemsToEligible(
+          updatedItems: updatedItems,
+          itemMapToQualify: itemMapToQualify,
+          notEligibleItems: notEligibleItems,
+        );
+      }
+
+      _cartItems.add(updatedItems);
+      saveCartStateToStorage();
+    });
   }
 
   increaseProductQuantity(String cartItemId) {
@@ -150,19 +182,48 @@ extension ShopControllerMutations on ShopController {
           updatedItems[itemIndex] = updatedItem;
         }
         _cartItems.add(updatedItems);
+        saveCartStateToStorage();
       });
     }
   }
 
-  decreaseProductQuantity(String cartItemId) {
+  void decreaseProductQuantity(String cartItemId) {
     final currentItems = cartItems;
     final itemIndex = currentItems.indexWhere((i) => i.uuid == cartItemId);
-    if (itemIndex != -1) {
-      final updatedItem = currentItems[itemIndex]
-          .copyWith(quantity: max(1, currentItems[itemIndex].quantity - 1));
+    if (itemIndex == -1) return;
+
+    userBalanceMinusCartCost.first.then((balanceLeft) {
+      final currentItem = currentItems[itemIndex];
       final updatedItems = List<ICartItem>.from(currentItems);
+
+      // Decrease quantity (or clamp at 1)
+      final updatedItem = currentItem.copyWith(
+        quantity: max(1, currentItem.quantity - 1),
+      );
       updatedItems[itemIndex] = updatedItem;
+
+      // we only optimize if item is eligible
+      if (currentItem.notEligible != true) {
+        // Simulated balance after "refunding" one item's cost
+        final simulatedBalance =
+            (balanceLeft ?? 0) + currentItem.product.finpointsPrice;
+
+        // Find not eligible items
+        final notEligibleItems =
+            currentItems.where((el) => el.notEligible == true).toList();
+
+        // Run optimizer to decide which notEligible items to make eligible
+        final Map<String, int> itemMapToQualify =
+            minimizePrice(simulatedBalance.round(), notEligibleItems);
+
+        convertNotEligibleItemsToEligible(
+            updatedItems: updatedItems,
+            itemMapToQualify: itemMapToQualify,
+            notEligibleItems: notEligibleItems);
+      }
+
       _cartItems.add(updatedItems);
-    }
+      saveCartStateToStorage();
+    });
   }
 }

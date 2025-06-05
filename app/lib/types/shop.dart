@@ -99,6 +99,14 @@ class IProductVariantsSet {
     );
   }
 
+  IProductVariant? findVariantByImage(String image) {
+    return variants
+        .where(
+          (variant) => variant.images != null && variant.images![0] == image,
+        )
+        .firstOrNull;
+  }
+
   IProductVariant? findVariant(Map<String, String> selectedAttributes) {
     return variants
         .where(
@@ -195,6 +203,14 @@ class IProductVariantsSet {
         entry.key: entry.value.toList()
     };
   }
+
+  bool isAvailableVariant(Map<String, String> selectedAttributes) {
+    return variants.any(
+      (variant) =>
+          variant.available &&
+          _attributesMatch(variant.attributes, selectedAttributes),
+    );
+  }
 }
 
 class ICartItem implements HasQuantity {
@@ -237,13 +253,36 @@ class ICartItem implements HasQuantity {
         variant?.id == other.variant?.id;
   }
 
-  void increaseQuantity() {
-    quantity++;
+  Map<String, dynamic> toJson() => {
+        'uuid': uuid,
+        'product': product.toJson(),
+        'variant': variant?.toJson(),
+        'quantity': quantity,
+        'notEligible': notEligible,
+      };
+
+  factory ICartItem.fromJson(Map<String, dynamic> json) {
+    return ICartItem(
+      uuid: json['uuid'],
+      product: IProductEntry.fromJson(json['product']),
+      variant: json['variant'] != null
+          ? IProductVariant.fromJson(json['variant'])
+          : null,
+      quantity: json['quantity'] ?? 1,
+      notEligible: json['notEligible'],
+    );
   }
 
-  void decreaseQuantity() {
-    if (quantity > 1) {
-      quantity--;
-    }
+  double getPrice({bool? isEligible}) {
+    isEligible ??= !(notEligible ?? false);
+
+    return (variant?.price ?? product.originalPrice) *
+        (isEligible
+            ? (100 - (variant?.discount ?? product.discount)) / 100
+            : 1);
+  }
+
+  String? getImage() {
+    return variant?.images?.first ?? product.mainImage;
   }
 }

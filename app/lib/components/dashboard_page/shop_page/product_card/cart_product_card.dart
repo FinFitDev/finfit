@@ -22,7 +22,7 @@ class CartProductCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(10),
       child: Slidable(
         key: ValueKey(item.uuid),
-        startActionPane: ActionPane(
+        endActionPane: ActionPane(
           motion: DrawerMotion(),
           extentRatio: 0.2,
           children: [
@@ -33,7 +33,6 @@ class CartProductCard extends StatelessWidget {
               },
               backgroundColor: colors.error,
               icon: Icons.delete,
-              borderRadius: BorderRadius.circular(10),
               foregroundColor: colors.primary,
             ),
           ],
@@ -41,20 +40,15 @@ class CartProductCard extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(16),
           height: 120,
-          color: colors.primaryContainer,
+          color: item.notEligible == true
+              ? colors.errorContainer.withAlpha(20)
+              : colors.primaryContainer,
           child: Row(
             children: [
-              RippleWrapper(
-                onPressed: () {
-                  closeModal(context);
-                  openModal(
-                      context, ProductInfoModal(productId: item.product.uuid));
-                },
-                child: ImageBox(
-                  image: item.product.image,
-                  height: 120 - 32,
-                  width: 120 - 32,
-                ),
+              ImageBox(
+                image: item.getImage(),
+                height: 120 - 32,
+                width: 120 - 32,
               ),
               SizedBox(
                 width: 16,
@@ -110,11 +104,12 @@ class CartProductCard extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                                '${padPriceDecimals(getCartItemPrice(item))} PLN',
+                            Text('${padPriceDecimals(item.getPrice())} PLN',
                                 style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                )),
+                                    fontWeight: FontWeight.w500,
+                                    color: item.notEligible == true
+                                        ? colors.errorContainer
+                                        : colors.tertiary)),
                           ],
                         )
                       ],
@@ -134,7 +129,7 @@ class CartProductCard extends StatelessWidget {
                         height: 30,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(100),
-                            color: colors.tertiaryContainer.withAlpha(50)),
+                            color: colors.tertiaryContainer.withAlpha(20)),
                         child: Icon(
                           Icons.remove,
                           size: 12,

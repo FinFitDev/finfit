@@ -17,7 +17,7 @@ class CurrentItemIndicator extends StatelessWidget {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
           color: colors.secondary
-              .withAlpha((min(max(activePercent, 0), 1) * 205).round() + 30)),
+              .withAlpha((min(max(activePercent, 0), 1) * 185).round() + 60)),
     );
   }
 }

@@ -126,9 +126,108 @@ IProductVariantsSet buildVariantsSet(List<IProductVariant> variants) {
   );
 }
 
-double getCartItemPrice(ICartItem item) {
-  return (item.variant?.price ?? item.product.originalPrice) *
-      ((item.notEligible == true)
-          ? 1
-          : (100 - (item.variant?.discount ?? item.product.discount)) / 100);
+Map<String, int> minimizePrice(int maxFinpointsBalance, List<ICartItem> items) {
+  final int n = items.length;
+  // dp[i] maps balanceUsed => minTotalCost
+  List<Map<int, double>> dp = List.generate(n + 1, (_) => {});
+  // quantities for each item
+  List<Map<int, int>> path = List.generate(n + 1, (_) => {});
+
+  dp[0][0] = 0.0;
+
+  for (int i = 0; i < n; i++) {
+    final item = items[i];
+    final current = dp[i];
+
+    for (final entry in current.entries) {
+      final int usedFinpointsBalance = entry.key;
+      final double currentPrice = entry.value;
+
+      // Try choosing q eligible units from 0 to quantity
+      for (int q = 0; q <= item.quantity; q++) {
+        final int addedFinpointsCost = q * item.product.finpointsPrice.round();
+        final int newFinpointsBalance =
+            usedFinpointsBalance + addedFinpointsCost;
+
+        if (newFinpointsBalance > maxFinpointsBalance) break;
+
+        final double totalPrice = q * item.getPrice(isEligible: true) +
+            (item.quantity - q) * item.getPrice(isEligible: false);
+
+        final double newTotal = currentPrice + totalPrice;
+
+        if (!dp[i + 1].containsKey(newFinpointsBalance) ||
+            newTotal < dp[i + 1][newFinpointsBalance]!) {
+          dp[i + 1][newFinpointsBalance] = newTotal;
+          path[i + 1][newFinpointsBalance] = q;
+        }
+      }
+    }
+  }
+  // Find best final balance (lowest total cost)
+  double minCost = double.infinity;
+  int bestBalance = 0;
+  for (final entry in dp[n].entries) {
+    if (entry.value < minCost) {
+      minCost = entry.value;
+      bestBalance = entry.key;
+    }
+  }
+
+// Backtrack to find how many units to make eligible
+  Map<String, int> eligibleUnits = {};
+  int b = bestBalance;
+  for (int i = n; i > 0; i--) {
+    final q = path[i][b]!;
+    eligibleUnits[items[i - 1].uuid!] = q;
+    b -= q * items[i - 1].product.finpointsPrice.round();
+  }
+
+// Remove entries with 0 quantity
+  eligibleUnits.removeWhere((key, value) => value == 0);
+
+  return eligibleUnits; // Map<Item uuid, quantity to qualify>
+}
+
+void convertNotEligibleItemsToEligible({
+  required List<ICartItem> updatedItems,
+  required Map<String, int> itemMapToQualify,
+  required List<ICartItem> notEligibleItems,
+}) {
+  for (final entry in itemMapToQualify.entries) {
+    final itemUUID = entry.key;
+    final qtyToMakeEligible = entry.value;
+
+    final foundItem =
+        notEligibleItems.where((el) => el.uuid == itemUUID).firstOrNull;
+    if (foundItem == null || qtyToMakeEligible == 0) continue;
+
+    // 1. Remove or reduce not-eligible item
+    final foundIndex = updatedItems.indexWhere((el) => el.uuid == itemUUID);
+    if (foundIndex != -1) {
+      final reducedQty = foundItem.quantity - qtyToMakeEligible;
+      if (reducedQty > 0) {
+        updatedItems[foundIndex] = foundItem.copyWith(quantity: reducedQty);
+      } else {
+        updatedItems.removeAt(foundIndex);
+      }
+    }
+
+    // 2. Add or update eligible version
+    final existingEligible = updatedItems
+        .where((el) => el.notEligible != true && el.isEqualParamsSet(foundItem))
+        .firstOrNull;
+
+    if (existingEligible != null) {
+      final ei = updatedItems.indexOf(existingEligible);
+      updatedItems[ei] = existingEligible.copyWith(
+        quantity: existingEligible.quantity + qtyToMakeEligible,
+      );
+    } else {
+      updatedItems.add(foundItem.copyWith(
+        quantity: qtyToMakeEligible,
+        notEligible: false,
+      ));
+    }
+  }
 }

@@ -40,14 +40,18 @@ class OptionsSlider extends StatelessWidget {
 
               return RippleWrapper(
                   onPressed: () {
-                    if (!unavailableOptions.contains(optionsList[index])) {
-                      onOptionSelected(optionsList[index]);
-                    }
+                    // if (!unavailableOptions.contains(optionsList[index])) {
+                    onOptionSelected(
+                      optionsList[index],
+                    );
+                    // }
                   },
                   child: Opacity(
-                      opacity: unavailableOptions.contains(optionsList[index])
-                          ? 0.2
-                          : 1,
+                      opacity:
+                          // unavailableOptions.contains(optionsList[index])
+                          //     ? 0.2
+                          //     :
+                          1,
                       child: Container(
                         margin: EdgeInsets.only(
                             right: index == optionsList.length - 1 ? 0 : 12),

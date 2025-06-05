@@ -119,7 +119,7 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                                 _transactionType == TRANSACTION_TYPE.PURCHASE
                                     ? ImageComponent(
                                         size: 80,
-                                        image: _transaction?.product?.image,
+                                        image: _transaction?.product?.mainImage,
                                       )
                                     : ProfileImageGenerator(
                                         size: 80,
@@ -221,7 +221,7 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                                                           ?.product?.name ??
                                                       'Unknown',
                                                   image: _transaction
-                                                      ?.product?.image,
+                                                      ?.product?.mainImage,
                                                   textStyle: TextStyle(
                                                     color: colors
                                                         .tertiaryContainer,

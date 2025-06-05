@@ -51,7 +51,10 @@ extension UserControllerEffects on UserController {
           await updatePointsScoreWithUpdateTimestampRequest(
               currentUser!.uuid, pointsToAdd);
 
+      print(updateResult);
+
       if (updateResult) {
+        print('update resulr');
         setUserUpdatedAt(DateTime.now());
       }
       return updateResult;

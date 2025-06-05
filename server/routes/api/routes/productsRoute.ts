@@ -116,12 +116,10 @@ export const getProductsForProductOwnerHandler = async (
       +(offset ?? 0)
     );
 
-    res
-      .status(200)
-      .json({
-        message: `Productsfound for product owner with id ${ownerId}`,
-        content: response,
-      });
+    res.status(200).json({
+      message: `Productsfound for product owner with id ${ownerId}`,
+      content: response,
+    });
   } catch (error: any) {
     res.status(error.statusCode ?? 404).json({
       message:

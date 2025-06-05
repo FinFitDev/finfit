@@ -34,7 +34,7 @@ class Position<T> extends StatelessWidget {
             Text(
               optionName.toString(),
               style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: isSelected == true
                       ? colors.secondary

@@ -46,6 +46,9 @@ class _ChooseRecipientsModalState extends State<ChooseRecipientsModal> {
           ModalHeader(
             title: 'Send finpoints',
             subtitle: 'Choose recipients',
+            onClose: () {
+              closeModal(context);
+            },
           ),
           SizedBox(
             height: 16,
