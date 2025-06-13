@@ -7,14 +7,16 @@ export const fetchProductOwnersByRegex = async (
 ) => {
   const formattedRegex = `%${regex.toLowerCase()}%`;
 
+  console.log(formattedRegex);
+
   const response = await pool.query(
-    `SELECT uuid, name, created_at, image, link, description, total_transactions, banner_image, total_products
-    FROM product_owners po
-    WHERE LOWER(po.name) LIKE $1
-     ORDER BY po.total_transactions DESC
-     LIMIT $2
-     OFFSET $3`,
+    `SELECT * FROM product_owners_with_delivery_methods
+      WHERE LOWER(name) LIKE $1
+      ORDER BY total_transactions DESC
+      LIMIT $2 OFFSET $3`,
     [formattedRegex, limit, offset]
   );
+
+  console.log;
   return response;
 };

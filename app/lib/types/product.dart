@@ -1,4 +1,5 @@
 import 'package:excerbuys/types/owner.dart';
+import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 
 class IProductEntry {

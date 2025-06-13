@@ -106,6 +106,14 @@ export interface IProductOwner {
   banner_image?: string;
   link?: string;
   image?: string;
+  delivery_methods?: IDeliveryMethod[];
+}
+
+export interface IDeliveryMethod {
+  uuid: string;
+  name: string;
+  image?: string;
+  description?: string;
 }
 
 export interface IShopApiData {

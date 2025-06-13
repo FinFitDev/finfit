@@ -1,4 +1,5 @@
 import 'package:excerbuys/components/shared/images/image_box.dart';
+import 'package:excerbuys/components/shared/indicators/sliders/text_overflow_slider.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/product_info_modal.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/types/shop.dart';
@@ -66,12 +67,15 @@ class CartProductCard extends StatelessWidget {
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
                             )),
-                        Text(item.variant?.createAttributesString() ?? '',
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 11,
-                                color: colors.tertiaryContainer))
+                        TextOverflowSlider(
+                          text: item.variant?.createAttributesString() ?? '',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 11,
+                              color: colors.tertiaryContainer),
+                          duration: Duration(seconds: 8),
+                          pauseDuration: Duration(seconds: 2),
+                        ),
                       ],
                     ),
                     Column(

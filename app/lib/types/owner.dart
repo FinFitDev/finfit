@@ -1,3 +1,5 @@
+import 'package:excerbuys/types/delivery.dart';
+import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 
 class IProductOwnerEntry {
@@ -10,6 +12,7 @@ class IProductOwnerEntry {
   final String? link;
   final String? image;
   final String? bannerImage;
+  final List<IDeliveryMethod>? deliveryMethods;
 
   IProductOwnerEntry({
     required this.uuid,
@@ -21,6 +24,7 @@ class IProductOwnerEntry {
     this.link,
     this.image,
     this.bannerImage,
+    this.deliveryMethods,
   });
 
   Map<String, dynamic> toJson() {
@@ -34,6 +38,7 @@ class IProductOwnerEntry {
       'image': image,
       'banner_image': bannerImage,
       'total_products': totalProducts,
+      'delivery_methods': deliveryMethods?.map((e) => e.toJson()).toList(),
     };
   }
 
@@ -47,6 +52,11 @@ class IProductOwnerEntry {
         link: json['link'],
         image: json['image'],
         bannerImage: json['banner_image'],
-        totalProducts: parseInt((json['total_products'])));
+        totalProducts: parseInt((json['total_products'])),
+        deliveryMethods: json['delivery_methods'] != null
+            ? (json['delivery_methods'] as List)
+                .map((e) => IDeliveryMethod.fromJson(e))
+                .toList()
+            : null);
   }
 }

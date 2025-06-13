@@ -1,4 +1,4 @@
-import 'package:excerbuys/components/dashboard_page/shop_page/cart/cart_modal_summary.dart';
+import 'package:excerbuys/components/dashboard_page/shop_page/checkout/cart/cart_modal_summary.dart';
 import 'package:excerbuys/components/dashboard_page/shop_page/product_card/cart_product_card.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
@@ -9,7 +9,9 @@ import 'package:excerbuys/wrappers/modal/modal_content_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class CartModal extends StatelessWidget {
-  const CartModal({super.key});
+  final void Function() nextPage;
+
+  const CartModal({super.key, required this.nextPage});
 
   @override
   Widget build(BuildContext context) {
@@ -138,11 +140,13 @@ class CartModal extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: MainButton(
-                            label: 'Checkout',
+                            label: 'Proceed',
                             backgroundColor: colors.secondary,
                             textColor: colors.primary,
                             isDisabled: totalQuantity == 0,
-                            onPressed: () {}),
+                            onPressed: () {
+                              nextPage();
+                            }),
                       ),
                     ],
                   )

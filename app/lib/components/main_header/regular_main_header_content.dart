@@ -1,4 +1,5 @@
-import 'package:excerbuys/containers/dashboard_page/modals/cart/cart_modal.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/checkout/cart_modal.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/checkout/checkout_modal_container.dart';
 import 'package:excerbuys/store/controllers/activity/activity_controller/activity_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
@@ -93,7 +94,7 @@ class RegularMainHeaderContent extends StatelessWidget {
                   ],
                 ),
                 onPressed: () {
-                  openModal(context, CartModal());
+                  openModal(context, CheckoutModalContainer());
                 });
           })
     ]);

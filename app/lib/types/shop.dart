@@ -1,5 +1,7 @@
+import 'package:excerbuys/types/delivery.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/types/general.dart';
+import 'package:excerbuys/types/owner.dart';
 import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
@@ -284,5 +286,47 @@ class ICartItem implements HasQuantity {
 
   String? getImage() {
     return variant?.images?.first ?? product.mainImage;
+  }
+}
+
+class IDeliveryGroup {
+  final String uuid;
+  final IProductOwnerEntry owner;
+  final List<ICartItem> items;
+  List<IDeliveryMethod>? deliveryMethods;
+
+  IDeliveryGroup({
+    required this.owner,
+    required this.items,
+    this.deliveryMethods,
+    String? uuid,
+  }) : uuid = uuid ?? UuidV4().generate();
+
+  IDeliveryGroup copyWith({
+    String? uuid,
+    IProductOwnerEntry? owner,
+    List<String>? images,
+    List<ICartItem>? items,
+    List<IDeliveryMethod>? deliveryMethods,
+  }) {
+    return IDeliveryGroup(
+      uuid: uuid ?? this.uuid,
+      owner: owner ?? this.owner,
+      items: items ?? this.items,
+      deliveryMethods: deliveryMethods ?? this.deliveryMethods,
+    );
+  }
+
+  List<String> get images {
+    return items
+        .map((item) => item.getImage())
+        .where((image) => image != null)
+        .cast<String>()
+        .toSet()
+        .toList();
+  }
+
+  int get totalQuantity {
+    return items.fold(0, (sum, item) => sum + item.quantity);
   }
 }

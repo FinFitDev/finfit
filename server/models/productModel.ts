@@ -79,7 +79,7 @@ export const fetchProductsByFilters = async (query: IFiltersQuery) => {
   const sql = `
     SELECT p.*, to_json(po) AS product_owner
     FROM products p
-    LEFT JOIN product_owners po ON p.owner_id = po.uuid
+    LEFT JOIN product_owners_with_delivery_methods po ON p.owner_id = po.uuid
     ${whereClause}
     ORDER BY p.${sortBy} ${order}
     LIMIT $${paramIndex - 2}
@@ -100,7 +100,7 @@ export const fetchAffordableProducts = async (
     `
         SELECT p.*,to_json(po) AS product_owner
         FROM products p
-        LEFT JOIN product_owners po ON p.owner_id = po.uuid
+        LEFT JOIN product_owners_with_delivery_methods po ON p.owner_id = po.uuid
         WHERE p.finpoints_price <= $1
         ORDER BY p.total_transactions DESC
         LIMIT $2
@@ -116,7 +116,7 @@ export const fetchNearlyAfforableProducts = async (points: number) => {
     `
         SELECT p.*, to_json(po) AS product_owner
         FROM products p
-        LEFT JOIN product_owners po ON p.owner_id = po.uuid
+        LEFT JOIN product_owners_with_delivery_methods po ON p.owner_id = po.uuid
         WHERE p.finpoints_price > $1 AND (p.finpoints_price - $1) < 10000
         ORDER BY (p.finpoints_price - $1) ASC, p.total_transactions DESC
         LIMIT 5
@@ -131,7 +131,7 @@ export const fetchProducts = async (limit: number, offset: number) => {
     `
         SELECT p.*,to_json(po) AS product_owner
         FROM products p
-        LEFT JOIN product_owners po ON p.owner_id = po.uuid
+        LEFT JOIN product_owners_with_delivery_methods po ON p.owner_id = po.uuid
         ORDER BY p.total_transactions DESC
         LIMIT $2
         OFFSET $3
@@ -173,7 +173,7 @@ export const fetchProductsForProductOwner = async (
     `
         SELECT p.*,to_json(po) AS product_owner
         FROM products p
-        LEFT JOIN product_owners po ON p.owner_id = po.uuid
+        LEFT JOIN product_owners_with_delivery_methods po ON p.owner_id = po.uuid
         WHERE po.uuid = $1
         ORDER BY p.total_transactions DESC
         LIMIT $2
