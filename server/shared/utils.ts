@@ -4,8 +4,14 @@ import {
   ILoginPayload,
   ISignupPayload,
 } from "../routes/auth/types";
-import { IDailyStepEntry, IHourlyStepEntry } from "./types";
-import bcrypt from "bcryptjs";
+import {
+  IDailyStepEntry,
+  IHourlyStepEntry,
+  IProductQuantitiesData,
+  IShopApiData,
+  StockItem,
+} from "./types";
+import crypto from "crypto";
 
 export const isUserGoogleLogin = (
   user: ILoginPayload | IGoogleLoginPayload
@@ -66,4 +72,73 @@ function toHex(num: number): string {
 
 export const generate6DigitCode = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+export function encrypt(text: string): string {
+  const iv = crypto.randomBytes(16);
+  const cipher = crypto.createCipheriv(
+    "aes-256-gcm",
+    Buffer.from(process.env.SHOP_API_ENCRYPTION_KEY!),
+    iv
+  );
+
+  let encrypted = cipher.update(text, "utf8", "hex");
+  encrypted += cipher.final("hex");
+  const authTag = cipher.getAuthTag().toString("hex");
+
+  return `${iv.toString("hex")}:${authTag}:${encrypted}`;
+}
+
+export function decrypt(encrypted: string): string {
+  const [ivHex, authTagHex, data] = encrypted.split(":");
+  const iv = Buffer.from(ivHex, "hex");
+  const authTag = Buffer.from(authTagHex, "hex");
+
+  const decipher = crypto.createDecipheriv(
+    "aes-256-gcm",
+    Buffer.from(process.env.SHOP_API_ENCRYPTION_KEY!),
+    iv
+  );
+  decipher.setAuthTag(authTag);
+
+  let decrypted = decipher.update(data, "hex", "utf8");
+  decrypted += decipher.final("utf8");
+
+  return decrypted;
+}
+
+export function decryptShopApiParams(shopApiParams: IShopApiData[]) {
+  return shopApiParams.map((param) => ({
+    ...param,
+    api_key: decrypt(param.api_key!),
+  }));
+}
+
+export const convertStockListToProducts = (
+  stockItems: StockItem[]
+): IProductQuantitiesData[] => {
+  const productMap = new Map<number, IProductQuantitiesData>();
+
+  stockItems.forEach(({ productId, idProductAttribute, quantity, id }) => {
+    if (!productMap.has(productId)) {
+      productMap.set(productId, {
+        productId: productId.toString(),
+        quantity: 0,
+        variants: [],
+      });
+    }
+
+    const product = productMap.get(productId)!;
+
+    if (idProductAttribute === 0) {
+      product.quantity = quantity;
+    } else {
+      product.variants.push({
+        variantId: idProductAttribute.toString(),
+        quantity,
+      });
+    }
+  });
+
+  return Array.from(productMap.values());
 };

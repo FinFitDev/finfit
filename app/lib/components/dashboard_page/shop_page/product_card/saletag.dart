@@ -14,19 +14,22 @@ class Saletag extends StatelessWidget {
         height: 40 * (scale ?? 1),
         padding: EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular((scale ?? 1) * 10),
-            gradient: LinearGradient(colors: [
-              colors.tertiary,
-              colors.tertiary,
-            ]),
-            boxShadow: [
-              BoxShadow(
-                color: colors.primary,
-                blurRadius: 8,
-                spreadRadius: 3,
-                offset: Offset(0, 0),
-              ),
-            ]),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular((scale ?? 1) * 10),
+              bottomRight: Radius.circular((scale ?? 1) * 10)),
+          gradient: LinearGradient(colors: [
+            colors.tertiary,
+            colors.tertiary,
+          ]),
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: colors.primary,
+          //     blurRadius: 8,
+          //     spreadRadius: 3,
+          //     offset: Offset(0, 0),
+          //   ),
+          // ]
+        ),
         child: Center(
           child: Text(
             'Aż do $discount% taniej',

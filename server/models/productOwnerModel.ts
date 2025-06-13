@@ -8,7 +8,8 @@ export const fetchProductOwnersByRegex = async (
   const formattedRegex = `%${regex.toLowerCase()}%`;
 
   const response = await pool.query(
-    `SELECT * FROM product_owners po
+    `SELECT uuid, name, created_at, image, link, description, total_transactions, banner_image, total_products
+    FROM product_owners po
     WHERE LOWER(po.name) LIKE $1
      ORDER BY po.total_transactions DESC
      LIMIT $2

@@ -5,6 +5,10 @@ export enum ORDER_TYPE {
   DESCENDING = "DESCENDING",
 }
 
+export enum SHOP_PROVIDER {
+  PRESTASHOP = "prestashop",
+}
+
 export type IAccessToken = string;
 export type IRefreshToken = string;
 export type IEmailVerificationToken = string;
@@ -102,7 +106,13 @@ export interface IProductOwner {
   banner_image?: string;
   link?: string;
   image?: string;
-  reference_id: string;
+}
+
+export interface IShopApiData {
+  uuid: string;
+  api_key: string;
+  api_url: string;
+  shop_type: SHOP_PROVIDER;
 }
 
 export interface ITransactionInsert {
@@ -133,3 +143,24 @@ export interface IFiltersQuery {
   limit?: number;
   offset?: number;
 }
+
+export type StockItem = {
+  id: number;
+  productId: number;
+  idProductAttribute: number;
+  quantity: number;
+};
+
+export interface IProductQuantitiesData {
+  productId: string;
+  quantity: number;
+  variants: {
+    variantId: string;
+    quantity: number;
+  }[];
+}
+
+export type IAllShops = Record<
+  SHOP_PROVIDER,
+  Record<string, IProductQuantitiesData[]>
+>;

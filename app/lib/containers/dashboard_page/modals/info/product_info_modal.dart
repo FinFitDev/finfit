@@ -5,8 +5,6 @@ import 'package:excerbuys/components/dashboard_page/shop_page/product_info_modal
 import 'package:excerbuys/components/dashboard_page/shop_page/product_info_modal/product_info_images_list.dart';
 import 'package:excerbuys/components/dashboard_page/shop_page/product_info_modal/product_info_variants.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
-import 'package:excerbuys/components/shared/images/image_box.dart';
-import 'package:excerbuys/components/shared/indicators/carousel/carousel_counter.dart';
 import 'package:excerbuys/components/shared/indicators/labels/empty_data_modal.dart';
 import 'package:excerbuys/components/shared/indicators/warning_box.dart';
 import 'package:excerbuys/components/shared/list/list_component.dart';

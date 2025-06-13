@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:excerbuys/components/dashboard_page/shop_page/product_card/saletag.dart';
+import 'package:excerbuys/components/rive/saletag_rive.dart';
 import 'package:excerbuys/components/shared/images/image_box.dart';
 import 'package:excerbuys/components/shared/positions/position_with_background.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
@@ -115,16 +116,17 @@ class _FeaturedProductCardState extends State<FeaturedProductCard> {
                         ),
                       ),
                     ),
-                    Positioned(
-                        left: 10,
-                        top: 10,
-                        child: Saletag(discount: widget.discount)
-                        // SaletagRive(
-                        //   discount: widget.discount,
-                        //   isProgress: isProgress,
-                        // )
-
-                        ),
+                    // Positioned(
+                    //     left: -8,
+                    //     top: -40,
+                    //     child: SizedBox(
+                    //       width: 140,
+                    //       height: 140,
+                    //       child: SaletagRive(
+                    //         discount: widget.discount,
+                    //         color: colors.tertiary,
+                    //       ),
+                    //     )),
                   ],
                 ),
                 isProgress

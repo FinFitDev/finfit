@@ -10,7 +10,6 @@ class IProductOwnerEntry {
   final String? link;
   final String? image;
   final String? bannerImage;
-  final String referenceId;
 
   IProductOwnerEntry({
     required this.uuid,
@@ -22,7 +21,6 @@ class IProductOwnerEntry {
     this.link,
     this.image,
     this.bannerImage,
-    required this.referenceId,
   });
 
   Map<String, dynamic> toJson() {
@@ -36,7 +34,6 @@ class IProductOwnerEntry {
       'image': image,
       'banner_image': bannerImage,
       'total_products': totalProducts,
-      'reference_id': referenceId
     };
   }
 
@@ -50,7 +47,6 @@ class IProductOwnerEntry {
         link: json['link'],
         image: json['image'],
         bannerImage: json['banner_image'],
-        totalProducts: parseInt((json['total_products'])),
-        referenceId: json['reference_id']);
+        totalProducts: parseInt((json['total_products'])));
   }
 }
