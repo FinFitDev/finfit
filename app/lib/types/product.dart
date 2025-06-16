@@ -1,6 +1,7 @@
 import 'package:excerbuys/types/owner.dart';
 import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
+import 'package:excerbuys/utils/utils.dart';
 
 class IProductEntry {
   final String uuid;
@@ -19,48 +20,60 @@ class IProductEntry {
   final List<IProductVariant>? variants;
   final String referenceId;
   final int inStock;
+  final List<String>? unavaialbleDeliveryMethods;
+  final bool? isDigital;
 
-  IProductEntry(
-      {required this.uuid,
-      required this.name,
-      required this.description,
-      required this.owner,
-      required this.originalPrice,
-      required this.finpointsPrice,
-      required this.discount,
-      required this.createdAt,
-      this.link,
-      this.images,
-      required this.category,
-      required this.totalTransactions,
-      this.isAffordable,
-      this.variants,
-      required this.referenceId,
-      required this.inStock});
+  IProductEntry({
+    required this.uuid,
+    required this.name,
+    required this.description,
+    required this.owner,
+    required this.originalPrice,
+    required this.finpointsPrice,
+    required this.discount,
+    required this.createdAt,
+    this.link,
+    this.images,
+    required this.category,
+    required this.totalTransactions,
+    this.isAffordable,
+    this.variants,
+    required this.referenceId,
+    required this.inStock,
+    this.unavaialbleDeliveryMethods,
+    this.isDigital,
+  });
 
   List<String> get variantsMainImages {
-    final imageList = variants
-        ?.map((v) =>
-            v.images != null && v.images!.isNotEmpty ? v.images!.first : null)
-        .where((img) => img != null)
-        .map((img) => img!)
+    if (variants == null || images == null) return [];
+
+    final imageList = variants!
+        .map((v) =>
+            v.images?.isNotEmpty == true ? images![v.images!.first] : null)
+        .whereType<String>()
         .toSet()
         .toList();
 
-    return imageList ?? [];
+    return imageList;
   }
 
   List<String> get initialCarouselImages {
-    return images ??
-        variants
-            ?.firstWhere((el) => el.images != null && el.images!.isNotEmpty)
-            .images ??
-        [];
+    final fallbackVariant = variants
+        ?.where(
+          (v) => v.images != null && v.images!.isNotEmpty,
+        )
+        .firstOrNull;
+
+    if (fallbackVariant != null && images != null) {
+      return selectByIndices(images ?? [], fallbackVariant.images ?? []);
+    } else {
+      return images ?? [];
+    }
   }
 
   String? get mainImage {
-    if (images != null && images!.isNotEmpty) {
-      return images!.first;
+    if (images == null || images!.isEmpty) {
+      return null;
     }
 
     final firstVariantWithImage = variants
@@ -69,7 +82,11 @@ class IProductEntry {
         )
         .firstOrNull;
 
-    return firstVariantWithImage?.images?.first;
+    if (firstVariantWithImage != null) {
+      return images![firstVariantWithImage.images!.first];
+    }
+
+    return images!.first;
   }
 
   Map<String, dynamic> toJson() {
@@ -89,7 +106,9 @@ class IProductEntry {
       'isAffordable': isAffordable,
       'variants': variants?.map((variant) => variant.toJson()).toList(),
       'reference_id': referenceId,
-      'in_stock': inStock
+      'in_stock': inStock,
+      'unavailable_delivery_methods': unavaialbleDeliveryMethods,
+      'is_digital': isDigital,
     };
   }
 
@@ -113,7 +132,16 @@ class IProductEntry {
             ?.map((variant) => IProductVariant.fromJson(variant))
             .toList(),
         referenceId: json['reference_id'],
-        inStock: parseInt(json['in_stock']));
+        inStock: parseInt(json['in_stock']),
+        unavaialbleDeliveryMethods:
+            (json['unavailable_delivery_methods'] as List?)
+                ?.map((e) => e.toString())
+                .toList(),
+        isDigital: json['is_digital'] == null
+            ? null
+            : json['is_digital'] is bool
+                ? json['is_digital']
+                : bool.parse(json['is_digital']));
   }
 }
 
@@ -122,7 +150,8 @@ class IProductVariant {
   final double discount;
   final double price;
   final int inStock;
-  final List<String>? images;
+  // image indices
+  final List<int>? images;
   final Map<String, String> attributes;
 
   IProductVariant({
@@ -142,7 +171,7 @@ class IProductVariant {
       discount: (json['discount'] as num).toDouble(),
       price: (json['price'] as num).toDouble(),
       inStock: parseInt(json['in_stock'] ?? '0'),
-      images: json['images'] != null ? List<String>.from(json['images']) : null,
+      images: json['images'] != null ? List<int>.from(json['images']) : null,
       attributes: Map<String, String>.from(json['attributes'] ?? {}),
     );
   }

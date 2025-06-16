@@ -6,6 +6,7 @@ import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 void navigate({required String route, BuildContext? context}) {
@@ -132,4 +133,11 @@ void launchURL(String urlString) async {
 
 int countQuantity<T extends HasQuantity>(List<T> items) {
   return items.fold(0, (count, item) => count + item.quantity);
+}
+
+List<T> selectByIndices<T>(List<T> items, List<int> indices) {
+  return indices
+      .where((i) => i >= 0 && i < items.length) // bounds check
+      .map((i) => items[i])
+      .toList();
 }

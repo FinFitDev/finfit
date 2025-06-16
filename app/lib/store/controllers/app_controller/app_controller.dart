@@ -3,6 +3,7 @@ import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/store/persistence/storage_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 
@@ -20,6 +21,11 @@ class AppController {
       BehaviorSubject.seeded(DateTime.now());
   Stream<DateTime> get installTimestampStream => _installTimestamp.stream;
   DateTime get installTimestamp => _installTimestamp.value;
+
+  final BehaviorSubject<Position?> _currentLocation =
+      BehaviorSubject.seeded(null);
+  Stream<Position?> get currentLocationStream => _currentLocation.stream;
+  Position? get currentLocation => _currentLocation.value;
 }
 
 AppController appController = AppController();

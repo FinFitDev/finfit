@@ -1,6 +1,5 @@
 import 'package:excerbuys/components/dashboard_page/shop_page/checkout/delivery/delivery_group.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
-import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/types/shop.dart';
 import 'package:excerbuys/utils/constants.dart';
@@ -11,9 +10,9 @@ import 'package:flutter/material.dart';
 
 class DeliveryMethodsModal extends StatefulWidget {
   final void Function() previousPage;
-  final void Function() nextPage;
+  final void Function(int) customPage;
   const DeliveryMethodsModal(
-      {super.key, required this.previousPage, required this.nextPage});
+      {super.key, required this.previousPage, required this.customPage});
 
   @override
   State<DeliveryMethodsModal> createState() => _DeliveryMethodsModalState();
@@ -60,50 +59,59 @@ class _DeliveryMethodsModalState extends State<DeliveryMethodsModal> {
                               final group = deliveryGroups[index];
                               return DeliveryGroup(
                                 deliveryGroup: group,
+                                onClickDeliveryMethod: (methodId) {
+                                  if (methodId ==
+                                      INPOST_OUT_OF_THE_BOX_DB_UUID) {
+                                    widget.customPage(2);
+                                  }
+                                },
                               );
                             })),
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: StreamBuilder<double>(
-                          stream: shopController
-                              .totalCartPriceWithoutDeliveryCostStream,
-                          builder: (context, snapshot) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              spacing: 4,
-                              children: [
-                                Text(
-                                  'Cena',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      color: colors.tertiaryContainer),
-                                ),
-                                Text(
-                                  ' 24 PLN',
-                                  textAlign: TextAlign.center,
-                                  style: texts.headlineMedium,
-                                )
-                              ],
-                            );
-                          }),
-                    ),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: MainButton(
-                          label: 'Confirm',
-                          backgroundColor: colors.secondary,
-                          textColor: colors.primary,
-                          onPressed: () {
-                            widget.nextPage();
-                          }),
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: StreamBuilder<double>(
+                            stream: shopController
+                                .totalCartPriceWithoutDeliveryCostStream,
+                            builder: (context, snapshot) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                spacing: 4,
+                                children: [
+                                  Text(
+                                    'Cena',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: colors.tertiaryContainer),
+                                  ),
+                                  Text(
+                                    ' 24 PLN',
+                                    textAlign: TextAlign.center,
+                                    style: texts.headlineMedium,
+                                  )
+                                ],
+                              );
+                            }),
+                      ),
+                      SizedBox(
+                        width: 16,
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: MainButton(
+                            label: 'Confirm',
+                            backgroundColor: colors.secondary,
+                            textColor: colors.primary,
+                            onPressed: () {
+                              widget.customPage(2);
+                            }),
+                      ),
+                    ],
+                  ),
                 )
               ],
             ),

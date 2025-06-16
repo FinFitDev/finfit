@@ -75,7 +75,8 @@ export interface IProductVariant {
   discount: number;
   price: number;
   in_stock: number;
-  images?: string[];
+  // indices of images in images array of the product
+  images?: number[];
   attributes: Record<string, string>;
 }
 
@@ -94,6 +95,8 @@ export interface IProduct {
   total_transactions: number;
   isAffordable?: boolean;
   variants: IProductVariant[];
+  unavailable_delivery_methods?: string[];
+  is_digital?: boolean;
 }
 
 export interface IProductOwner {

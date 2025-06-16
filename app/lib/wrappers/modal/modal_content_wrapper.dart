@@ -10,6 +10,7 @@ class ModalContentWrapper extends StatelessWidget {
   final String? subtitle;
   final void Function()? onClose;
   final void Function()? onClickBack;
+  final String? image;
 
   final EdgeInsets? padding;
   const ModalContentWrapper(
@@ -19,7 +20,8 @@ class ModalContentWrapper extends StatelessWidget {
       this.title,
       this.subtitle,
       this.onClose,
-      this.onClickBack});
+      this.onClickBack,
+      this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +42,7 @@ class ModalContentWrapper extends StatelessWidget {
                         subtitle: subtitle!,
                         onClose: onClose,
                         goBack: onClickBack,
+                        image: image,
                       )
                     : SizedBox.shrink(),
                 Expanded(

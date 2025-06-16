@@ -125,9 +125,12 @@ class _ProductInfoModalState extends State<ProductInfoModal> {
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 ProductInfoHeaderCarousel(
-                                  items: _selectedProductVariant?.images ??
-                                      _product?.initialCarouselImages ??
-                                      [],
+                                  items: _selectedProductVariant
+                                              ?.images?.isNotEmpty ==
+                                          true
+                                      ? selectByIndices(_product?.images ?? [],
+                                          _selectedProductVariant!.images!)
+                                      : _product?.initialCarouselImages ?? [],
                                 ),
                                 ProductInfoHeader(
                                   product: _product,
@@ -135,13 +138,16 @@ class _ProductInfoModalState extends State<ProductInfoModal> {
                                 (_product?.variantsMainImages.length ?? 0) > 1
                                     ? ProductInfoImagesList(
                                         images: _product!.variantsMainImages,
-                                        selectedImage:
-                                            _selectedProductVariant?.images?[0],
+                                        selectedImage: _product?.images?[
+                                            _selectedProductVariant
+                                                    ?.images?[0] ??
+                                                0],
                                         onImageSelected: (image) {
                                           setState(() {
                                             _selectedProductVariant =
-                                                _variantSet
-                                                    ?.findVariantByImage(image);
+                                                _variantSet?.findVariantByImage(
+                                                    image,
+                                                    _product?.images ?? []);
                                           });
                                         },
                                       )

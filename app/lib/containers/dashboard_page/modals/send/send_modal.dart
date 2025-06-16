@@ -22,14 +22,16 @@ class _SendModalState extends State<SendModal> {
   Widget build(BuildContext context) {
     return ModalSwitcherWrapper(
       modals: [
-        (next, prev) => ModalStep(
+        (next, prev, custom) => ModalStep(
               nextPage: next,
               previousPage: prev,
+              customPage: custom,
               child: ChooseRecipientsModal(nextPage: next),
             ),
-        (next, prev) => ModalStep(
+        (next, prev, custom) => ModalStep(
               nextPage: next,
               previousPage: prev,
+              customPage: custom,
               child: AmountModal(previousPage: prev),
             ),
       ],

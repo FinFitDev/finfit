@@ -37,7 +37,7 @@ class CartModalSummary extends StatelessWidget {
                             : ' 0 finpoints',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
-                            color: colors.tertiary,
+                            color: colors.secondary,
                             fontSize: 12));
                   }),
             ],

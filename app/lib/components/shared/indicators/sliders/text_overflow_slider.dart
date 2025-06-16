@@ -1,3 +1,4 @@
+import 'package:excerbuys/utils/debug.dart';
 import 'package:flutter/material.dart';
 
 class TextOverflowSlider extends StatefulWidget {
@@ -51,11 +52,16 @@ class _TextOverflowSliderState extends State<TextOverflowSlider>
       textDirection: TextDirection.ltr,
     )..layout();
 
-    final textWidth = textPainter.width;
-    _scrollAmount = textWidth - availableWidth + 30;
+    final textWidth = textPainter.width + 20;
+    _scrollAmount = textWidth - availableWidth;
+    print(_scrollAmount);
 
     if (_scrollAmount > 0) {
       _shouldScroll = true;
+
+      final dynamicDuration =
+          Duration(milliseconds: (_scrollAmount * 75).round());
+      _animationController.duration = dynamicDuration;
 
       _animation = Tween<double>(begin: 0, end: _scrollAmount).animate(
         CurvedAnimation(parent: _animationController, curve: Curves.linear),

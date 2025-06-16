@@ -14,4 +14,8 @@ extension AppControllerMutations on AppController {
   setInstallTimestamp(DateTime date) {
     _installTimestamp.add(date);
   }
+
+  setCurrentLocation(Position? position) {
+    _currentLocation.add(position);
+  }
 }

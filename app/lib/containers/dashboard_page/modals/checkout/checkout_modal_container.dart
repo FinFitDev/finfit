@@ -1,5 +1,6 @@
 import 'package:excerbuys/containers/dashboard_page/modals/checkout/cart_modal.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/checkout/delivery/delivery_methods_modal.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/checkout/delivery/inpost_outofthebox_select_modal.dart';
 import 'package:excerbuys/wrappers/modal/modal_switcher_wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -20,17 +21,28 @@ class _CheckoutModalContainerState extends State<CheckoutModalContainer> {
   Widget build(BuildContext context) {
     return ModalSwitcherWrapper(
       modals: [
-        (next, prev) => ModalStep(
+        (next, prev, customPage) => ModalStep(
               nextPage: next,
               previousPage: prev,
+              customPage: customPage,
               child: CartModal(nextPage: next),
             ),
-        (next, prev) => ModalStep(
+        (next, prev, customPage) => ModalStep(
               nextPage: next,
               previousPage: prev,
+              customPage: customPage,
               child: DeliveryMethodsModal(
                 previousPage: prev,
-                nextPage: next,
+                customPage: customPage,
+              ),
+            ),
+        (next, prev, customPage) => ModalStep(
+              nextPage: next,
+              previousPage: prev,
+              customPage: customPage,
+              child: InpostOutoftheboxSelectModal(
+                prevPage: () => customPage(1),
+                nextPage: () => customPage(4),
               ),
             ),
       ],

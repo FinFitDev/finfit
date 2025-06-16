@@ -101,10 +101,12 @@ class IProductVariantsSet {
     );
   }
 
-  IProductVariant? findVariantByImage(String image) {
+  IProductVariant? findVariantByImage(String image, List<String> images) {
     return variants
         .where(
-          (variant) => variant.images != null && variant.images![0] == image,
+          (variant) =>
+              variant.images != null &&
+              variant.images![0] == images.indexOf(image),
         )
         .firstOrNull;
   }
@@ -285,7 +287,9 @@ class ICartItem implements HasQuantity {
   }
 
   String? getImage() {
-    return variant?.images?.first ?? product.mainImage;
+    return variant?.images?.isNotEmpty == true
+        ? product.images![variant!.images!.first]
+        : product.mainImage;
   }
 }
 

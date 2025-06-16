@@ -1,3 +1,5 @@
+import 'package:excerbuys/components/shared/image_component.dart';
+import 'package:excerbuys/components/shared/images/image_box.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -8,12 +10,14 @@ class ModalHeader extends StatelessWidget {
   final String subtitle;
   final void Function()? goBack;
   final void Function()? onClose;
+  final String? image;
   const ModalHeader(
       {super.key,
       required this.title,
       required this.subtitle,
       this.goBack,
-      this.onClose});
+      this.onClose,
+      this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -60,9 +64,19 @@ class ModalHeader extends StatelessWidget {
                 SizedBox(
                   height: HORIZOTAL_PADDING,
                 ),
-                Text(title,
-                    style: texts.headlineMedium
-                        ?.copyWith(fontWeight: FontWeight.w600)),
+                Row(
+                  children: [
+                    image != null
+                        ? Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: ImageComponent(image: image, size: 20),
+                          )
+                        : SizedBox.shrink(),
+                    Text(title,
+                        style: texts.headlineMedium
+                            ?.copyWith(fontWeight: FontWeight.w600)),
+                  ],
+                ),
                 SizedBox(
                   height: 4,
                 ),
