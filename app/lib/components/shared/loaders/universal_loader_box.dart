@@ -6,8 +6,14 @@ class UniversalLoaderBox extends StatefulWidget {
   final double height;
   final double? width;
   final double? borderRadius;
+  final bool? animate;
+
   const UniversalLoaderBox(
-      {super.key, required this.height, this.width, this.borderRadius});
+      {super.key,
+      required this.height,
+      this.width,
+      this.borderRadius,
+      this.animate});
 
   @override
   State<UniversalLoaderBox> createState() => _UniversalLoaderBoxState();

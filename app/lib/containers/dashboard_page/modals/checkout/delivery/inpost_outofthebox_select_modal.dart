@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:excerbuys/components/input_with_icon.dart';
-import 'package:excerbuys/components/shared/buttons/main_button.dart';
-import 'package:excerbuys/components/shared/image_component.dart';
-import 'package:excerbuys/components/shared/images/image_box.dart';
-import 'package:excerbuys/store/controllers/app_controller/app_controller.dart';
+import 'package:excerbuys/components/shared/map/map_handler.dart';
+import 'package:excerbuys/components/shop_page/checkout/map/delivery_point_search_component.dart';
+import 'package:excerbuys/components/shop_page/checkout/map/location_selected_modal.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
+import 'package:excerbuys/types/delivery.dart';
+import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/utils/fetching/utils.dart';
 import 'package:excerbuys/utils/shop/checkout/utils.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/modal/modal_content_wrapper.dart';
@@ -31,53 +33,89 @@ class InpostOutoftheboxSelectModal extends StatefulWidget {
 class _InpostOutoftheboxSelectModalState
     extends State<InpostOutoftheboxSelectModal> {
   LatLng? myLocation;
-  StreamSubscription<Position?>? _locationSubscription;
   Timer? _debounce;
-  LatLng _lastFetchedCenter = LatLng(52.2297, 21.0122); // Warsaw coordinates
   final MapController _mapController = MapController();
+  final List<IInpostOutOfTheBoxPoint> _points = [];
+  IInpostOutOfTheBoxPoint? _selectedPoint;
+  double? _visibleRadius = 80000;
+  LatLng? currentCenter = WARSAW_COORDINATES;
+  bool isLoading = true;
+
+  void fetchAllParcelPoints() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      final res = await httpHandler(
+          url:
+              'https://api-shipx-pl.easypack24.net/v1/points?per_page=40000&functions=parcel_collect',
+          method: HTTP_METHOD.GET);
+
+      final List<IInpostOutOfTheBoxPoint> points = [];
+      for (final item in res['items']) {
+        final addressDetails = item['address_details'];
+        points.add(IInpostOutOfTheBoxPoint(
+            id: item['name'],
+            name: item['name'],
+            description: item['location_description'],
+            address: IAddressDetails(
+                country: 'Polska',
+                city: addressDetails['city'],
+                street: addressDetails['street'],
+                postCode: addressDetails['post_code'],
+                houseNumber: addressDetails['building_number'],
+                flatNumber: addressDetails['flat_number'],
+                province: addressDetails['province']),
+            coordinates: LatLng(
+                item['location']['latitude'], item['location']['longitude']),
+            image: item['image_url']));
+      }
+
+      setState(() {
+        _points.clear();
+        _points.addAll(points);
+      });
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    appController.getCurrentLocation();
-    _locationSubscription =
-        appController.currentLocationStream.listen((location) {
-      if (location != null) {
-        final newLatLng = LatLng(location.latitude, location.longitude);
-        setState(() {
-          myLocation = newLatLng;
-        });
-        // TODO: Uncomment the line below to move the map to the user's location
-        // _mapController.move(newLatLng, _mapController.camera.zoom);
-      }
-    });
+    fetchAllParcelPoints();
   }
-
-  @override
-  void dispose() {
-    _locationSubscription?.cancel();
-    super.dispose();
-  }
-
-  void fetchAllParcelPoints() {}
 
   void _onMapMoved(MapCamera pos, bool hasGesture) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(Duration(milliseconds: 800), () {
+    _debounce = Timer(Duration(milliseconds: 300), () {
       final newCenter = pos.center;
-      final double visibleMeters = calculateVisibleMeters(
-          newCenter.latitude, pos.zoom, MediaQuery.sizeOf(context).width);
-      if (isSignificantChange(_lastFetchedCenter, newCenter, visibleMeters)) {
-        _lastFetchedCenter = newCenter;
-        print('now');
-        // fetchLockers(newCenter.latitude, newCenter.longitude);
-      }
+      final double visibleMetersVertical = calculateVisibleMeters(
+          newCenter.latitude, pos.zoom, MediaQuery.sizeOf(context).height);
+      setState(() {
+        currentCenter = newCenter;
+        _visibleRadius = visibleMetersVertical;
+      });
     });
+  }
+
+  List<IInpostOutOfTheBoxPoint>? get visiblePoints {
+    if (currentCenter == null || _visibleRadius == null) return null;
+    final visiblePoints = _points.where((point) {
+      final distance = Distance();
+      return distance.as(LengthUnit.Meter, currentCenter!, point.coordinates) <=
+          _visibleRadius!;
+    }).toList();
+
+    return visiblePoints.isNotEmpty ? visiblePoints : null;
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+
     return ModalContentWrapper(
       title: 'Paczkomaty InPost',
       subtitle: 'Wybierz paczkomat',
@@ -92,129 +130,80 @@ class _InpostOutoftheboxSelectModalState
       padding: EdgeInsets.all(0),
       child: Stack(
         children: [
-          FlutterMap(
+          MapHandler(
+            onLocalize: (pos) {
+              setState(() {
+                myLocation = pos;
+              });
+            },
             mapController: _mapController,
-            options: MapOptions(
-                // Warsaw coordinates
-                onPositionChanged: _onMapMoved,
-                initialCenter: LatLng(52.2297, 21.0122),
-                initialZoom: 10),
-            children: [
-              TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              ),
-              // MarkerLayer(
-              //   markers: [
-              //     Marker(
-              //       height: 70,
-              //       width: 70,
-              //       point: LatLng(52.1297, 21),
-              //       child: RippleWrapper(
-              //         onPressed: () {
-              //           print('pressed');
-              //         },
-              //         child: SvgPicture.asset(
-              //           'assets/svg/inpost_marker.svg',
-              //           width: 70,
-              //         ),
-              //       ),
-              //     ),
-              //     Marker(
-              //       height: 70,
-              //       width: 70,
-              //       point: LatLng(52.127, 20.99),
-              //       child: RippleWrapper(
-              //         onPressed: () {
-              //           print('pressed');
-              //         },
-              //         child: SvgPicture.asset(
-              //           'assets/svg/inpost_marker.svg',
-              //           width: 70,
-              //         ),
-              //       ),
-              //     ),
-              //     Marker(
-              //       height: 70,
-              //       width: 70,
-              //       point: LatLng(52.1197, 21.012),
-              //       child: RippleWrapper(
-              //         onPressed: () {
-              //           print('pressed');
-              //         },
-              //         child: SvgPicture.asset(
-              //           'assets/svg/inpost_marker.svg',
-              //           width: 70,
-              //         ),
-              //       ),
-              //     ),
-              //   ], // lista Markerów z fetchMarkersNearLocation
-              // ),
-            ],
-          ),
-          Positioned(
-            top: 16,
-            right: 16,
-            left: 16,
-            child: InputWithIcon(
-              placeholder: 'Wyszukaj paczkomat',
-              onChange: (val) {},
-              rightIcon: 'assets/svg/locate_me.svg',
-              borderRadius: 10,
-              verticalPadding: 12,
-              onPressRightIcon: () {
-                _mapController.move(myLocation ?? LatLng(52.2297, 21.0122),
-                    _mapController.camera.zoom);
-              },
-            ),
-          ),
-          Positioned(
-              bottom: layoutController.bottomPadding + 16,
-              right: 16,
-              child: Column(
-                spacing: 8,
-                children: [
-                  RippleWrapper(
-                    onPressed: () {
-                      _mapController.move(
-                        _mapController.camera.center,
-                        _mapController.camera.zoom + 1.0,
-                      );
-                    },
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: colors.primaryContainer),
-                      child: Icon(
-                        Icons.add,
-                        size: 25,
-                        color: colors.primaryFixedDim,
+            onMapMoved: _onMapMoved,
+            markers: (visiblePoints ?? [])
+                .map(
+                  (el) => Marker(
+                    height: 50,
+                    width: 50,
+                    point: el.coordinates,
+                    child: RippleWrapper(
+                      onPressed: () {
+                        setState(() {
+                          _selectedPoint = el;
+                        });
+                      },
+                      child: SvgPicture.asset(
+                        'assets/svg/inpost_marker.svg',
+                        width: 50,
                       ),
                     ),
                   ),
-                  RippleWrapper(
-                    onPressed: () {
-                      _mapController.move(
-                        _mapController.camera.center,
-                        _mapController.camera.zoom - 1.0,
-                      );
-                    },
-                    child: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: colors.primaryContainer),
-                      child: Icon(
-                        Icons.remove,
-                        size: 25,
-                        color: colors.primaryFixedDim,
-                      ),
-                    ),
+                )
+                .toList(),
+            aggregateMarkerBuilder: (context, markers) {
+              return Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: const Color.fromARGB(255, 59, 66, 71)),
+                child: Center(
+                  child: Text(
+                    markers.length.toString(),
+                    style: const TextStyle(
+                        color: Color.fromARGB(255, 230, 205, 40),
+                        fontWeight: FontWeight.bold),
                   ),
-                ],
-              )),
+                ),
+              );
+            },
+          ),
+          DeliveryPointSearchComponent(
+            centerLocation: () {
+              _mapController.move(myLocation ?? WARSAW_COORDINATES, 10);
+            },
+            points: _points,
+          ),
+          LocationSelectedModal(
+            onClickCancel: () {
+              setState(() {
+                _selectedPoint = null;
+              });
+            },
+            selectedPoint: _selectedPoint,
+          ),
+          isLoading
+              ? Positioned(
+                  child: Column(
+                  children: [
+                    Expanded(
+                        child: Container(
+                      color: colors.primary,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: colors.secondary,
+                        ),
+                      ),
+                    )),
+                  ],
+                ))
+              : SizedBox.shrink(),
         ],
       ),
     );

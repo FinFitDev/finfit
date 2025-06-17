@@ -1,11 +1,11 @@
 import 'dart:math';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:excerbuys/components/dashboard_page/home_page/activity_card/steps_graph_animation.dart';
 import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/utils/activity/steps.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -167,6 +167,18 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
           if (widget.isLoading == true) {
             return loadingSteps(context);
           }
+          if (widget.stepsData.isEmpty) {
+            return Container(
+              height: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: colors.primaryContainer,
+              ),
+              margin: EdgeInsets.only(
+                  left: HORIZOTAL_PADDING, right: HORIZOTAL_PADDING),
+              child: StepsGraphAnimation(),
+            );
+          }
           return Container(
             height: 200,
             decoration: BoxDecoration(
@@ -280,6 +292,7 @@ Widget loadingSteps(BuildContext context) {
         }).map((el) {
           return UniversalLoaderBox(
               height: el.toDouble(),
+              borderRadius: 4,
               width: MediaQuery.sizeOf(context).width / 10 - 10);
         }).toList(),
       ));

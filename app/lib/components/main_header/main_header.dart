@@ -1,44 +1,53 @@
 import 'package:excerbuys/components/main_header/regular_main_header_content.dart';
 import 'package:excerbuys/components/main_header/product_owner_header_content.dart';
-import 'package:excerbuys/store/controllers/activity/activity_controller/activity_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
-import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
-import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/wrappers/animated_switcher_wrapper.dart';
-import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
-class MainHeader extends StatelessWidget {
+class MainHeader extends StatefulWidget {
   const MainHeader({super.key});
+
+  @override
+  State<MainHeader> createState() => _MainHeaderState();
+}
+
+class _MainHeaderState extends State<MainHeader> {
+  int? _lastPage;
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
 
-    return StreamBuilder<double>(
-        stream: dashboardController.scrollDistanceStream,
-        builder: (context, snapshot) {
-          return StreamBuilder(
-              stream: dashboardController.activePageStream,
-              builder: (context, pageSnapshot) {
+    return StreamBuilder(
+        stream: dashboardController.activePageStream,
+        builder: (context, pageSnapshot) {
+          return StreamBuilder<double>(
+              stream: dashboardController.scrollDistanceStream,
+              builder: (context, snapshot) {
                 final bool isActive =
                     snapshot.hasData && snapshot.data! > 380 ||
                         pageSnapshot.data != 0;
+                final bool isPageChanged =
+                    _lastPage != null && _lastPage != pageSnapshot.data;
+
+                if (pageSnapshot.hasData) {
+                  _lastPage = pageSnapshot.data as int;
+                }
 
                 return AnimatedPositioned(
                   top: isActive ? 0 : -70,
-                  duration: const Duration(milliseconds: 200),
+                  duration:
+                      Duration(milliseconds: isPageChanged == true ? 0 : 200),
                   child: Stack(
                     children: [
                       AnimatedOpacity(
                         opacity: isActive ? 1 : 0,
-                        duration: Duration(milliseconds: 200),
+                        duration: Duration(
+                            milliseconds: isPageChanged == true ? 0 : 100),
                         curve: Curves.decelerate,
                         child: Container(
                           padding: EdgeInsets.only(

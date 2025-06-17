@@ -9,6 +9,7 @@ class InputWithIcon extends StatefulWidget {
   final String? rightIcon;
   final void Function()? onPressRightIcon;
   final void Function(String) onChange;
+  final void Function()? onTap;
   final String placeholder;
   final String? error;
   final bool? isPassword;
@@ -17,6 +18,7 @@ class InputWithIcon extends StatefulWidget {
   final double? borderRadius;
   TextInputType? inputType = TextInputType.text;
   final String? initialValue;
+  final FocusNode? focusNode;
 
   InputWithIcon(
       {super.key,
@@ -31,7 +33,9 @@ class InputWithIcon extends StatefulWidget {
       this.borderRadius,
       this.verticalPadding,
       this.inputType,
-      this.initialValue});
+      this.initialValue,
+      this.onTap,
+      this.focusNode});
 
   @override
   State<InputWithIcon> createState() => _InputWithIconState();
@@ -91,6 +95,7 @@ class _InputWithIconState extends State<InputWithIcon> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextField(
+            focusNode: widget.focusNode,
             controller: _controller, // Assign the controller here
             keyboardType: widget.inputType,
             inputFormatters: widget.inputType == TextInputType.number
@@ -104,6 +109,7 @@ class _InputWithIconState extends State<InputWithIcon> {
                 _value = val;
               });
             },
+            onTap: widget.onTap,
 
             cursorColor: iconsColor,
             style: texts.headlineMedium?.copyWith(

@@ -96,16 +96,7 @@ class CartModal extends StatelessWidget {
                             ],
                           ),
                   ),
-                  CartModalSummary(),
-                  Text('Final price doesn’t include shipping costs',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: colors.tertiaryContainer,
-                          fontSize: 12)),
-                  SizedBox(
-                    height: 16,
-                  ),
+                  // CartModalSummary(),
                   Row(
                     children: [
                       Expanded(

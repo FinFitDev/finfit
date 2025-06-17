@@ -25,7 +25,7 @@ class CartProductCard extends StatelessWidget {
         key: ValueKey(item.uuid),
         endActionPane: ActionPane(
           motion: DrawerMotion(),
-          extentRatio: 0.2,
+          extentRatio: 0.18,
           children: [
             SlidableAction(
               onPressed: (context) {
@@ -35,21 +35,20 @@ class CartProductCard extends StatelessWidget {
               backgroundColor: colors.error,
               icon: Icons.delete,
               foregroundColor: colors.primary,
+              borderRadius: BorderRadius.circular(10),
             ),
           ],
         ),
         child: Container(
-          padding: EdgeInsets.all(16),
+          padding: EdgeInsets.only(right: 16, top: 8, bottom: 8, left: 8),
           height: 120,
-          color: item.notEligible == true
-              ? colors.errorContainer.withAlpha(20)
-              : colors.primaryContainer,
+          color: colors.primary,
           child: Row(
             children: [
               ImageBox(
                 image: item.getImage(),
-                height: 120 - 32,
-                width: 120 - 32,
+                height: 120 - 16,
+                width: 120 - 16,
               ),
               SizedBox(
                 width: 16,

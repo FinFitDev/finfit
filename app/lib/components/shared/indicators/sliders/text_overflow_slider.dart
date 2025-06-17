@@ -54,7 +54,6 @@ class _TextOverflowSliderState extends State<TextOverflowSlider>
 
     final textWidth = textPainter.width + 20;
     _scrollAmount = textWidth - availableWidth;
-    print(_scrollAmount);
 
     if (_scrollAmount > 0) {
       _shouldScroll = true;
@@ -78,9 +77,9 @@ class _TextOverflowSliderState extends State<TextOverflowSlider>
   Future<void> _startLoop() async {
     while (mounted) {
       await _animationController.forward();
-      await Future.delayed(widget.pauseDuration);
-      await _animationController.reverse();
-      await Future.delayed(widget.pauseDuration);
+      if (mounted) await Future.delayed(widget.pauseDuration);
+      if (mounted) await _animationController.reverse();
+      if (mounted) await Future.delayed(widget.pauseDuration);
     }
   }
 
@@ -89,10 +88,12 @@ class _TextOverflowSliderState extends State<TextOverflowSlider>
     return LayoutBuilder(
       builder: (context, constraints) {
         if (!_shouldScroll) {
-          // Delay animation setup until after build to get correct width
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _setupAnimation(constraints.maxWidth);
-          });
+          if (context.mounted) {
+            // Delay animation setup until after build to get correct width
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _setupAnimation(constraints.maxWidth);
+            });
+          }
         }
 
         return ClipRect(

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
+import 'package:latlong2/latlong.dart';
 
 const String APP_TITLE = 'FinFit';
-const String BACKEND_BASE_URL = 'http://192.168.1.14:3000/';
+const String BACKEND_BASE_URL = 'http://192.168.254.120:3000/';
 GlobalKey<NavigatorState> NAVIGATOR_KEY = GlobalKey<NavigatorState>();
 RegExp EMAIL_REGEX = RegExp(r'^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$');
 const String WEB_CLIENT_GOOGLE_ID =
@@ -15,6 +16,8 @@ final List<HealthDataType> HEALTH_DATA_TYPES = [
 ];
 final List<HealthDataAccess> HEALTH_DATA_PERMISSIONS =
     HEALTH_DATA_TYPES.map((e) => HealthDataAccess.READ).toList();
+
+final LatLng WARSAW_COORDINATES = LatLng(52.2297, 21.0122);
 
 const double HORIZOTAL_PADDING = 16;
 const double MAIN_HEADER_HEIGHT = 55;
