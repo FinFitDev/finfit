@@ -1,7 +1,9 @@
 import 'package:excerbuys/components/dashboard_page/shop_page/checkout/delivery/delivery_group.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
+import 'package:excerbuys/store/controllers/shop/checkout_controller/checkout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
-import 'package:excerbuys/types/shop.dart';
+import 'package:excerbuys/types/shop/checkout.dart';
+import 'package:excerbuys/types/shop/shop.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/shop/checkout/utils.dart';
 import 'package:excerbuys/utils/utils.dart';
@@ -25,7 +27,7 @@ class _DeliveryMethodsModalState extends State<DeliveryMethodsModal> {
     final texts = Theme.of(context).textTheme;
 
     return StreamBuilder<List<ICartItem>>(
-        stream: shopController.cartItemsStream,
+        stream: checkoutController.cartItemsStream,
         builder: (context, snapshot) {
           final List<IDeliveryGroup> deliveryGroups =
               snapshot.data != null ? createDeliveryGroups(snapshot.data!) : [];
@@ -64,6 +66,9 @@ class _DeliveryMethodsModalState extends State<DeliveryMethodsModal> {
                                       INPOST_OUT_OF_THE_BOX_DB_UUID) {
                                     widget.customPage(2);
                                   }
+                                  if (methodId == COURIER_DB_UUID) {
+                                    widget.customPage(3);
+                                  }
                                 },
                               );
                             })),
@@ -74,7 +79,7 @@ class _DeliveryMethodsModalState extends State<DeliveryMethodsModal> {
                       Expanded(
                         flex: 1,
                         child: StreamBuilder<double>(
-                            stream: shopController
+                            stream: checkoutController
                                 .totalCartPriceWithoutDeliveryCostStream,
                             builder: (context, snapshot) {
                               return Column(

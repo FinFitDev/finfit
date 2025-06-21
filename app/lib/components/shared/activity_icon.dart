@@ -5,11 +5,15 @@ class IconContainer extends StatelessWidget {
   final String icon;
   final double size;
   final Color? backgroundColor;
+  final Color? iconColor;
+  final double? ratio;
   const IconContainer(
       {super.key,
       required this.icon,
       required this.size,
-      this.backgroundColor});
+      this.backgroundColor,
+      this.iconColor,
+      this.ratio});
 
   @override
   Widget build(BuildContext context) {
@@ -18,16 +22,16 @@ class IconContainer extends StatelessWidget {
     return Container(
       height: size,
       width: size,
-      padding: EdgeInsets.all(5),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
           color: backgroundColor ?? colors.secondary),
       child: Center(
         child: SizedBox(
-          width: size / 2,
-          height: size / 2,
+          width: size * (ratio ?? 0.5),
+          height: size * (ratio ?? 0.5),
           child: SvgPicture.asset(icon,
-              colorFilter: ColorFilter.mode(colors.primary, BlendMode.srcIn)),
+              colorFilter: ColorFilter.mode(
+                  iconColor ?? colors.primary, BlendMode.srcIn)),
         ),
       ),
     );

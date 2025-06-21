@@ -7,8 +7,8 @@ import 'package:excerbuys/store/controllers/layout_controller/layout_controller.
 import 'package:excerbuys/store/controllers/shop/product_owners_controller/product_owners_controller.dart';
 import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
-import 'package:excerbuys/types/product.dart';
-import 'package:excerbuys/types/shop.dart';
+import 'package:excerbuys/types/shop/product.dart';
+import 'package:excerbuys/types/shop/shop.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/animated_switcher_wrapper.dart';
 import 'package:excerbuys/wrappers/infinite_list_wrapper_v2.dart';

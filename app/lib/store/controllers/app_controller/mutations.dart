@@ -4,7 +4,7 @@ extension AppControllerMutations on AppController {
   restoreStateFromStorage() async {
     await authController.restoreAuthStateFromStorage();
     await userController.restoreCurrentUserStateFromStorage();
-    await shopController.loadCartStateFromStorage();
+    await checkoutController.loadCartStateFromStorage();
   }
 
   setDeviceId(String id) {

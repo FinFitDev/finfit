@@ -73,6 +73,7 @@ class _AmountModalState extends State<AmountModal> {
                   height: 16,
                 ),
                 InputWithIcon(
+                  outsideLabel: 'Amount',
                   placeholder: 'Amount',
                   onChange: (val) {
                     if (val.isEmpty) {

@@ -1,4 +1,4 @@
-import 'package:excerbuys/types/product.dart';
+import 'package:excerbuys/types/shop/product.dart';
 import 'package:excerbuys/types/user.dart';
 
 class ITransactionEntry {

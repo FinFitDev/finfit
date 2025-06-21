@@ -7,8 +7,6 @@ export const fetchProductOwnersByRegex = async (
 ) => {
   const formattedRegex = `%${regex.toLowerCase()}%`;
 
-  console.log(formattedRegex);
-
   const response = await pool.query(
     `SELECT * FROM product_owners_with_delivery_methods
       WHERE LOWER(name) LIKE $1
@@ -17,6 +15,5 @@ export const fetchProductOwnersByRegex = async (
     [formattedRegex, limit, offset]
   );
 
-  console.log;
   return response;
 };

@@ -3,9 +3,11 @@ import 'package:health/health.dart';
 import 'package:latlong2/latlong.dart';
 
 const String APP_TITLE = 'FinFit';
-const String BACKEND_BASE_URL = 'http://192.168.254.120:3000/';
+const String BACKEND_BASE_URL = 'http://192.168.1.8:3000/';
 GlobalKey<NavigatorState> NAVIGATOR_KEY = GlobalKey<NavigatorState>();
 RegExp EMAIL_REGEX = RegExp(r'^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$');
+RegExp PHONE_REGEX = RegExp(r'^\d{3} \d{3} \d{3}$');
+RegExp POST_CODE_REGEX = RegExp(r'^\d{2}-\d{3}$');
 const String WEB_CLIENT_GOOGLE_ID =
     '675848705064-ope52veb5ql854hdlkm044sk37j6lkt8.apps.googleusercontent.com';
 
@@ -31,6 +33,7 @@ const String REFRESH_TOKEN_KEY = 'refresh_token';
 const String CURRENT_USER_KEY = 'current_user';
 const String RECENT_RECIPIENTS_KEY = 'recent_recipients';
 const String CART_STATE_KEY = 'cart_state';
+const String USER_ORDER_DATA_KEY = 'user_order_data';
 const String MAX_PRICE_RANGES_KEY = 'max_price_ranges';
 const String AVAILABLE_SHOP_CATEGORIES_KEY = 'available_shop_categories';
 

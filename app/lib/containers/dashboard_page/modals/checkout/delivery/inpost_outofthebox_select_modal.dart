@@ -1,11 +1,9 @@
 import 'dart:async';
-
-import 'package:excerbuys/components/input_with_icon.dart';
+import 'package:dio/dio.dart';
 import 'package:excerbuys/components/shared/map/map_handler.dart';
 import 'package:excerbuys/components/shop_page/checkout/map/delivery_point_search_component.dart';
 import 'package:excerbuys/components/shop_page/checkout/map/location_selected_modal.dart';
-import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
-import 'package:excerbuys/types/delivery.dart';
+import 'package:excerbuys/types/shop/delivery.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
 import 'package:excerbuys/utils/shop/checkout/utils.dart';
@@ -15,7 +13,6 @@ import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
 class InpostOutoftheboxSelectModal extends StatefulWidget {
@@ -40,6 +37,8 @@ class _InpostOutoftheboxSelectModalState
   double? _visibleRadius = 80000;
   LatLng? currentCenter = WARSAW_COORDINATES;
   bool isLoading = true;
+  bool isError = false;
+  final CancelToken cancelToken = CancelToken();
 
   void fetchAllParcelPoints() async {
     try {
@@ -49,7 +48,8 @@ class _InpostOutoftheboxSelectModalState
       final res = await httpHandler(
           url:
               'https://api-shipx-pl.easypack24.net/v1/points?per_page=40000&functions=parcel_collect',
-          method: HTTP_METHOD.GET);
+          method: HTTP_METHOD.GET,
+          cancelToken: cancelToken);
 
       final List<IInpostOutOfTheBoxPoint> points = [];
       for (final item in res['items']) {
@@ -70,10 +70,16 @@ class _InpostOutoftheboxSelectModalState
                 item['location']['latitude'], item['location']['longitude']),
             image: item['image_url']));
       }
-
+      if (!mounted) {
+        return null;
+      }
       setState(() {
         _points.clear();
         _points.addAll(points);
+      });
+    } catch (error) {
+      setState(() {
+        isError = true;
       });
     } finally {
       setState(() {
@@ -122,9 +128,12 @@ class _InpostOutoftheboxSelectModalState
       image:
           'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSS51q8ZkBRKAAZKDJ9rWC5gax4v5etya2c3g&s',
       onClose: () {
+        cancelToken.cancel();
         closeModal(context);
       },
       onClickBack: () {
+        cancelToken.cancel();
+
         widget.prevPage();
       },
       padding: EdgeInsets.all(0),
@@ -174,21 +183,33 @@ class _InpostOutoftheboxSelectModalState
               );
             },
           ),
-          DeliveryPointSearchComponent(
-            centerLocation: () {
-              _mapController.move(myLocation ?? WARSAW_COORDINATES, 10);
-            },
-            points: _points,
-          ),
           LocationSelectedModal(
             onClickCancel: () {
               setState(() {
                 _selectedPoint = null;
               });
             },
+            onClickSelect: () {
+              if (_selectedPoint != null) {
+                widget.nextPage();
+              }
+            },
             selectedPoint: _selectedPoint,
           ),
-          isLoading
+          DeliveryPointSearchComponent<dynamic>(
+            centerLocation: () {
+              _mapController.move(myLocation ?? WARSAW_COORDINATES, 10);
+            },
+            points: _points,
+            myLocation: myLocation ?? WARSAW_COORDINATES,
+            onPointSelected: (p) {
+              setState(() {
+                _selectedPoint = p;
+                _mapController.move(p.coordinates, 15);
+              });
+            },
+          ),
+          isLoading || isError
               ? Positioned(
                   child: Column(
                   children: [
@@ -196,10 +217,18 @@ class _InpostOutoftheboxSelectModalState
                         child: Container(
                       color: colors.primary,
                       child: Center(
-                        child: CircularProgressIndicator(
-                          color: colors.secondary,
-                        ),
-                      ),
+                          child: isLoading
+                              ? CircularProgressIndicator(
+                                  color: colors.secondary,
+                                )
+                              : Text(
+                                  'Błąd podczas ładowania punktów paczkomatów',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: colors.tertiaryContainer,
+                                    fontSize: 16,
+                                  ),
+                                )),
                     )),
                   ],
                 ))

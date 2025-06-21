@@ -1,6 +1,10 @@
+import 'package:excerbuys/components/shared/activity_icon.dart';
 import 'package:excerbuys/components/shared/image_component.dart';
 import 'package:excerbuys/components/shared/indicators/sliders/text_overflow_slider.dart';
-import 'package:excerbuys/types/shop.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/checkout/delivery/delivery_method_description.dart';
+import 'package:excerbuys/types/shop/shop.dart';
+import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -74,57 +78,111 @@ class _DeliveryGroupState extends State<DeliveryGroup> {
           child: Column(
               spacing: 4,
               children: (widget.deliveryGroup.deliveryMethods ?? [])
-                  .map((method) => Column(
+                  .map((method) => Row(
                         children: [
-                          RippleWrapper(
-                            onPressed: () {
-                              if (method.isAvailable == false) return;
-                              widget.onClickDeliveryMethod(method.uuid);
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: colors.primaryContainer),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 12),
-                              child: Row(
-                                spacing: 16,
-                                children: [
-                                  Opacity(
-                                    opacity:
-                                        method.isAvailable == false ? 0.2 : 1.0,
-                                    child: Row(
-                                      spacing: 16,
-                                      children: [
-                                        ImageComponent(
-                                          size: 28,
-                                          image: method.image,
-                                        ),
-                                        Text(method.name,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 13,
-                                                color: colors.primaryFixedDim)),
-                                      ],
-                                    ),
-                                  ),
-                                  method.isAvailable == false
-                                      ? Expanded(
-                                          child: TextOverflowSlider(
-                                            text:
-                                                'Unavailable for ${method.unavailableFor!.join(', ')}',
-                                            style: TextStyle(
-                                                fontSize: 11,
-                                                color:
-                                                    colors.tertiaryContainer),
-                                            pauseDuration: Duration(seconds: 2),
+                          Expanded(
+                            child: RippleWrapper(
+                              onPressed: () {
+                                if (method.isAvailable == false) return;
+                                widget.onClickDeliveryMethod(method.uuid);
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: colors.primaryContainer),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 12),
+                                child: Row(
+                                  spacing: 16,
+                                  children: [
+                                    Opacity(
+                                      opacity: method.isAvailable == false
+                                          ? 0.2
+                                          : 1.0,
+                                      child: Row(
+                                        spacing: 16,
+                                        children: [
+                                          ImageComponent(
+                                            size: 28,
+                                            image: method.image,
                                           ),
-                                        )
-                                      : SizedBox.shrink(),
-                                ],
+                                          Text(method.name,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 13,
+                                                  color:
+                                                      colors.primaryFixedDim)),
+                                        ],
+                                      ),
+                                    ),
+                                    method.isAvailable == false
+                                        ? Expanded(
+                                            child: TextOverflowSlider(
+                                              text:
+                                                  'Unavailable for ${method.unavailableFor!.join(', ')}',
+                                              style: TextStyle(
+                                                  fontSize: 11,
+                                                  color:
+                                                      colors.tertiaryContainer),
+                                              pauseDuration:
+                                                  Duration(seconds: 2),
+                                            ),
+                                          )
+                                        : method.uuid == SHOP_DELIVERY_DB_UUID
+                                            ? Expanded(
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 10,
+                                                              vertical: 4),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(4),
+                                                          color:
+                                                              colors.secondary),
+                                                      child: Text(
+                                                        '0 PLN',
+                                                        style: TextStyle(
+                                                            color:
+                                                                colors.primary,
+                                                            fontSize: 11),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            : SizedBox.shrink(),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
+                          method.description != null
+                              ? Container(
+                                  margin: EdgeInsets.only(left: 16),
+                                  child: RippleWrapper(
+                                      child: IconContainer(
+                                          backgroundColor:
+                                              colors.primaryContainer,
+                                          iconColor: colors.tertiaryContainer,
+                                          ratio: 0.7,
+                                          icon: 'assets/svg/info.svg',
+                                          size: 20),
+                                      onPressed: () {
+                                        openModal(
+                                            context,
+                                            DeliveryMethodDescription(
+                                                title: method.name,
+                                                description:
+                                                    method.description!));
+                                      }),
+                                )
+                              : SizedBox.shrink(),
                         ],
                       ))
                   .toList()),

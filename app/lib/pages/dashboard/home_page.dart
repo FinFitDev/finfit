@@ -18,7 +18,7 @@ import 'package:excerbuys/store/controllers/shop/transactions_controller/transac
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
-import 'package:excerbuys/types/product.dart';
+import 'package:excerbuys/types/shop/product.dart';
 import 'package:excerbuys/types/transaction.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/refresh_wrapper.dart';

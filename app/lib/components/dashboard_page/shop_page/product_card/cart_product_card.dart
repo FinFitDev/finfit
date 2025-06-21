@@ -1,8 +1,10 @@
 import 'package:excerbuys/components/shared/images/image_box.dart';
 import 'package:excerbuys/components/shared/indicators/sliders/text_overflow_slider.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/product_info_modal.dart';
+import 'package:excerbuys/store/controllers/shop/checkout_controller/checkout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
-import 'package:excerbuys/types/shop.dart';
+import 'package:excerbuys/types/shop/checkout.dart';
+import 'package:excerbuys/types/shop/shop.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/shop/product/utils.dart';
 import 'package:excerbuys/utils/utils.dart';
@@ -29,7 +31,7 @@ class CartProductCard extends StatelessWidget {
           children: [
             SlidableAction(
               onPressed: (context) {
-                shopController.removeCartItem(item.uuid!);
+                checkoutController.removeCartItem(item.uuid!);
                 triggerVibrate(FeedbackType.selection);
               },
               backgroundColor: colors.error,
@@ -140,7 +142,7 @@ class CartProductCard extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        shopController.decreaseProductQuantity(item.uuid!);
+                        checkoutController.decreaseProductQuantity(item.uuid!);
                       }),
                   Text(
                     item.quantity.toString(),
@@ -162,7 +164,7 @@ class CartProductCard extends StatelessWidget {
                             color: colors.primary,
                           )),
                       onPressed: () {
-                        shopController.increaseProductQuantity(item.uuid!);
+                        checkoutController.increaseProductQuantity(item.uuid!);
                       })
                 ],
               )

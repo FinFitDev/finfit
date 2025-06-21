@@ -89,7 +89,8 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
                                   ? 'Wrong email'
                                   : 'Server error'
                               : null,
-                          placeholder: 'Enter email',
+                          outsideLabel: 'Email',
+                          placeholder: 'Email',
                           onChange: (val) {
                             setState(() {
                               _email = val;

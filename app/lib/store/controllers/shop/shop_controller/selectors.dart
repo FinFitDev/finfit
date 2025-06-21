@@ -10,20 +10,6 @@ extension ShopControllerSelectors on ShopController {
   Stream<int> get activeShopCategoryStream =>
       allShopFiltersStream.map((data) => data?.activeShopCategory ?? 0);
 
-  Stream<int> get totalCartFinpointsCostStream =>
-      cartItemsStream.map(countTotalCartFinpointsCost);
-
-  Stream<double> get totalCartPriceWithoutDeliveryCostStream =>
-      cartItemsStream.map(countTotalCartPrice);
-
-  Stream<double> get totalCartDiscountValueSaved =>
-      cartItemsStream.map(getTotalDiscountSavings);
-
-  Stream<double?> get userBalanceMinusCartCost => Rx.combineLatest2(
-      userController.userBalanceStream,
-      totalCartFinpointsCostStream,
-      getUserBalanceMinusCartCost);
-
   Stream<ShopFilters?> shopPageUpdateTrigger() {
     return Rx.combineLatest5(
       productOwnersController.allProductOwnersStream,

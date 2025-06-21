@@ -185,7 +185,7 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
               borderRadius: BorderRadius.circular(10),
               color: colors.primaryContainer,
             ),
-            padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+            padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 6),
             margin: EdgeInsets.only(
                 left: HORIZOTAL_PADDING, right: HORIZOTAL_PADDING),
             child: SfCartesianChart(
@@ -242,9 +242,7 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
                   xValueMapper: (MapEntry<int, int> data, _) => data.key,
                   yValueMapper: (MapEntry<int, int> data, _) => data.value,
                   color: colors.secondary,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(4),
-                      topRight: Radius.circular(4)),
+                  borderRadius: BorderRadius.circular(4),
                   width: 0.95,
                   borderWidth: 0,
                   borderColor: colors.secondary,

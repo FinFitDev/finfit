@@ -4,8 +4,8 @@ import 'package:excerbuys/store/controllers/user_controller/user_controller.dart
 import 'package:excerbuys/store/persistence/cache.dart';
 import 'package:excerbuys/store/selectors/shop/products.dart';
 import 'package:excerbuys/types/general.dart';
-import 'package:excerbuys/types/product.dart';
-import 'package:excerbuys/types/shop.dart';
+import 'package:excerbuys/types/shop/product.dart';
+import 'package:excerbuys/types/shop/shop.dart';
 import 'package:excerbuys/utils/shop/product/requests.dart';
 import 'package:rxdart/rxdart.dart';
 

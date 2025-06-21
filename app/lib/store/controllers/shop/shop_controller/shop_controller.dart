@@ -9,7 +9,7 @@ import 'package:excerbuys/store/selectors/shop/shop.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/owner.dart';
-import 'package:excerbuys/types/shop.dart';
+import 'package:excerbuys/types/shop/shop.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/shop/product/filters.dart';
@@ -47,11 +47,6 @@ class ShopController {
   Stream<List<String>> get availableCategoriesStream =>
       _availableCategories.stream;
   List<String> get availableCategories => _availableCategories.value;
-
-  final BehaviorSubject<List<ICartItem>> _cartItems =
-      BehaviorSubject.seeded([]);
-  Stream<List<ICartItem>> get cartItemsStream => _cartItems.stream;
-  List<ICartItem> get cartItems => _cartItems.value;
 }
 
 ShopController shopController = ShopController();

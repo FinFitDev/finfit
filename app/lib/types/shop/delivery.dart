@@ -4,15 +4,18 @@ class IDeliveryMethod {
   final String uuid;
   final String name;
   final String? image;
+  final String? description;
   final String? externalId;
   final List<String>? unavailableFor;
 
-  IDeliveryMethod(
-      {required this.uuid,
-      required this.name,
-      this.image,
-      this.externalId,
-      this.unavailableFor});
+  IDeliveryMethod({
+    required this.uuid,
+    required this.name,
+    this.image,
+    this.description,
+    this.unavailableFor,
+    this.externalId,
+  });
 
   copyWith({
     String? uuid,
@@ -25,8 +28,9 @@ class IDeliveryMethod {
       uuid: uuid ?? this.uuid,
       name: name ?? this.name,
       image: image ?? this.image,
-      externalId: externalId ?? this.externalId,
+      description: externalId ?? this.description,
       unavailableFor: unavailableFor ?? this.unavailableFor,
+      externalId: externalId ?? this.externalId,
     );
   }
 
@@ -39,6 +43,7 @@ class IDeliveryMethod {
       'uuid': uuid,
       'name': name,
       'image': image,
+      'description': description,
       'external_id': externalId,
     };
   }
@@ -48,6 +53,7 @@ class IDeliveryMethod {
       uuid: json['uuid'],
       name: json['name'],
       image: json['image'],
+      description: json['description'],
       externalId: json['external_id'],
     );
   }
@@ -93,6 +99,24 @@ class IAddressDetails {
       flatNumber: json['flat_number'],
       province: json['province'],
     );
+  }
+
+  String toAddressString() {
+    final buffer = StringBuffer();
+
+    buffer.write(street);
+
+    if (houseNumber != null && houseNumber!.isNotEmpty) {
+      buffer.write(' $houseNumber');
+    }
+
+    if (flatNumber != null && flatNumber!.isNotEmpty) {
+      buffer.write('/$flatNumber');
+    }
+
+    buffer.write(', $postCode, $city');
+
+    return buffer.toString();
   }
 }
 

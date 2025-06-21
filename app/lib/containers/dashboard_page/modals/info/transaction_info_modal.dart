@@ -135,6 +135,7 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                                               ? 'assets/svg/receiveArrow.svg'
                                               : 'assets/svg/sendArrow.svg',
                                           size: 30,
+                                          ratio: 0.7,
                                           backgroundColor: color,
                                         ))
                                     : SizedBox.shrink()

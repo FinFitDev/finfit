@@ -9,7 +9,7 @@ import 'package:excerbuys/store/controllers/layout_controller/layout_controller.
 
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/types/enums.dart';
-import 'package:excerbuys/types/shop.dart';
+import 'package:excerbuys/types/shop/shop.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/shop/constants.dart';
 import 'package:excerbuys/utils/utils.dart';

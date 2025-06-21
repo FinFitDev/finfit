@@ -1,8 +1,10 @@
 import 'package:excerbuys/components/dashboard_page/shop_page/checkout/cart/cart_modal_summary.dart';
 import 'package:excerbuys/components/dashboard_page/shop_page/product_card/cart_product_card.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
+import 'package:excerbuys/store/controllers/shop/checkout_controller/checkout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
-import 'package:excerbuys/types/shop.dart';
+import 'package:excerbuys/types/shop/checkout.dart';
+import 'package:excerbuys/types/shop/shop.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/modal/modal_content_wrapper.dart';
@@ -19,7 +21,7 @@ class CartModal extends StatelessWidget {
     final texts = Theme.of(context).textTheme;
 
     return StreamBuilder<List<ICartItem>>(
-        stream: shopController.cartItemsStream,
+        stream: checkoutController.cartItemsStream,
         builder: (context, snapshot) {
           final int totalQuantity =
               snapshot.data != null ? countQuantity(snapshot.data!) : 0;
@@ -102,7 +104,7 @@ class CartModal extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: StreamBuilder<double>(
-                            stream: shopController
+                            stream: checkoutController
                                 .totalCartPriceWithoutDeliveryCostStream,
                             builder: (context, snapshot) {
                               return Column(

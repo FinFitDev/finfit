@@ -1,7 +1,7 @@
 import 'package:excerbuys/components/shared/positions/position_with_background.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
-import 'package:excerbuys/types/product.dart';
+import 'package:excerbuys/types/shop/product.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';

@@ -2,9 +2,11 @@ import 'package:excerbuys/containers/dashboard_page/modals/checkout/cart_modal.d
 import 'package:excerbuys/containers/dashboard_page/modals/checkout/checkout_modal_container.dart';
 import 'package:excerbuys/store/controllers/activity/activity_controller/activity_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
+import 'package:excerbuys/store/controllers/shop/checkout_controller/checkout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
-import 'package:excerbuys/types/shop.dart';
+import 'package:excerbuys/types/shop/checkout.dart';
+import 'package:excerbuys/types/shop/shop.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
@@ -52,7 +54,7 @@ class RegularMainHeaderContent extends StatelessWidget {
             }),
       ]),
       StreamBuilder<List<ICartItem>>(
-          stream: shopController.cartItemsStream,
+          stream: checkoutController.cartItemsStream,
           builder: (context, snapshot) {
             final int totalQuantity =
                 snapshot.data != null ? countQuantity(snapshot.data!) : 0;

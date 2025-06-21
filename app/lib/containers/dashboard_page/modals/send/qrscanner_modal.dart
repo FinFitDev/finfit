@@ -52,7 +52,7 @@ class _QrscannerModalState extends State<QrscannerModal> {
           topRight: Radius.circular(MODAL_BORDER_RADIUS)),
       child: Container(
         color: colors.primary,
-        height: MediaQuery.sizeOf(context).height * 0.9,
+        height: MediaQuery.sizeOf(context).height * 0.92,
         width: double.infinity,
         child: Column(
           children: [

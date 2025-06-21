@@ -43,10 +43,14 @@ class QrcodeModal extends StatelessWidget {
                 SizedBox(
                   height: 16,
                 ),
-                Text(
-                  'Use the scanner option in the send modal on another device to scan this code. You will then need to refresh the app to see the received points.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: colors.primaryFixedDim, fontSize: 13),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(
+                    'Use the scanner option in the send modal on another device to scan this code. You will then need to refresh the app to see the received points.',
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(color: colors.primaryFixedDim, fontSize: 12),
+                  ),
                 ),
               ],
             ),

@@ -49,7 +49,7 @@ class _MapHandlerState extends State<MapHandler> {
         });
         widget.onLocalize?.call(newLatLng);
         // TODO: Uncomment the line below to move the map to the user's location
-        // widget.mapController.move(newLatLng, _mapController.camera.zoom);
+        widget.mapController.move(newLatLng, widget.mapController.camera.zoom);
       }
     });
   }
@@ -65,6 +65,9 @@ class _MapHandlerState extends State<MapHandler> {
     return FlutterMap(
       mapController: widget.mapController,
       options: MapOptions(
+          interactionOptions: InteractionOptions(
+              flags: InteractiveFlag.all & ~InteractiveFlag.rotate),
+          initialRotation: 0,
           onPositionChanged: widget.onMapMoved,
           onTap: (position, latlng) {
             FocusScope.of(context).unfocus();

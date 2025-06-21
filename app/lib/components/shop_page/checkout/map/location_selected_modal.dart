@@ -1,18 +1,20 @@
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/components/shared/image_component.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
-import 'package:excerbuys/types/delivery.dart';
+import 'package:excerbuys/types/shop/delivery.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class LocationSelectedModal extends StatefulWidget {
   final IInpostOutOfTheBoxPoint? selectedPoint;
   final void Function() onClickCancel;
+  final void Function() onClickSelect;
 
   const LocationSelectedModal({
     super.key,
     this.selectedPoint,
     required this.onClickCancel,
+    required this.onClickSelect,
   });
 
   @override
@@ -65,7 +67,7 @@ class _LocationSelectedModalState extends State<LocationSelectedModal> {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          '${widget.selectedPoint?.address.street ?? ''} ${widget.selectedPoint?.address.houseNumber ?? ''}, ${widget.selectedPoint?.address.postCode ?? ''} ${widget.selectedPoint?.address.city ?? ''}',
+                          widget.selectedPoint?.address.toAddressString() ?? '',
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                           style: TextStyle(
@@ -97,7 +99,7 @@ class _LocationSelectedModalState extends State<LocationSelectedModal> {
                       backgroundColor: colors.secondary,
                       textColor: colors.primary,
                       height: 50,
-                      onPressed: () {},
+                      onPressed: widget.onClickSelect,
                     ),
                   ),
                 ],

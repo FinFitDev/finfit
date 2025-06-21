@@ -1,12 +1,11 @@
-import 'dart:math';
+import 'dart:async';
 
 import 'package:excerbuys/components/dashboard_page/shop_page/product_card/featured_product_card.dart';
 import 'package:excerbuys/components/shared/indicators/carousel/carousel_counter.dart';
 import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
-import 'package:excerbuys/components/shared/indicators/carousel/current_item_indicator.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/product_info_modal.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
-import 'package:excerbuys/types/product.dart';
+import 'package:excerbuys/types/shop/product.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -23,18 +22,34 @@ class AvailableOffers extends StatefulWidget {
 class _AvailableOffersState extends State<AvailableOffers> {
   final ScrollController _scrollController = ScrollController();
   double _scrollPercent = 0;
+  Timer? _scrollTimer;
 
   @override
   void initState() {
     super.initState();
 
     _scrollController.addListener(_onScroll);
+
+    _scrollTimer = Timer.periodic(const Duration(seconds: 6), (_) {
+      if (!_scrollController.hasClients || widget.products.length <= 1) return;
+
+      final itemWidth = layoutController.relativeContentWidth;
+      final maxScrollExtent = _scrollController.position.maxScrollExtent;
+      final nextOffset = _scrollController.offset + itemWidth;
+
+      _scrollController.animateTo(
+        nextOffset > maxScrollExtent ? 0 : nextOffset,
+        duration: const Duration(seconds: 1),
+        curve: Curves.ease,
+      );
+    });
   }
 
   @override
   void dispose() {
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
+    _scrollTimer?.cancel();
     super.dispose();
   }
 

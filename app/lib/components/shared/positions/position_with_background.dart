@@ -35,7 +35,7 @@ class PositionWithBackground extends StatelessWidget {
                 )
               : ProfileImageGenerator(seed: image, size: imageSize ?? 14),
           SizedBox(
-            width: 6,
+            width: 8,
           ),
           Text(
             name,

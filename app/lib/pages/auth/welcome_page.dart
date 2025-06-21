@@ -7,6 +7,7 @@ import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rive/rive.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});

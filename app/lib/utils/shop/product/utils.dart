@@ -1,7 +1,8 @@
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/types/enums.dart';
-import 'package:excerbuys/types/product.dart';
-import 'package:excerbuys/types/shop.dart';
+import 'package:excerbuys/types/shop/checkout.dart';
+import 'package:excerbuys/types/shop/product.dart';
+import 'package:excerbuys/types/shop/shop.dart';
 import 'package:excerbuys/utils/debug.dart';
 
 String sortByCategoryParser(String displayText) {

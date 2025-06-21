@@ -115,71 +115,97 @@ class _SignupContainerState extends State<SignupContainer> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(children: [
-          InputWithIcon(
-            leftIcon: 'assets/svg/profile.svg',
-            placeholder: 'Username',
-            onChange: (String val) {
-              setState(() {
-                _formFieldsState[SIGNUP_FIELD_TYPE.USERNAME] = val;
-                _formErrorsState[SIGNUP_FIELD_TYPE.USERNAME] = null;
-              });
-            },
-            error: _formErrorsState[SIGNUP_FIELD_TYPE.USERNAME],
-            borderRadius: 10,
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(children: [
+              Container(
+                  margin: EdgeInsets.only(top: 30, bottom: 60),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Sign up below',
+                        style: TextStyle(
+                            fontSize: 32, fontWeight: FontWeight.w600),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Text(
+                        'And start your journey with FinFit',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w400,
+                            color: colors.primaryFixedDim),
+                      ),
+                    ],
+                  )),
+              InputWithIcon(
+                outsideLabel: 'Username',
+                placeholder: 'Username',
+                onChange: (String val) {
+                  setState(() {
+                    _formFieldsState[SIGNUP_FIELD_TYPE.USERNAME] = val;
+                    _formErrorsState[SIGNUP_FIELD_TYPE.USERNAME] = null;
+                  });
+                },
+                error: _formErrorsState[SIGNUP_FIELD_TYPE.USERNAME],
+                borderRadius: 10,
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              InputWithIcon(
+                outsideLabel: 'Email',
+                placeholder: 'Email',
+                onChange: (String val) {
+                  setState(() {
+                    _formFieldsState[SIGNUP_FIELD_TYPE.EMAIL] = val;
+                    _formErrorsState[SIGNUP_FIELD_TYPE.EMAIL] = null;
+                  });
+                },
+                error: _formErrorsState[SIGNUP_FIELD_TYPE.EMAIL],
+                borderRadius: 10,
+                inputType: TextInputType.emailAddress,
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              InputWithIcon(
+                outsideLabel: 'Password',
+                placeholder: 'Password',
+                onChange: (String val) {
+                  setState(() {
+                    _formFieldsState[SIGNUP_FIELD_TYPE.PASSWORD] = val;
+                    _formErrorsState[SIGNUP_FIELD_TYPE.PASSWORD] = null;
+                  });
+                },
+                error: _formErrorsState[SIGNUP_FIELD_TYPE.PASSWORD],
+                isPassword: true,
+                borderRadius: 10,
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              InputWithIcon(
+                outsideLabel: 'Repeat password',
+                placeholder: 'Repeat password',
+                onChange: (String val) {
+                  setState(() {
+                    _formFieldsState[SIGNUP_FIELD_TYPE.PASSWORD_REPEAT] = val;
+                    _formErrorsState[SIGNUP_FIELD_TYPE.PASSWORD_REPEAT] = null;
+                  });
+                },
+                error: _formErrorsState[SIGNUP_FIELD_TYPE.PASSWORD_REPEAT],
+                isPassword: true,
+                borderRadius: 10,
+              ),
+              SizedBox(
+                height: 16,
+              ),
+            ]),
           ),
-          SizedBox(
-            height: 16,
-          ),
-          InputWithIcon(
-            leftIcon: 'assets/svg/email.svg',
-            placeholder: 'Email',
-            onChange: (String val) {
-              setState(() {
-                _formFieldsState[SIGNUP_FIELD_TYPE.EMAIL] = val;
-                _formErrorsState[SIGNUP_FIELD_TYPE.EMAIL] = null;
-              });
-            },
-            error: _formErrorsState[SIGNUP_FIELD_TYPE.EMAIL],
-            borderRadius: 10,
-            inputType: TextInputType.emailAddress,
-          ),
-          SizedBox(
-            height: 16,
-          ),
-          InputWithIcon(
-            leftIcon: 'assets/svg/padlock.svg',
-            placeholder: 'Password',
-            onChange: (String val) {
-              setState(() {
-                _formFieldsState[SIGNUP_FIELD_TYPE.PASSWORD] = val;
-                _formErrorsState[SIGNUP_FIELD_TYPE.PASSWORD] = null;
-              });
-            },
-            error: _formErrorsState[SIGNUP_FIELD_TYPE.PASSWORD],
-            isPassword: true,
-            borderRadius: 10,
-          ),
-          SizedBox(
-            height: 16,
-          ),
-          InputWithIcon(
-            leftIcon: 'assets/svg/padlock.svg',
-            placeholder: 'Repeat password',
-            onChange: (String val) {
-              setState(() {
-                _formFieldsState[SIGNUP_FIELD_TYPE.PASSWORD_REPEAT] = val;
-                _formErrorsState[SIGNUP_FIELD_TYPE.PASSWORD_REPEAT] = null;
-              });
-            },
-            error: _formErrorsState[SIGNUP_FIELD_TYPE.PASSWORD_REPEAT],
-            isPassword: true,
-            borderRadius: 10,
-          ),
-          SizedBox(
-            height: 16,
-          ),
-        ]),
+        ),
         MainButton(
             label: 'Sign up',
             backgroundColor: colors.secondary,

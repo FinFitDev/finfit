@@ -194,3 +194,32 @@ String capitalizeFirst(String? text) {
 //   }
 //   return String.fromCharCodes(bytes);
 // }
+
+bool isValidNIP(String nip) {
+  final cleaned = nip.replaceAll(RegExp(r'\D'), ''); // Remove dashes/spaces
+  if (cleaned.length != 10) return false;
+
+  final weights = [6, 5, 7, 2, 3, 4, 5, 6, 7];
+  int sum = 0;
+
+  for (int i = 0; i < weights.length; i++) {
+    sum += int.parse(cleaned[i]) * weights[i];
+  }
+
+  final checksum = sum % 11;
+  return checksum == int.parse(cleaned[9]);
+}
+
+String friendlyName(String key) {
+  return key
+      .toString()
+      .split('.')
+      .last
+      .replaceAll('_', ' ')
+      .toLowerCase()
+      .splitMapJoin(
+        RegExp(r'\b\w'),
+        onMatch: (m) => m.group(0)!.toUpperCase(),
+        onNonMatch: (n) => n,
+      );
+}

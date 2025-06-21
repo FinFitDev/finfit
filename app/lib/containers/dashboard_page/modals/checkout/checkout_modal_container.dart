@@ -1,4 +1,5 @@
 import 'package:excerbuys/containers/dashboard_page/modals/checkout/cart_modal.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/checkout/data/customer_data_modal.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/checkout/delivery/delivery_methods_modal.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/checkout/delivery/inpost_outofthebox_select_modal.dart';
 import 'package:excerbuys/wrappers/modal/modal_switcher_wrapper.dart';
@@ -42,7 +43,16 @@ class _CheckoutModalContainerState extends State<CheckoutModalContainer> {
               customPage: customPage,
               child: InpostOutoftheboxSelectModal(
                 prevPage: () => customPage(1),
-                nextPage: () => customPage(4),
+                nextPage: () => customPage(3),
+              ),
+            ),
+        (next, prev, customPage) => ModalStep(
+              nextPage: next,
+              previousPage: prev,
+              customPage: customPage,
+              child: CustomerDataModal(
+                prevPage: () => customPage(1),
+                nextPage: () => customPage(1),
               ),
             ),
       ],

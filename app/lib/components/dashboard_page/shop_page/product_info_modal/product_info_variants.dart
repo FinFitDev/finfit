@@ -1,6 +1,6 @@
 import 'package:excerbuys/components/shared/options_slider.dart';
-import 'package:excerbuys/types/product.dart';
-import 'package:excerbuys/types/shop.dart';
+import 'package:excerbuys/types/shop/product.dart';
+import 'package:excerbuys/types/shop/shop.dart';
 import 'package:excerbuys/utils/shop/product/utils.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';

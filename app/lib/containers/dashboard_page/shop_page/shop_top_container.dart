@@ -9,7 +9,7 @@ import 'package:excerbuys/store/controllers/shop/products_controller/products_co
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/owner.dart';
-import 'package:excerbuys/types/product.dart';
+import 'package:excerbuys/types/shop/product.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';

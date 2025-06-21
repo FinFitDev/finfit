@@ -1,8 +1,9 @@
-import 'package:excerbuys/types/delivery.dart';
+import 'package:excerbuys/types/shop/checkout.dart';
+import 'package:excerbuys/types/shop/delivery.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/owner.dart';
-import 'package:excerbuys/types/product.dart';
+import 'package:excerbuys/types/shop/product.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:uuid/v4.dart';
@@ -214,82 +215,6 @@ class IProductVariantsSet {
           variant.available &&
           _attributesMatch(variant.attributes, selectedAttributes),
     );
-  }
-}
-
-class ICartItem implements HasQuantity {
-  final String? uuid;
-  final IProductEntry product;
-  final IProductVariant? variant;
-  int quantity;
-  final bool? notEligible;
-
-  ICartItem({
-    required this.product,
-    this.variant,
-    this.quantity = 1,
-    this.notEligible,
-    String? uuid,
-  }) : uuid = uuid ?? UuidV4().generate();
-
-  ICartItem copyWith(
-      {IProductEntry? product,
-      IProductVariant? variant,
-      int? quantity,
-      bool? notEligible}) {
-    return ICartItem(
-        product: product ?? this.product,
-        variant: variant ?? this.variant,
-        quantity: quantity ?? this.quantity,
-        notEligible: notEligible ?? this.notEligible,
-        uuid: this.uuid);
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ICartItem &&
-          runtimeType == other.runtimeType &&
-          uuid == other.uuid;
-
-  bool isEqualParamsSet(ICartItem other) {
-    return product.uuid == other.product.uuid &&
-        variant?.id == other.variant?.id;
-  }
-
-  Map<String, dynamic> toJson() => {
-        'uuid': uuid,
-        'product': product.toJson(),
-        'variant': variant?.toJson(),
-        'quantity': quantity,
-        'notEligible': notEligible,
-      };
-
-  factory ICartItem.fromJson(Map<String, dynamic> json) {
-    return ICartItem(
-      uuid: json['uuid'],
-      product: IProductEntry.fromJson(json['product']),
-      variant: json['variant'] != null
-          ? IProductVariant.fromJson(json['variant'])
-          : null,
-      quantity: json['quantity'] ?? 1,
-      notEligible: json['notEligible'],
-    );
-  }
-
-  double getPrice({bool? isEligible}) {
-    isEligible ??= !(notEligible ?? false);
-
-    return (variant?.price ?? product.originalPrice) *
-        (isEligible
-            ? (100 - (variant?.discount ?? product.discount)) / 100
-            : 1);
-  }
-
-  String? getImage() {
-    return variant?.images?.isNotEmpty == true
-        ? product.images![variant!.images!.first]
-        : product.mainImage;
   }
 }
 

@@ -56,7 +56,8 @@ class _ChooseRecipientsModalState extends State<ChooseRecipientsModal> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING),
             child: InputWithIcon(
-              placeholder: 'Find users',
+              outsideLabel: 'Search for users',
+              placeholder: 'Search for users',
               onChange: (val) {
                 _debouncer.run(() {
                   sendController.setSearchValue(val);

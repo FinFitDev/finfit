@@ -9,10 +9,12 @@ import 'package:excerbuys/components/shared/indicators/labels/empty_data_modal.d
 import 'package:excerbuys/components/shared/indicators/warning_box.dart';
 import 'package:excerbuys/components/shared/list/list_component.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
+import 'package:excerbuys/store/controllers/shop/checkout_controller/checkout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
-import 'package:excerbuys/types/product.dart';
-import 'package:excerbuys/types/shop.dart';
+import 'package:excerbuys/types/shop/checkout.dart';
+import 'package:excerbuys/types/shop/product.dart';
+import 'package:excerbuys/types/shop/shop.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/shop/product/utils.dart';
@@ -198,7 +200,7 @@ class _ProductInfoModalState extends State<ProductInfoModal> {
                         ),
                       ),
                       StreamBuilder<double?>(
-                          stream: shopController.userBalanceMinusCartCost,
+                          stream: checkoutController.userBalanceMinusCartCost,
                           builder: (context, snapshot) {
                             if (!snapshot.hasData ||
                                 snapshot.data == null ||
@@ -219,7 +221,8 @@ class _ProductInfoModalState extends State<ProductInfoModal> {
                         child: Row(
                           children: [
                             StreamBuilder<double?>(
-                                stream: shopController.userBalanceMinusCartCost,
+                                stream:
+                                    checkoutController.userBalanceMinusCartCost,
                                 builder: (context, snapshot) {
                                   final double userBalance = snapshot.data ?? 0;
                                   return Expanded(
@@ -251,12 +254,12 @@ class _ProductInfoModalState extends State<ProductInfoModal> {
                             Expanded(
                                 flex: 2,
                                 child: StreamBuilder<double?>(
-                                    stream:
-                                        shopController.userBalanceMinusCartCost,
+                                    stream: checkoutController
+                                        .userBalanceMinusCartCost,
                                     builder: (context, userBalance) {
                                       return StreamBuilder<List<ICartItem>>(
-                                          stream:
-                                              shopController.cartItemsStream,
+                                          stream: checkoutController
+                                              .cartItemsStream,
                                           builder: (context, snapshot) {
                                             final cartItem = ICartItem(
                                                 product: _product!,
@@ -307,7 +310,7 @@ class _ProductInfoModalState extends State<ProductInfoModal> {
                                                     return;
                                                   }
 
-                                                  shopController
+                                                  checkoutController
                                                       .addCartItem(cartItem);
 
                                                   triggerSuccess();

@@ -1,4 +1,5 @@
 import 'package:excerbuys/components/shared/indicators/warning_box.dart';
+import 'package:excerbuys/store/controllers/shop/checkout_controller/checkout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,7 @@ class CartModalSummary extends StatelessWidget {
                       color: colors.tertiaryContainer,
                       fontSize: 12)),
               StreamBuilder<int>(
-                  stream: shopController.totalCartFinpointsCostStream,
+                  stream: checkoutController.totalCartFinpointsCostStream,
                   builder: (context, snapshot) {
                     return Text(
                         snapshot.data != null
@@ -51,7 +52,7 @@ class CartModalSummary extends StatelessWidget {
                       color: colors.tertiaryContainer,
                       fontSize: 12)),
               StreamBuilder<double>(
-                  stream: shopController.totalCartDiscountValueSaved,
+                  stream: checkoutController.totalCartDiscountValueSaved,
                   builder: (context, snapshot) {
                     return Text('-${padPriceDecimals(snapshot.data ?? 0)} PLN',
                         style: TextStyle(

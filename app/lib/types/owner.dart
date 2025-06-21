@@ -1,4 +1,4 @@
-import 'package:excerbuys/types/delivery.dart';
+import 'package:excerbuys/types/shop/delivery.dart';
 import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 

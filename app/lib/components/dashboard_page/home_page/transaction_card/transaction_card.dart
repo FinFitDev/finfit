@@ -88,6 +88,7 @@ class _TransactionCardState extends State<TransactionCard> {
                                 ? 'assets/svg/receiveArrow.svg'
                                 : 'assets/svg/sendArrow.svg',
                             size: 20,
+                            ratio: 0.7,
                             backgroundColor: color,
                           ))
                       : SizedBox.shrink()

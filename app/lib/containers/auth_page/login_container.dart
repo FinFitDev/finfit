@@ -136,41 +136,67 @@ class _LoginContainerState extends State<LoginContainer> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(children: [
-            InputWithIcon(
-              leftIcon: 'assets/svg/login.svg',
-              placeholder: 'Login',
-              onChange: (String val) {
-                setState(() {
-                  _formFieldsState[LOGIN_FIELD_TYPE.LOGIN] = val;
-                  _formErrorsState[LOGIN_FIELD_TYPE.LOGIN] = null;
-                });
-              },
-              error: _formErrorsState[LOGIN_FIELD_TYPE.LOGIN],
-              disabled: _loading,
-              borderRadius: 10,
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(children: [
+                Container(
+                    margin: EdgeInsets.only(top: 30, bottom: 60),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Log in below',
+                          style: TextStyle(
+                              fontSize: 32, fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          'And continue your journey with FinFit',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w400,
+                              color: colors.primaryFixedDim),
+                        ),
+                      ],
+                    )),
+                InputWithIcon(
+                  outsideLabel: 'Login',
+                  placeholder: 'Login',
+                  onChange: (String val) {
+                    setState(() {
+                      _formFieldsState[LOGIN_FIELD_TYPE.LOGIN] = val;
+                      _formErrorsState[LOGIN_FIELD_TYPE.LOGIN] = null;
+                    });
+                  },
+                  error: _formErrorsState[LOGIN_FIELD_TYPE.LOGIN],
+                  disabled: _loading,
+                  borderRadius: 10,
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                InputWithIcon(
+                  outsideLabel: 'Password',
+                  placeholder: 'Password',
+                  onChange: (String val) {
+                    setState(() {
+                      _formFieldsState[LOGIN_FIELD_TYPE.PASSWORD] = val;
+                      _formErrorsState[LOGIN_FIELD_TYPE.PASSWORD] = null;
+                    });
+                  },
+                  error: _formErrorsState[LOGIN_FIELD_TYPE.PASSWORD],
+                  isPassword: true,
+                  disabled: _loading,
+                  borderRadius: 10,
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                loginOptions(colors),
+              ]),
             ),
-            SizedBox(
-              height: 16,
-            ),
-            InputWithIcon(
-              leftIcon: 'assets/svg/padlock.svg',
-              placeholder: 'Password',
-              onChange: (String val) {
-                setState(() {
-                  _formFieldsState[LOGIN_FIELD_TYPE.PASSWORD] = val;
-                  _formErrorsState[LOGIN_FIELD_TYPE.PASSWORD] = null;
-                });
-              },
-              error: _formErrorsState[LOGIN_FIELD_TYPE.PASSWORD],
-              isPassword: true,
-              disabled: _loading,
-              borderRadius: 10,
-            ),
-            loginOptions(colors),
-          ]),
-          SizedBox(
-            height: 16,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -178,7 +204,7 @@ class _LoginContainerState extends State<LoginContainer> {
               RippleWrapper(
                   child: Container(
                     margin: EdgeInsets.only(left: 10),
-                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    padding: const EdgeInsets.only(top: 16, bottom: 20),
                     child: Text(
                       'Forgot your password?',
                       style: TextStyle(
