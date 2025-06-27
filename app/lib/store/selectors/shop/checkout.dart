@@ -30,3 +30,10 @@ double getTotalDiscountSavings(List<ICartItem> cartItems) {
           ((item.getPrice(isEligible: false) - item.getPrice()) *
               item.quantity));
 }
+
+List<IOrder> getValidOrders(List<ICartItem> cartItems, List<IOrder> orders) {
+  return orders.where((order) {
+    return order.cartItemsIds.every(
+        (cartItemId) => cartItems.any((item) => item.uuid == cartItemId));
+  }).toList();
+}

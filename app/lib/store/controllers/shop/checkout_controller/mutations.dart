@@ -11,6 +11,7 @@ extension CheckoutControllerMutations on CheckoutController {
     if (!currentItems.any((i) => i.isEqualParamsSet(item))) {
       _cartItems.add([...currentItems, item]);
       saveCartStateToStorage();
+      removeOrderByCartItemsOwnerId(item);
     }
   }
 
@@ -18,6 +19,8 @@ extension CheckoutControllerMutations on CheckoutController {
     final currentItems = cartItems;
     final itemIndex = currentItems.indexWhere((i) => i.uuid == itemId);
     if (itemIndex == -1) return;
+
+    removeOrderByCartItemsId(itemId);
 
     final itemToRemove = currentItems[itemIndex];
 
@@ -53,6 +56,8 @@ extension CheckoutControllerMutations on CheckoutController {
     final currentItems = cartItems;
     final itemIndex = currentItems.indexWhere((i) => i.uuid == cartItemId);
     if (itemIndex != -1) {
+      removeOrderByCartItemsId(cartItemId);
+
       final updatedItems = List<ICartItem>.from(currentItems);
       final currentItem = currentItems[itemIndex];
 
@@ -93,6 +98,8 @@ extension CheckoutControllerMutations on CheckoutController {
     final itemIndex = currentItems.indexWhere((i) => i.uuid == cartItemId);
     if (itemIndex == -1) return;
 
+    removeOrderByCartItemsId(cartItemId);
+
     userBalanceMinusCartCost.first.then((balanceLeft) {
       final currentItem = currentItems[itemIndex];
       final updatedItems = List<ICartItem>.from(currentItems);
@@ -131,5 +138,104 @@ extension CheckoutControllerMutations on CheckoutController {
   setUserOrderData(IUserOrderData? data) {
     _userOrderData.add(data);
     saveUserOrderDataToStorage();
+  }
+
+  setOrders(List<IOrder> orders, {bool saveToStorage = true}) {
+    _orders.add(orders);
+    if (saveToStorage) saveOrdersDataToStorage();
+  }
+
+  addOrder(IOrder order) {
+    final currentOrders = orders;
+    if (currentOrders.contains(order)) {
+      return;
+    }
+    setOrders([...currentOrders, order]);
+  }
+
+  void removeOrderByCartItemsOwnerId(ICartItem cartItem) {
+    final currentOrders = orders;
+
+    final orderIndex = currentOrders.indexWhere((o) {
+      // get first one only because all cart items in order should have the same owner
+      final cartItemId = o.cartItemsIds.isNotEmpty ? o.cartItemsIds[0] : null;
+      if (cartItemId == null) return false;
+
+      final matchedCartItem = cartItems
+          .where(
+            (item) => item.uuid == cartItemId,
+          )
+          .firstOrNull;
+
+      return matchedCartItem?.product.owner.uuid == cartItem.product.owner.uuid;
+    });
+
+    if (orderIndex != -1) {
+      removeOrder(currentOrders[orderIndex].uuid);
+    }
+  }
+
+  removeOrderByCartItemsId(String cartItemId) {
+    final currentOrders = orders;
+    final orderIndex =
+        currentOrders.indexWhere((o) => o.containsItem(cartItemId));
+    if (orderIndex != -1) {
+      removeOrder(currentOrders[orderIndex].uuid);
+    }
+  }
+
+  removeOrder(String orderId) {
+    final currentOrders = orders;
+    final orderIndex = currentOrders.indexWhere((o) => o.uuid == orderId);
+    if (orderIndex != -1) {
+      final updatedOrders = List<IOrder>.from(currentOrders)
+        ..removeAt(orderIndex);
+      setOrders(updatedOrders);
+    }
+  }
+
+  changeOrderDeliveryDetails(
+      String orderId, IDeliveryDetails? deliveryDetails) {
+    final currentOrders = orders;
+    final orderIndex = currentOrders.indexWhere((o) => o.uuid == orderId);
+    if (orderIndex != -1) {
+      final updatedOrder = currentOrders[orderIndex].copyWith(
+        deliveryDetails: deliveryDetails,
+      );
+      final updatedOrders = List<IOrder>.from(currentOrders)
+        ..[orderIndex] = updatedOrder;
+      setOrders(updatedOrders);
+    }
+  }
+
+  changeOrderUserData(String orderId, IUserOrderData? userData) {
+    final currentOrders = orders;
+    final orderIndex = currentOrders.indexWhere((o) => o.uuid == orderId);
+    if (orderIndex != -1) {
+      final updatedOrder = currentOrders[orderIndex].copyWith(
+        userData: userData,
+      );
+      final updatedOrders = List<IOrder>.from(currentOrders)
+        ..[orderIndex] = updatedOrder;
+      setOrders(updatedOrders);
+    }
+  }
+
+  setCurrentlyProcessedOrderId(List<ICartItem>? items) {
+    final IOrder? foundOrder = orders
+        .where(
+          (order) => order.isEqualItems(items ?? []),
+        )
+        .firstOrNull;
+
+    if (foundOrder != null) {
+      _currentlyProcessedOrderId.add(foundOrder.uuid);
+    } else {
+      _currentlyProcessedOrderId.add(null);
+    }
+  }
+
+  setCurrentlyProcessedDeliveryGroup(IDeliveryMethod? deliveryGroup) {
+    _currentlyProcessedDeliveryMethod.add(deliveryGroup);
   }
 }

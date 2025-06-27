@@ -141,3 +141,13 @@ List<T> selectByIndices<T>(List<T> items, List<int> indices) {
       .map((i) => items[i])
       .toList();
 }
+
+bool areListsEqualContent<T>(List<T> list1, List<T> list2) {
+  if (list1.length != list2.length) return false;
+
+  if (list1.every((el) => list2.contains(el)) &&
+      list2.every((el) => list1.contains(el))) {
+    return true;
+  }
+  return false;
+}

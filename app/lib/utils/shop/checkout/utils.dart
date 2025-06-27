@@ -1,8 +1,10 @@
 import 'dart:math';
 
+import 'package:excerbuys/store/controllers/shop/checkout_controller/checkout_controller.dart';
 import 'package:excerbuys/types/shop/checkout.dart';
 import 'package:excerbuys/types/shop/delivery.dart';
 import 'package:excerbuys/types/shop/shop.dart';
+import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -10,11 +12,14 @@ Map<String, List<ICartItem>> groupProductsByOwner(List<ICartItem> cartItems) {
   final Map<String, List<ICartItem>> groupedItems = {};
 
   for (final item in cartItems) {
-    final ownerId = item.product.owner.uuid;
-    if (groupedItems.containsKey(ownerId)) {
-      groupedItems[ownerId]!.add(item);
+    final baseOwnerId = item.product.owner.uuid;
+    final key =
+        item.product.isDigital == true ? '${baseOwnerId}_digital' : baseOwnerId;
+
+    if (groupedItems.containsKey(key)) {
+      groupedItems[key]!.add(item);
     } else {
-      groupedItems[ownerId] = [item];
+      groupedItems[key] = [item];
     }
   }
 
@@ -40,11 +45,17 @@ List<IDeliveryGroup> createDeliveryGroups(List<ICartItem> cartItems) {
             .cast<IDeliveryMethod>() ??
         [];
 
+    checkoutController.addOrder(IOrder(
+        cartItemsIds: entry.value.map((item) => item.uuid!).toList(),
+        groupId: entry.key));
+
     return IDeliveryGroup(
       owner: owner,
       items: entry.value,
       uuid: entry.key,
-      deliveryMethods: deliveryMethods,
+      deliveryMethods: entry.key.contains('_digital')
+          ? [DIGITAL_PRODUCT_DELIVERY_METHOD]
+          : deliveryMethods,
     );
   }).toList();
 }

@@ -14,4 +14,17 @@ extension CheckoutControllerSelectors on CheckoutController {
       userController.userBalanceStream,
       totalCartFinpointsCostStream,
       getUserBalanceMinusCartCost);
+
+  Stream<List<IOrder>> get filteredOrdersStream =>
+      Rx.combineLatest2(cartItemsStream, ordersStream, getValidOrders);
+
+  Stream<({String? orderId, IDeliveryMethod? deliveryMethod})>
+      get combinedProcessingStream => Rx.combineLatest2(
+            _currentlyProcessedOrderId.stream,
+            _currentlyProcessedDeliveryMethod.stream,
+            (orderId, deliveryMethod) => (
+              orderId: orderId,
+              deliveryMethod: deliveryMethod,
+            ),
+          );
 }

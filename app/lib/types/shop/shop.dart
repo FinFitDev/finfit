@@ -258,4 +258,12 @@ class IDeliveryGroup {
   int get totalQuantity {
     return items.fold(0, (sum, item) => sum + item.quantity);
   }
+
+  IOrder? getMatchingOrder(List<IOrder> orders) {
+    return orders
+        .where(
+          (order) => order.isEqualItems(items),
+        )
+        .firstOrNull;
+  }
 }

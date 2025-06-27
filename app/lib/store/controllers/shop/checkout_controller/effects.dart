@@ -34,4 +34,22 @@ extension CheckoutControllerEffects on CheckoutController {
       setUserOrderData(IUserOrderData.fromJson(parsedData));
     }
   }
+
+// orders - delivery, cart items and user data for checkout
+  Future<void> saveOrdersDataToStorage() async {
+    await storageController.saveStateLocal(
+        ORDERS_DATA_KEY, jsonEncode(orders.map((el) => el.toJson()).toList()));
+  }
+
+  Future<void> loadOrdersDataFromStorage() async {
+    final String? serializedOrdersData =
+        await storageController.loadStateLocal(ORDERS_DATA_KEY);
+
+    if (serializedOrdersData != null) {
+      final List<dynamic> parsedData = jsonDecode(serializedOrdersData);
+      final List<IOrder> ordersList =
+          parsedData.map((el) => IOrder.fromJson(el)).toList();
+      setOrders(ordersList, saveToStorage: false);
+    }
+  }
 }

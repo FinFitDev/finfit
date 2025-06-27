@@ -2,6 +2,7 @@ import 'package:excerbuys/components/shared/activity_icon.dart';
 import 'package:excerbuys/components/shared/image_component.dart';
 import 'package:excerbuys/components/shared/indicators/sliders/text_overflow_slider.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/checkout/delivery/delivery_method_description.dart';
+import 'package:excerbuys/types/shop/delivery.dart';
 import 'package:excerbuys/types/shop/shop.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
@@ -11,10 +12,12 @@ import 'package:flutter/material.dart';
 class DeliveryGroup extends StatefulWidget {
   final IDeliveryGroup deliveryGroup;
   final void Function(String) onClickDeliveryMethod;
+  final IDeliveryDetails? chosenDeliveryDetails;
   const DeliveryGroup(
       {super.key,
       required this.deliveryGroup,
-      required this.onClickDeliveryMethod});
+      required this.onClickDeliveryMethod,
+      this.chosenDeliveryDetails});
 
   @override
   State<DeliveryGroup> createState() => _DeliveryGroupState();
@@ -128,7 +131,10 @@ class _DeliveryGroupState extends State<DeliveryGroup> {
                                                   Duration(seconds: 2),
                                             ),
                                           )
-                                        : method.uuid == SHOP_DELIVERY_DB_UUID
+                                        : method.uuid ==
+                                                    SHOP_DELIVERY_DB_UUID ||
+                                                method.uuid ==
+                                                    DIGITAL_PRODUCT_DELIVERY_UUID
                                             ? Expanded(
                                                 child: Row(
                                                   mainAxisAlignment:
@@ -202,11 +208,17 @@ class _DeliveryGroupState extends State<DeliveryGroup> {
                     style:
                         TextStyle(fontSize: 13, color: colors.primaryFixedDim)),
                 TextSpan(
-                    text: '----',
+                    text: widget.deliveryGroup.uuid.contains('_digital')
+                        ? '0 PLN'
+                        : widget.chosenDeliveryDetails == null
+                            ? 'Nie wybrano'
+                            : '10 PLN',
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 13,
-                        color: colors.tertiary)),
+                        color: widget.chosenDeliveryDetails == null
+                            ? colors.errorContainer
+                            : colors.tertiary)),
               ]))
             ],
           ),

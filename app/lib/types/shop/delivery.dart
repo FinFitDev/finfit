@@ -59,6 +59,45 @@ class IDeliveryMethod {
   }
 }
 
+class IDeliveryDetails {
+  final IDeliveryMethod deliveryMethod;
+  final String? deliveryPointId;
+  final String? deliveryPointName;
+  final String? deliveryPointDescription;
+  final IAddressDetails? addressDetails;
+
+  IDeliveryDetails(
+      {required this.deliveryMethod,
+      this.deliveryPointId,
+      this.deliveryPointName,
+      this.addressDetails,
+      this.deliveryPointDescription});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'delivery_method': deliveryMethod.toJson(),
+      'delivery_point_id': deliveryPointId,
+      'delivery_point_name': deliveryPointName,
+      'address_details': addressDetails?.toJson(),
+      'delivery_point_description': deliveryPointDescription,
+    };
+  }
+
+  factory IDeliveryDetails.fromJson(Map<String, dynamic> json) {
+    return IDeliveryDetails(
+      deliveryMethod: json['delivery_method'] != null
+          ? IDeliveryMethod.fromJson(json['delivery_method'])
+          : IDeliveryMethod(uuid: '', name: ''),
+      deliveryPointId: json['delivery_point_id'],
+      deliveryPointName: json['delivery_point_name'],
+      addressDetails: json['address_details'] != null
+          ? IAddressDetails.fromJson(json['address_details'])
+          : null,
+      deliveryPointDescription: json['delivery_point_description'],
+    );
+  }
+}
+
 class IAddressDetails {
   final String country;
   final String city;

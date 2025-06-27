@@ -1,6 +1,7 @@
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/shop/delivery.dart';
 import 'package:excerbuys/types/shop/product.dart';
+import 'package:excerbuys/utils/utils.dart';
 import 'package:uuid/v4.dart';
 
 class ICartItem implements HasQuantity {
@@ -146,32 +147,76 @@ class IUserOrderData {
 
 class IOrder {
   final String uuid;
+  final String groupId;
   final List<String> cartItemsIds;
-  final IDeliveryMethod deliveryMethod;
-  final IUserOrderData userData;
+  final IDeliveryDetails? deliveryDetails;
+  final IUserOrderData? userData;
 
   IOrder(
       {required this.cartItemsIds,
-      required this.deliveryMethod,
-      required this.userData,
+      this.deliveryDetails,
+      this.userData,
+      required this.groupId,
       String? uuid})
       : uuid = uuid ?? UuidV4().generate();
 
   factory IOrder.fromJson(Map<String, dynamic> json) {
     return IOrder(
-      uuid: json['uuid'],
-      cartItemsIds: List<String>.from(json['cartItemsIds']),
-      deliveryMethod: IDeliveryMethod.fromJson(json['deliveryMethod']),
-      userData: IUserOrderData.fromJson(json['userData']),
-    );
+        uuid: json['uuid'],
+        cartItemsIds: List<String>.from(json['cart_items_ids']),
+        deliveryDetails: json['delivery_details'] != null
+            ? IDeliveryDetails.fromJson(json['delivery_details'])
+            : null,
+        userData: json['user_data'] != null
+            ? IUserOrderData.fromJson(json['user_data'])
+            : null,
+        groupId: json['group_id']);
   }
 
   Map<String, dynamic> toJson() {
     return {
       'uuid': uuid,
-      'cartItemsIds': cartItemsIds,
-      'deliveryMethod': deliveryMethod.toJson(),
-      'userData': userData.toJson(),
+      'cart_items_ids': cartItemsIds,
+      'delivery_details': deliveryDetails?.toJson(),
+      'user_data': userData?.toJson(),
+      'group_id': groupId
     };
+  }
+
+  IOrder copyWith(
+      {String? uuid,
+      List<String>? cartItemsIds,
+      IDeliveryDetails? deliveryDetails,
+      IUserOrderData? userData,
+      String? groupId}) {
+    return IOrder(
+        uuid: uuid ?? this.uuid,
+        cartItemsIds: cartItemsIds ?? this.cartItemsIds,
+        deliveryDetails: deliveryDetails ?? this.deliveryDetails,
+        userData: userData ?? this.userData,
+        groupId: groupId ?? this.groupId);
+  }
+
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is IOrder &&
+          (uuid == other.uuid ||
+              areListsEqualContent(cartItemsIds, other.cartItemsIds));
+
+  @override
+  int get hashCode => Object.hashAll(cartItemsIds);
+
+  bool isEqualItems(List<ICartItem> items) {
+    if (cartItemsIds.length != items.length) return false;
+
+    for (final item in items) {
+      if (!cartItemsIds.contains(item.uuid)) return false;
+    }
+
+    return true;
+  }
+
+  bool containsItem(String itemId) {
+    return cartItemsIds.contains(itemId);
   }
 }

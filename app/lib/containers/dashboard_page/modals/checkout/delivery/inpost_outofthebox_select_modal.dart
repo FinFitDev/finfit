@@ -3,7 +3,9 @@ import 'package:dio/dio.dart';
 import 'package:excerbuys/components/shared/map/map_handler.dart';
 import 'package:excerbuys/components/shop_page/checkout/map/delivery_point_search_component.dart';
 import 'package:excerbuys/components/shop_page/checkout/map/location_selected_modal.dart';
+import 'package:excerbuys/store/controllers/shop/checkout_controller/checkout_controller.dart';
 import 'package:excerbuys/types/shop/delivery.dart';
+import 'package:excerbuys/types/shop/shop.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
 import 'package:excerbuys/utils/shop/checkout/utils.dart';
@@ -183,19 +185,36 @@ class _InpostOutoftheboxSelectModalState
               );
             },
           ),
-          LocationSelectedModal(
-            onClickCancel: () {
-              setState(() {
-                _selectedPoint = null;
-              });
-            },
-            onClickSelect: () {
-              if (_selectedPoint != null) {
-                widget.nextPage();
-              }
-            },
-            selectedPoint: _selectedPoint,
-          ),
+          StreamBuilder<({String? orderId, IDeliveryMethod? deliveryMethod})>(
+              stream: checkoutController.combinedProcessingStream,
+              builder: (context, snapshot) {
+                return LocationSelectedModal(
+                  onClickCancel: () {
+                    setState(() {
+                      _selectedPoint = null;
+                    });
+                  },
+                  onClickSelect: () {
+                    if (_selectedPoint != null &&
+                        snapshot.data?.deliveryMethod != null &&
+                        snapshot.data?.orderId != null) {
+                      final IDeliveryDetails deliveryDetails = IDeliveryDetails(
+                        deliveryMethod: snapshot.data!.deliveryMethod!,
+                        deliveryPointId: _selectedPoint?.id,
+                        deliveryPointDescription: _selectedPoint?.description,
+                        deliveryPointName: _selectedPoint?.name,
+                        addressDetails: _selectedPoint?.address,
+                      );
+
+                      checkoutController.changeOrderDeliveryDetails(
+                          snapshot.data!.orderId!, deliveryDetails);
+
+                      widget.nextPage();
+                    }
+                  },
+                  selectedPoint: _selectedPoint,
+                );
+              }),
           DeliveryPointSearchComponent<dynamic>(
             centerLocation: () {
               _mapController.move(myLocation ?? WARSAW_COORDINATES, 10);
