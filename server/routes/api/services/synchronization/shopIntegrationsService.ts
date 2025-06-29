@@ -1,6 +1,6 @@
 import axios from "axios";
 import { convertStockListToProducts } from "../../../../shared/utils";
-import { StockItem } from "../../../../shared/types";
+import { StockItem } from "../../../../shared/types/synchronization";
 
 export const synchronizePrestashopQuantities = async (
   shopUrl: string,

@@ -9,7 +9,7 @@ import {
   updatePointsScore,
   updatePointsScoreWithUpdateTimestamp,
 } from "../../../models/userModel";
-import { IUserNoPassword } from "../../../shared/types";
+import { IUserNoPassword } from "../../../shared/types/auth";
 
 export const getUserById = async (user_id: string) => {
   const foundUser = await fetchUserById(user_id);

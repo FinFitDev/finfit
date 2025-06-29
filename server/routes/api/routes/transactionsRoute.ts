@@ -3,7 +3,7 @@ import {
   addTransactionsToDb,
   getTransactions,
 } from "../services/transactionsService";
-import { RequestWithPayload } from "../../../shared/types";
+import { RequestWithPayload } from "../../../shared/types/general";
 
 export const addTransactionsHandler = async (req: Request, res: Response) => {
   try {

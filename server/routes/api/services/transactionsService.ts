@@ -4,10 +4,9 @@ import {
   insertTransactions,
 } from "../../../models/transactionsModel";
 import {
-  ITrainingEntryResponse,
   ITransactionEntryResponse,
   ITransactionInsert,
-} from "../../../shared/types";
+} from "../../../shared/types/shop";
 
 export const addTransactionsToDb = async (
   transactions: ITransactionInsert[]

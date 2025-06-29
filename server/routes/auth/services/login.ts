@@ -8,9 +8,9 @@ import {
   insertRefreshToken,
 } from "../../../models/tokenModel";
 import { IGoogleLoginPayload, ILoginPayload, ILoginResponse } from "../types";
-import { IUser } from "../../../shared/types";
 import { isUserGoogleLogin } from "../../../shared/utils";
 import { sendVerificationEmail } from "../../../shared/utils/email";
+import { IUser } from "../../../shared/types/auth";
 
 export const logInUser = async (
   user: ILoginPayload | IGoogleLoginPayload,

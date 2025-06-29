@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { RequestWithPayload } from "../../../shared/types";
 import {
   getUserById,
   getUsersByIds,
@@ -9,6 +8,7 @@ import {
   updateUserPointsScore,
   updateUserPointsScoreWithUpdateTimestamp,
 } from "../services/userService";
+import { RequestWithPayload } from "../../../shared/types/general";
 
 export const getUserByIdHandler = async (
   req: RequestWithPayload<undefined, { id: string }>,

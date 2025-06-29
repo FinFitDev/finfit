@@ -3,7 +3,6 @@ import { signUpUser } from "./services/signup";
 import { logInUser } from "./services/login";
 import { regenerateAccessTokenFromRefreshToken } from "./services/refresh";
 import { logOut } from "./services/logout";
-import { RequestWithPayload } from "../../shared/types";
 import { ILoginPayload, ISignupPayload } from "./types";
 import {
   resendEmailVerify,
@@ -18,6 +17,7 @@ import {
   resolveSendResetPasswordMail,
   verifyResetCode,
 } from "./services/resetPassword";
+import { RequestWithPayload } from "../../shared/types/general";
 
 const authRouter: Router = express.Router();
 

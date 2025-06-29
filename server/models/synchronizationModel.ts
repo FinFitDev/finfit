@@ -1,4 +1,4 @@
-import { IAllShops, IProductVariant, SHOP_PROVIDER } from "../shared/types";
+import { IAllShops, SHOP_PROVIDER } from "../shared/types/synchronization";
 import { pool } from "../shared/utils/db";
 
 export const fetchProductOwnersWithAvailableAPI = async () => {

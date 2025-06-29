@@ -22,6 +22,7 @@ import {
   addTransactionsHandler,
   getTransactionsHandler,
 } from "./routes/transactionsRoute";
+import { createCartOrder } from "./routes/orderRoute";
 
 const apiRouter: Router = express.Router();
 
@@ -54,6 +55,9 @@ apiRouter.get("/product_owners", getProductOwnersHandler);
 apiRouter.post("/transactions", addTransactionsHandler);
 
 apiRouter.get("/transactions/:user_id", getTransactionsHandler);
+
+apiRouter.post("/orders", createCartOrder);
+
 // apiRouter.get(
 //   "/steps/:id",
 //   async (req: RequestWithPayload<undefined, { id: string }>, res: Response) => {

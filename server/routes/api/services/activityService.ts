@@ -11,13 +11,13 @@ import {
   insertTraining,
 } from "../../../models/activityModel";
 import { ONE_DAY_MILLISECONDS } from "../../../shared/constants";
+
+import { aggregateDailyDataObject } from "../../../shared/utils";
 import {
-  IDailyStepEntry,
   IHourlyStepEntry,
   ITrainingEntry,
   ITrainingEntryResponse,
-} from "../../../shared/types";
-import { aggregateDailyDataObject } from "../../../shared/utils";
+} from "../../../shared/types/activity";
 
 export const getUserTrainings = async (
   userId: string,

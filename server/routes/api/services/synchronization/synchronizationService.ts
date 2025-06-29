@@ -7,12 +7,13 @@ import {
   updateStockFromAllShops,
 } from "../../../../models/synchronizationModel";
 import { decryptShopApiParams } from "../../../../shared/utils";
+
+import { synchronizePrestashopQuantities } from "./shopIntegrationsService";
 import {
   IAllShops,
   IShopApiData,
   SHOP_PROVIDER,
-} from "../../../../shared/types";
-import { synchronizePrestashopQuantities } from "./shopIntegrationsService";
+} from "../../../../shared/types/synchronization";
 
 export const synchronizeQuantities = async () => {
   try {

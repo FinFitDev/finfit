@@ -1,4 +1,4 @@
-import { IAccessToken, IRefreshToken } from "../../shared/types";
+import { IAccessToken, IRefreshToken } from "../../shared/types/auth";
 
 export interface ILoginPayload {
   login: string;

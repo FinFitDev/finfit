@@ -7,7 +7,7 @@ import {
   fetchTokenFromDb,
   ITokenData,
 } from "../../../models/tokenModel";
-import { IAccessToken, IRefreshToken } from "../../../shared/types";
+import { IAccessToken, IRefreshToken } from "../../../shared/types/auth";
 
 export const regenerateAccessTokenFromRefreshToken = async (
   refresh_token: IRefreshToken

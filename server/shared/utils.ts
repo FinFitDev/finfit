@@ -4,14 +4,14 @@ import {
   ILoginPayload,
   ISignupPayload,
 } from "../routes/auth/types";
+
+import crypto from "crypto";
+import { IDailyStepEntry, IHourlyStepEntry } from "./types/activity";
 import {
-  IDailyStepEntry,
-  IHourlyStepEntry,
   IProductQuantitiesData,
   IShopApiData,
   StockItem,
-} from "./types";
-import crypto from "crypto";
+} from "./types/synchronization";
 
 export const isUserGoogleLogin = (
   user: ILoginPayload | IGoogleLoginPayload

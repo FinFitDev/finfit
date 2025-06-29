@@ -2,7 +2,7 @@ import {
   IAccessToken,
   IEmailVerificationToken,
   IRefreshToken,
-} from "../shared/types";
+} from "../shared/types/auth";
 import { pool } from "../shared/utils/db";
 import jwt from "jsonwebtoken";
 

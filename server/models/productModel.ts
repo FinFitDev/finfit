@@ -1,4 +1,4 @@
-import { IFiltersQuery, ORDER_TYPE } from "../shared/types";
+import { IFiltersQuery, ORDER_TYPE } from "../shared/types/shop";
 import { pool } from "../shared/utils/db";
 
 export const fetchProductsByFilters = async (query: IFiltersQuery) => {

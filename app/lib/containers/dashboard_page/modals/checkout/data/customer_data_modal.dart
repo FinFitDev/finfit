@@ -457,7 +457,7 @@ class _CustomerDataModalState extends State<CustomerDataModal> {
                         phoneNumber:
                             _formFieldsState[USER_DATA_INPUTS.PHONE_NUMBER]!,
                         address: IAddressDetails(
-                            country: 'Poland',
+                            country: 'PL',
                             city: _formFieldsState[USER_DATA_INPUTS.CITY]!,
                             street: _formFieldsState[USER_DATA_INPUTS.STREET]!,
                             postCode:

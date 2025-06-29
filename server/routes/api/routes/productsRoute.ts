@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { RequestWithPayload } from "../../../shared/types";
 import {
   getAllAvailableCategories,
   getHomeProducts,
@@ -8,6 +7,7 @@ import {
   getProductsForProductOwner,
 } from "../services/productsService";
 import { getProductOwnersBySearch } from "../services/productOwnerService";
+import { RequestWithPayload } from "../../../shared/types/general";
 
 export const getHomeProductsHandler = async (
   req: RequestWithPayload<undefined, { id: string }>,

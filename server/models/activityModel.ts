@@ -2,7 +2,7 @@ import {
   IDailyStepEntry,
   IHourlyStepEntry,
   ITrainingEntry,
-} from "../shared/types";
+} from "../shared/types/activity";
 import { pool } from "../shared/utils/db";
 
 export const fetchUserTrainings = async (

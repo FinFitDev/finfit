@@ -1,4 +1,4 @@
-import { SHOP_PROVIDER } from "./types";
+import { SHOP_PROVIDER } from "./types/synchronization";
 
 export const ANDROID_WEB_CLIENT_ID =
   "675848705064-ope52veb5ql854hdlkm044sk37j6lkt8.apps.googleusercontent.com";

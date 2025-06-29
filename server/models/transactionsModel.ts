@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
-import { ITransactionInsert } from "../shared/types";
 import { pool } from "../shared/utils/db";
+import { ITransactionInsert } from "../shared/types/shop";
 
 export const fetchTransactions = async (
   userId: string,

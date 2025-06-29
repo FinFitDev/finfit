@@ -1,4 +1,4 @@
-import { IResetPasswordCode } from "../shared/types";
+import { IResetPasswordCode } from "../shared/types/auth";
 import { pool } from "../shared/utils/db";
 
 // Used to generate a correct code for the user

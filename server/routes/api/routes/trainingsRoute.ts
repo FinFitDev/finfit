@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { RequestWithPayload } from "../../../shared/types";
 import { addTrainings, getUserTrainings } from "../services/activityService";
+import { RequestWithPayload } from "../../../shared/types/general";
 
 export const getTrainingsForUserIdHadler = async (
   req: RequestWithPayload<undefined, { id: string }>,

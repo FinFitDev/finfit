@@ -17,3 +17,16 @@ export const fetchProductOwnersByRegex = async (
 
   return response;
 };
+
+export const fetchProductOwnerAPIById = async (uuid: string) => {
+  const response = await pool.query(
+    `SELECT uuid, api_key, api_url, shop_type FROM product_owners
+    WHERE api_url IS NOT NULL 
+    AND api_key IS NOT NULL
+    AND shop_type IS NOT NULL
+    AND uuid = $1
+      `,
+    [uuid]
+  );
+  return response.rows;
+};
