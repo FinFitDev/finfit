@@ -60,9 +60,11 @@ extension TransactionsControllerEffects on TransactionsController {
         addTransactions(values);
         productsController.addProducts({
           for (final entry in values.entries)
-            if (entry.value.product != null)
-              entry.value.product!.uuid: entry.value.product!
+            if (entry.value.products != null)
+              for (final product in entry.value.products!)
+                product.product.uuid: product.product,
         });
+
         setLazyLoadOffset(allTransactions.content.length);
       }
 

@@ -196,7 +196,7 @@ export const transferPointsTransaction = async (
         {
           second_user_ids: recipientsIds,
           user_id: userId,
-          amount_finpoints: fractionAmount,
+          amount_finpoints: Math.round(totalAmount),
         },
       ],
       client

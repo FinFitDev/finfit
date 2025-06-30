@@ -1,9 +1,7 @@
 import 'package:excerbuys/components/shared/activity_icon.dart';
-import 'package:excerbuys/components/shared/image_component.dart';
-import 'package:excerbuys/components/shared/profile_image_generator.dart';
+import 'package:excerbuys/components/shared/indicators/images_row.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/types/enums.dart';
-import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -14,12 +12,12 @@ class TransactionCard extends StatefulWidget {
   final TRANSACTION_TYPE type;
 
   // product purchase
-  final String? productImage;
-  final double? productPrice;
+  final List<String>? productImages;
+  final double? totalProductPrice;
 
   // second user interaction
-  final String? userImage;
-  final String? username;
+  final List<String>? userImages;
+  final List<String>? usernames;
 
   const TransactionCard(
       {super.key,
@@ -27,10 +25,10 @@ class TransactionCard extends StatefulWidget {
       required this.onPressed,
       required this.date,
       required this.type,
-      this.productImage,
-      this.productPrice,
-      this.userImage,
-      this.username});
+      this.productImages,
+      this.totalProductPrice,
+      this.userImages,
+      this.usernames});
 
   @override
   State<TransactionCard> createState() => _TransactionCardState();
@@ -60,6 +58,9 @@ class _TransactionCardState extends State<TransactionCard> {
         ? colors.error
         : colors.secondary;
 
+    final imageCount =
+        widget.productImages?.length ?? widget.userImages?.length ?? 0;
+
     return RippleWrapper(
       onPressed: widget.onPressed,
       child: Container(
@@ -71,13 +72,10 @@ class _TransactionCardState extends State<TransactionCard> {
               Stack(
                 children: [
                   widget.type == TRANSACTION_TYPE.PURCHASE
-                      ? ImageComponent(
-                          size: 50,
-                          image: widget.productImage,
-                        )
-                      : ProfileImageGenerator(
-                          size: 50,
-                          seed: widget.userImage,
+                      ? ImagesRow(images: widget.productImages!)
+                      : ImagesRow(
+                          images: widget.userImages!,
+                          isProfile: true,
                         ),
                   widget.type != TRANSACTION_TYPE.PURCHASE
                       ? Positioned(
@@ -94,9 +92,7 @@ class _TransactionCardState extends State<TransactionCard> {
                       : SizedBox.shrink()
                 ],
               ),
-              SizedBox(
-                width: 12,
-              ),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -133,17 +129,37 @@ class _TransactionCardState extends State<TransactionCard> {
                     Row(
                       children: [
                         widget.type == TRANSACTION_TYPE.PURCHASE
-                            ? Text(
-                                'Paid ${widget.productPrice?.toStringAsFixed(2)} PLN',
-                                style: TextStyle(
-                                  color: colors.tertiaryContainer,
-                                  fontSize: 13,
-                                ),
-                              )
+                            ? StreamBuilder<bool>(
+                                stream: dashboardController.balanceHiddenStream,
+                                builder: (context, snapshot) {
+                                  final bool isHidden = snapshot.data ?? false;
+
+                                  return Text(
+                                    'Zapłacono ${isHidden ? '*****' : widget.totalProductPrice?.toStringAsFixed(2)} PLN',
+                                    style: TextStyle(
+                                      color: colors.tertiaryContainer,
+                                      fontSize: 13,
+                                    ),
+                                  );
+                                })
                             : widget.type == TRANSACTION_TYPE.RECEIVE ||
                                     widget.type == TRANSACTION_TYPE.SEND
                                 ? Text(
-                                    widget.username ?? 'Unknown',
+                                    (widget.usernames != null &&
+                                            widget.usernames!.isNotEmpty)
+                                        ? widget.usernames!
+                                                .sublist(
+                                                    0,
+                                                    widget.usernames!.length >=
+                                                            2
+                                                        ? 2
+                                                        : widget
+                                                            .usernames!.length)
+                                                .join(', ') +
+                                            (widget.usernames!.length > 2
+                                                ? ' + ${(widget.usernames!.length - 2)}'
+                                                : '')
+                                        : 'Unknown',
                                     style: TextStyle(
                                       color: colors.tertiaryContainer,
                                       fontSize: 13,

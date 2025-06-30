@@ -4,7 +4,7 @@ import 'package:health/health.dart';
 import 'package:latlong2/latlong.dart';
 
 const String APP_TITLE = 'FinFit';
-const String BACKEND_BASE_URL = 'http://192.168.254.120:3000/';
+const String BACKEND_BASE_URL = 'http://172.20.10.10:3000/';
 GlobalKey<NavigatorState> NAVIGATOR_KEY = GlobalKey<NavigatorState>();
 RegExp EMAIL_REGEX = RegExp(r'^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$');
 RegExp PHONE_REGEX = RegExp(r'^\d{3} \d{3} \d{3}$');

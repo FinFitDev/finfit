@@ -37,15 +37,17 @@ class PositionWithBackground extends StatelessWidget {
           SizedBox(
             width: 8,
           ),
-          Text(
-            name,
-            overflow: TextOverflow.ellipsis,
-            style: textStyle ??
-                TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w300,
-                  color: colors.tertiary,
-                ),
+          Expanded(
+            child: Text(
+              name,
+              overflow: TextOverflow.ellipsis,
+              style: textStyle ??
+                  TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w300,
+                    color: colors.tertiary,
+                  ),
+            ),
           ),
         ],
       ),

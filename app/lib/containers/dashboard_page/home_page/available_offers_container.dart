@@ -39,7 +39,7 @@ class _AvailableOffersState extends State<AvailableOffers> {
 
       _scrollController.animateTo(
         nextOffset > maxScrollExtent ? 0 : nextOffset,
-        duration: const Duration(seconds: 1),
+        duration: Duration(seconds: nextOffset > maxScrollExtent ? 3 : 1),
         curve: Curves.ease,
       );
     });

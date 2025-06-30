@@ -1,7 +1,12 @@
+import 'dart:math';
+
+import 'package:excerbuys/components/dashboard_page/history_page/transaction_info_modal/transaction_info_products.dart';
+import 'package:excerbuys/components/dashboard_page/history_page/transaction_info_modal/transaction_info_users.dart';
 import 'package:excerbuys/components/shared/activity_icon.dart';
 import 'package:excerbuys/components/shared/buttons/copy_text.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/components/shared/image_component.dart';
+import 'package:excerbuys/components/shared/indicators/images_row.dart';
 import 'package:excerbuys/components/shared/indicators/labels/empty_data_modal.dart';
 import 'package:excerbuys/components/shared/list/list_component.dart';
 import 'package:excerbuys/components/shared/positions/position_with_background.dart';
@@ -40,9 +45,11 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
         transactionsController.allTransactions.content[widget.transactionId];
 
     // add product that are referenced in a transaction
-    if (foundTransaction?.product != null) {
-      productsController.addProducts(
-          {foundTransaction!.product!.uuid: foundTransaction.product!});
+    if (foundTransaction?.products != null) {
+      productsController.addProducts({
+        for (final entry in foundTransaction!.products!)
+          entry.product.uuid: entry.product
+      });
     }
 
     if (foundTransaction == null) {
@@ -87,6 +94,12 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
         ? colors.error
         : colors.secondary;
 
+    final isUsers = _transaction?.secondUsers != null &&
+        _transaction!.secondUsers!.isNotEmpty;
+
+    final isProducts =
+        _transaction?.products != null && _transaction!.products!.isNotEmpty;
+
     return Padding(
       padding: EdgeInsets.only(
         bottom:
@@ -117,14 +130,26 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                             Stack(
                               children: [
                                 _transactionType == TRANSACTION_TYPE.PURCHASE
-                                    ? ImageComponent(
-                                        size: 80,
-                                        image: _transaction?.product?.mainImage,
-                                      )
-                                    : ProfileImageGenerator(
-                                        size: 80,
-                                        seed: _transaction?.secondUser?.image,
-                                      ),
+                                    ? ImagesRow(
+                                        images: isProducts
+                                            ? _transaction!.products!
+                                                .map((product) =>
+                                                    product.product
+                                                        .getImageByVariantId(
+                                                            product
+                                                                .variantId) ??
+                                                    '')
+                                                .toList()
+                                            : [],
+                                        size: 80)
+                                    : ImagesRow(
+                                        images: isUsers
+                                            ? _transaction!.secondUsers!
+                                                .map((user) => user.image ?? '')
+                                                .toList()
+                                            : [],
+                                        isProfile: true,
+                                        size: 80),
                                 _transactionType != TRANSACTION_TYPE.PURCHASE
                                     ? Positioned(
                                         right: 0,
@@ -169,80 +194,83 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                           ],
                         ),
                         SizedBox(
-                          height: 32,
+                          height: 16,
                         ),
                         Expanded(
-                          child: Column(
-                            children: [
-                              StreamBuilder<bool>(
-                                  stream:
-                                      dashboardController.balanceHiddenStream,
-                                  builder: (context, snapshot) {
-                                    final bool isHidden =
-                                        snapshot.data ?? false;
-                                    return ListComponent(
-                                      data: {
-                                        'Status': 'Confirmed',
-                                        'Timestamp':
-                                            '${_transaction!.createdAt.hour}:${_transaction!.createdAt.minute.toString().padLeft(2, '0')}',
-                                        if (_transaction?.secondUser != null)
-                                          'Interacted with': Row(
-                                            children: [
-                                              PositionWithBackground(
-                                                name: _transaction?.secondUser
-                                                        ?.username ??
-                                                    'Unknown',
-                                                image: _transaction
-                                                    ?.secondUser?.image,
-                                                textStyle: TextStyle(
-                                                  color:
-                                                      colors.tertiaryContainer,
-                                                  fontSize: 12,
+                          child: SingleChildScrollView(
+                            padding: EdgeInsets.symmetric(vertical: 16),
+                            child: Column(
+                              children: [
+                                StreamBuilder<bool>(
+                                    stream:
+                                        dashboardController.balanceHiddenStream,
+                                    builder: (context, snapshot) {
+                                      final bool isHidden =
+                                          snapshot.data ?? false;
+                                      return Column(
+                                        children: [
+                                          ListComponent(
+                                            data: {
+                                              'Status':
+                                                  Row(spacing: 6, children: [
+                                                Text(
+                                                  'Potwierdzono',
+                                                  style: TextStyle(
+                                                      fontSize: 13,
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              255,
+                                                              105,
+                                                              190,
+                                                              149),
+                                                      fontWeight:
+                                                          FontWeight.w600),
                                                 ),
-                                              ),
-                                            ],
+                                                IconContainer(
+                                                  icon: 'assets/svg/tick.svg',
+                                                  size: 14,
+                                                  backgroundColor:
+                                                      const Color.fromARGB(
+                                                          255, 105, 190, 149),
+                                                  iconColor: colors.primary,
+                                                )
+                                              ]),
+                                              'Godzina':
+                                                  '${_transaction!.createdAt.hour}:${_transaction!.createdAt.minute.toString().padLeft(2, '0')}',
+                                              if (isUsers) 'Interakcja z': '',
+                                              if (isProducts) 'Produkty': ''
+                                            },
                                           ),
-                                        if (_transaction?.product != null)
-                                          'Product': Row(
-                                            children: [
-                                              RippleWrapper(
-                                                onPressed: () {
-                                                  closeModal(context);
-
-                                                  openModal(
-                                                      context,
-                                                      ProductInfoModal(
-                                                          productId:
-                                                              _transaction!
-                                                                  .product!
-                                                                  .uuid));
-                                                },
-                                                child: PositionWithBackground(
-                                                  name: _transaction
-                                                          ?.product?.name ??
-                                                      'Unknown',
-                                                  image: _transaction
-                                                      ?.product?.mainImage,
-                                                  textStyle: TextStyle(
-                                                    color: colors
-                                                        .tertiaryContainer,
-                                                    fontSize: 12,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                      },
-                                      summary:
-                                          '${isHidden ? '*****' : '${_transactionType == TRANSACTION_TYPE.RECEIVE ? '+' : '-'}${formatNumber(_transaction?.amountFinpoints?.round() ?? _transaction?.product?.finpointsPrice.round() ?? 0)}'} finpoints',
-                                      summaryColor: color,
-                                    );
-                                  }),
-                            ],
+                                          isUsers
+                                              ? TransactionInfoUsers(
+                                                  users: _transaction!
+                                                      .secondUsers!,
+                                                  totalFinpoints: _transaction!
+                                                          .amountFinpoints ??
+                                                      0)
+                                              : isProducts
+                                                  ? TransactionInfoProducts(
+                                                      products: _transaction!
+                                                          .products!)
+                                                  : SizedBox.shrink(),
+                                          ListComponent(
+                                            data: {},
+                                            summary:
+                                                '${isHidden ? '*****' : '${_transactionType == TRANSACTION_TYPE.RECEIVE ? '+' : '-'}${formatNumber(_transaction?.amountFinpoints?.round() ?? _transaction?.products?[0].product.finpointsPrice.round() ?? 0)}'} finpoints',
+                                            summaryColor: color,
+                                          )
+                                        ],
+                                      );
+                                    }),
+                              ],
+                            ),
                           ),
                         ),
+                        SizedBox(
+                          height: 16,
+                        ),
                         Text(
-                          'Transaction ID',
+                          'ID transakcji',
                           style: TextStyle(
                             color: colors.tertiaryContainer,
                             fontSize: 14,
@@ -257,7 +285,7 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                           height: 24,
                         ),
                         MainButton(
-                            label: 'Close',
+                            label: 'Zamknij',
                             backgroundColor:
                                 colors.tertiaryContainer.withAlpha(80),
                             textColor: colors.primaryFixedDim,

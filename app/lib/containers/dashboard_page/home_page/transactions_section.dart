@@ -158,12 +158,16 @@ class _TransactionsSectionState extends State<TransactionsSection> {
                         ),
                         child: Column(
                           children: entry.value.map((transactionData) {
+                            final isSecondUsers =
+                                transactionData.secondUsers != null &&
+                                    transactionData.secondUsers!.isNotEmpty;
+
+                            final isProducts =
+                                transactionData.products != null &&
+                                    transactionData.products!.isNotEmpty;
+
                             return TransactionCard(
-                              points:
-                                  transactionData.amountFinpoints?.round() ??
-                                      transactionData.product?.finpointsPrice
-                                          .round() ??
-                                      0,
+                              points: transactionData.totalFinpoints,
                               onPressed: () {
                                 openModal(
                                     context,
@@ -173,15 +177,26 @@ class _TransactionsSectionState extends State<TransactionsSection> {
                               date: parseDate(transactionData.createdAt),
                               type: transactionTypeStringToEnum(
                                   transactionData.type),
-                              productImage: transactionData.product?.mainImage,
-                              productPrice: transactionData.product != null
-                                  ? (transactionData.product!.originalPrice *
-                                      (1 -
-                                          (transactionData.product!.discount) /
-                                              100))
+                              productImages: isProducts
+                                  ? transactionData.products
+                                      ?.map((product) =>
+                                          product.product.getImageByVariantId(
+                                              product.variantId) ??
+                                          '')
+                                      .toList()
                                   : null,
-                              userImage: transactionData.secondUser?.image,
-                              username: transactionData.secondUser?.username,
+                              totalProductPrice:
+                                  transactionData.totalProductsPrice,
+                              userImages: isSecondUsers
+                                  ? transactionData.secondUsers
+                                      ?.map((user) => user.image!)
+                                      .toList()
+                                  : null,
+                              usernames: isSecondUsers
+                                  ? transactionData.secondUsers
+                                      ?.map((user) => user.username)
+                                      .toList()
+                                  : null,
                             );
                           }).toList(),
                         ),

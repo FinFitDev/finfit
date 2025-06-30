@@ -34,12 +34,12 @@ class _CopyTextState extends State<CopyText> {
 
   void onCopy() async {
     Clipboard.setData(ClipboardData(text: widget.textToCopy));
-    if (_text == 'Copied!') {
+    if (_text == 'Skopiowano!') {
       return;
     }
 
     setState(() {
-      _text = 'Copied!';
+      _text = 'Skopiowano!';
     });
     await Future.delayed(Duration(seconds: 2));
     setState(() {

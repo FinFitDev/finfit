@@ -57,6 +57,34 @@ class IProductEntry {
     return imageList;
   }
 
+  IProductVariant? getVariantByVariantId(String variantId) {
+    return variants?.where((variant) => variant.id == variantId).firstOrNull;
+  }
+
+  String? getImageByVariantId(String? variantId) {
+    var foundVariant;
+
+    if (variantId == null) {
+      foundVariant =
+          variants != null && variants!.isNotEmpty ? variants![0] : null;
+    } else {
+      foundVariant = getVariantByVariantId(variantId);
+    }
+
+    if (foundVariant != null &&
+        foundVariant.images != null &&
+        foundVariant.images!.isNotEmpty) {
+      final index = foundVariant.images![0];
+
+      // Safety check to avoid out-of-bounds
+      if (index >= 0 && index < (images?.length ?? 0)) {
+        return images![index];
+      }
+    }
+
+    return mainImage;
+  }
+
   List<String> get initialCarouselImages {
     final fallbackVariant = variants
         ?.where(

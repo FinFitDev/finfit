@@ -58,16 +58,23 @@ export interface ITransactionEntryResponse {
   uuid: number;
   created_at: string;
   amount_finpoints?: number;
-  second_user?: Partial<IUser>;
-  product?: IProduct;
+  second_users?: Partial<IUser>[];
+  products?: IProduct[];
   user_id?: number;
+}
+
+export interface IProductTransactionData {
+  variant_id?: string;
+  quantity: number;
+  eligible?: boolean;
+  id: string;
 }
 
 export interface ITransactionInsert {
   amount_finpoints: number;
   user_id: string;
   second_user_ids?: string[];
-  product_ids?: string[];
+  product_data?: IProductTransactionData[];
 }
 
 export interface IFiltersQuery {
