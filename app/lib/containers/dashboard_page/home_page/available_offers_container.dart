@@ -71,7 +71,7 @@ class _AvailableOffersState extends State<AvailableOffers> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Available now', style: texts.headlineLarge),
+                Text('Available forevaaaa', style: texts.headlineLarge),
               ],
             ),
           ),

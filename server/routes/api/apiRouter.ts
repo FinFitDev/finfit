@@ -10,18 +10,15 @@ import {
   addTrainingsHandler,
   getTrainingsForUserIdHadler,
 } from "./routes/trainingsRoute";
-import {
-  getHomeProductsHandler,
-  getProductOwnersHandler,
-  getProductRangesHandler,
-  getProductsByFiltersHandler,
-  getProductsCategoriesHandler,
-  getProductsForProductOwnerHandler,
-} from "./routes/productsRoute";
+
 import {
   addTransactionsHandler,
   getTransactionsHandler,
 } from "./routes/transactionsRoute";
+import {
+  getFeaturedOffersHandler,
+  getOffersHandler,
+} from "./routes/offersRoute";
 
 const apiRouter: Router = express.Router();
 
@@ -39,17 +36,15 @@ apiRouter.get("/trainings/:id", getTrainingsForUserIdHadler);
 
 apiRouter.post("/trainings", addTrainingsHandler);
 
-apiRouter.get("/products/featured/:id", getHomeProductsHandler);
+apiRouter.get("/offers/featured", getFeaturedOffersHandler);
 
-apiRouter.get("/products/:id", getProductsForProductOwnerHandler);
+apiRouter.get("/offers", getOffersHandler);
 
-apiRouter.get("/products", getProductsByFiltersHandler);
+// apiRouter.get("/product_ranges", getProductRangesHandler);
 
-apiRouter.get("/product_ranges", getProductRangesHandler);
+// apiRouter.get("/product_categories", getProductsCategoriesHandler);
 
-apiRouter.get("/product_categories", getProductsCategoriesHandler);
-
-apiRouter.get("/product_owners", getProductOwnersHandler);
+// apiRouter.get("/product_owners", getProductOwnersHandler);
 
 apiRouter.post("/transactions", addTransactionsHandler);
 

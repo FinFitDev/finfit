@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/store/persistence/cache.dart';
-import 'package:excerbuys/store/selectors/shop/products.dart';
+import 'package:excerbuys/store/selectors/offers/products.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/types/shop.dart';

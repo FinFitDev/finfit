@@ -1,25 +1,20 @@
 import 'dart:math';
 import 'package:excerbuys/containers/dashboard_page/home_page/background_container.dart';
+import 'package:excerbuys/containers/dashboard_page/home_page/featured_offers_container.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/recent_training_section.dart';
-import 'package:excerbuys/components/dashboard_page/home_page/activity_card/steps_activity_card.dart';
-import 'package:excerbuys/containers/dashboard_page/home_page/available_offers_container.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/balance_container.dart';
-import 'package:excerbuys/containers/dashboard_page/home_page/news_container.dart';
-import 'package:excerbuys/containers/dashboard_page/home_page/progress_offers_container.dart';
-import 'package:excerbuys/containers/dashboard_page/home_page/transactions_section.dart';
 import 'package:excerbuys/store/controllers/activity/activity_controller/activity_controller.dart';
 import 'package:excerbuys/store/controllers/activity/steps_controller/steps_controller.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard/send_controller/send_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
+import 'package:excerbuys/store/controllers/shop/offers_controller/offers_controller.dart';
 import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
-import 'package:excerbuys/store/controllers/shop/transactions_controller/transactions_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
-import 'package:excerbuys/types/product.dart';
-import 'package:excerbuys/types/transaction.dart';
+import 'package:excerbuys/types/shop/offer.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/refresh_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -60,6 +55,7 @@ class _HomePageState extends State<HomePage> {
     await stepsController.fetchsSteps();
 
     await productsController.refreshHomeProducts();
+    await offersController.refreshFeaturedOffers();
     await sendController.refresh();
   }
 
@@ -115,52 +111,60 @@ class _HomePageState extends State<HomePage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            NewsContainer(
-                                // isLoading: true,
-                                ),
                             StreamBuilder<
-                                    ContentWithLoading<List<IProductEntry>>>(
-                                stream: productsController
-                                    .affordableHomeProductsStream,
+                                    ContentWithLoading<
+                                        Map<BigInt, IOfferEntry>>>(
+                                stream: offersController.featuredOffersStream,
                                 builder: (context, snapshot) {
-                                  if ((snapshot.data == null ||
-                                          snapshot.data!.content.isEmpty) &&
-                                      snapshot.data?.isLoading != true) {
-                                    return SizedBox.shrink();
-                                  }
-                                  return AvailableOffers(
-                                    products: snapshot.data?.content ?? [],
-                                    isLoading: snapshot.data?.isLoading,
+                                  return FeaturedOffersContainer(
+                                    offers: snapshot.data?.content ?? {},
+                                    isLoading: snapshot.data?.isLoading == true,
                                   );
                                 }),
-                            StreamBuilder<
-                                    ContentWithLoading<List<IProductEntry>>>(
-                                stream: productsController
-                                    .nearlyAffordableHomeProducts,
-                                builder: (context, snapshot) {
-                                  if ((snapshot.data == null ||
-                                          snapshot.data!.content.isEmpty) &&
-                                      snapshot.data?.isLoading != true) {
-                                    return SizedBox.shrink();
-                                  }
-                                  return ProgressOffersContainer(
-                                    products: snapshot.data?.content ?? [],
-                                    isLoading: snapshot.data?.isLoading,
-                                  );
-                                }),
-                            StreamBuilder<ContentWithLoading<IStoreStepsData>>(
-                                stream: stepsController.userStepsStream,
-                                builder: (context, stepsSnapshot) {
-                                  final IStoreStepsData stepsData =
-                                      stepsSnapshot.hasData
-                                          ? stepsSnapshot.data!.content
-                                          : {};
-                                  return StepsActivityCard(
-                                    isLoading:
-                                        stepsSnapshot.data?.isLoading ?? false,
-                                    stepsData: stepsData,
-                                  );
-                                }),
+
+                            // StreamBuilder<
+                            //         ContentWithLoading<List<IProductEntry>>>(
+                            //     stream: productsController
+                            //         .affordableHomeProductsStream,
+                            //     builder: (context, snapshot) {
+                            //       if ((snapshot.data == null ||
+                            //               snapshot.data!.content.isEmpty) &&
+                            //           snapshot.data?.isLoading != true) {
+                            //         return SizedBox.shrink();
+                            //       }
+                            //       return AvailableOffers(
+                            //         products: snapshot.data?.content ?? [],
+                            //         isLoading: snapshot.data?.isLoading,
+                            //       );
+                            //     }),
+                            // StreamBuilder<
+                            //         ContentWithLoading<List<IProductEntry>>>(
+                            //     stream: productsController
+                            //         .nearlyAffordableHomeProducts,
+                            //     builder: (context, snapshot) {
+                            //       if ((snapshot.data == null ||
+                            //               snapshot.data!.content.isEmpty) &&
+                            //           snapshot.data?.isLoading != true) {
+                            //         return SizedBox.shrink();
+                            //       }
+                            //       return ProgressOffersContainer(
+                            //         products: snapshot.data?.content ?? [],
+                            //         isLoading: snapshot.data?.isLoading,
+                            //       );
+                            //     }),
+                            // StreamBuilder<ContentWithLoading<IStoreStepsData>>(
+                            //     stream: stepsController.userStepsStream,
+                            //     builder: (context, stepsSnapshot) {
+                            //       final IStoreStepsData stepsData =
+                            //           stepsSnapshot.hasData
+                            //               ? stepsSnapshot.data!.content
+                            //               : {};
+                            //       return StepsActivityCard(
+                            //         isLoading:
+                            //             stepsSnapshot.data?.isLoading ?? false,
+                            //         stepsData: stepsData,
+                            //       );
+                            //     }),
                             StreamBuilder<
                                     ContentWithLoading<
                                         Map<String, ITrainingEntry>>>(
@@ -178,23 +182,23 @@ class _HomePageState extends State<HomePage> {
                                           snapshot.data?.isLoading ?? false,
                                       recentTraining: trainings);
                                 }),
-                            StreamBuilder<
-                                    ContentWithLoading<
-                                        Map<String, ITransactionEntry>>>(
-                                stream: transactionsController
-                                    .allTransactionsStream,
-                                builder: (context, snapshot) {
-                                  final Map<String, ITransactionEntry>
-                                      transactions = getTopRecentEntries(
-                                          snapshot.data?.content,
-                                          (a, b) => b.value.createdAt
-                                              .compareTo(a.value.createdAt),
-                                          5);
-                                  return TransactionsSection(
-                                    recentTransactions: transactions,
-                                    isLoading: snapshot.data?.isLoading,
-                                  );
-                                })
+                            // StreamBuilder<
+                            //         ContentWithLoading<
+                            //             Map<String, ITransactionEntry>>>(
+                            //     stream: transactionsController
+                            //         .allTransactionsStream,
+                            //     builder: (context, snapshot) {
+                            //       final Map<String, ITransactionEntry>
+                            //           transactions = getTopRecentEntries(
+                            //               snapshot.data?.content,
+                            //               (a, b) => b.value.createdAt
+                            //                   .compareTo(a.value.createdAt),
+                            //               5);
+                            //       return TransactionsSection(
+                            //         recentTransactions: transactions,
+                            //         isLoading: snapshot.data?.isLoading,
+                            //       );
+                            //     })
                           ],
                         ),
                       ),

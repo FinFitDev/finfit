@@ -32,17 +32,14 @@ class _BottomBarState extends State<BottomBar> {
                     top: 16),
                 decoration: BoxDecoration(
                   color: colors.primary,
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: Colors.black.withAlpha(20),
-                  //     spreadRadius: 3,
-                  //     blurRadius: 3,
-                  //     offset: Offset(0, -3), // changes position of shadow
-                  //   ),
-                  // ]
-                  border: Border(
-                      top: BorderSide(
-                          color: colors.primaryFixedDim, width: 0.5)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withAlpha(10),
+                      spreadRadius: 3,
+                      blurRadius: 3,
+                      offset: Offset(0, -3), // changes position of shadow
+                    ),
+                  ],
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -57,7 +54,7 @@ class _BottomBarState extends State<BottomBar> {
                     ),
                     AppbarIconButton(
                       name: 'Offers',
-                      icon: 'assets/svg/dollar.svg',
+                      icon: 'assets/svg/gift.svg',
                       onPressed: () {
                         dashboardController.setActivePage(1);
                       },

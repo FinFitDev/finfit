@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/store/persistence/cache.dart';
-import 'package:excerbuys/store/selectors/shop/product_owners.dart';
+import 'package:excerbuys/store/selectors/offers/product_owners.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/owner.dart';
 import 'package:excerbuys/utils/shop/product_owner/requests.dart';

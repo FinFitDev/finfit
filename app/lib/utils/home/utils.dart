@@ -13,19 +13,19 @@ ActivityMetadata getActivityMetadata(ACTIVITY_TYPE activity) {
           color: const Color.fromARGB(255, 70, 24, 105));
     case ACTIVITY_TYPE.RUNNING:
       return ActivityMetadata(
-          icon: 'assets/svg/running.svg',
+          icon: 'assets/svg/footprints.svg',
           name: 'Running',
-          color: Color.fromARGB(255, 0, 0, 0));
+          color: Color.fromARGB(255, 116, 0, 218));
     case ACTIVITY_TYPE.BIKE_RIDING:
       return ActivityMetadata(
           icon: 'assets/svg/bike.svg',
           name: 'Bike riding',
-          color: Color.fromARGB(255, 126, 126, 126));
+          color: Color.fromARGB(255, 1, 215, 172));
     case ACTIVITY_TYPE.SWIMMING:
       return ActivityMetadata(
           icon: 'assets/svg/swimming.svg',
           name: 'Swimming',
-          color: Color(0xFF6CB4EE));
+          color: Color.fromARGB(255, 1, 180, 144));
   }
 }
 

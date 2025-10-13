@@ -66,59 +66,57 @@ export interface IDailyStepEntry {
 
 export type IResetPasswordCode = string;
 
-export interface IProductVariant {
-  id: string;
-  discount: number;
-  price: number;
-  in_stock: number;
-  images?: string[];
-  attributes: Record<string, string>;
-}
-
-export interface IProduct {
-  uuid: string;
-  name: string;
+export interface IOffer {
+  id: number;
+  partner_id: string;
   description: string;
-  product_owner: IProductOwner;
-  original_price: number;
-  finpoints_price: number;
-  discount: number;
+  points: number;
   created_at: string;
-  link?: string;
-  images: string[];
-  category: string;
-  total_transactions: number;
-  isAffordable?: boolean;
-  variants: IProductVariant[];
+  valid_until: string;
+  // category: string;
+  total_redeemed: number;
+  featured?: boolean;
 }
 
-export interface IProductOwner {
+export interface IPartner {
   uuid: string;
   name: string;
   description: string;
-  createdAt: string;
-  total_transactions: number;
-  total_products: number;
+  created_at: string;
   banner_image?: string;
   link?: string;
   image?: string;
   reference_id: string;
 }
 
-export interface ITransactionInsert {
-  amount_finpoints: number;
-  user_id: string;
-  second_user_ids?: string[];
-  product_ids?: string[];
+export interface IDeliveryMethod {
+  uuid: string;
+  name: string;
+  image?: string;
+  description?: string;
 }
 
 export interface ITransactionEntryResponse {
   uuid: number;
   created_at: string;
   amount_finpoints?: number;
-  second_user?: Partial<IUser>;
-  product?: IProduct;
+  second_users?: Partial<IUser>[];
+  // products?: IProduct[];
   user_id?: number;
+}
+
+export interface IProductTransactionData {
+  variant_id?: string;
+  quantity: number;
+  eligible?: boolean;
+  id: string;
+}
+
+export interface ITransactionInsert {
+  amount_finpoints: number;
+  user_id: string;
+  second_user_ids?: string[];
+  product_data?: IProductTransactionData[];
 }
 
 export interface IFiltersQuery {

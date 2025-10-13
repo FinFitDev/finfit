@@ -71,7 +71,7 @@ class _BalanceContainerState extends State<BalanceContainer> {
               height: 10,
             ),
             Text(
-              'finpoints',
+              'points',
               style: TextStyle(
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w600,

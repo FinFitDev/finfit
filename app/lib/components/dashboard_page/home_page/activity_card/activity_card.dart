@@ -6,13 +6,14 @@ import 'package:excerbuys/utils/home/utils.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ActivityCard extends StatefulWidget {
   final void Function() onPressed;
   final ACTIVITY_TYPE activityType;
   final int points;
   final String date;
-  final int? calories;
+  final int? distance;
   final int? duration;
 
   const ActivityCard({
@@ -20,7 +21,7 @@ class ActivityCard extends StatefulWidget {
     required this.activityType,
     required this.date,
     required this.points,
-    this.calories,
+    this.distance,
     this.duration,
     required this.onPressed,
   });
@@ -43,78 +44,127 @@ class _ActivityCardState extends State<ActivityCard> {
         widget.onPressed();
       },
       child: Container(
-        height: 75,
-        color: Colors.transparent,
-        padding: EdgeInsets.all(10),
-        child: Row(
+        height: 115,
+        decoration: BoxDecoration(
+          // color: colors.error,
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Stack(
           children: [
-            IconContainer(icon: activityMetadata.icon, size: 50),
-            SizedBox(
-              width: 12,
-            ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(right: 6),
-                        child: StreamBuilder<bool>(
-                            stream: dashboardController.balanceHiddenStream,
-                            builder: (context, snapshot) {
-                              final bool isHidden = snapshot.data ?? false;
-                              return Text(
-                                  '${isHidden ? '***** finpoints' : '+${widget.points.abs().toString()} finpoints'}',
-                                  style: texts.headlineMedium?.copyWith(
-                                    color: colors.secondary,
-                                  ));
-                            }),
-                      ),
-                      Text(
-                        widget.date
-                            .split(' ')[widget.date.split(' ').length - 1],
-                        style: TextStyle(
-                            color: colors.tertiaryContainer, fontSize: 12),
-                      )
-                    ],
+            Positioned(
+              top: 0,
+              bottom: 0,
+              left: 0,
+              child: Container(
+                width: 20,
+                decoration: BoxDecoration(
+                  color: activityMetadata.color,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    bottomLeft: Radius.circular(15),
+                    bottomRight: Radius.circular(10),
+                    topRight: Radius.circular(10),
                   ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        parseDuration(widget.duration ?? 0),
-                        style: TextStyle(
-                          color: colors.tertiaryContainer,
-                          fontSize: 13,
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 8),
-                        width: 0.5,
-                        height: 16,
-                        color: colors.tertiaryContainer,
-                      ),
-                      Text(
-                        '${widget.calories} kcal',
-                        style: TextStyle(
-                          color: colors.tertiaryContainer,
-                          fontSize: 13,
-                        ),
-                      ),
-
-                      // SvgPicture.asset('assets/svg/fire.svg',
-                      //     colorFilter: ColorFilter.mode(
-                      //         colors.tertiaryContainer.withAlpha(150),
-                      //         BlendMode.srcIn))
-                    ],
-                  )
-                ],
+                ),
               ),
-            )
+            ),
+            Positioned(
+              top: 0,
+              bottom: 0,
+              left: 3,
+              right: 0,
+              child: Container(
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: colors.primaryContainer,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            IconContainer(
+                              icon: activityMetadata.icon,
+                              size: 50,
+                              iconColor: activityMetadata.color,
+                              backgroundColor:
+                                  activityMetadata.color.withAlpha(20),
+                            ),
+                            SizedBox(width: 16),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  child: Text(activityMetadata.name,
+                                      style: texts.titleMedium?.copyWith(
+                                          fontWeight: FontWeight.w600)),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(top: 2),
+                                  child: Text(widget.date,
+                                      style: texts.bodyMedium?.copyWith(
+                                          color: colors.tertiaryContainer)),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text('+${widget.points}',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                    color: activityMetadata.color)),
+                            Container(
+                              margin: EdgeInsets.only(top: 0),
+                              child: Text('points',
+                                  style: texts.bodyMedium?.copyWith(
+                                      color: colors.tertiaryContainer)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      spacing: 20,
+                      children: [
+                        Row(children: [
+                          SvgPicture.asset(
+                            'assets/svg/clock.svg',
+                            width: 16,
+                            colorFilter: ColorFilter.mode(
+                                colors.tertiaryContainer, BlendMode.srcIn),
+                          ),
+                          SizedBox(width: 6),
+                          Text(parseDuration(widget.duration ?? 0),
+                              style: texts.bodyMedium
+                                  ?.copyWith(color: colors.tertiaryContainer)),
+                        ]),
+                        Row(children: [
+                          SvgPicture.asset(
+                            'assets/svg/trend_up.svg',
+                            width: 16,
+                            colorFilter: ColorFilter.mode(
+                                colors.tertiaryContainer, BlendMode.srcIn),
+                          ),
+                          SizedBox(width: 6),
+                          Text(formatNumber(widget.distance ?? 0) + 'km',
+                              style: texts.bodyMedium
+                                  ?.copyWith(color: colors.tertiaryContainer)),
+                        ]),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),

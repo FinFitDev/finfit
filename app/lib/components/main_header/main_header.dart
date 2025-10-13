@@ -48,9 +48,15 @@ class MainHeader extends StatelessWidget {
                           width: MediaQuery.sizeOf(context).width,
                           decoration: BoxDecoration(
                             color: colors.primary,
-                            border: Border(
-                                bottom: BorderSide(
-                                    color: colors.primaryFixedDim, width: 0.5)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withAlpha(10),
+                                spreadRadius: 3,
+                                blurRadius: 3,
+                                offset:
+                                    Offset(0, 3), // changes position of shadow
+                              ),
+                            ],
                           ),
                           height: MAIN_HEADER_HEIGHT +
                               layoutController.statusBarHeight,
