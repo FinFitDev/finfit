@@ -3,6 +3,8 @@ import 'package:excerbuys/containers/dashboard_page/home_page/background_contain
 import 'package:excerbuys/containers/dashboard_page/home_page/featured_offers_container.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/recent_training_section.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/balance_container.dart';
+import 'package:excerbuys/containers/dashboard_page/home_page/transactions_section.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/offer_info_modal.dart';
 import 'package:excerbuys/store/controllers/activity/activity_controller/activity_controller.dart';
 import 'package:excerbuys/store/controllers/activity/steps_controller/steps_controller.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller/trainings_controller.dart';
@@ -10,12 +12,14 @@ import 'package:excerbuys/store/controllers/dashboard/send_controller/send_contr
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/offers_controller/offers_controller.dart';
-import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
+import 'package:excerbuys/store/controllers/shop/transactions_controller/transactions_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/shop/offer.dart';
+import 'package:excerbuys/types/transaction.dart';
 import 'package:excerbuys/utils/utils.dart';
+import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/refresh_wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -54,7 +58,6 @@ class _HomePageState extends State<HomePage> {
     activityController.setTodaysPoints(0);
     await stepsController.fetchsSteps();
 
-    await productsController.refreshHomeProducts();
     await offersController.refreshFeaturedOffers();
     await sendController.refresh();
   }
@@ -119,6 +122,19 @@ class _HomePageState extends State<HomePage> {
                                   return FeaturedOffersContainer(
                                     offers: snapshot.data?.content ?? {},
                                     isLoading: snapshot.data?.isLoading == true,
+                                    onPress: (id) {
+                                      final offer = snapshot
+                                          .data?.content.values
+                                          .firstWhere((element) =>
+                                              element.id.toString() == id);
+                                      if (offer != null) {
+                                        openModal(
+                                            context,
+                                            OfferInfoModal(
+                                              offer: offer,
+                                            ));
+                                      }
+                                    },
                                   );
                                 }),
 
@@ -182,23 +198,23 @@ class _HomePageState extends State<HomePage> {
                                           snapshot.data?.isLoading ?? false,
                                       recentTraining: trainings);
                                 }),
-                            // StreamBuilder<
-                            //         ContentWithLoading<
-                            //             Map<String, ITransactionEntry>>>(
-                            //     stream: transactionsController
-                            //         .allTransactionsStream,
-                            //     builder: (context, snapshot) {
-                            //       final Map<String, ITransactionEntry>
-                            //           transactions = getTopRecentEntries(
-                            //               snapshot.data?.content,
-                            //               (a, b) => b.value.createdAt
-                            //                   .compareTo(a.value.createdAt),
-                            //               5);
-                            //       return TransactionsSection(
-                            //         recentTransactions: transactions,
-                            //         isLoading: snapshot.data?.isLoading,
-                            //       );
-                            //     })
+                            StreamBuilder<
+                                    ContentWithLoading<
+                                        Map<String, ITransactionEntry>>>(
+                                stream: transactionsController
+                                    .allTransactionsStream,
+                                builder: (context, snapshot) {
+                                  final Map<String, ITransactionEntry>
+                                      transactions = getTopRecentEntries(
+                                          snapshot.data?.content,
+                                          (a, b) => b.value.createdAt
+                                              .compareTo(a.value.createdAt),
+                                          5);
+                                  return TransactionsSection(
+                                    recentTransactions: transactions,
+                                    isLoading: snapshot.data?.isLoading,
+                                  );
+                                })
                           ],
                         ),
                       ),

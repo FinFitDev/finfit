@@ -69,9 +69,10 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
       _workout = foundWorkout;
     });
 
-    final activityMetadata = getActivityMetadata(parseActivityType(
-        HealthWorkoutActivityType.values
-            .firstWhere((el) => el.name == foundWorkout.type)));
+    final activityMetadata = getActivityMetadata(
+        parseActivityType(HealthWorkoutActivityType.values
+            .firstWhere((el) => el.name == foundWorkout.type)),
+        Theme.of(context).colorScheme);
 
     setState(() {
       _activityMetadata = activityMetadata;

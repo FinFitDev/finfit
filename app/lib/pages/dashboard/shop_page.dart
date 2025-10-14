@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'package:excerbuys/containers/dashboard_page/shop_page/product_owner_header_container.dart';
 import 'package:excerbuys/containers/dashboard_page/shop_page/products_row_container.dart';
 import 'package:excerbuys/containers/dashboard_page/shop_page/shop_top_container.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/product_owners_controller/product_owners_controller.dart';
-import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/types/shop.dart';
@@ -59,9 +57,7 @@ class _ShopPageState extends State<ShopPage> {
         _shopFiltersSubscription = shopController.allShopFiltersStream
             .debounceTime(Duration(milliseconds: 100))
             .distinct()
-            .listen((data) {
-          productsController.handleOnChangeFilters(data);
-        });
+            .listen((data) {});
 
         _selectedProductOwnerSubscription =
             shopController.selectedProductOwnerStream.distinct().listen((data) {
@@ -96,100 +92,7 @@ class _ShopPageState extends State<ShopPage> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
-    return StreamBuilder<IAllProductsData>(
-      stream: productsController.productsForSearchStream,
-      builder: (context, snapshot) {
-        return StreamBuilder<bool>(
-          stream: productsController.loadingForSearchStream,
-          builder: (context, loadingForSearchSnapshot) {
-            final isLoading = snapshot.data?.isLoading == true ||
-                loadingForSearchSnapshot.data == true;
-
-            final List<dynamic> data = isLoading
-                ? List.generate(10, (index) => null)
-                : (snapshot.data?.content ?? {}).entries.toList();
-
-            return StreamBuilder<ShopFilters?>(
-              stream: shopController.shopPageUpdateTrigger(),
-              builder: (context, filtersSnapshot) {
-                return InfiniteListWrapperV2(
-                  scrollController: scrollController,
-                  on: true,
-                  isLoadingMoreData:
-                      productsController.lazyLoadOffset.isLoading,
-                  isRefreshing: productsController.allProducts.isLoading ||
-                      productsController.loadingForSearch ||
-                      productOwnersController.allProductOwners.isLoading,
-                  canFetchMore: productsController.canFetchMore,
-                  onRefresh: () {
-                    productsController.refresh();
-                    productOwnersController.refresh();
-                  },
-                  onLoadMore: () {
-                    productsController.loadMoreData();
-                  },
-                  padding: EdgeInsets.only(
-                      bottom: APPBAR_HEIGHT + layoutController.bottomPadding),
-                  children: [
-                    AnimatedSwitcherWrapper(
-                        child: shopController.selectedProductOwner != null
-                            ? Container(
-                                constraints: BoxConstraints(
-                                    minHeight: _isAnimating ? 15000 : 0),
-                                key: ValueKey('BaseData'),
-                                child: ProductOwnerHeaderContainer(
-                                  productOwnerId:
-                                      shopController.selectedProductOwner,
-                                  onBackPressed: () {
-                                    productsController
-                                        .handleOnClickProductOwner(null);
-                                    scrollController.jumpTo(0);
-                                  },
-                                ))
-                            : Container(
-                                constraints: BoxConstraints(
-                                    minHeight: _isAnimating ? 15000 : 0),
-                                key: ValueKey('ProductOwnerData'),
-                                child: ShopTopContainer(
-                                  onPressPartner: (String? uuid) {
-                                    shopController.resetShopFilters();
-
-                                    productsController
-                                        .handleOnClickProductOwner(uuid);
-                                    scrollController.jumpTo(0);
-                                  },
-                                ),
-                              )),
-                    SizedBox(
-                      height: 16,
-                    ),
-                    if (data.isEmpty)
-                      emptyProducts(colors, texts)
-                    else
-                      // generated rows in pairs:
-                      for (int i = 0; i < data.length; i += 2)
-                        Builder(builder: (context) {
-                          final entry = data[i];
-                          final nextEntry =
-                              i + 1 < data.length ? data[i + 1] : null;
-
-                          final MapEntry<String, IProductEntry>? current =
-                              entry;
-                          final MapEntry<String, IProductEntry>? next =
-                              nextEntry;
-
-                          return ProductsRowContainer(
-                              first: current, second: next);
-                        }),
-                    SizedBox(height: 32),
-                  ],
-                );
-              },
-            );
-          },
-        );
-      },
-    );
+    return Container();
   }
 }
 

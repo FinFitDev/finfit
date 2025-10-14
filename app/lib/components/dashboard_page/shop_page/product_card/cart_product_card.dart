@@ -25,17 +25,7 @@ class CartProductCard extends StatelessWidget {
         endActionPane: ActionPane(
           motion: DrawerMotion(),
           extentRatio: 0.2,
-          children: [
-            SlidableAction(
-              onPressed: (context) {
-                shopController.removeCartItem(item.uuid!);
-                triggerVibrate(FeedbackType.selection);
-              },
-              backgroundColor: colors.error,
-              icon: Icons.delete,
-              foregroundColor: colors.primary,
-            ),
-          ],
+          children: [],
         ),
         child: Container(
           padding: EdgeInsets.all(16),
@@ -136,9 +126,7 @@ class CartProductCard extends StatelessWidget {
                           color: colors.primaryFixedDim,
                         ),
                       ),
-                      onPressed: () {
-                        shopController.decreaseProductQuantity(item.uuid!);
-                      }),
+                      onPressed: () {}),
                   Text(
                     item.quantity.toString(),
                     style: TextStyle(
@@ -158,9 +146,7 @@ class CartProductCard extends StatelessWidget {
                             size: 12,
                             color: colors.primary,
                           )),
-                      onPressed: () {
-                        shopController.increaseProductQuantity(item.uuid!);
-                      })
+                      onPressed: () {})
                 ],
               )
             ],

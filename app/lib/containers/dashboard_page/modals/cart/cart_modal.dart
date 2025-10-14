@@ -106,32 +106,6 @@ class CartModal extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Expanded(
-                        flex: 1,
-                        child: StreamBuilder<double>(
-                            stream: shopController
-                                .totalCartPriceWithoutDeliveryCostStream,
-                            builder: (context, snapshot) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                spacing: 4,
-                                children: [
-                                  Text(
-                                    'Cena',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        color: colors.tertiaryContainer),
-                                  ),
-                                  Text(
-                                    ' ${padPriceDecimals(snapshot.data ?? 0)} PLN',
-                                    textAlign: TextAlign.center,
-                                    style: texts.headlineMedium,
-                                  )
-                                ],
-                              );
-                            }),
-                      ),
                       SizedBox(
                         width: 16,
                       ),

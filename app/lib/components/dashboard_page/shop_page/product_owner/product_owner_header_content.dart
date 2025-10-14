@@ -1,5 +1,4 @@
 import 'package:excerbuys/store/controllers/shop/product_owners_controller/product_owners_controller.dart';
-import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/owner.dart';
@@ -24,9 +23,7 @@ class ProductOwnerHeaderContent extends StatelessWidget {
               colorFilter:
                   ColorFilter.mode(colors.primaryFixedDim, BlendMode.srcIn),
             ),
-            onPressed: () {
-              productsController.handleOnClickProductOwner(null);
-            }),
+            onPressed: () {}),
         StreamBuilder<String?>(
             stream: shopController.selectedProductOwnerStream,
             builder: (context, snapshot) {

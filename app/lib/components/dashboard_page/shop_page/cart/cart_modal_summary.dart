@@ -28,18 +28,6 @@ class CartModalSummary extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       color: colors.tertiaryContainer,
                       fontSize: 12)),
-              StreamBuilder<int>(
-                  stream: shopController.totalCartFinpointsCostStream,
-                  builder: (context, snapshot) {
-                    return Text(
-                        snapshot.data != null
-                            ? ' ${snapshot.data!.toStringAsFixed(0)} finpoints'
-                            : ' 0 finpoints',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: colors.tertiary,
-                            fontSize: 12));
-                  }),
             ],
           ),
           Row(
@@ -50,15 +38,6 @@ class CartModalSummary extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       color: colors.tertiaryContainer,
                       fontSize: 12)),
-              StreamBuilder<double>(
-                  stream: shopController.totalCartDiscountValueSaved,
-                  builder: (context, snapshot) {
-                    return Text('-${padPriceDecimals(snapshot.data ?? 0)} PLN',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: colors.secondary,
-                            fontSize: 12));
-                  }),
             ],
           ),
         ],

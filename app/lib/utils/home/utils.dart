@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 
 // TODO add all activities
-ActivityMetadata getActivityMetadata(ACTIVITY_TYPE activity) {
+ActivityMetadata getActivityMetadata(
+    ACTIVITY_TYPE activity, ColorScheme colors) {
   switch (activity) {
     case ACTIVITY_TYPE.WALKING:
       return ActivityMetadata(
@@ -15,17 +16,17 @@ ActivityMetadata getActivityMetadata(ACTIVITY_TYPE activity) {
       return ActivityMetadata(
           icon: 'assets/svg/footprints.svg',
           name: 'Running',
-          color: Color.fromARGB(255, 116, 0, 218));
+          color: colors.secondary);
     case ACTIVITY_TYPE.BIKE_RIDING:
       return ActivityMetadata(
           icon: 'assets/svg/bike.svg',
           name: 'Bike riding',
-          color: Color.fromARGB(255, 1, 215, 172));
+          color: colors.secondaryContainer);
     case ACTIVITY_TYPE.SWIMMING:
       return ActivityMetadata(
           icon: 'assets/svg/swimming.svg',
           name: 'Swimming',
-          color: Color.fromARGB(255, 1, 180, 144));
+          color: colors.secondaryContainer);
   }
 }
 

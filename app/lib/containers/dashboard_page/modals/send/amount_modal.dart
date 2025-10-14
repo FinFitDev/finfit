@@ -54,7 +54,7 @@ class _AmountModalState extends State<AmountModal> {
     final colors = Theme.of(context).colorScheme;
 
     return ModalContentWrapper(
-      title: 'Send finpoints',
+      title: 'Send points',
       subtitle: 'Enter amount',
       onClickBack: widget.previousPage,
       onClose: () {
@@ -128,16 +128,16 @@ class _AmountModalState extends State<AmountModal> {
                       return ListComponent(
                         data: {
                           'Amount':
-                              '${formatNumber(snapshot.data ?? 0)} finpoints',
+                              '${formatNumber(snapshot.data ?? 0)} points',
                           'No. of recipients':
                               '${sendController.chosenUsersIds.length}',
                           'Current balance':
-                              '${formatNumber((userController.userBalance ?? 0).round())} finpoints',
+                              '${formatNumber((userController.userBalance ?? 0).round())} points',
                           'Remaining balance':
-                              '${formatNumber(max(((userController.userBalance ?? 0) - (snapshot.data ?? 0) * sendController.chosenUsersIds.length), 0).round())} finpoints'
+                              '${formatNumber(max(((userController.userBalance ?? 0) - (snapshot.data ?? 0) * sendController.chosenUsersIds.length), 0).round())} points'
                         },
                         summary:
-                            '${(snapshot.data ?? 0) * sendController.chosenUsersIds.length} finpoints',
+                            '${(snapshot.data ?? 0) * sendController.chosenUsersIds.length} points',
                         summaryColor: colors.secondary,
                       );
                     }),

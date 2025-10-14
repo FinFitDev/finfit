@@ -1,5 +1,5 @@
 import { fetchProductOwnersByRegex } from "../../../models/productOwnerModel";
-import { IProductOwner } from "../../../shared/types";
+import { IProductOwner } from "../../../shared/types/shop";
 
 export const getProductOwnersBySearch = async (
   limit: number,

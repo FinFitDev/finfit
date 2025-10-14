@@ -73,6 +73,8 @@ export interface IOffer {
   points: number;
   created_at: string;
   valid_until: string;
+  catch: string;
+  details: string;
   // category: string;
   total_redeemed: number;
   featured?: boolean;
@@ -96,27 +98,24 @@ export interface IDeliveryMethod {
   description?: string;
 }
 
+export interface IOfferWithPartner extends IOffer {
+  partner: IPartner;
+}
+
 export interface ITransactionEntryResponse {
   uuid: number;
   created_at: string;
   amount_finpoints?: number;
   second_users?: Partial<IUser>[];
-  // products?: IProduct[];
+  offer?: IOfferWithPartner;
   user_id?: number;
-}
-
-export interface IProductTransactionData {
-  variant_id?: string;
-  quantity: number;
-  eligible?: boolean;
-  id: string;
 }
 
 export interface ITransactionInsert {
   amount_finpoints: number;
   user_id: string;
   second_user_ids?: string[];
-  product_data?: IProductTransactionData[];
+  offer_id?: string;
 }
 
 export interface IFiltersQuery {

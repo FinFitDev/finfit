@@ -1,20 +1,21 @@
 import 'package:excerbuys/types/product.dart';
+import 'package:excerbuys/types/shop/offer.dart';
 import 'package:excerbuys/types/user.dart';
 
 class ITransactionEntry {
   final String uuid;
   final String type;
   final DateTime createdAt;
-  final double? amountFinpoints;
-  final IProductEntry? product;
+  final double? amountPoints;
+  final IOfferEntry? offer;
   final User? secondUser;
 
   ITransactionEntry({
     required this.uuid,
     required this.type,
     required this.createdAt,
-    this.amountFinpoints,
-    this.product,
+    this.amountPoints,
+    this.offer,
     this.secondUser,
   });
 
@@ -23,9 +24,9 @@ class ITransactionEntry {
       'uuid': uuid,
       'type': type,
       'second_user': secondUser.toString(),
-      'amount_finpoints': amountFinpoints,
+      'amount_points': amountPoints,
       'created_at': createdAt,
-      'product': product?.toJson(),
+      'offer': offer?.toJson(),
     };
   }
 
@@ -36,11 +37,9 @@ class ITransactionEntry {
       secondUser: json['second_user'] != null
           ? User.fromJson(json['second_user'])
           : null,
-      amountFinpoints: (json['amount_finpoints'] as num?)?.toDouble(),
+      amountPoints: (json['amount_points'] as num?)?.toDouble(),
       createdAt: DateTime.parse(json['created_at']).toLocal(),
-      product: json['product'] != null
-          ? IProductEntry.fromJson(json['product'])
-          : null,
+      offer: json['offer'] != null ? IOfferEntry.fromJson(json['offer']) : null,
     );
   }
 }

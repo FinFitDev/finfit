@@ -31,7 +31,6 @@ export const getTransactionsHandler = async (
       limit ? +limit : undefined,
       offset ? +offset : undefined
     );
-
     res.status(200).json({ message: "Transactions found", content: response });
   } catch (error: any) {
     res.status(error.statusCode ?? 404).json({

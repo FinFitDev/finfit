@@ -4,7 +4,7 @@ import {
   fetchPaginatedOffers,
 } from "../../../models/offersModel";
 import { fetchUserById } from "../../../models/userModel";
-import { IOffer } from "../../../shared/types/shop";
+import { IOffer } from "../../../shared/types";
 
 // export const getAffordableProducts = async (
 //   userId: string,

@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 
 import { getPartnersBySearch } from "../services/partnersService";
-import { RequestWithPayload } from "../../../shared/types/general";
 import { getFeaturedOffers, getOffers } from "../services/offersService";
 
 // export const getHomeProductsHandler = async (

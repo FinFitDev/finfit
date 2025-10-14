@@ -87,87 +87,85 @@ class _MainButtonState extends State<MainButton> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final texts = Theme.of(context).textTheme;
 
-    return SizedBox(
-      height: widget.height ?? 60,
-      child: GestureDetector(
-        onLongPressStart: (e) {
-          if (widget.holdToConfirm != true || widget.isDisabled == true) {
-            return;
-          }
-          _incrementProgress();
-        },
-        onLongPressEnd: (e) {
-          if (widget.holdToConfirm != true || widget.isDisabled == true) {
-            return;
-          }
+    return Opacity(
+      opacity: widget.isDisabled == true ? 0.2 : 1,
+      child: SizedBox(
+        height: widget.height ?? 50,
+        child: GestureDetector(
+          onLongPressStart: (e) {
+            if (widget.holdToConfirm != true || widget.isDisabled == true) {
+              return;
+            }
+            _incrementProgress();
+          },
+          onLongPressEnd: (e) {
+            if (widget.holdToConfirm != true || widget.isDisabled == true) {
+              return;
+            }
 
-          progressTimer?.cancel();
-          holdProgressNotifier.value = 0;
-        },
-        child: TextButton(
-            onPressed: (widget.isDisabled != null && widget.isDisabled!)
-                ? null
-                : widget.holdToConfirm == true
-                    ? () {}
-                    : () {
-                        widget.onPressed();
-                        triggerVibrate(FeedbackType.selection);
-                      },
-            style: TextButton.styleFrom(
-              backgroundColor: widget.backgroundColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+            progressTimer?.cancel();
+            holdProgressNotifier.value = 0;
+          },
+          child: TextButton(
+              onPressed: (widget.isDisabled != null && widget.isDisabled!)
+                  ? null
+                  : widget.holdToConfirm == true
+                      ? () {}
+                      : () {
+                          widget.onPressed();
+                          triggerVibrate(FeedbackType.selection);
+                        },
+              style: TextButton.styleFrom(
+                backgroundColor: widget.backgroundColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                disabledBackgroundColor: widget.backgroundColor,
               ),
-              disabledBackgroundColor: widget.backgroundColor.withAlpha(155),
-            ),
-            child: widget.loading != null && widget.loading!
-                ? SpinKitCircle(
-                    color: Theme.of(context).colorScheme.primary,
-                    size: 30.0,
-                    controller:
-                        _animationController, // Use the initialized controller
-                  )
-                : ValueListenableBuilder(
-                    valueListenable: holdProgressNotifier,
-                    builder: (context, value, child) {
-                      if (widget.holdToConfirm == true && value > 0) {
-                        return CircleProgress(
-                            size: 40,
-                            progress: value / 100,
-                            color: Theme.of(context).colorScheme.primary);
-                      }
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          widget.isSuccess == true
-                              ? CheckmarkWithCircle()
-                              : widget.icon != null
-                                  ? Container(
-                                      margin: EdgeInsets.only(right: 8),
-                                      child: SvgPicture.asset(
-                                        widget.icon!,
-                                        width: 24,
-                                        height: 24,
-                                        colorFilter: ColorFilter.mode(
-                                            widget.isDisabled == true
-                                                ? widget.textColor
-                                                    .withAlpha(155)
-                                                : widget.textColor,
-                                            BlendMode.srcIn),
-                                      ),
-                                    )
-                                  : SizedBox.shrink(),
-                          widget.isSuccess != true
-                              ? Text(widget.label,
-                                  style: texts.headlineMedium?.copyWith(
-                                    color: widget.isDisabled == true
-                                        ? widget.textColor.withAlpha(155)
-                                        : widget.textColor,
-                                  ))
-                              : SizedBox.shrink(),
-                        ],
-                      );
-                    })),
+              child: widget.loading != null && widget.loading!
+                  ? SpinKitCircle(
+                      color: Theme.of(context).colorScheme.primary,
+                      size: 25.0,
+                      controller:
+                          _animationController, // Use the initialized controller
+                    )
+                  : ValueListenableBuilder(
+                      valueListenable: holdProgressNotifier,
+                      builder: (context, value, child) {
+                        if (widget.holdToConfirm == true && value > 0) {
+                          return CircleProgress(
+                              size: 30,
+                              progress: value / 100,
+                              color: Theme.of(context).colorScheme.primary);
+                        }
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            widget.isSuccess == true
+                                ? CheckmarkWithCircle()
+                                : widget.icon != null
+                                    ? Container(
+                                        margin: EdgeInsets.only(right: 8),
+                                        child: SvgPicture.asset(
+                                          widget.icon!,
+                                          width: 24,
+                                          height: 24,
+                                          colorFilter: ColorFilter.mode(
+                                              widget.textColor,
+                                              BlendMode.srcIn),
+                                        ),
+                                      )
+                                    : SizedBox.shrink(),
+                            widget.isSuccess != true
+                                ? Text(widget.label,
+                                    style: texts.headlineMedium?.copyWith(
+                                      color: widget.textColor,
+                                    ))
+                                : SizedBox.shrink(),
+                          ],
+                        );
+                      })),
+        ),
       ),
     );
   }

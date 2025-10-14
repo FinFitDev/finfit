@@ -8,7 +8,6 @@ import 'package:excerbuys/store/controllers/activity/activity_controller/activit
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/offers_controller/offers_controller.dart';
-import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
 import 'package:excerbuys/store/controllers/shop/transactions_controller/transactions_controller.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -27,7 +26,6 @@ class _DashboardPageState extends State<DashboardPage> {
   Future<void> fetchData() async {
     Health().configure();
     transactionsController.fetchTransactions();
-    productsController.fetchHomeProducts();
     offersController.fetchFeaturedOffers();
 
     await activityController.authorize();

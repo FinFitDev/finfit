@@ -1,5 +1,4 @@
 import 'package:excerbuys/components/shared/positions/position_with_background.dart';
-import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
 import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
@@ -29,8 +28,6 @@ class ProductInfoHeader extends StatelessWidget {
           RippleWrapper(
             onPressed: () {
               closeModal(context);
-
-              productsController.handleOnClickProductOwner(product?.owner.uuid);
             },
             child: PositionWithBackground(
                 name: product?.owner.name ?? '',

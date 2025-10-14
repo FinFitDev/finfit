@@ -22,8 +22,9 @@ class ModalHeader extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-          border: Border(
-              bottom: BorderSide(width: 0.5, color: colors.tertiaryContainer))),
+        border: Border(
+            bottom: BorderSide(width: 0.5, color: colors.tertiaryContainer)),
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Row(

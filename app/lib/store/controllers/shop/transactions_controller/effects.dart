@@ -56,16 +56,6 @@ extension TransactionsControllerEffects on TransactionsController {
         for (var el in parsedTransactionData) el.uuid: el,
       };
 
-      if (values.isNotEmpty) {
-        addTransactions(values);
-        productsController.addProducts({
-          for (final entry in values.entries)
-            if (entry.value.product != null)
-              entry.value.product!.uuid: entry.value.product!
-        });
-        setLazyLoadOffset(allTransactions.content.length);
-      }
-
       // it means we are at the end of the data
       if (values.length < TRANSACTION_DATA_CHUNK_SIZE) {
         setCanFetchMore(false);

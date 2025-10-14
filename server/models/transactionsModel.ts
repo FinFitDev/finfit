@@ -1,7 +1,6 @@
 import { PoolClient } from "pg";
 import { ITransactionInsert } from "../shared/types";
 import { pool } from "../shared/utils/db";
-
 export const fetchTransactions = async (
   userId: string,
   limit: number,
@@ -9,150 +8,157 @@ export const fetchTransactions = async (
 ) => {
   const response = await pool.query(
     `
-        SELECT
-        t.uuid, t.amount_finpoints, t.created_at,
-        (to_jsonb(p) || jsonb_build_object('product_owner', to_jsonb(po))) AS product,
+    SELECT
+      t.uuid,
+      t.amount_points,
+      t.created_at,
+      (to_jsonb(o) || jsonb_build_object('partner', to_jsonb(p))) AS offer,
 
-        CASE
-            WHEN t.second_user_id IS NULL THEN NULL
-            WHEN t.user_id = $1 THEN 
-                json_build_object(
-                'uuid', su.uuid,
-                'username', su.username,
-                'email', su.email,
-                'image', su.image
-                )
-            ELSE
-                json_build_object(
-                'uuid', u.uuid,
-                'username', u.username,
-                'email', u.email,
-                'image', u.image
-                )
-        END AS second_user,
+      CASE
+        WHEN t.second_user_ids IS NULL THEN NULL
+        WHEN t.user_id = $1 THEN 
+          (
+            SELECT json_agg(json_build_object(
+              'uuid', u.uuid,
+              'username', u.username,
+              'email', u.email,
+              'image', u.image
+            ))
+            FROM users u
+            WHERE u.uuid = ANY(ARRAY(
+              SELECT jsonb_array_elements_text(t.second_user_ids)::uuid
+            ))
+          )
+        ELSE
+          (
+            SELECT json_agg(json_build_object(
+              'uuid', u.uuid,
+              'username', u.username,
+              'email', u.email,
+              'image', u.image
+            ))
+            FROM users u
+            WHERE u.uuid = t.user_id
+          )
+      END AS second_user_ids,
 
-        CASE
-            WHEN t.second_user_id IS NULL AND t.product_id IS NOT NULL THEN 'PURCHASE'
-            WHEN t.user_id = $1 THEN 'SEND'
-            ELSE 'RECEIVE'
-        END AS type
+      CASE
+        WHEN t.second_user_ids IS NULL AND t.offer_id IS NOT NULL THEN 'REDEEM'
+        WHEN t.user_id = $1 THEN 'SEND'
+        ELSE 'RECEIVE'
+      END AS type
 
-        FROM transactions t
+    FROM transactions t
+    LEFT JOIN offers o ON t.offer_id = o.id
+    LEFT JOIN partners p ON o.partner_id = p.uuid
 
-        LEFT JOIN products p ON t.product_id = p.uuid
-        LEFT JOIN product_owners po ON p.owner_id = po.uuid
+    WHERE $1 = t.user_id OR $1 = ANY(ARRAY(
+      SELECT jsonb_array_elements_text(t.second_user_ids)::uuid
+    ))
 
-        LEFT JOIN users u ON t.user_id = u.uuid
-        LEFT JOIN users su ON t.second_user_id = su.uuid
-
-        WHERE 
-        t.user_id = $1 OR t.second_user_id = $1
-
-        ORDER BY t.created_at DESC
-        LIMIT $2 OFFSET $3
-      `,
+    ORDER BY t.created_at DESC
+    LIMIT $2 OFFSET $3
+    `,
     [userId, limit, offset]
   );
 
   return response;
 };
 
-// fetch transactions 7 days back - first fetch
 export const fetchRecentUserTransactions = async (userId: string) => {
   const response = await pool.query(
     `
-        SELECT
-        t.uuid, t.amount_finpoints, t.created_at,
-        (to_jsonb(p) || jsonb_build_object('product_owner', to_jsonb(po))) AS product,
+    SELECT
+      t.uuid,
+      t.amount_points,
+      t.created_at,
+      (to_jsonb(o) || jsonb_build_object('partner', to_jsonb(p))) AS offer,
 
-        CASE
-            WHEN t.second_user_id IS NULL THEN NULL
-            WHEN t.user_id = $1 THEN 
-                json_build_object(
-                'uuid', su.uuid,
-                'username', su.username,
-                'email', su.email,
-                'image', su.image
-                )
-            ELSE
-                json_build_object(
-                'uuid', u.uuid,
-                'username', u.username,
-                'email', u.email,
-                'image', u.image
-                )
-        END AS second_user,
+      CASE
+        WHEN t.second_user_ids IS NULL THEN NULL
+        WHEN t.user_id = $1 THEN 
+          (
+            SELECT json_agg(json_build_object(
+              'uuid', u.uuid,
+              'username', u.username,
+              'email', u.email,
+              'image', u.image
+            ))
+            FROM users u
+            WHERE u.uuid = ANY(ARRAY(
+              SELECT jsonb_array_elements_text(t.second_user_ids)::uuid
+            ))
+          )
+        ELSE
+          (
+            SELECT json_agg(json_build_object(
+              'uuid', u.uuid,
+              'username', u.username,
+              'email', u.email,
+              'image', u.image
+            ))
+            FROM users u
+            WHERE u.uuid = t.user_id
+          )
+      END AS second_user_ids,
 
-        CASE
-            WHEN t.second_user_id IS NULL AND t.product_id IS NOT NULL THEN 'PURCHASE'
-            WHEN t.user_id = $1 THEN 'SEND'
-            ELSE 'RECEIVE'
-        END AS type
+      CASE
+        WHEN t.second_user_ids IS NULL AND t.offer_id IS NOT NULL THEN 'REDEEM'
+        WHEN t.user_id = $1 THEN 'SEND'
+        ELSE 'RECEIVE'
+      END AS type
 
-        FROM transactions t
+    FROM transactions t
+    LEFT JOIN offers o ON t.offer_id = o.id
+    LEFT JOIN partners p ON o.partner_id = p.uuid
 
-        LEFT JOIN products p ON t.product_id = p.uuid
-        LEFT JOIN product_owners po ON p.owner_id = po.uuid
+    WHERE ($1 = t.user_id OR $1 = ANY(ARRAY(
+      SELECT jsonb_array_elements_text(t.second_user_ids)::uuid
+    ))) 
+      AND t.created_at >= NOW() - INTERVAL '7 days'
 
-        LEFT JOIN users u ON t.user_id = u.uuid
-        LEFT JOIN users su ON t.second_user_id = su.uuid
-
-        WHERE 
-        (t.user_id = $1 OR t.second_user_id = $1) AND t.created_at >= NOW() - INTERVAL '7 days'
-
-        ORDER BY t.created_at DESC
-
-      `,
+    ORDER BY t.created_at DESC
+    `,
     [userId]
   );
 
   return response;
 };
-
 export const insertTransactions = async (
   transactions: ITransactionInsert[],
-  // if we want to use the model inside the sql transaction
   poolClient?: PoolClient
 ) => {
-  // Build the VALUES clause dynamically for bulk insert
+  if (!transactions.length) return;
+
   const values: any[] = [];
-  let offset = 0;
+  const placeholders: string[] = [];
 
-  const placeholders = transactions
-    .flatMap((transaction) => {
-      // resolve second party ids
-      const secondPartyIds = [
-        ...(transaction.second_user_ids ?? []).map((id) => ({
-          user_id: id,
-          product_id: null,
-        })),
-        ...(transaction.product_ids ?? []).map((id) => ({
-          user_id: null,
-          product_id: id,
-        })),
-      ];
+  transactions.forEach((transaction, index) => {
+    const base = index * 4;
 
-      return secondPartyIds.map(({ user_id, product_id }) => {
-        values.push(
-          transaction.amount_finpoints,
-          transaction.user_id,
-          user_id,
-          product_id
-        );
+    // second_user_ids as JSON array
+    const secondUserIdsJson = transaction.second_user_ids
+      ? JSON.stringify(transaction.second_user_ids)
+      : null;
 
-        const base = offset;
-        offset += 4;
+    values.push(
+      transaction.amount_finpoints,
+      transaction.user_id,
+      secondUserIdsJson,
+      transaction.offer_id ?? null
+    );
 
-        return `($${base + 1}, $${base + 2}, $${base + 3}, $${base + 4})`;
-      });
-    })
-    .join(", ");
+    placeholders.push(
+      `($${base + 1}, $${base + 2}, $${base + 3}::jsonb, $${base + 4})`
+    );
+  });
 
-  const response = await (poolClient ?? pool).query(
-    `INSERT INTO transactions (amount_finpoints, user_id, second_user_id, product_id)
-      VALUES ${placeholders}`,
-    values
-  );
+  const query = `
+    INSERT INTO transactions (amount_points, user_id, second_user_ids, offer_id)
+    VALUES ${placeholders.join(", ")}
+  `;
+
+  const response = await (poolClient ?? pool).query(query, values);
 
   return response;
 };

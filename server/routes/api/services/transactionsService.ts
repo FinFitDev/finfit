@@ -17,7 +17,7 @@ export const addTransactionsToDb = async (
   }
   const response = await insertTransactions(transactions);
 
-  return response.rowCount;
+  return response?.rowCount;
 };
 
 export const getTransactions = async (

@@ -6,8 +6,13 @@ class ImageComponent extends StatelessWidget {
   final String? image;
   final double size;
   final Color? filterColor;
+  final double? borderRadius;
   const ImageComponent(
-      {super.key, this.image, required this.size, this.filterColor});
+      {super.key,
+      this.image,
+      required this.size,
+      this.filterColor,
+      this.borderRadius});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +20,7 @@ class ImageComponent extends StatelessWidget {
       image: image,
       height: size,
       width: size,
-      borderRadius: 100,
+      borderRadius: borderRadius ?? 100,
     );
   }
 }

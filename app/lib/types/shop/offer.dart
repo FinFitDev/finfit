@@ -9,6 +9,8 @@ class IOfferEntry {
   final String createdAt;
   final bool? featured;
   final BigInt totalRedeemed;
+  final String catchString;
+  final String details;
 
   IOfferEntry({
     required this.id,
@@ -19,18 +21,22 @@ class IOfferEntry {
     required this.createdAt,
     this.featured,
     required this.totalRedeemed,
+    required this.catchString,
+    required this.details,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id.toString(), // ✅ BigInt → String
+      'id': id.toString(),
       'description': description,
       'partner': partner.toJson(),
       'points': points,
       'valid_until': validUntil,
       'created_at': createdAt,
       'featured': featured,
-      'total_redeemed': totalRedeemed.toString(), // ✅ BigInt → String
+      'total_redeemed': totalRedeemed.toString(),
+      'catch': catchString,
+      'details': details,
     };
   }
 
@@ -44,6 +50,8 @@ class IOfferEntry {
       createdAt: json['created_at'] ?? '',
       featured: json['featured'],
       totalRedeemed: BigInt.parse((json['total_redeemed'] ?? '0').toString()),
+      catchString: json['catch'] ?? '',
+      details: json['details'] ?? '',
     );
   }
 }

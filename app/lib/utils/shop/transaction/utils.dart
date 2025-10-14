@@ -2,8 +2,8 @@ import 'package:excerbuys/types/enums.dart';
 
 TRANSACTION_TYPE transactionTypeStringToEnum(String stringCategory) {
   switch (stringCategory) {
-    case 'PURCHASE':
-      return TRANSACTION_TYPE.PURCHASE;
+    case 'REDEEM':
+      return TRANSACTION_TYPE.REDEEM;
     case 'RECEIVE':
       return TRANSACTION_TYPE.RECEIVE;
     case 'SEND':

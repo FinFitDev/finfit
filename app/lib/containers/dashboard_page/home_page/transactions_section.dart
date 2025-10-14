@@ -28,33 +28,14 @@ class TransactionsSection extends StatefulWidget {
 }
 
 class _TransactionsSectionState extends State<TransactionsSection> {
-  Map<String, List<ITransactionEntry>> _groupedTransactionsData = {};
+  List<ITransactionEntry> _transactions = [];
 
-  void groupData() {
-    if (widget.recentTransactions.isEmpty) {
-      return;
-    }
-
-    final Map<String, List<ITransactionEntry>> groupedData = {};
-    for (var el in widget.recentTransactions.values) {
-      final List<String> splitParsedDate = parseDate(el.createdAt).split(' ');
-      final String dateKey = splitParsedDate.length == 3
-          ? '${splitParsedDate[0]} ${splitParsedDate[1]}'
-          : splitParsedDate[0];
-
-      final now = DateTime.now();
-      final today = DateTime(now.year, now.month, now.day);
-      final elementTimestampDay =
-          DateTime(el.createdAt.year, el.createdAt.month, el.createdAt.day);
-      groupedData
-          .putIfAbsent(
-              '${dateKey}_${today.difference(elementTimestampDay).inDays}',
-              () => [])
-          .add(el);
-    }
-
+  void _prepareTransactions() {
+    final sortedTransactions = widget.recentTransactions.values
+        .toList(growable: false)
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
     setState(() {
-      _groupedTransactionsData = groupedData;
+      _transactions = sortedTransactions;
     });
   }
 
@@ -62,13 +43,13 @@ class _TransactionsSectionState extends State<TransactionsSection> {
   void initState() {
     super.initState();
 
-    groupData();
+    _prepareTransactions();
   }
 
   @override
   void didUpdateWidget(covariant TransactionsSection oldWidget) {
     if (oldWidget.recentTransactions != widget.recentTransactions) {
-      groupData();
+      _prepareTransactions();
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -105,88 +86,30 @@ class _TransactionsSectionState extends State<TransactionsSection> {
               padding: EdgeInsets.only(top: widget.hideTitle == true ? 0 : 16),
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: _groupedTransactionsData.length,
+              itemCount: _transactions.length,
               itemBuilder: (context, index) {
-                final entry = _groupedTransactionsData.entries.elementAt(index);
-                final keyParts = entry.key.split('_');
-                final dateLabel = keyParts[0];
-                final daysAgo = keyParts.length > 1 ? keyParts[1] : '';
-
+                final transactionData = _transactions[index];
                 return Container(
                   margin: EdgeInsets.only(top: index != 0 ? 8 : 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      if (widget.isDaily != true)
-                        Container(
-                          margin: EdgeInsets.only(top: 4, bottom: 4),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                dateLabel,
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: colors.tertiaryContainer),
-                              ),
-                              SizedBox(width: 6),
-                              if (dateLabel != 'Today' &&
-                                  dateLabel != 'Yesterday')
-                                Text(
-                                  '($daysAgo days ago)',
-                                  style: TextStyle(
-                                      fontSize: 11,
-                                      color: colors.tertiaryContainer
-                                          .withAlpha(150)),
-                                ),
-                              Expanded(
-                                child: Container(
-                                  margin: EdgeInsets.only(left: 8),
-                                  height: 0,
-                                  color:
-                                      colors.tertiaryContainer.withAlpha(100),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      Container(
-                        margin: EdgeInsets.only(top: 8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: colors.primaryContainer,
-                        ),
-                        child: Column(
-                          children: entry.value.map((transactionData) {
-                            return TransactionCard(
-                              points:
-                                  transactionData.amountFinpoints?.round() ??
-                                      transactionData.product?.finpointsPrice
-                                          .round() ??
-                                      0,
-                              onPressed: () {
-                                openModal(
-                                    context,
-                                    TransactionInfoModal(
-                                        transactionId: transactionData.uuid));
-                              },
-                              date: parseDate(transactionData.createdAt),
-                              type: transactionTypeStringToEnum(
-                                  transactionData.type),
-                              productImage: transactionData.product?.mainImage,
-                              productPrice: transactionData.product != null
-                                  ? (transactionData.product!.originalPrice *
-                                      (1 -
-                                          (transactionData.product!.discount) /
-                                              100))
-                                  : null,
-                              userImage: transactionData.secondUser?.image,
-                              username: transactionData.secondUser?.username,
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ],
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: colors.primaryContainer,
+                  ),
+                  child: TransactionCard(
+                    points: transactionData.amountPoints?.round() ?? 0,
+                    onPressed: () {
+                      openModal(
+                          context,
+                          TransactionInfoModal(
+                              transactionId: transactionData.uuid));
+                    },
+                    date: transactionData.createdAt,
+                    type: transactionTypeStringToEnum(transactionData.type),
+                    offerImage: transactionData.offer?.partner.image,
+                    offerName:
+                        '${transactionData.offer?.partner.name} - ${transactionData.offer?.catchString}',
+                    userImage: transactionData.secondUser?.image,
+                    username: transactionData.secondUser?.username,
                   ),
                 );
               },

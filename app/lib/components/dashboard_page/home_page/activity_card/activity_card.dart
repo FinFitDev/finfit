@@ -37,7 +37,7 @@ class _ActivityCardState extends State<ActivityCard> {
     final texts = Theme.of(context).textTheme;
 
     final ActivityMetadata activityMetadata =
-        getActivityMetadata(widget.activityType);
+        getActivityMetadata(widget.activityType, colors);
 
     return RippleWrapper(
       onPressed: () {

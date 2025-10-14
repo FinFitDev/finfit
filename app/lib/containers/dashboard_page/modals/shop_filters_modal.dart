@@ -77,19 +77,6 @@ class _ShopFiltersModalState extends State<ShopFiltersModal> {
     if (shopController.maxPriceRanges.isEmpty) {
       shopController.fetchMaxRanges();
     }
-
-    _subscription = shopController.numberOfActiveFiltersStream.listen((event) {
-      setState(() {
-        _sortByCategory = shopController.allShopFilters?.sortByData?.category;
-        _sortingOrder = shopController.allShopFilters?.sortByData?.sortingOrder;
-      });
-      if (shopController.allShopFilters != null) {
-        _currentPriceRange.value =
-            shopController.allShopFilters!.currentPriceRange;
-        _currentFinpointsCost.value =
-            shopController.allShopFilters!.currentFinpointsRange;
-      }
-    });
   }
 
   @override

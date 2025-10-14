@@ -8,10 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class FeaturedOffersContainer extends StatelessWidget {
+  final void Function(String) onPress;
   final Map<BigInt, IOfferEntry> offers;
   final bool isLoading;
   const FeaturedOffersContainer(
-      {super.key, required this.offers, required this.isLoading});
+      {super.key,
+      required this.offers,
+      required this.isLoading,
+      required this.onPress});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +37,7 @@ class FeaturedOffersContainer extends StatelessWidget {
             child: Text('Featured rewards', style: texts.headlineLarge),
           ),
           SizedBox(
-            height: 160,
+            height: 180,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: offersList.length,
@@ -43,6 +47,7 @@ class FeaturedOffersContainer extends StatelessWidget {
                 final name = offer.partner.name;
                 final description = offer.description;
                 final points = offer.points;
+                final catchPhrase = offer.catchString;
                 if (isLoading) {
                   return Container(
                       margin: EdgeInsets.only(
@@ -54,7 +59,9 @@ class FeaturedOffersContainer extends StatelessWidget {
                       child: UniversalLoaderBox(height: 130, width: 220));
                 }
                 return RippleWrapper(
-                  onPressed: () {},
+                  onPressed: () {
+                    onPress(offer.id.toString());
+                  },
                   child: Container(
                     margin: EdgeInsets.only(
                       left: index == 0 ? 16 : 8,
@@ -69,6 +76,7 @@ class FeaturedOffersContainer extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
@@ -129,6 +137,17 @@ class FeaturedOffersContainer extends StatelessWidget {
                               ),
                             )
                           ],
+                        ),
+                        Text(
+                          catchPhrase,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: colors.secondary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.left,
                         ),
                         Text(
                           description,

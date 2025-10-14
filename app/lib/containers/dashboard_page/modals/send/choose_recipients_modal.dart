@@ -44,7 +44,7 @@ class _ChooseRecipientsModalState extends State<ChooseRecipientsModal> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           ModalHeader(
-            title: 'Send finpoints',
+            title: 'Send points',
             subtitle: 'Choose recipients',
             onClose: () {
               closeModal(context);

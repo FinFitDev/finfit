@@ -2,10 +2,8 @@ import 'package:excerbuys/components/dashboard_page/shop_page/filters_button.dar
 import 'package:excerbuys/components/input_with_icon.dart';
 import 'package:excerbuys/components/shared/buttons/dropdown_trigger.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/available_offers_container.dart';
-import 'package:excerbuys/containers/dashboard_page/shop_page/partners_container.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/product_owners_controller/product_owners_controller.dart';
-import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/owner.dart';
@@ -54,27 +52,6 @@ class _ShopTopContainerState extends State<ShopTopContainer>
                   });
                 }),
           ),
-          StreamBuilder<String?>(
-              stream: shopController.searchValueStream,
-              builder: (context, searchSnapshot) {
-                return StreamBuilder<ContentWithLoading<List<IProductEntry>>>(
-                    stream: productsController.affordableHomeProductsStream,
-                    builder: (context, snapshot) {
-                      if (((snapshot.data == null ||
-                                  snapshot.data!.content.isEmpty) &&
-                              snapshot.data?.isLoading != true) ||
-                          searchSnapshot.data != null &&
-                              searchSnapshot.data!.isNotEmpty) {
-                        return SizedBox(
-                          height: 32,
-                        );
-                      }
-                      return AvailableOffers(
-                        products: snapshot.data?.content ?? [],
-                        isLoading: snapshot.data?.isLoading,
-                      );
-                    });
-              }),
           StreamBuilder<ContentWithLoading<Map<String, IProductOwnerEntry>>>(
               stream: productOwnersController.searchProductOwners,
               builder: (context, snapshot) {
@@ -85,13 +62,8 @@ class _ShopTopContainerState extends State<ShopTopContainer>
                 }
 
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 24),
-                  child: PartnersContainer(
-                    isLoading: snapshot.data?.isLoading == true,
-                    owners: snapshot.data!.content,
-                    onPressPartner: widget.onPressPartner,
-                  ),
-                );
+                    padding: const EdgeInsets.only(bottom: 24),
+                    child: Container());
               }),
           Container(
             margin: EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING),

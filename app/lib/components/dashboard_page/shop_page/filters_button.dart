@@ -13,36 +13,9 @@ class FiltersButton extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
 
     return RippleWrapper(
-      onPressed: () {
-        openModal(context, ShopFiltersModal());
-      },
-      child: StreamBuilder<int>(
-          stream: shopController.numberOfActiveFiltersStream,
-          builder: (context, snapshot) {
-            final noOfFilters = (snapshot.data ?? 0);
-            return Row(
-              children: [
-                SvgPicture.asset(
-                  'assets/svg/filters.svg',
-                  colorFilter: ColorFilter.mode(
-                      noOfFilters > 0
-                          ? colors.secondary
-                          : colors.primaryFixedDim,
-                      BlendMode.srcIn),
-                ),
-                noOfFilters > 0
-                    ? Padding(
-                        padding: const EdgeInsets.only(left: 8),
-                        child: Text(
-                          '${noOfFilters} filter${noOfFilters > 1 ? 's' : ''} active',
-                          style:
-                              TextStyle(color: colors.secondary, fontSize: 13),
-                        ),
-                      )
-                    : SizedBox.shrink()
-              ],
-            );
-          }),
-    );
+        onPressed: () {
+          openModal(context, ShopFiltersModal());
+        },
+        child: Container());
   }
 }

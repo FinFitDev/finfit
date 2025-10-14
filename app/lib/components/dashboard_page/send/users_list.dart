@@ -83,13 +83,13 @@ Widget userCard(
                 Text(name,
                     overflow: TextOverflow.ellipsis,
                     style: texts.headlineMedium?.copyWith(
-                      color: colors.primaryFixedDim,
+                      color: colors.tertiary,
                     )),
                 Text(
                   email,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: colors.tertiaryContainer,
+                    color: colors.primaryFixedDim,
                     fontSize: 13,
                   ),
                 )

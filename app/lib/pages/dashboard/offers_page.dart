@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:excerbuys/components/input_with_icon.dart';
 import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/featured_offers_container.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/offer_info_modal.dart';
 import 'package:excerbuys/containers/dashboard_page/offers_page/all_offers_container.dart';
 import 'package:excerbuys/containers/dashboard_page/offers_page/product_owner_header_container.dart';
 import 'package:excerbuys/containers/dashboard_page/offers_page/products_row_container.dart';
@@ -10,13 +11,13 @@ import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_contr
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/offers_controller/offers_controller.dart';
 import 'package:excerbuys/store/controllers/shop/product_owners_controller/product_owners_controller.dart';
-import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/store/selectors/offers/offers.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/shop/offer.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/infinite_list_wrapper_v2.dart';
+import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -54,9 +55,7 @@ class _OffersPageState extends State<OffersPage> {
         _shopFiltersSubscription = shopController.allShopFiltersStream
             .debounceTime(Duration(milliseconds: 100))
             .distinct()
-            .listen((data) {
-          productsController.handleOnChangeFilters(data);
-        });
+            .listen((data) {});
 
         _selectedProductOwnerSubscription =
             shopController.selectedProductOwnerStream.distinct().listen((data) {
@@ -113,10 +112,32 @@ class _OffersPageState extends State<OffersPage> {
               FeaturedOffersContainer(
                 offers: snapshot.data?.featuredOffers.content ?? {},
                 isLoading: snapshot.data?.featuredOffers.isLoading == true,
+                onPress: (id) {
+                  final offer = snapshot.data?.featuredOffers.content.values
+                      .firstWhere((element) => element.id.toString() == id);
+                  if (offer != null) {
+                    openModal(
+                        context,
+                        OfferInfoModal(
+                          offer: offer,
+                        ));
+                  }
+                },
               ),
               AllOffersContainer(
                 offers: snapshot.data?.allOffers.content ?? {},
                 isLoading: snapshot.data?.allOffers.isLoading == true,
+                onPress: (id) {
+                  final offer = snapshot.data?.allOffers.content.values
+                      .firstWhere((element) => element.id.toString() == id);
+                  if (offer != null) {
+                    openModal(
+                        context,
+                        OfferInfoModal(
+                          offer: offer,
+                        ));
+                  }
+                },
               )
             ],
           );

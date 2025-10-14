@@ -10,10 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AllOffersContainer extends StatelessWidget {
+  final void Function(String) onPress;
   final Map<BigInt, IOfferEntry> offers;
   final bool isLoading;
   const AllOffersContainer(
-      {super.key, required this.offers, required this.isLoading});
+      {super.key,
+      required this.offers,
+      required this.isLoading,
+      required this.onPress});
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +56,7 @@ class AllOffersContainer extends StatelessWidget {
                 final description = offer.description;
                 final points = offer.points;
                 final totalRedeemed = offer.totalRedeemed;
+                final catchString = offer.catchString;
                 if (isLoading) {
                   return Container(
                       margin: EdgeInsets.only(
@@ -61,29 +66,30 @@ class AllOffersContainer extends StatelessWidget {
                       child: UniversalLoaderBox(height: 270));
                 }
                 return RippleWrapper(
-                  onPressed: () {},
+                  onPressed: () {
+                    onPress(offer.id.toString());
+                  },
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: Container(
                       margin: EdgeInsets.only(
                         bottom: 16,
                       ),
-                      height: 270,
+                      height: 328,
                       decoration: BoxDecoration(
                         color: colors.primaryContainer,
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Column(
                         children: [
-                          Expanded(
-                            child: Container(
-                              color: colors.primary,
-                              child: ImageBox(
-                                image: bannerImageUrl,
-                                placeholderImage:
-                                    'https://img.freepik.com/vector-premium/resumen-estetica-mediados-siglo-moderno-paisaje-oceanico-plantilla-portada-poster-boho-contemporaneo-ilustraciones-minimas-naturales-arte-impreso-postal-papel-tapiz-arte-pared_13824-550.jpg',
-                                borderRadius: 0,
-                              ),
+                          Container(
+                            height: 100,
+                            color: colors.primary,
+                            child: ImageBox(
+                              image: bannerImageUrl,
+                              placeholderImage:
+                                  'https://img.freepik.com/vector-premium/resumen-estetica-mediados-siglo-moderno-paisaje-oceanico-plantilla-portada-poster-boho-contemporaneo-ilustraciones-minimas-naturales-arte-impreso-postal-papel-tapiz-arte-pared_13824-550.jpg',
+                              borderRadius: 0,
                             ),
                           ),
                           Expanded(
@@ -131,78 +137,112 @@ class AllOffersContainer extends StatelessWidget {
                                     ],
                                   ),
                                   SizedBox(height: 16),
+                                  Text(
+                                    catchString,
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: colors.secondary,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  SizedBox(height: 8),
                                   StreamBuilder<double?>(
                                       stream: userController.userBalanceStream,
                                       builder: (context, snapshot) {
                                         final bool hasEnoughPoints =
                                             (snapshot.data ?? 0) >= points;
-                                        return Row(
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
                                           children: [
                                             Text(
-                                              '${points.toInt()} points',
+                                              'Cost',
                                               style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w600,
-                                                color: hasEnoughPoints
-                                                    ? colors.tertiary
-                                                    : colors.tertiary
-                                                        .withAlpha(50),
+                                                fontSize: 12,
+                                                color: colors.tertiaryContainer,
                                               ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.left,
                                             ),
-                                            const SizedBox(width: 16),
-                                            hasEnoughPoints
-                                                ? SizedBox.shrink()
-                                                : Container(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 8,
-                                                        vertical: 2),
-                                                    decoration: BoxDecoration(
-                                                      color: colors.error
-                                                          .withAlpha(20),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                    ),
-                                                    child: Text(
-                                                      'Not enough points',
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        color: colors.error,
-                                                      ),
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  '${points.toInt()} points',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: hasEnoughPoints
+                                                        ? colors.tertiary
+                                                        : colors.tertiary
+                                                            .withAlpha(50),
                                                   ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                                const SizedBox(width: 16),
+                                                hasEnoughPoints
+                                                    ? SizedBox.shrink()
+                                                    : Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: 8,
+                                                                vertical: 2),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: colors.error
+                                                              .withAlpha(20),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                        ),
+                                                        child: Text(
+                                                          'Not enough points',
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color: colors.error,
+                                                          ),
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ),
+                                              ],
+                                            ),
                                           ],
                                         );
                                       }),
                                   SizedBox(height: 8),
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset('assets/svg/gift.svg',
-                                          width: 14,
-                                          colorFilter: ColorFilter.mode(
-                                              colors.secondary,
-                                              BlendMode.srcIn)),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        'Redeemed $totalRedeemed times',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w300,
-                                          color: colors.secondary,
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          colors.primaryFixedDim.withAlpha(20),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        SvgPicture.asset('assets/svg/gift.svg',
+                                            width: 12,
+                                            colorFilter: ColorFilter.mode(
+                                                colors.primaryFixedDim,
+                                                BlendMode.srcIn)),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          'Redeemed $totalRedeemed times',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w300,
+                                            color: colors.primaryFixedDim,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
+                                      ],
+                                    ),
+                                  )
                                 ],
                               ),
                             ),

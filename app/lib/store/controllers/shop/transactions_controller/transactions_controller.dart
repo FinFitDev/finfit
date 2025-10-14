@@ -1,4 +1,3 @@
-import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/transaction.dart';

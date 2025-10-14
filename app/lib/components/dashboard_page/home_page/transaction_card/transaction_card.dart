@@ -10,12 +10,12 @@ import 'package:flutter/material.dart';
 class TransactionCard extends StatefulWidget {
   final int points;
   final void Function() onPressed;
-  final String date;
+  final DateTime date;
   final TRANSACTION_TYPE type;
 
   // product purchase
-  final String? productImage;
-  final double? productPrice;
+  final String? offerImage;
+  final String? offerName;
 
   // second user interaction
   final String? userImage;
@@ -27,8 +27,8 @@ class TransactionCard extends StatefulWidget {
       required this.onPressed,
       required this.date,
       required this.type,
-      this.productImage,
-      this.productPrice,
+      this.offerImage,
+      this.offerName,
       this.userImage,
       this.username});
 
@@ -39,14 +39,27 @@ class TransactionCard extends StatefulWidget {
 class _TransactionCardState extends State<TransactionCard> {
   String getTransactionTypeText(TRANSACTION_TYPE type) {
     switch (type) {
-      case TRANSACTION_TYPE.PURCHASE:
-        return 'Used';
+      case TRANSACTION_TYPE.REDEEM:
+        return 'Redeemed';
       case TRANSACTION_TYPE.SEND:
-        return 'Sent';
+        return 'Sent to';
       case TRANSACTION_TYPE.RECEIVE:
-        return 'Received';
+        return 'Received from';
       default:
         return '';
+    }
+  }
+
+  Color getTransactionTypeColor(TRANSACTION_TYPE type, ColorScheme colors) {
+    switch (type) {
+      case TRANSACTION_TYPE.REDEEM:
+        return colors.secondary;
+      case TRANSACTION_TYPE.SEND:
+        return colors.error;
+      case TRANSACTION_TYPE.RECEIVE:
+        return colors.secondaryContainer;
+      default:
+        return colors.tertiaryContainer;
     }
   }
 
@@ -55,10 +68,7 @@ class _TransactionCardState extends State<TransactionCard> {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
 
-    final color = widget.type == TRANSACTION_TYPE.PURCHASE ||
-            widget.type == TRANSACTION_TYPE.SEND
-        ? colors.error
-        : colors.secondary;
+    final color = getTransactionTypeColor(widget.type, colors);
 
     return RippleWrapper(
       onPressed: widget.onPressed,
@@ -68,30 +78,15 @@ class _TransactionCardState extends State<TransactionCard> {
           padding: EdgeInsets.all(10),
           child: Row(
             children: [
-              Stack(
-                children: [
-                  widget.type == TRANSACTION_TYPE.PURCHASE
-                      ? ImageComponent(
-                          size: 50,
-                          image: widget.productImage,
-                        )
-                      : ProfileImageGenerator(
-                          size: 50,
-                          seed: widget.userImage,
-                        ),
-                  widget.type != TRANSACTION_TYPE.PURCHASE
-                      ? Positioned(
-                          right: 0,
-                          bottom: 0,
-                          child: IconContainer(
-                            icon: widget.type == TRANSACTION_TYPE.RECEIVE
-                                ? 'assets/svg/receiveArrow.svg'
-                                : 'assets/svg/sendArrow.svg',
-                            size: 20,
-                            backgroundColor: color,
-                          ))
-                      : SizedBox.shrink()
-                ],
+              IconContainer(
+                icon: widget.type == TRANSACTION_TYPE.REDEEM
+                    ? 'assets/svg/gift.svg'
+                    : widget.type == TRANSACTION_TYPE.RECEIVE
+                        ? 'assets/svg/arrowReceive.svg'
+                        : 'assets/svg/arrowSend.svg',
+                size: 50,
+                backgroundColor: color.withAlpha(20),
+                iconColor: color,
               ),
               SizedBox(
                 width: 12,
@@ -103,40 +98,57 @@ class _TransactionCardState extends State<TransactionCard> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          margin: EdgeInsets.only(right: 6),
-                          child: StreamBuilder<bool>(
-                              stream: dashboardController.balanceHiddenStream,
-                              builder: (context, snapshot) {
-                                final bool isHidden = snapshot.data ?? false;
-                                return Text(
-                                    isHidden
-                                        ? '***** finpoints'
-                                        : '${widget.type == TRANSACTION_TYPE.RECEIVE ? '+' : '-'}${widget.points.abs().toString()} finpoints',
-                                    style: texts.headlineMedium?.copyWith(
-                                      color: color,
-                                    ));
-                              }),
-                        ),
+                        Text(getTransactionTypeText(widget.type),
+                            style: texts.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.w600)),
+
                         Text(
-                          widget.date
-                              .split(' ')[widget.date.split(' ').length - 1],
-                          style: TextStyle(
-                              color: colors.tertiaryContainer, fontSize: 12),
-                        )
+                            '${widget.type == TRANSACTION_TYPE.RECEIVE ? '+' : '-'}${widget.points}',
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: color)),
+                        // Container(
+                        //   margin: EdgeInsets.only(right: 6),
+                        //   child: StreamBuilder<bool>(
+                        //       stream: dashboardController.balanceHiddenStream,
+                        //       builder: (context, snapshot) {
+                        //         final bool isHidden = snapshot.data ?? false;
+                        //         return Text(
+                        //             isHidden
+                        //                 ? '***** finpoints'
+                        //                 : '${widget.type == TRANSACTION_TYPE.RECEIVE ? '+' : '-'}${widget.points.abs().toString()} finpoints',
+                        //             style: texts.headlineMedium?.copyWith(
+                        //               color: color,
+                        //             ));
+                        //       }),
+                        // ),
                       ],
                     ),
-                    SizedBox(
-                      height: 4,
-                    ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      spacing: 16,
                       children: [
-                        widget.type == TRANSACTION_TYPE.PURCHASE
-                            ? Text(
-                                'Paid ${widget.productPrice?.toStringAsFixed(2)} PLN',
-                                style: TextStyle(
-                                  color: colors.tertiaryContainer,
-                                  fontSize: 13,
+                        widget.type == TRANSACTION_TYPE.REDEEM
+                            ? Expanded(
+                                child: Row(
+                                  spacing: 4,
+                                  children: [
+                                    ImageComponent(
+                                      size: 14,
+                                      image: widget.offerImage,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        widget.offerName ?? '',
+                                        style: TextStyle(
+                                            color: colors.tertiaryContainer,
+                                            fontSize: 12),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               )
                             : widget.type == TRANSACTION_TYPE.RECEIVE ||
@@ -155,6 +167,11 @@ class _TransactionCardState extends State<TransactionCard> {
                                       fontSize: 13,
                                     ),
                                   ),
+                        Text(
+                          parseDate(widget.date),
+                          style: TextStyle(
+                              color: colors.tertiaryContainer, fontSize: 12),
+                        )
                       ],
                     )
                   ],

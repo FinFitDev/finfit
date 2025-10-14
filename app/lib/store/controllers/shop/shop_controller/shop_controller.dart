@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:excerbuys/store/controllers/shop/product_owners_controller/product_owners_controller.dart';
-import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/store/persistence/storage_controller.dart';
 import 'package:excerbuys/store/selectors/offers/shop.dart';

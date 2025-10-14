@@ -1,9 +1,6 @@
-import 'package:excerbuys/components/modal/modal_header.dart';
 import 'package:excerbuys/components/shared/buttons/copy_text.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
-import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
-import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/modal/modal_content_wrapper.dart';
 import 'package:flutter/material.dart';

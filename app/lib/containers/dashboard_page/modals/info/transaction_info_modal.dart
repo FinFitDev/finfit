@@ -9,7 +9,6 @@ import 'package:excerbuys/components/shared/profile_image_generator.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/product_info_modal.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
-import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
 import 'package:excerbuys/store/controllers/shop/transactions_controller/transactions_controller.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/types/transaction.dart';
@@ -40,10 +39,7 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
         transactionsController.allTransactions.content[widget.transactionId];
 
     // add product that are referenced in a transaction
-    if (foundTransaction?.product != null) {
-      productsController.addProducts(
-          {foundTransaction!.product!.uuid: foundTransaction.product!});
-    }
+    if (foundTransaction?.offer != null) {}
 
     if (foundTransaction == null) {
       setState(() {
@@ -82,7 +78,7 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
 
-    final color = _transactionType == TRANSACTION_TYPE.PURCHASE ||
+    final color = _transactionType == TRANSACTION_TYPE.REDEEM ||
             _transactionType == TRANSACTION_TYPE.SEND
         ? colors.error
         : colors.secondary;
@@ -116,16 +112,17 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                           children: [
                             Stack(
                               children: [
-                                _transactionType == TRANSACTION_TYPE.PURCHASE
+                                _transactionType == TRANSACTION_TYPE.REDEEM
                                     ? ImageComponent(
                                         size: 80,
-                                        image: _transaction?.product?.mainImage,
+                                        image:
+                                            _transaction?.offer?.partner.image,
                                       )
                                     : ProfileImageGenerator(
                                         size: 80,
                                         seed: _transaction?.secondUser?.image,
                                       ),
-                                _transactionType != TRANSACTION_TYPE.PURCHASE
+                                _transactionType != TRANSACTION_TYPE.REDEEM
                                     ? Positioned(
                                         right: 0,
                                         bottom: 0,
@@ -201,39 +198,39 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                                               ),
                                             ],
                                           ),
-                                        if (_transaction?.product != null)
+                                        if (_transaction?.offer != null)
                                           'Product': Row(
                                             children: [
-                                              RippleWrapper(
-                                                onPressed: () {
-                                                  closeModal(context);
+                                              // RippleWrapper(
+                                              //   onPressed: () {
+                                              //     closeModal(context);
 
-                                                  openModal(
-                                                      context,
-                                                      ProductInfoModal(
-                                                          productId:
-                                                              _transaction!
-                                                                  .product!
-                                                                  .uuid));
-                                                },
-                                                child: PositionWithBackground(
-                                                  name: _transaction
-                                                          ?.product?.name ??
-                                                      'Unknown',
-                                                  image: _transaction
-                                                      ?.product?.mainImage,
-                                                  textStyle: TextStyle(
-                                                    color: colors
-                                                        .tertiaryContainer,
-                                                    fontSize: 12,
-                                                  ),
-                                                ),
-                                              ),
+                                              //     // openModal(
+                                              //     //     context,
+                                              //     //     ProductInfoModal(
+                                              //     //         productId:
+                                              //     //             _transaction!
+                                              //     //                 .offer!
+                                              //     //                 .id));
+                                              //   },
+                                              //   child: PositionWithBackground(
+                                              //     name: _transaction
+                                              //             ?.product?.name ??
+                                              //         'Unknown',
+                                              //     image: _transaction
+                                              //         ?.product?.mainImage,
+                                              //     textStyle: TextStyle(
+                                              //       color: colors
+                                              //           .tertiaryContainer,
+                                              //       fontSize: 12,
+                                              //     ),
+                                              //   ),
+                                              // ),
                                             ],
                                           ),
                                       },
                                       summary:
-                                          '${isHidden ? '*****' : '${_transactionType == TRANSACTION_TYPE.RECEIVE ? '+' : '-'}${formatNumber(_transaction?.amountFinpoints?.round() ?? _transaction?.product?.finpointsPrice.round() ?? 0)}'} finpoints',
+                                          '${isHidden ? '*****' : '${_transactionType == TRANSACTION_TYPE.RECEIVE ? '+' : '-'}${formatNumber(_transaction?.amountPoints?.round() ?? 0)}'} finpoints',
                                       summaryColor: color,
                                     );
                                   }),

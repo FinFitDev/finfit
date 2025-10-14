@@ -11,7 +11,6 @@ import 'package:excerbuys/components/shared/indicators/labels/empty_data_modal.d
 import 'package:excerbuys/components/shared/indicators/warning_box.dart';
 import 'package:excerbuys/components/shared/list/list_component.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
-import 'package:excerbuys/store/controllers/shop/products_controller/products_controller.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/types/shop.dart';
@@ -58,9 +57,7 @@ class _ProductInfoModalState extends State<ProductInfoModal> {
   }
 
   void getProductMetadata() {
-    final foundProduct =
-        productsController.allProducts.content[widget.productId] ??
-            productsController.homeProducts.content[widget.productId];
+    final foundProduct = null;
     if (foundProduct == null) {
       setState(() {
         _error = true;
@@ -193,20 +190,6 @@ class _ProductInfoModalState extends State<ProductInfoModal> {
                               ]),
                         ),
                       ),
-                      StreamBuilder<double?>(
-                          stream: shopController.userBalanceMinusCartCost,
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData ||
-                                snapshot.data == null ||
-                                snapshot.data! >=
-                                    (_product?.finpointsPrice ?? 0)) {
-                              return SizedBox.shrink();
-                            }
-
-                            return WarningBox(
-                                text:
-                                    'You are not eligible for a discount on this product yet, but you can still purchase it at the original price. It can be caused by your cart items using up your finpoints balance.');
-                          }),
                       Container(
                         padding: EdgeInsets.only(
                             top: 16,
@@ -214,102 +197,9 @@ class _ProductInfoModalState extends State<ProductInfoModal> {
                             right: HORIZOTAL_PADDING),
                         child: Row(
                           children: [
-                            StreamBuilder<double?>(
-                                stream: shopController.userBalanceMinusCartCost,
-                                builder: (context, snapshot) {
-                                  final double userBalance = snapshot.data ?? 0;
-                                  return Expanded(
-                                      flex: 1,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
-                                        spacing: 4,
-                                        children: [
-                                          Text(
-                                            'Cena',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color:
-                                                    colors.tertiaryContainer),
-                                          ),
-                                          Text(
-                                            '${padPriceDecimals(getPrice() * (userBalance < (_product?.finpointsPrice ?? 0) ? 1 : (100 - (getDiscount())) / 100))} PLN',
-                                            textAlign: TextAlign.center,
-                                            style: texts.headlineMedium,
-                                          )
-                                        ],
-                                      ));
-                                }),
                             SizedBox(
                               width: 16,
                             ),
-                            Expanded(
-                                flex: 2,
-                                child: StreamBuilder<double?>(
-                                    stream:
-                                        shopController.userBalanceMinusCartCost,
-                                    builder: (context, userBalance) {
-                                      return StreamBuilder<List<ICartItem>>(
-                                          stream:
-                                              shopController.cartItemsStream,
-                                          builder: (context, snapshot) {
-                                            final cartItem = ICartItem(
-                                                product: _product!,
-                                                quantity: 1,
-                                                variant:
-                                                    _selectedProductVariant ??
-                                                        null,
-                                                notEligible:
-                                                    (userBalance.data ?? 0) <
-                                                        _product!
-                                                            .finpointsPrice);
-                                            final alreadyInCart = snapshot.data
-                                                    ?.where((el) =>
-                                                        el.isEqualParamsSet(
-                                                            cartItem))
-                                                    .firstOrNull !=
-                                                null;
-
-                                            final isAvailableVariant = _product
-                                                        ?.variants !=
-                                                    null
-                                                ? _variantSet
-                                                    ?.isAvailableVariant(
-                                                        _selectedProductVariant
-                                                                ?.attributes ??
-                                                            {})
-                                                : true;
-
-                                            final isDisabled = alreadyInCart ||
-                                                isAvailableVariant != true;
-
-                                            return MainButton(
-                                                label: alreadyInCart
-                                                    ? 'Juz w koszyku'
-                                                    : isAvailableVariant != true
-                                                        ? 'Wariant niedostępny'
-                                                        : 'Dodaj do koszyka',
-                                                icon: isDisabled
-                                                    ? null
-                                                    : 'assets/svg/cart.svg',
-                                                backgroundColor:
-                                                    colors.secondary,
-                                                isDisabled: isDisabled,
-                                                textColor: colors.primary,
-                                                isSuccess: isAddToCart,
-                                                onPressed: () {
-                                                  if (_product == null) {
-                                                    return;
-                                                  }
-
-                                                  shopController
-                                                      .addCartItem(cartItem);
-
-                                                  triggerSuccess();
-                                                });
-                                          });
-                                    })),
                           ],
                         ),
                       )
