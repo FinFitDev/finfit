@@ -45,7 +45,6 @@ class _ChooseRecipientsModalState extends State<ChooseRecipientsModal> {
         children: [
           ModalHeader(
             title: 'Send points',
-            subtitle: 'Choose recipients',
             onClose: () {
               closeModal(context);
             },

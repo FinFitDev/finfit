@@ -7,13 +7,15 @@ class IconContainer extends StatelessWidget {
   final Color? backgroundColor;
   final Color? iconColor;
   final double? ratio;
+  final double? borderRadius;
   const IconContainer(
       {super.key,
       required this.icon,
       required this.size,
       this.backgroundColor,
       this.iconColor,
-      this.ratio});
+      this.ratio,
+      this.borderRadius});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class IconContainer extends StatelessWidget {
       width: size,
       padding: EdgeInsets.all(5),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(borderRadius ?? 15),
           color: backgroundColor ?? colors.secondary.withAlpha(30)),
       child: Center(
         child: SizedBox(

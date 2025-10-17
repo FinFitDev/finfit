@@ -5,15 +5,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class ModalHeader extends StatelessWidget {
   final String title;
-  final String subtitle;
   final void Function()? goBack;
   final void Function()? onClose;
   const ModalHeader(
-      {super.key,
-      required this.title,
-      required this.subtitle,
-      this.goBack,
-      this.onClose});
+      {super.key, required this.title, this.goBack, this.onClose});
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +16,7 @@ class ModalHeader extends StatelessWidget {
     final texts = Theme.of(context).textTheme;
 
     return Container(
-      decoration: BoxDecoration(
-        border: Border(
-            bottom: BorderSide(width: 0.5, color: colors.tertiaryContainer)),
-      ),
+      color: colors.tertiaryContainer.withAlpha(40),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Row(
@@ -42,15 +34,17 @@ class ModalHeader extends StatelessWidget {
                         onPressed: goBack!,
                         child: Container(
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: colors.primaryContainer),
-                          height: 40,
-                          width: 40,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          height: 30,
+                          width: 30,
                           child: Center(
                             child: SvgPicture.asset(
                               'assets/svg/arrow_left.svg',
                               width: 15,
                               height: 15,
+                              colorFilter: ColorFilter.mode(
+                                  colors.tertiary, BlendMode.srcIn),
                             ),
                           ),
                         ),
@@ -59,19 +53,13 @@ class ModalHeader extends StatelessWidget {
             Column(
               children: [
                 SizedBox(
-                  height: HORIZOTAL_PADDING,
+                  height: 20,
                 ),
                 Text(title,
                     style: texts.headlineMedium
-                        ?.copyWith(fontWeight: FontWeight.w600)),
+                        ?.copyWith(fontWeight: FontWeight.w500)),
                 SizedBox(
-                  height: 4,
-                ),
-                Text(subtitle,
-                    style:
-                        TextStyle(color: colors.primaryFixedDim, fontSize: 14)),
-                SizedBox(
-                  height: HORIZOTAL_PADDING,
+                  height: 20,
                 )
               ],
             ),
@@ -87,15 +75,15 @@ class ModalHeader extends StatelessWidget {
                         onPressed: onClose!,
                         child: Container(
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                color: colors.primaryContainer),
-                            height: 40,
-                            width: 40,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            height: 30,
+                            width: 30,
                             child: Center(
                               child: SvgPicture.asset(
                                 'assets/svg/close.svg',
                                 colorFilter: ColorFilter.mode(
-                                    colors.primaryFixedDim, BlendMode.srcIn),
+                                    colors.tertiary, BlendMode.srcIn),
                               ),
                             )),
                       )

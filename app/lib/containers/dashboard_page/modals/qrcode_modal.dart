@@ -16,7 +16,6 @@ class QrcodeModal extends StatelessWidget {
 
     return ModalContentWrapper(
       title: 'Receive finpoints',
-      subtitle: 'Scan code',
       onClose: () {
         closeModal(context);
       },
@@ -26,17 +25,22 @@ class QrcodeModal extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 16),
-                    child: PrettyQrView.data(
-                      data: userController.currentUser!.uuid,
-                      // decoration: const PrettyQrDecoration(
-                      //   image: PrettyQrDecorationImage(
-                      //     image: AssetImage('assets/images/logo.png'),
-                      //   ),
-                      // ),
-                    )),
+                Container(
+                  margin: EdgeInsets.only(top: 16),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: colors.secondary.withAlpha(20)),
+                  padding: const EdgeInsets.all(70),
+                  child: PrettyQrView.data(
+                    data: userController.currentUser!.uuid,
+                    decoration: PrettyQrDecoration(
+                      // 👇 this controls the QR dots color
+                      shape: PrettyQrSmoothSymbol(
+                        color: colors.secondary, // ← your custom QR color
+                      ),
+                    ),
+                  ),
+                ),
                 SizedBox(
                   height: 16,
                 ),
@@ -61,7 +65,7 @@ class QrcodeModal extends StatelessWidget {
               textColor: colors.primary,
               onPressed: () {
                 Share.share(
-                    "My FinFit id is ${userController.currentUser?.uuid}");
+                    "Share your points with me. This is my ID - ${userController.currentUser?.uuid}");
               })
         ],
       ),

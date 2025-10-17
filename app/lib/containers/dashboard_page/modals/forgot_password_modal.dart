@@ -72,7 +72,6 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
                 children: [
                   ModalHeader(
                     title: 'Forgot password',
-                    subtitle: 'Reset it in the email inbox',
                     onClose: () {
                       closeModal(context);
                     },

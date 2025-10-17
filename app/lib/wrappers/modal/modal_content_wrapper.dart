@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 class ModalContentWrapper extends StatelessWidget {
   final Widget child;
   final String? title;
-  final String? subtitle;
   final void Function()? onClose;
   final void Function()? onClickBack;
 
@@ -17,7 +16,6 @@ class ModalContentWrapper extends StatelessWidget {
       required this.child,
       this.padding,
       this.title,
-      this.subtitle,
       this.onClose,
       this.onClickBack});
 
@@ -34,10 +32,9 @@ class ModalContentWrapper extends StatelessWidget {
             width: double.infinity,
             child: Column(
               children: [
-                title != null && subtitle != null
+                title != null
                     ? ModalHeader(
                         title: title!,
-                        subtitle: subtitle!,
                         onClose: onClose,
                         goBack: onClickBack,
                       )

@@ -108,8 +108,7 @@ class _TransactionsSectionState extends State<TransactionsSection> {
                     offerImage: transactionData.offer?.partner.image,
                     offerName:
                         '${transactionData.offer?.partner.name} - ${transactionData.offer?.catchString}',
-                    userImage: transactionData.secondUser?.image,
-                    username: transactionData.secondUser?.username,
+                    userInfo: transactionData.secondUsers,
                   ),
                 );
               },
@@ -158,46 +157,10 @@ Widget loadingTransactions(bool hideTitle) {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          UniversalLoaderBox(
-            height: 20,
-            width: 200,
-          ),
-          SizedBox(
-            height: 8,
-          ),
+          UniversalLoaderBox(height: 80),
           UniversalLoaderBox(height: 70),
-          SizedBox(
-            height: 16,
-          ),
-          UniversalLoaderBox(
-            height: 20,
-            width: 150,
-          ),
-          SizedBox(
-            height: 8,
-          ),
           UniversalLoaderBox(height: 70),
-          SizedBox(
-            height: 16,
-          ),
-          UniversalLoaderBox(
-            height: 20,
-            width: 250,
-          ),
-          SizedBox(
-            height: 8,
-          ),
           UniversalLoaderBox(height: 70),
-          SizedBox(
-            height: 16,
-          ),
-          UniversalLoaderBox(
-            height: 20,
-            width: 150,
-          ),
-          SizedBox(
-            height: 8,
-          ),
           UniversalLoaderBox(height: 70),
         ],
       ));

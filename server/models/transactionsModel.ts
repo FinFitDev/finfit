@@ -40,7 +40,7 @@ export const fetchTransactions = async (
             FROM users u
             WHERE u.uuid = t.user_id
           )
-      END AS second_user_ids,
+      END AS second_users,
 
       CASE
         WHEN t.second_user_ids IS NULL AND t.offer_id IS NOT NULL THEN 'REDEEM'
@@ -100,7 +100,7 @@ export const fetchRecentUserTransactions = async (userId: string) => {
             FROM users u
             WHERE u.uuid = t.user_id
           )
-      END AS second_user_ids,
+      END AS second_users,
 
       CASE
         WHEN t.second_user_ids IS NULL AND t.offer_id IS NOT NULL THEN 'REDEEM'
@@ -142,7 +142,7 @@ export const insertTransactions = async (
       : null;
 
     values.push(
-      transaction.amount_finpoints,
+      transaction.amount_points * (transaction.second_user_ids?.length ?? 1),
       transaction.user_id,
       secondUserIdsJson,
       transaction.offer_id ?? null

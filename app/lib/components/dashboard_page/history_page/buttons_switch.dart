@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:excerbuys/components/shared/buttons/category_button.dart';
 import 'package:excerbuys/store/controllers/dashboard/history_controller/history_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
@@ -18,32 +16,43 @@ class ButtonsSwitch extends StatelessWidget {
     return StreamBuilder<RECENT_DATA_CATEGORY>(
         stream: historyController.activeCategoryRecentDataStream,
         builder: (context, snapshot) {
-          return SizedBox(
-            height: 76,
+          return Container(
+            height: 50,
+            margin: EdgeInsets.all(16),
             width: layoutController.relativeContentWidth,
-            child: ListView.builder(
-              padding: EdgeInsets.all(16),
-              scrollDirection: Axis.horizontal,
-              itemCount: HISTORY_CATEGORY_BUTTONS.length,
-              itemBuilder: (context, index) {
-                final item = HISTORY_CATEGORY_BUTTONS[index];
-                return Padding(
-                  padding: EdgeInsets.only(left: index == 0 ? 0 : 10.0),
-                  child: CategoryButton(
-                    title: item['title'],
-                    icon: item['icon'],
-                    activeBackgroundColor: colors.primaryContainer,
-                    backgroundColor: colors.primary,
-                    activeTextColor: colors.tertiaryContainer,
-                    textColor: colors.tertiaryContainer,
-                    onPressed: () {
-                      onPressed(item);
-                    },
-                    fontSize: 13,
-                    isActive: snapshot.data == item['category'],
-                  ),
-                );
-              },
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: colors.primaryFixedDim.withAlpha(20)),
+            child: Padding(
+              padding: const EdgeInsets.all(6),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (var index = 0;
+                      index < HISTORY_CATEGORY_BUTTONS.length;
+                      index++) ...[
+                    if (index > 0) const SizedBox(width: 10),
+                    Expanded(
+                      child: CategoryButton(
+                        title: HISTORY_CATEGORY_BUTTONS[index]['title'],
+                        icon: HISTORY_CATEGORY_BUTTONS[index]['icon'],
+                        activeBackgroundColor: colors.primary,
+                        backgroundColor: Colors.transparent,
+                        activeTextColor: colors.tertiary,
+                        textColor: colors.primaryFixedDim,
+                        height: double.infinity,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        onPressed: () {
+                          onPressed(HISTORY_CATEGORY_BUTTONS[index]);
+                        },
+                        fontSize: 13,
+                        isActive: snapshot.data ==
+                            HISTORY_CATEGORY_BUTTONS[index]['category'],
+                      ),
+                    ),
+                  ],
+                ],
+              ),
             ),
           );
         });

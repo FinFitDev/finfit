@@ -6,8 +6,10 @@ import 'package:excerbuys/store/controllers/user_controller/user_controller.dart
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/modal/modal_content_wrapper.dart';
+import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/v4.dart';
+import 'package:uuid/uuid.dart';
 
 class RegenerateImageModal extends StatefulWidget {
   const RegenerateImageModal({super.key});
@@ -18,6 +20,11 @@ class RegenerateImageModal extends StatefulWidget {
 
 class _RegenerateImageModalState extends State<RegenerateImageModal> {
   String? _seed;
+  List<String> _randomSeeds = [];
+
+  List<String> generateUUIDs({int count = 5}) {
+    return List.generate(count, (_) => UuidV4().generate());
+  }
 
   @override
   void initState() {
@@ -26,6 +33,10 @@ class _RegenerateImageModalState extends State<RegenerateImageModal> {
     setState(() {
       _seed = userController.currentUser?.image;
     });
+
+    setState(() {
+      _randomSeeds = generateUUIDs(count: 5);
+    });
   }
 
   @override
@@ -33,8 +44,7 @@ class _RegenerateImageModalState extends State<RegenerateImageModal> {
     final colors = Theme.of(context).colorScheme;
 
     return ModalContentWrapper(
-        title: 'Regenerate image',
-        subtitle: 'Keep the one you like',
+        title: 'Change image',
         onClose: () {
           closeModal(context);
         },
@@ -49,7 +59,36 @@ class _RegenerateImageModalState extends State<RegenerateImageModal> {
                   ProfileImageGenerator(
                       seed: _seed,
                       size: MediaQuery.sizeOf(context).width -
-                          2 * HORIZOTAL_PADDING),
+                          8 * HORIZOTAL_PADDING),
+                  Container(
+                    margin: EdgeInsets.only(top: 16),
+                    height: 100,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: _randomSeeds
+                          .map(
+                            (seed) => Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  RippleWrapper(
+                                    onPressed: () {
+                                      setState(() {
+                                        _seed = seed;
+                                      });
+                                    },
+                                    child: ProfileImageGenerator(
+                                      seed: seed,
+                                      size: 50,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  )
                 ],
               ),
             ),

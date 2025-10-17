@@ -9,7 +9,7 @@ extension StepsControllerEffects on StepsController {
     setStepsLoading(true);
 
     final now = DateTime.now();
-    final lastUpdated = userController.currentUser?.stepsUpdatedAt ?? now;
+    final lastUpdated = now;
 
     final Duration difference = now.difference(lastUpdated);
     final Duration minDifference = Duration(days: 7);

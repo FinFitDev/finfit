@@ -40,6 +40,7 @@ class CategoryButton extends StatelessWidget {
               color: isActive == true ? activeBackgroundColor : backgroundColor,
               borderRadius: BorderRadius.circular(10)),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               icon != null
                   ? Container(

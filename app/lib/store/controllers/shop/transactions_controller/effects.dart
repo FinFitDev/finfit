@@ -8,7 +8,6 @@ extension TransactionsControllerEffects on TransactionsController {
       }
 
       setTransactionsLoading(true);
-      await Future.delayed(Duration(milliseconds: 2000)); // TODO remove
 
       final List<ITransactionEntry>? fetchedTransactions =
           await loadTransactionRequest(
@@ -21,7 +20,12 @@ extension TransactionsControllerEffects on TransactionsController {
       final Map<String, ITransactionEntry> transactionsMap = {
         for (final el in fetchedTransactions) el.uuid: el
       };
+
       addTransactions(transactionsMap);
+
+      offersController.addAllOffers(extractNewOffersFromTransactions(
+          transactionsMap, offersController.allOffers.content));
+
       // it means we are at the end of the data
       if (transactionsMap.length < TRANSACTION_DATA_CHUNK_SIZE) {
         setCanFetchMore(false);
@@ -40,13 +44,11 @@ extension TransactionsControllerEffects on TransactionsController {
         throw Exception('Current user is null');
       }
       setLoadingMoreData(true);
-      await Future.delayed(Duration(milliseconds: 2000)); // TODO remove
 
       List<ITransactionEntry> parsedTransactionData =
           await loadTransactionRequest(userController.currentUser!.uuid,
                   TRANSACTION_DATA_CHUNK_SIZE, lazyLoadOffset.content) ??
               [];
-
       Set<String> unique = {};
       parsedTransactionData = parsedTransactionData
           .where((element) => unique.add(element.uuid))
@@ -56,6 +58,9 @@ extension TransactionsControllerEffects on TransactionsController {
         for (var el in parsedTransactionData) el.uuid: el,
       };
 
+      addTransactions(values);
+      offersController.addAllOffers(extractNewOffersFromTransactions(
+          values, offersController.allOffers.content));
       // it means we are at the end of the data
       if (values.length < TRANSACTION_DATA_CHUNK_SIZE) {
         setCanFetchMore(false);

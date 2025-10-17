@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
     await Future.delayed(Duration(milliseconds: 300));
     activityController.setTodaysPoints(0);
     await stepsController.fetchsSteps();
-
+    await transactionsController.refresh();
     await offersController.refreshFeaturedOffers();
     await sendController.refresh();
   }
@@ -198,6 +198,9 @@ class _HomePageState extends State<HomePage> {
                                           snapshot.data?.isLoading ?? false,
                                       recentTraining: trainings);
                                 }),
+                            SizedBox(
+                              height: 24,
+                            ),
                             StreamBuilder<
                                     ContentWithLoading<
                                         Map<String, ITransactionEntry>>>(

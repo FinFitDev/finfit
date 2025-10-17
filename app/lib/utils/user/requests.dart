@@ -79,6 +79,8 @@ Future<User?> fetchUserByIdRequest(
 
     final dynamic el = res['content'];
 
+    print(el);
+
     final User result = User.fromJson(el);
 
     return result;

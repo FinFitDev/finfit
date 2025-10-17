@@ -23,7 +23,6 @@ class CartModal extends StatelessWidget {
               snapshot.data != null ? countQuantity(snapshot.data!) : 0;
           return ModalContentWrapper(
               title: 'Your cart',
-              subtitle: '$totalQuantity items selected',
               onClose: () {
                 closeModal(context);
               },

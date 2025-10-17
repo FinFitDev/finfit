@@ -8,9 +8,9 @@ class User {
   final String email;
   final DateTime? createdAt;
   final double? points;
-  final DateTime? stepsUpdatedAt;
   final String? image;
   final bool? verified;
+  final double? totalPointsEarned;
 
   User(
       {required this.uuid,
@@ -18,9 +18,9 @@ class User {
       required this.email,
       required this.createdAt,
       required this.points,
-      required this.stepsUpdatedAt,
       String? image,
-      this.verified})
+      this.verified,
+      this.totalPointsEarned})
       : image = image == 'NULL' ? null : image;
 
   // Factory constructor to create a User from a Map
@@ -35,9 +35,9 @@ class User {
         email: map['email'],
         createdAt: DateTime.parse(map['createdAt']),
         points: double.parse(map['points']), // Ensure double conversion
-        stepsUpdatedAt: DateTime.parse(map['stepsUpdatedAt']),
         image: image,
-        verified: verified);
+        verified: verified,
+        totalPointsEarned: double.parse(map['total_points_earned']));
   }
 
   @override
@@ -47,10 +47,10 @@ class User {
       "username": "$username",
       "email": "$email",
       "createdAt": "${createdAt.toString()}",
-      "stepsUpdatedAt": "${stepsUpdatedAt.toString()}",
       "points": "$points",
       "image": "$image",
-      "verified":"$verified"
+      "verified":"$verified",
+      "total_points_earned":"$totalPointsEarned" 
     }""";
   }
 
@@ -60,31 +60,31 @@ class User {
       "username": username,
       "email": email,
       "createdAt": createdAt?.toIso8601String(),
-      "stepsUpdatedAt": stepsUpdatedAt?.toIso8601String(),
       "points": points.toString(),
       "image": image,
-      'verified': verified
+      'verified': verified,
+      "total_points_earned": totalPointsEarned.toString()
     };
   }
 
-  User copyWith({
-    String? uuid,
-    String? username,
-    String? email,
-    DateTime? createdAt,
-    double? points,
-    DateTime? stepsUpdatedAt,
-    String? image,
-  }) {
+  User copyWith(
+      {String? uuid,
+      String? username,
+      String? email,
+      DateTime? createdAt,
+      double? points,
+      DateTime? stepsUpdatedAt,
+      String? image,
+      double? totalPointsEarned}) {
     return User(
         uuid: uuid ?? this.uuid,
         username: username ?? this.username,
         email: email ?? this.email,
         createdAt: createdAt ?? this.createdAt,
         points: points ?? this.points,
-        stepsUpdatedAt: stepsUpdatedAt ?? this.stepsUpdatedAt,
         image: image ?? this.image,
-        verified: verified ?? this.verified);
+        verified: verified ?? this.verified,
+        totalPointsEarned: totalPointsEarned ?? this.totalPointsEarned);
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -95,8 +95,9 @@ class User {
         email: json['email'],
         image: json['image'],
         createdAt: dateTimeParseNullish(json['created_at']),
-        stepsUpdatedAt: dateTimeParseNullish(json['steps_updated_at']),
-        verified: json['verified']);
+        verified: json['verified'],
+        totalPointsEarned:
+            parseInt(json['total_points_earned'] ?? '0').toDouble());
   }
 }
 

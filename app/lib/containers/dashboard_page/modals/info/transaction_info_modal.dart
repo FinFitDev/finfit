@@ -5,8 +5,10 @@ import 'package:excerbuys/components/shared/image_component.dart';
 import 'package:excerbuys/components/shared/indicators/labels/empty_data_modal.dart';
 import 'package:excerbuys/components/shared/list/list_component.dart';
 import 'package:excerbuys/components/shared/positions/position_with_background.dart';
+import 'package:excerbuys/components/shared/positions/position_with_title.dart';
 import 'package:excerbuys/components/shared/profile_image_generator.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/product_info_modal.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/offer_info_modal.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/transactions_controller/transactions_controller.dart';
@@ -16,9 +18,11 @@ import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/shop/transaction/utils.dart';
 import 'package:excerbuys/utils/utils.dart';
+import 'package:excerbuys/wrappers/modal/modal_content_wrapper.dart';
 import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class TransactionInfoModal extends StatefulWidget {
   final String transactionId;
@@ -78,190 +82,181 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
 
-    final color = _transactionType == TRANSACTION_TYPE.REDEEM ||
-            _transactionType == TRANSACTION_TYPE.SEND
-        ? colors.error
-        : colors.secondary;
+    final color = getTransactionTypeColor(
+        _transactionType ?? TRANSACTION_TYPE.UNKNOWN, colors);
 
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom:
-            MediaQuery.of(context).viewInsets.bottom, // Adjust with keyboard
-      ),
-      child: ClipRRect(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(MODAL_BORDER_RADIUS),
-              topRight: Radius.circular(MODAL_BORDER_RADIUS)),
-          child: Container(
-              height: MediaQuery.sizeOf(context).height * 0.9,
-              color: colors.primary,
-              width: double.infinity,
-              padding: EdgeInsets.only(
-                  top: 2 * HORIZOTAL_PADDING,
-                  left: HORIZOTAL_PADDING,
-                  right: HORIZOTAL_PADDING,
-                  bottom: layoutController.bottomPadding + HORIZOTAL_PADDING),
-              child: _error
-                  ? EmptyDataModal(
-                      message: "Couldn't find transaction data",
-                    )
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Row(
-                          children: [
-                            Stack(
-                              children: [
-                                _transactionType == TRANSACTION_TYPE.REDEEM
-                                    ? ImageComponent(
-                                        size: 80,
-                                        image:
-                                            _transaction?.offer?.partner.image,
-                                      )
-                                    : ProfileImageGenerator(
-                                        size: 80,
-                                        seed: _transaction?.secondUser?.image,
-                                      ),
-                                _transactionType != TRANSACTION_TYPE.REDEEM
-                                    ? Positioned(
-                                        right: 0,
-                                        bottom: 0,
-                                        child: IconContainer(
-                                          icon: _transactionType ==
-                                                  TRANSACTION_TYPE.RECEIVE
-                                              ? 'assets/svg/receiveArrow.svg'
-                                              : 'assets/svg/sendArrow.svg',
-                                          size: 30,
-                                          backgroundColor: color,
-                                        ))
-                                    : SizedBox.shrink()
-                              ],
-                            ),
-                            SizedBox(
-                              width: 16,
-                            ),
-                            Expanded(
-                                child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  capitalizeFirst(_transaction?.type),
-                                  textAlign: TextAlign.start,
-                                  style: texts.headlineLarge
-                                      ?.copyWith(color: color),
-                                ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Text(
-                                  '${getDayName(_daysAgo)}, ${getDayNumber(_daysAgo)} ${getDayMonth(_daysAgo)} ${getDayYear(_daysAgo)}',
-                                  textAlign: TextAlign.left,
-                                  style: texts.headlineMedium?.copyWith(
-                                      fontWeight: FontWeight.w300,
-                                      color: colors.tertiaryContainer),
-                                ),
-                              ],
-                            ))
-                          ],
-                        ),
-                        SizedBox(
-                          height: 32,
-                        ),
-                        Expanded(
-                          child: Column(
+    return ModalContentWrapper(
+      title: getTransactionTitle(_transactionType ?? TRANSACTION_TYPE.UNKNOWN),
+      onClose: () {
+        closeModal(context);
+      },
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 16,
+                        children: [
+                          IconContainer(
+                            icon: getTransactionTypeIcon(
+                                _transactionType ?? TRANSACTION_TYPE.UNKNOWN),
+                            size: 60,
+                            backgroundColor: color,
+                            iconColor: colors.primary,
+                            borderRadius: 200,
+                          ),
+                          Row(
+                            spacing: 8,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              StreamBuilder<bool>(
-                                  stream:
-                                      dashboardController.balanceHiddenStream,
-                                  builder: (context, snapshot) {
-                                    final bool isHidden =
-                                        snapshot.data ?? false;
-                                    return ListComponent(
-                                      data: {
-                                        'Status': 'Confirmed',
-                                        'Timestamp':
-                                            '${_transaction!.createdAt.hour}:${_transaction!.createdAt.minute.toString().padLeft(2, '0')}',
-                                        if (_transaction?.secondUser != null)
-                                          'Interacted with': Row(
-                                            children: [
-                                              PositionWithBackground(
-                                                name: _transaction?.secondUser
-                                                        ?.username ??
-                                                    'Unknown',
-                                                image: _transaction
-                                                    ?.secondUser?.image,
-                                                textStyle: TextStyle(
-                                                  color:
-                                                      colors.tertiaryContainer,
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        if (_transaction?.offer != null)
-                                          'Product': Row(
-                                            children: [
-                                              // RippleWrapper(
-                                              //   onPressed: () {
-                                              //     closeModal(context);
-
-                                              //     // openModal(
-                                              //     //     context,
-                                              //     //     ProductInfoModal(
-                                              //     //         productId:
-                                              //     //             _transaction!
-                                              //     //                 .offer!
-                                              //     //                 .id));
-                                              //   },
-                                              //   child: PositionWithBackground(
-                                              //     name: _transaction
-                                              //             ?.product?.name ??
-                                              //         'Unknown',
-                                              //     image: _transaction
-                                              //         ?.product?.mainImage,
-                                              //     textStyle: TextStyle(
-                                              //       color: colors
-                                              //           .tertiaryContainer,
-                                              //       fontSize: 12,
-                                              //     ),
-                                              //   ),
-                                              // ),
-                                            ],
-                                          ),
-                                      },
-                                      summary:
-                                          '${isHidden ? '*****' : '${_transactionType == TRANSACTION_TYPE.RECEIVE ? '+' : '-'}${formatNumber(_transaction?.amountPoints?.round() ?? 0)}'} finpoints',
-                                      summaryColor: color,
-                                    );
-                                  }),
+                              Text(
+                                '${_transactionType == TRANSACTION_TYPE.RECEIVE ? "+" : '-'}${(_transaction?.amountPoints ?? 0).toStringAsFixed(0)}',
+                                style: TextStyle(
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.w700,
+                                    color: color),
+                              ),
+                              Text(
+                                'points',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                    color: color.withAlpha(150)),
+                              )
                             ],
                           ),
-                        ),
-                        Text(
-                          'Transaction ID',
-                          style: TextStyle(
-                            color: colors.tertiaryContainer,
-                            fontSize: 14,
+                        ],
+                      ),
+                    ),
+                    PositionWithTitle(
+                      title: 'Transaction timestamp',
+                      value: _transaction != null
+                          ? parseDate(_transaction!.createdAt)
+                          : "",
+                      icon: 'assets/svg/clock.svg',
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 16),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: colors.primaryContainer),
+                      padding: EdgeInsets.all(16),
+                      child: Column(
+                        spacing: 8,
+                        children: [
+                          Row(
+                            spacing: 8,
+                            children: [
+                              SvgPicture.asset(
+                                _transactionType == TRANSACTION_TYPE.REDEEM
+                                    ? 'assets/svg/gift.svg'
+                                    : 'assets/svg/people.svg',
+                                colorFilter: ColorFilter.mode(
+                                    colors.primaryFixedDim, BlendMode.srcIn),
+                                height: 20,
+                              ),
+                              Text(
+                                getTransactionTypeText(_transactionType ??
+                                    TRANSACTION_TYPE.UNKNOWN),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: colors.primaryFixedDim,
+                                ),
+                              )
+                            ],
                           ),
-                          textAlign: TextAlign.left,
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        CopyText(textToCopy: _transaction?.uuid ?? ''),
-                        SizedBox(
-                          height: 24,
-                        ),
-                        MainButton(
-                            label: 'Close',
-                            backgroundColor:
-                                colors.tertiaryContainer.withAlpha(80),
-                            textColor: colors.primaryFixedDim,
-                            onPressed: () {
-                              closeModal(context);
-                            })
-                      ],
-                    ))),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          ...(_transaction?.secondUsers ?? [])
+                              .map((user) => Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: colors.tertiaryContainer
+                                            .withAlpha(30)),
+                                    child: Row(
+                                      spacing: 8,
+                                      children: [
+                                        ProfileImageGenerator(
+                                            seed: user.image, size: 35),
+                                        Expanded(
+                                          child: Text(
+                                            user.username,
+                                            style: TextStyle(
+                                                color: colors.tertiary,
+                                                fontWeight: FontWeight.w500),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )),
+                          _transaction?.offer != null
+                              ? RippleWrapper(
+                                  onPressed: () {
+                                    openModal(
+                                        context,
+                                        OfferInfoModal(
+                                            offer: _transaction!.offer!));
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: colors.tertiaryContainer
+                                            .withAlpha(30)),
+                                    child: Row(
+                                      spacing: 8,
+                                      children: [
+                                        ImageComponent(
+                                          image: _transaction!
+                                              .offer!.partner.image,
+                                          size: 35,
+                                          borderRadius: 10,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            '${_transaction!.offer!.partner.name} - ${_transaction!.offer!.catchString}',
+                                            style: TextStyle(
+                                                color: colors.tertiary,
+                                                fontWeight: FontWeight.w500),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : SizedBox.shrink()
+                        ],
+                      ),
+                    ),
+                  ]),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(top: 16),
+            child: MainButton(
+                label: 'Close',
+                backgroundColor: colors.tertiaryContainer.withAlpha(40),
+                textColor: colors.primaryFixedDim,
+                onPressed: () {
+                  closeModal(context);
+                }),
+          )
+        ],
+      ),
     );
   }
 }

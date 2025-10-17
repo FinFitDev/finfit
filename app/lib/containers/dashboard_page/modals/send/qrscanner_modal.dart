@@ -58,7 +58,6 @@ class _QrscannerModalState extends State<QrscannerModal> {
           children: [
             ModalHeader(
               title: 'Send points',
-              subtitle: 'Scan QR code',
               goBack: () => Navigator.pop(context),
             ),
             Expanded(

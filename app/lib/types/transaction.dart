@@ -1,4 +1,3 @@
-import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/types/shop/offer.dart';
 import 'package:excerbuys/types/user.dart';
 
@@ -8,7 +7,7 @@ class ITransactionEntry {
   final DateTime createdAt;
   final double? amountPoints;
   final IOfferEntry? offer;
-  final User? secondUser;
+  final List<User>? secondUsers;
 
   ITransactionEntry({
     required this.uuid,
@@ -16,14 +15,14 @@ class ITransactionEntry {
     required this.createdAt,
     this.amountPoints,
     this.offer,
-    this.secondUser,
+    this.secondUsers,
   });
 
   Map<String, dynamic> toJson() {
     return {
       'uuid': uuid,
       'type': type,
-      'second_user': secondUser.toString(),
+      'second_users': secondUsers?.map((el) => el.toString()).toList() ?? [],
       'amount_points': amountPoints,
       'created_at': createdAt,
       'offer': offer?.toJson(),
@@ -34,9 +33,9 @@ class ITransactionEntry {
     return ITransactionEntry(
       uuid: json['uuid'],
       type: json['type'],
-      secondUser: json['second_user'] != null
-          ? User.fromJson(json['second_user'])
-          : null,
+      secondUsers: (json['second_users'] as List<dynamic>?)
+          ?.map((variant) => User.fromJson(variant))
+          .toList(),
       amountPoints: (json['amount_points'] as num?)?.toDouble(),
       createdAt: DateTime.parse(json['created_at']).toLocal(),
       offer: json['offer'] != null ? IOfferEntry.fromJson(json['offer']) : null,

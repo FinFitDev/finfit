@@ -6,6 +6,7 @@ import 'package:excerbuys/components/input_with_icon.dart';
 import 'package:excerbuys/components/modal/modal_header.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/components/shared/list/list_component.dart';
+import 'package:excerbuys/components/shared/positions/position_with_title.dart';
 import 'package:excerbuys/store/controllers/app_controller/app_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard/send_controller/send_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
@@ -55,7 +56,6 @@ class _AmountModalState extends State<AmountModal> {
 
     return ModalContentWrapper(
       title: 'Send points',
-      subtitle: 'Enter amount',
       onClickBack: widget.previousPage,
       onClose: () {
         closeModal(context);
@@ -125,20 +125,57 @@ class _AmountModalState extends State<AmountModal> {
                 StreamBuilder<int?>(
                     stream: sendController.amountStream,
                     builder: (context, snapshot) {
-                      return ListComponent(
-                        data: {
-                          'Amount':
-                              '${formatNumber(snapshot.data ?? 0)} points',
-                          'No. of recipients':
-                              '${sendController.chosenUsersIds.length}',
-                          'Current balance':
-                              '${formatNumber((userController.userBalance ?? 0).round())} points',
-                          'Remaining balance':
-                              '${formatNumber(max(((userController.userBalance ?? 0) - (snapshot.data ?? 0) * sendController.chosenUsersIds.length), 0).round())} points'
-                        },
-                        summary:
-                            '${(snapshot.data ?? 0) * sendController.chosenUsersIds.length} points',
-                        summaryColor: colors.secondary,
+                      // return ListComponent(
+                      //   data: {
+                      //     'Amount':
+                      //         '${formatNumber(snapshot.data ?? 0)} points',
+                      //     'No. of recipients':
+                      //         '${sendController.chosenUsersIds.length}',
+                      //     'Current balance':
+                      //         '${formatNumber((userController.userBalance ?? 0).round())} points',
+                      //     'Remaining balance':
+                      //         '${formatNumber(max(((userController.userBalance ?? 0) - (snapshot.data ?? 0) * sendController.chosenUsersIds.length), 0).round())} points'
+                      //   },
+                      //   summary:
+                      //       '${(snapshot.data ?? 0) * sendController.chosenUsersIds.length} points',
+                      //   summaryColor: colors.secondary,
+                      // );
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          PositionWithTitle(
+                              title: 'Input amount',
+                              icon: 'assets/svg/dollar.svg',
+                              value:
+                                  '${formatNumber(snapshot.data ?? 0)} points'),
+                          PositionWithTitle(
+                              title: 'Number of recipients',
+                              icon: 'assets/svg/people.svg',
+                              value:
+                                  '${sendController.chosenUsersIds.length} recipeints'),
+                          PositionWithTitle(
+                              title: 'Current balance',
+                              icon: 'assets/svg/trend_up.svg',
+                              value:
+                                  '${formatNumber((userController.userBalance ?? 0).round())} points'),
+                          Container(
+                            margin: EdgeInsets.only(top: 16),
+                            decoration: BoxDecoration(
+                              color: colors.error.withAlpha(20),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 12),
+                            child: Text(
+                              '${formatNumber((snapshot.data ?? 0) * sendController.chosenUsersIds.length)} points',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: colors.error,
+                                  fontWeight: FontWeight.w600),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
                       );
                     }),
               ],

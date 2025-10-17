@@ -8,10 +8,12 @@ import 'package:excerbuys/store/controllers/layout_controller/layout_controller.
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -47,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   stream: userController.currentUserStream,
                   builder: (context, userSnapshot) {
                     return ProfileImageGenerator(
-                        seed: userController.currentUser?.image, size: 170);
+                        seed: userController.currentUser?.image, size: 130);
                   }),
             ),
           ),
@@ -68,26 +70,88 @@ class _ProfilePageState extends State<ProfilePage> {
           SizedBox(
             height: 24,
           ),
+          Row(children: [
+            Text(
+              'Your statistics',
+              style: texts.headlineMedium
+                  ?.copyWith(color: colors.tertiaryContainer),
+            ),
+            SizedBox(
+              width: 16,
+            ),
+            Expanded(
+                child: Container(
+              height: 0.5,
+              color: colors.tertiaryContainer,
+            ))
+          ]),
+          SizedBox(
+            height: 16,
+          ),
           Wrap(
             runSpacing: 6,
             children: [
-              Postition(
-                label: 'Personal details',
-                onPressed: () {},
-                iconRight: 'assets/svg/arrow-right.svg',
-              ),
-              Postition(
-                label: 'Contracts',
-                onPressed: () {},
-                iconRight: 'assets/svg/arrow-right.svg',
-              ),
-              Postition(
-                label: 'Recommend',
-                onPressed: () {},
-              ),
-              Postition(
-                label: 'Rate the app',
-                onPressed: () {},
+              Container(
+                height: 100,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      colors.secondary,
+                      colors.secondary.withAlpha(150),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Total points earned',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: colors.primary.withAlpha(200)),
+                            ),
+                            StreamBuilder<double?>(
+                                stream:
+                                    userController.userTotalPointsEarnedStream,
+                                builder: (context, snapshot) {
+                                  return Text(
+                                    snapshot.data == null
+                                        ? '0'
+                                        : formatNumber(snapshot.data!.round()),
+                                    style: TextStyle(
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.w700,
+                                        color: colors.primary),
+                                  );
+                                }),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: SvgPicture.asset(
+                        'assets/svg/trend_up.svg',
+                        fit: BoxFit.contain,
+                        colorFilter: ColorFilter.mode(
+                            colors.primary.withAlpha(200), BlendMode.srcIn),
+                        width: 50,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

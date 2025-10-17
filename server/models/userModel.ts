@@ -3,7 +3,7 @@ import { insertTransactions } from "./transactionsModel";
 
 export const fetchAllUsers = async (limit: number, offset: number) => {
   const response = await pool.query(
-    "SELECT uuid, username, email, image, created_at, points, steps_updated_at FROM users LIMIT $1 OFFSET $2",
+    "SELECT uuid, username, email, image, created_at, points, total_points_earned FROM users LIMIT $1 OFFSET $2",
     [limit, offset]
   );
 
@@ -18,7 +18,7 @@ export const fetchUsersByRegex = async (
   const formattedRegex = `%${regex.toLowerCase()}%`;
 
   const response = await pool.query(
-    "SELECT uuid, username, email, image, created_at, points, steps_updated_at FROM users u WHERE LOWER(u.username) LIKE $1 OR LOWER(u.email) LIKE $1 LIMIT $2 OFFSET $3",
+    "SELECT uuid, username, email, image, created_at, points, total_points_earned FROM users u WHERE LOWER(u.username) LIKE $1 OR LOWER(u.email) LIKE $1 LIMIT $2 OFFSET $3",
     [formattedRegex, limit, offset]
   );
   return response;
@@ -26,7 +26,7 @@ export const fetchUsersByRegex = async (
 
 export const fetchUserById = async (id: string) => {
   const response = await pool.query(
-    "SELECT uuid, username, email, image, created_at, points, steps_updated_at, verified FROM users WHERE users.uuid = $1",
+    "SELECT uuid, username, email, image, created_at, points, total_points_earned, verified FROM users WHERE users.uuid = $1",
     [id]
   );
 
@@ -35,7 +35,7 @@ export const fetchUserById = async (id: string) => {
 
 export const fetchUsersByIds = async (ids: string[]) => {
   const response = await pool.query(
-    "SELECT uuid, username, email, image, created_at, points, steps_updated_at, verified FROM users WHERE users.uuid = ANY($1)",
+    "SELECT uuid, username, email, image, created_at, points, total_points_earned, verified FROM users WHERE users.uuid = ANY($1)",
     [ids]
   );
 
@@ -196,7 +196,7 @@ export const transferPointsTransaction = async (
         {
           second_user_ids: recipientsIds,
           user_id: userId,
-          amount_finpoints: fractionAmount,
+          amount_points: fractionAmount,
         },
       ],
       client

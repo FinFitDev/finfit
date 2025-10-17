@@ -76,9 +76,8 @@ class _InputWithIconState extends State<InputWithIcon> {
 
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(widget.borderRadius ?? 20),
-          border: Border.all(
-              color: colors.primaryFixedDim.withAlpha(50), width: 1)),
+        borderRadius: BorderRadius.circular(widget.borderRadius ?? 20),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -171,13 +170,17 @@ class _InputWithIconState extends State<InputWithIcon> {
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(widget.borderRadius ?? 20),
                 borderSide: BorderSide(
-                    color: isError ? colors.error : Colors.transparent,
+                    color: isError
+                        ? colors.error
+                        : colors.primaryFixedDim.withAlpha(50),
                     width: 1),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(widget.borderRadius ?? 20),
                 borderSide: BorderSide(
-                    color: isError ? colors.error : Colors.transparent,
+                    color: isError
+                        ? colors.error
+                        : colors.primaryFixedDim.withAlpha(50),
                     width: 1),
               ),
               filled: true,

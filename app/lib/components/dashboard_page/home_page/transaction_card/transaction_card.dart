@@ -3,7 +3,9 @@ import 'package:excerbuys/components/shared/image_component.dart';
 import 'package:excerbuys/components/shared/profile_image_generator.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/types/enums.dart';
+import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
+import 'package:excerbuys/utils/shop/transaction/utils.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -18,49 +20,41 @@ class TransactionCard extends StatefulWidget {
   final String? offerName;
 
   // second user interaction
-  final String? userImage;
-  final String? username;
+  final List<User>? userInfo;
 
-  const TransactionCard(
-      {super.key,
-      required this.points,
-      required this.onPressed,
-      required this.date,
-      required this.type,
-      this.offerImage,
-      this.offerName,
-      this.userImage,
-      this.username});
+  const TransactionCard({
+    super.key,
+    required this.points,
+    required this.onPressed,
+    required this.date,
+    required this.type,
+    this.offerImage,
+    this.offerName,
+    this.userInfo,
+  });
 
   @override
   State<TransactionCard> createState() => _TransactionCardState();
 }
 
 class _TransactionCardState extends State<TransactionCard> {
-  String getTransactionTypeText(TRANSACTION_TYPE type) {
-    switch (type) {
-      case TRANSACTION_TYPE.REDEEM:
-        return 'Redeemed';
-      case TRANSACTION_TYPE.SEND:
-        return 'Sent to';
-      case TRANSACTION_TYPE.RECEIVE:
-        return 'Received from';
-      default:
-        return '';
+  String getUsersText(List<User> secondUsers) {
+    if (secondUsers.isEmpty) {
+      return 'Unknown';
     }
-  }
 
-  Color getTransactionTypeColor(TRANSACTION_TYPE type, ColorScheme colors) {
-    switch (type) {
-      case TRANSACTION_TYPE.REDEEM:
-        return colors.secondary;
-      case TRANSACTION_TYPE.SEND:
-        return colors.error;
-      case TRANSACTION_TYPE.RECEIVE:
-        return colors.secondaryContainer;
-      default:
-        return colors.tertiaryContainer;
+    if (secondUsers.length > 2) {
+      return 'Multiple users';
     }
+
+    String result =
+        secondUsers.fold("", (prev, user) => prev + '${user.username} + ');
+
+    if (result.isNotEmpty) {
+      result = result.substring(0, result.length - 3);
+    }
+
+    return result;
   }
 
   @override
@@ -71,19 +65,15 @@ class _TransactionCardState extends State<TransactionCard> {
     final color = getTransactionTypeColor(widget.type, colors);
 
     return RippleWrapper(
-      onPressed: widget.onPressed,
-      child: Container(
+        onPressed: widget.onPressed,
+        child: Container(
           color: Colors.transparent,
-          height: 75,
+          height: 80,
           padding: EdgeInsets.all(10),
           child: Row(
             children: [
               IconContainer(
-                icon: widget.type == TRANSACTION_TYPE.REDEEM
-                    ? 'assets/svg/gift.svg'
-                    : widget.type == TRANSACTION_TYPE.RECEIVE
-                        ? 'assets/svg/arrowReceive.svg'
-                        : 'assets/svg/arrowSend.svg',
+                icon: getTransactionTypeIcon(widget.type),
                 size: 50,
                 backgroundColor: color.withAlpha(20),
                 iconColor: color,
@@ -94,6 +84,7 @@ class _TransactionCardState extends State<TransactionCard> {
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 6,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -101,28 +92,12 @@ class _TransactionCardState extends State<TransactionCard> {
                         Text(getTransactionTypeText(widget.type),
                             style: texts.titleMedium
                                 ?.copyWith(fontWeight: FontWeight.w600)),
-
                         Text(
                             '${widget.type == TRANSACTION_TYPE.RECEIVE ? '+' : '-'}${widget.points}',
                             style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
                                 color: color)),
-                        // Container(
-                        //   margin: EdgeInsets.only(right: 6),
-                        //   child: StreamBuilder<bool>(
-                        //       stream: dashboardController.balanceHiddenStream,
-                        //       builder: (context, snapshot) {
-                        //         final bool isHidden = snapshot.data ?? false;
-                        //         return Text(
-                        //             isHidden
-                        //                 ? '***** finpoints'
-                        //                 : '${widget.type == TRANSACTION_TYPE.RECEIVE ? '+' : '-'}${widget.points.abs().toString()} finpoints',
-                        //             style: texts.headlineMedium?.copyWith(
-                        //               color: color,
-                        //             ));
-                        //       }),
-                        // ),
                       ],
                     ),
                     Row(
@@ -134,9 +109,23 @@ class _TransactionCardState extends State<TransactionCard> {
                                 child: Row(
                                   spacing: 4,
                                   children: [
-                                    ImageComponent(
-                                      size: 14,
-                                      image: widget.offerImage,
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withAlpha(10),
+                                            spreadRadius: 1,
+                                            blurRadius: 1,
+                                            offset: Offset(0, 1),
+                                          ),
+                                        ],
+                                      ),
+                                      child: ImageComponent(
+                                        size: 14,
+                                        image: widget.offerImage,
+                                      ),
                                     ),
                                     Expanded(
                                       child: Text(
@@ -153,11 +142,59 @@ class _TransactionCardState extends State<TransactionCard> {
                               )
                             : widget.type == TRANSACTION_TYPE.RECEIVE ||
                                     widget.type == TRANSACTION_TYPE.SEND
-                                ? Text(
-                                    widget.username ?? 'Unknown',
-                                    style: TextStyle(
-                                      color: colors.tertiaryContainer,
-                                      fontSize: 13,
+                                ? Expanded(
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          height: 16,
+                                          width:
+                                              ((widget.userInfo?.length ?? 1) *
+                                                      12.0) +
+                                                  12,
+                                          child: Stack(
+                                            children: (widget.userInfo ?? [])
+                                                .asMap()
+                                                .entries
+                                                .map((entry) {
+                                              final index = entry.key;
+                                              final user = entry.value;
+                                              return Positioned(
+                                                left: index * 12.0,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            100),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.black
+                                                            .withAlpha(10),
+                                                        spreadRadius: 1,
+                                                        blurRadius: 1,
+                                                        offset: Offset(0, 1),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: ProfileImageGenerator(
+                                                    seed: user.image,
+                                                    size: 14,
+                                                  ),
+                                                ),
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            getUsersText(widget.userInfo!),
+                                            style: TextStyle(
+                                                color: colors.tertiaryContainer,
+                                                fontSize: 12),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   )
                                 : Text(
@@ -178,7 +215,7 @@ class _TransactionCardState extends State<TransactionCard> {
                 ),
               )
             ],
-          )),
-    );
+          ),
+        ));
   }
 }

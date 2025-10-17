@@ -1,6 +1,7 @@
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/components/shared/image_component.dart';
 import 'package:excerbuys/components/shared/images/image_box.dart';
+import 'package:excerbuys/components/shared/positions/position_with_title.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/types/shop/offer.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
@@ -17,8 +18,7 @@ class OfferInfoModal extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
 
     return ModalContentWrapper(
-      title: 'Offer details',
-      subtitle: 'Review & claim',
+      title: 'Review offer',
       onClose: () {
         closeModal(context);
       },
@@ -169,72 +169,16 @@ class OfferInfoModal extends StatelessWidget {
                           ],
                         );
                       }),
-                  SizedBox(height: 8),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        'Valid until',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: colors.tertiaryContainer,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            parseDate(DateTime.parse(offer.validUntil)),
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: colors.tertiary,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(width: 16),
-                        ],
-                      ),
-                    ],
+                  PositionWithTitle(
+                    title: 'Valid until',
+                    value: parseDate(DateTime.parse(offer.validUntil)),
+                    icon: 'assets/svg/clock.svg',
                   ),
-                  SizedBox(
-                    height: 8,
+                  PositionWithTitle(
+                    title: 'Claimed by others',
+                    value: '${offer.totalRedeemed.toString()} times',
+                    icon: 'assets/svg/gift.svg',
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        'Redeemed',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: colors.tertiaryContainer,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            '${offer.totalRedeemed.toString()} times',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: colors.tertiary,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(width: 16),
-                        ],
-                      ),
-                    ],
-                  )
                 ],
               ),
             ),

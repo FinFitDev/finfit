@@ -16,10 +16,10 @@ export interface IUser {
   password?: string;
   google_id?: string;
   created_at: string;
-  steps_updated_at: string;
   points: number;
   image?: string;
   verified?: boolean;
+  total_points_earned: number;
 }
 
 export type IUserNoPassword = Omit<IUser, "password">;
@@ -112,7 +112,7 @@ export interface ITransactionEntryResponse {
 }
 
 export interface ITransactionInsert {
-  amount_finpoints: number;
+  amount_points: number;
   user_id: string;
   second_user_ids?: string[];
   offer_id?: string;

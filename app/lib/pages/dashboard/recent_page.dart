@@ -35,7 +35,7 @@ class _RecentPageState extends State<RecentPage> {
         stream: historyController.recentPageUpdateTrigger(),
         builder: (context, snapshot) {
           return InfiniteListWrapper(
-              on: snapshot.data != RECENT_DATA_CATEGORY.DAILY,
+              on: true,
               padding:
                   EdgeInsets.only(bottom: APPBAR_HEIGHT + HORIZOTAL_PADDING),
               canFetchMore: snapshot.data == RECENT_DATA_CATEGORY.WORKOUTS
@@ -80,55 +80,43 @@ class _RecentPageState extends State<RecentPage> {
                   ),
 
                   AnimatedSwitcherWrapper(
-                      child: snapshot.data == RECENT_DATA_CATEGORY.DAILY
+                      child: snapshot.data == RECENT_DATA_CATEGORY.TRANSACTIONS
                           ? Container(
                               constraints: BoxConstraints(
                                   minHeight: _isAnimating ? 15000 : 0),
-                              key: ValueKey('DailyData'),
+                              key: ValueKey('Transactions'),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  DailyDataContainer(),
+                                  ValueListenableBuilder(
+                                      valueListenable: scrollMoreProgress,
+                                      builder: (context, value, child) {
+                                        return HistoricalTransactions(
+                                          scrollLoadMoreProgress:
+                                              min(max(value, 0), 100),
+                                        );
+                                      })
                                 ],
                               ),
                             )
-                          : snapshot.data == RECENT_DATA_CATEGORY.TRANSACTIONS
-                              ? Container(
-                                  constraints: BoxConstraints(
-                                      minHeight: _isAnimating ? 15000 : 0),
-                                  key: ValueKey('Transactions'),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      ValueListenableBuilder(
-                                          valueListenable: scrollMoreProgress,
-                                          builder: (context, value, child) {
-                                            return HistoricalTransactions(
-                                              scrollLoadMoreProgress:
-                                                  min(max(value, 0), 100),
-                                            );
-                                          })
-                                    ],
-                                  ),
-                                )
-                              : Container(
-                                  constraints: BoxConstraints(
-                                      minHeight: _isAnimating ? 15000 : 0),
-                                  key: ValueKey('Workouts'),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      ValueListenableBuilder(
-                                          valueListenable: scrollMoreProgress,
-                                          builder: (context, value, child) {
-                                            return HistoricalWorkouts(
-                                              scrollLoadMoreProgress:
-                                                  min(max(value, 0), 100),
-                                            );
-                                          })
-                                    ],
-                                  ),
-                                ))
+                          : Container(
+                              constraints: BoxConstraints(
+                                  minHeight: _isAnimating ? 15000 : 0),
+                              key: ValueKey('Workouts'),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  ValueListenableBuilder(
+                                      valueListenable: scrollMoreProgress,
+                                      builder: (context, value, child) {
+                                        return HistoricalWorkouts(
+                                          scrollLoadMoreProgress:
+                                              min(max(value, 0), 100),
+                                        );
+                                      })
+                                ],
+                              ),
+                            ))
                 ],
               ));
         });

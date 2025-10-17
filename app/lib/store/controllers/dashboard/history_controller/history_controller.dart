@@ -11,7 +11,7 @@ part 'selectors.dart';
 
 class HistoryController {
   final BehaviorSubject<RECENT_DATA_CATEGORY> _activeCategoryRecentData =
-      BehaviorSubject.seeded(RECENT_DATA_CATEGORY.DAILY);
+      BehaviorSubject.seeded(RECENT_DATA_CATEGORY.WORKOUTS);
   Stream<RECENT_DATA_CATEGORY> get activeCategoryRecentDataStream =>
       _activeCategoryRecentData.stream;
   RECENT_DATA_CATEGORY get activeCategoryRecentData =>

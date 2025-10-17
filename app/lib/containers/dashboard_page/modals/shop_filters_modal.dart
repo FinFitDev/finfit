@@ -96,7 +96,6 @@ class _ShopFiltersModalState extends State<ShopFiltersModal> {
       ),
       child: ModalContentWrapper(
           title: 'Shop filters',
-          subtitle: 'Find what you need',
           onClose: () {
             closeModal(context);
           },
