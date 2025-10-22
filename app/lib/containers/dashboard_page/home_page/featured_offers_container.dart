@@ -1,8 +1,8 @@
 import 'package:excerbuys/components/shared/image_component.dart';
 import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
+import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/types/shop/offer.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -34,7 +34,31 @@ class FeaturedOffersContainer extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING),
-            child: Text('Featured rewards', style: texts.headlineLarge),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text('Featured rewards', style: texts.headlineLarge),
+                RippleWrapper(
+                  onPressed: () {
+                    dashboardController.setActivePage(2);
+                  },
+                  child: Row(
+                    spacing: 4,
+                    children: [
+                      Text('See all',
+                          style:
+                              TextStyle(color: colors.secondary, fontSize: 14)),
+                      SvgPicture.asset(
+                        'assets/svg/arrowSend.svg',
+                        colorFilter:
+                            ColorFilter.mode(colors.secondary, BlendMode.srcIn),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
           SizedBox(
             height: 180,

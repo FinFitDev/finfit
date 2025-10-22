@@ -1,18 +1,22 @@
 import 'package:excerbuys/components/dashboard_page/home_page/activity_card/activity_card.dart';
 import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/workout_info_modal.dart';
+import 'package:excerbuys/store/controllers/dashboard/history_controller/history_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/types/activity.dart';
+import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/home/utils.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
+import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:health/health.dart';
 
 class RecentTrainingSection extends StatefulWidget {
   final Map<String, ITrainingEntry> recentTraining;
   final bool? isLoading;
-  final bool? isDaily;
   final bool? hideTitle;
   final bool? allowLoadMore;
 
@@ -20,7 +24,6 @@ class RecentTrainingSection extends StatefulWidget {
     super.key,
     required this.recentTraining,
     this.isLoading,
-    this.isDaily,
     this.hideTitle,
     this.allowLoadMore,
   });
@@ -37,12 +40,7 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
 
     // Empty state
     if (widget.recentTraining.isEmpty && widget.isLoading != true) {
-      return emptyActivity(
-        colors,
-        texts,
-        widget.isDaily ?? false,
-        widget.hideTitle ?? false,
-      );
+      return emptyActivity(colors, texts, widget.hideTitle == true);
     }
 
     return Container(
@@ -56,9 +54,32 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (widget.hideTitle != true)
-            Text(
-              widget.isDaily == true ? 'Daily workouts' : 'Last workouts',
-              style: texts.headlineLarge,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text('Last workouts', style: texts.headlineLarge),
+                RippleWrapper(
+                  onPressed: () {
+                    historyController
+                        .setActiveCategory(RECENT_DATA_CATEGORY.WORKOUTS);
+                    dashboardController.setActivePage(3);
+                  },
+                  child: Row(
+                    spacing: 4,
+                    children: [
+                      Text('See all',
+                          style:
+                              TextStyle(color: colors.secondary, fontSize: 14)),
+                      SvgPicture.asset(
+                        'assets/svg/arrowSend.svg',
+                        colorFilter:
+                            ColorFilter.mode(colors.secondary, BlendMode.srcIn),
+                      )
+                    ],
+                  ),
+                )
+              ],
             ),
           if (widget.isLoading == true)
             loadingWorkouts(widget.hideTitle ?? false)
@@ -74,7 +95,7 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
                     .firstWhere((el) => el.name == entry.type);
 
                 return Container(
-                  margin: EdgeInsets.only(top: index != 0 ? 16 : 0),
+                  margin: EdgeInsets.only(top: index != 0 ? 8 : 0),
                   child: ActivityCard(
                     activityType: parseActivityType(type),
                     points: entry.points,
@@ -102,7 +123,6 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
 Widget emptyActivity(
   ColorScheme colors,
   TextTheme texts,
-  bool isDaily,
   bool hideTitle,
 ) {
   return Container(
@@ -117,14 +137,12 @@ Widget emptyActivity(
           Container(
             margin: const EdgeInsets.only(bottom: 12),
             child: Text(
-              isDaily ? 'Daily workouts' : 'No workouts yet',
+              'No workouts yet',
               style: texts.headlineLarge,
             ),
           ),
         Text(
-          isDaily
-              ? 'Could not find workout data for the selected date. Make sure to change that next time :)'
-              : 'Start working out to earn finpoints and claim your discounts in the shop!',
+          'Start working out to earn finpoints and claim your discounts in the shop!',
           style: TextStyle(color: colors.primaryFixedDim),
         ),
       ],

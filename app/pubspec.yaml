@@ -58,6 +58,9 @@ dependencies:
   syncfusion_flutter_sliders: ^29.1.39
   flutter_slidable: ^4.0.0
   animated_checkmark: ^3.1.0
+  geolocator: ^10.0.0
+  flutter_map: ^8.2.2
+  latlong2: ^0.9.1
 
   # payu:
   #   git:

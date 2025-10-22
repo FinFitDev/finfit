@@ -87,8 +87,6 @@ class AllOffersContainer extends StatelessWidget {
                             color: colors.primary,
                             child: ImageBox(
                               image: bannerImageUrl,
-                              placeholderImage:
-                                  'https://img.freepik.com/vector-premium/resumen-estetica-mediados-siglo-moderno-paisaje-oceanico-plantilla-portada-poster-boho-contemporaneo-ilustraciones-minimas-naturales-arte-impreso-postal-papel-tapiz-arte-pared_13824-550.jpg',
                               borderRadius: 0,
                             ),
                           ),

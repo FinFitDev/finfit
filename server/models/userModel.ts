@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import { pool } from "../shared/utils/db";
 import { insertTransactions } from "./transactionsModel";
 
@@ -136,6 +137,22 @@ export const updatePointsScore = async (user_id: string, points: number) => {
   return response;
 };
 
+export const subtractPointsScoreWithReturn = async (
+  user_id: string,
+  points: number,
+  client?: PoolClient
+) => {
+  const executor = client ?? pool;
+  const response = await executor.query(
+    `UPDATE users
+        SET points = points - $1
+        WHERE uuid = $2
+        RETURNING points`,
+    [points, user_id]
+  );
+
+  return response;
+};
 export const updatePointsScoreWithUpdateTimestamp = async (
   user_id: string,
   points: number,

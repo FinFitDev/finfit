@@ -4,13 +4,14 @@ import 'package:excerbuys/containers/dashboard_page/home_page/featured_offers_co
 import 'package:excerbuys/containers/dashboard_page/home_page/recent_training_section.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/balance_container.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/transactions_section.dart';
-import 'package:excerbuys/containers/dashboard_page/modals/offer_info_modal.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/info/offer_info_modal.dart';
 import 'package:excerbuys/store/controllers/activity/activity_controller/activity_controller.dart';
 import 'package:excerbuys/store/controllers/activity/steps_controller/steps_controller.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard/send_controller/send_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
+import 'package:excerbuys/store/controllers/shop/claims_controller/claims_controller.dart';
 import 'package:excerbuys/store/controllers/shop/offers_controller/offers_controller.dart';
 import 'package:excerbuys/store/controllers/shop/transactions_controller/transactions_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
@@ -60,6 +61,7 @@ class _HomePageState extends State<HomePage> {
     await transactionsController.refresh();
     await offersController.refreshFeaturedOffers();
     await sendController.refresh();
+    await claimsController.refresh();
   }
 
   @override
@@ -137,50 +139,6 @@ class _HomePageState extends State<HomePage> {
                                     },
                                   );
                                 }),
-
-                            // StreamBuilder<
-                            //         ContentWithLoading<List<IProductEntry>>>(
-                            //     stream: productsController
-                            //         .affordableHomeProductsStream,
-                            //     builder: (context, snapshot) {
-                            //       if ((snapshot.data == null ||
-                            //               snapshot.data!.content.isEmpty) &&
-                            //           snapshot.data?.isLoading != true) {
-                            //         return SizedBox.shrink();
-                            //       }
-                            //       return AvailableOffers(
-                            //         products: snapshot.data?.content ?? [],
-                            //         isLoading: snapshot.data?.isLoading,
-                            //       );
-                            //     }),
-                            // StreamBuilder<
-                            //         ContentWithLoading<List<IProductEntry>>>(
-                            //     stream: productsController
-                            //         .nearlyAffordableHomeProducts,
-                            //     builder: (context, snapshot) {
-                            //       if ((snapshot.data == null ||
-                            //               snapshot.data!.content.isEmpty) &&
-                            //           snapshot.data?.isLoading != true) {
-                            //         return SizedBox.shrink();
-                            //       }
-                            //       return ProgressOffersContainer(
-                            //         products: snapshot.data?.content ?? [],
-                            //         isLoading: snapshot.data?.isLoading,
-                            //       );
-                            //     }),
-                            // StreamBuilder<ContentWithLoading<IStoreStepsData>>(
-                            //     stream: stepsController.userStepsStream,
-                            //     builder: (context, stepsSnapshot) {
-                            //       final IStoreStepsData stepsData =
-                            //           stepsSnapshot.hasData
-                            //               ? stepsSnapshot.data!.content
-                            //               : {};
-                            //       return StepsActivityCard(
-                            //         isLoading:
-                            //             stepsSnapshot.data?.isLoading ?? false,
-                            //         stepsData: stepsData,
-                            //       );
-                            //     }),
                             StreamBuilder<
                                     ContentWithLoading<
                                         Map<String, ITrainingEntry>>>(

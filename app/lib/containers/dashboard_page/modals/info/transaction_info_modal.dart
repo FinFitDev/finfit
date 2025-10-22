@@ -2,19 +2,15 @@ import 'package:excerbuys/components/shared/activity_icon.dart';
 import 'package:excerbuys/components/shared/buttons/copy_text.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/components/shared/image_component.dart';
-import 'package:excerbuys/components/shared/indicators/labels/empty_data_modal.dart';
-import 'package:excerbuys/components/shared/list/list_component.dart';
-import 'package:excerbuys/components/shared/positions/position_with_background.dart';
 import 'package:excerbuys/components/shared/positions/position_with_title.dart';
 import 'package:excerbuys/components/shared/profile_image_generator.dart';
-import 'package:excerbuys/containers/dashboard_page/modals/info/product_info_modal.dart';
-import 'package:excerbuys/containers/dashboard_page/modals/offer_info_modal.dart';
-import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
-import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/all_claims_modal.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/info/offer_info_modal.dart';
+import 'package:excerbuys/store/controllers/shop/claims_controller/claims_controller.dart';
 import 'package:excerbuys/store/controllers/shop/transactions_controller/transactions_controller.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/types/transaction.dart';
-import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/shop/transaction/utils.dart';
 import 'package:excerbuys/utils/utils.dart';
@@ -33,7 +29,6 @@ class TransactionInfoModal extends StatefulWidget {
 }
 
 class _TransactionInfoModalState extends State<TransactionInfoModal> {
-  bool _error = false;
   ITransactionEntry? _transaction;
   TRANSACTION_TYPE? _transactionType;
   int _daysAgo = 0;
@@ -46,9 +41,6 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
     if (foundTransaction?.offer != null) {}
 
     if (foundTransaction == null) {
-      setState(() {
-        _error = true;
-      });
       return;
     }
     final now = DateTime.now();
@@ -242,6 +234,26 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                         ],
                       ),
                     ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    _transactionType == TRANSACTION_TYPE.REDEEM
+                        ? StreamBuilder<IAllClaimsData>(
+                            stream: claimsController.allClaimsStream,
+                            builder: (context, snapshot) {
+                              final foundClaim =
+                                  (snapshot.data?.content.values ?? [])
+                                      .where((element) =>
+                                          element.offer.id ==
+                                          _transaction?.offer?.id)
+                                      .firstOrNull;
+
+                              if (foundClaim == null) {
+                                return SizedBox.shrink();
+                              }
+                              return CopyText(textToCopy: foundClaim.code);
+                            })
+                        : SizedBox.shrink()
                   ]),
             ),
           ),

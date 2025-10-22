@@ -42,6 +42,7 @@ class _BottomBarState extends State<BottomBar> {
                   ],
                 ),
                 child: Row(
+                  spacing: 20,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     AppbarIconButton(
@@ -53,20 +54,28 @@ class _BottomBarState extends State<BottomBar> {
                       isActive: snapshot.data == 0,
                     ),
                     AppbarIconButton(
-                      name: 'Offers',
-                      icon: 'assets/svg/gift.svg',
+                      name: 'Track',
+                      icon: 'assets/svg/footprints.svg',
                       onPressed: () {
                         dashboardController.setActivePage(1);
                       },
                       isActive: snapshot.data == 1,
                     ),
                     AppbarIconButton(
-                      name: 'Recent',
-                      icon: 'assets/svg/clockBold.svg',
+                      name: 'Offers',
+                      icon: 'assets/svg/gift.svg',
                       onPressed: () {
                         dashboardController.setActivePage(2);
                       },
                       isActive: snapshot.data == 2,
+                    ),
+                    AppbarIconButton(
+                      name: 'Recent',
+                      icon: 'assets/svg/clockBold.svg',
+                      onPressed: () {
+                        dashboardController.setActivePage(3);
+                      },
+                      isActive: snapshot.data == 3,
                     ),
                     StreamBuilder<User?>(
                         stream: userController.currentUserStream,
@@ -78,9 +87,9 @@ class _BottomBarState extends State<BottomBar> {
                             onPressed: () {
                               !userSnapshot.hasData
                                   ? null
-                                  : dashboardController.setActivePage(3);
+                                  : dashboardController.setActivePage(4);
                             },
-                            isActive: snapshot.data == 3,
+                            isActive: snapshot.data == 4,
                             isLast: true,
                           );
                         }),
@@ -91,8 +100,8 @@ class _BottomBarState extends State<BottomBar> {
                   duration: const Duration(milliseconds: 150),
                   curve: Curves.decelerate,
                   left: MediaQuery.sizeOf(context).width / 2 -
-                      152.5 +
-                      ((snapshot.data ?? 0) * 85),
+                      165 +
+                      ((snapshot.data ?? 0) * 70),
                   top: 0,
                   child: Container(
                     width: 50,

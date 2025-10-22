@@ -158,23 +158,35 @@ class _AmountModalState extends State<AmountModal> {
                               icon: 'assets/svg/trend_up.svg',
                               value:
                                   '${formatNumber((userController.userBalance ?? 0).round())} points'),
-                          Container(
-                            margin: EdgeInsets.only(top: 16),
-                            decoration: BoxDecoration(
-                              color: colors.error.withAlpha(20),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 12),
-                            child: Text(
-                              '${formatNumber((snapshot.data ?? 0) * sendController.chosenUsersIds.length)} points',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: colors.error,
-                                  fontWeight: FontWeight.w600),
-                              textAlign: TextAlign.center,
-                            ),
+                          SizedBox(
+                            height: 16,
                           ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                'Summary',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: colors.tertiaryContainer,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                              SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                '${formatNumber((snapshot.data ?? 0) * sendController.chosenUsersIds.length)} points',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                  color: colors.secondary,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          )
                         ],
                       );
                     }),

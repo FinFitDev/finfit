@@ -3,7 +3,6 @@ import 'package:excerbuys/store/persistence/cache.dart';
 import 'package:excerbuys/types/shop/offer.dart';
 import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
 
 Future<List<IOfferEntry>?> loadFeaturedOffersRequest() async {
@@ -16,8 +15,6 @@ Future<List<IOfferEntry>?> loadFeaturedOffersRequest() async {
         method: HTTP_METHOD.GET,
         endpoint: 'api/v1/offers/featured',
       );
-
-      smartPrint('RESESE', res);
 
       if (res['error'] != null) {
         throw res['error'];

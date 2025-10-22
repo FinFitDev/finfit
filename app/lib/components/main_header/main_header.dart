@@ -40,36 +40,38 @@ class MainHeader extends StatelessWidget {
                         duration: Duration(milliseconds: 200),
                         curve: Curves.decelerate,
                         child: Container(
-                          padding: EdgeInsets.only(
-                              left: 1.5 * HORIZOTAL_PADDING,
-                              right: 1.5 * HORIZOTAL_PADDING,
-                              top: layoutController.statusBarHeight),
-                          width: MediaQuery.sizeOf(context).width,
-                          decoration: BoxDecoration(
-                            color: colors.primary,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withAlpha(10),
-                                spreadRadius: 3,
-                                blurRadius: 3,
-                                offset:
-                                    Offset(0, 3), // changes position of shadow
-                              ),
-                            ],
-                          ),
-                          height: MAIN_HEADER_HEIGHT +
-                              layoutController.statusBarHeight,
-                          child: StreamBuilder<String?>(
-                              stream: shopController.selectedProductOwnerStream,
-                              builder: (context, ownerSnapshot) {
-                                return AnimatedSwitcherWrapper(
-                                    duration: 100,
-                                    child: ownerSnapshot.data != null &&
-                                            pageSnapshot.data == 1
-                                        ? ProductOwnerHeaderContent()
-                                        : RegularMainHeaderContent());
-                              }),
-                        ),
+                            padding: EdgeInsets.only(
+                                left: 1.5 * HORIZOTAL_PADDING,
+                                right: 1.5 * HORIZOTAL_PADDING,
+                                top: layoutController.statusBarHeight),
+                            width: MediaQuery.sizeOf(context).width,
+                            decoration: BoxDecoration(
+                              color: colors.primary,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withAlpha(10),
+                                  spreadRadius: 3,
+                                  blurRadius: 3,
+                                  offset: Offset(
+                                      0, 3), // changes position of shadow
+                                ),
+                              ],
+                            ),
+                            height: MAIN_HEADER_HEIGHT +
+                                layoutController.statusBarHeight,
+                            child: RegularMainHeaderContent()
+
+                            // StreamBuilder<String?>(
+                            //     stream: shopController.selectedProductOwnerStream,
+                            //     builder: (context, ownerSnapshot) {
+                            //       return AnimatedSwitcherWrapper(
+                            //           duration: 100,
+                            //           child: ownerSnapshot.data != null &&
+                            //                   pageSnapshot.data == 1
+                            //               ? ProductOwnerHeaderContent()
+                            //               : RegularMainHeaderContent());
+                            //     }),
+                            ),
                       ),
                     ],
                   ),

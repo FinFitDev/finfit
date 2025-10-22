@@ -59,7 +59,7 @@ class _CopyTextState extends State<CopyText> {
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: colors.primaryContainer),
+            color: colors.primaryFixedDim.withAlpha(20)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -67,7 +67,7 @@ class _CopyTextState extends State<CopyText> {
               _text,
               style: TextStyle(
                   fontSize: 12,
-                  color: colors.primaryFixedDim,
+                  color: colors.tertiary,
                   fontWeight: FontWeight.w600),
             ),
             SvgPicture.asset(

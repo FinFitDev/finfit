@@ -133,3 +133,11 @@ void launchURL(String urlString) async {
 int countQuantity<T extends HasQuantity>(List<T> items) {
   return items.fold(0, (count, item) => count + item.quantity);
 }
+
+void openLink(String url) async {
+  if (await canLaunchUrl(Uri.parse(url))) {
+    await launchUrl(Uri.parse(url));
+  } else {
+    throw 'Could not launch $url';
+  }
+}

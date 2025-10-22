@@ -65,6 +65,7 @@ extension TransactionsControllerEffects on TransactionsController {
       if (values.length < TRANSACTION_DATA_CHUNK_SIZE) {
         setCanFetchMore(false);
       }
+      setLazyLoadOffset(allTransactions.content.length);
     } catch (error) {
       debugPrint("Exception while lazy loading more transaction data: $error");
     } finally {

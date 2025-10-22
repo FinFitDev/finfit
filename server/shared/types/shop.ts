@@ -1,4 +1,4 @@
-import { IUser } from "../types";
+import { IOffer, IUser } from "../types";
 
 export enum ORDER_TYPE {
   ASCENDING = "ASCENDING",
@@ -88,4 +88,11 @@ export interface IFiltersQuery {
   order?: ORDER_TYPE;
   limit?: number;
   offset?: number;
+}
+
+export interface IClaim {
+  code: string;
+  created_at: string;
+  valid_until: string;
+  offer: IOffer;
 }

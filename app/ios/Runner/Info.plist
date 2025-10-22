@@ -49,20 +49,25 @@
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
 	<key>GIDClientID</key>
-<string>675848705064-7q99pkk565e17ii3r5j2tssfengi7h32.apps.googleusercontent.com</string>
+	<string>675848705064-7q99pkk565e17ii3r5j2tssfengi7h32.apps.googleusercontent.com</string>
 	<key>CFBundleURLTypes</key>
+	<array>
+	<dict>
+		<key>CFBundleTypeRole</key>
+		<string>Editor</string>
+		<key>CFBundleURLSchemes</key>
 		<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
 			<string>com.googleusercontent.apps.675848705064-7q99pkk565e17ii3r5j2tssfengi7h32</string>
-
-			</array>
-		</dict>
 		</array>
-
-	
 	</dict>
+	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your location to track your workouts</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We need your location even in background to track workouts</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
+</dict>
 </plist>

@@ -4,9 +4,11 @@ import 'package:excerbuys/pages/dashboard/home_page.dart';
 import 'package:excerbuys/pages/dashboard/profile_page.dart';
 import 'package:excerbuys/pages/dashboard/recent_page.dart';
 import 'package:excerbuys/pages/dashboard/offers_page.dart';
+import 'package:excerbuys/pages/dashboard/track_page.dart';
 import 'package:excerbuys/store/controllers/activity/activity_controller/activity_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
+import 'package:excerbuys/store/controllers/shop/claims_controller/claims_controller.dart';
 import 'package:excerbuys/store/controllers/shop/offers_controller/offers_controller.dart';
 import 'package:excerbuys/store/controllers/shop/transactions_controller/transactions_controller.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +35,7 @@ class _DashboardPageState extends State<DashboardPage> {
       await activityController.checkHealthConnectSdk();
     }
     activityController.fetchActivity();
+    claimsController.fetchAllClaims();
   }
 
   @override
@@ -51,6 +54,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     index: snapshot.data,
                     children: [
                       HomePage(fetchData: fetchData),
+                      TrackPage(),
                       OffersPage(),
                       RecentPage(),
                       ProfilePage()

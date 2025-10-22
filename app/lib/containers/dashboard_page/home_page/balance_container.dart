@@ -1,8 +1,10 @@
 import 'package:excerbuys/components/animated_balance.dart';
 import 'package:excerbuys/components/shared/indicators/canvas/ellipse_painter.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/all_claims_modal.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/qrcode_modal.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/send/send_modal.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
+import 'package:excerbuys/store/controllers/shop/claims_controller/claims_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
@@ -84,6 +86,44 @@ class _BalanceContainerState extends State<BalanceContainer> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                StreamBuilder<IAllClaimsData>(
+                    stream: claimsController.allClaimsStream,
+                    builder: (context, snapshot) {
+                      return Stack(
+                        children: [
+                          homeTopButton(context, () {
+                            openModal(context, AllClaimsModal());
+                          }, 'assets/svg/gift.svg', 'Claimed'),
+                          snapshot.data != null &&
+                                  snapshot.data!.content.keys.isNotEmpty
+                              ? Positioned(
+                                  top: 0,
+                                  right: 0,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        color: colors.error),
+                                    width: 20,
+                                    height: 20,
+                                    child: Center(
+                                      child: Text(
+                                        snapshot.data!.content.keys.length
+                                            .toString(),
+                                        style: TextStyle(
+                                            color: colors.primary,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 10),
+                                      ),
+                                    ),
+                                  ))
+                              : SizedBox.shrink()
+                        ],
+                      );
+                    }),
+                SizedBox(
+                  width: 20,
+                ),
                 homeTopButton(context, () {
                   if (userController.currentUser?.uuid != null) {
                     openModal(context, QrcodeModal());
@@ -95,21 +135,6 @@ class _BalanceContainerState extends State<BalanceContainer> {
                 homeTopButton(context, () {
                   openModal(context, SendModal());
                 }, 'assets/svg/sent.svg', 'Send'),
-                SizedBox(
-                  width: 20,
-                ),
-                StreamBuilder<bool>(
-                    stream: dashboardController.balanceHiddenStream,
-                    builder: (context, snapshot) {
-                      final bool isHidden = snapshot.data ?? false;
-                      return homeTopButton(context, () {
-                        dashboardController.setBalanceHidden(!isHidden);
-                      },
-                          isHidden
-                              ? 'assets/svg/eye.svg'
-                              : 'assets/svg/eye-close.svg',
-                          isHidden ? 'Show' : 'Hide');
-                    }),
               ],
             )
           ],

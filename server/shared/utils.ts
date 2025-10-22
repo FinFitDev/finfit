@@ -67,3 +67,17 @@ function toHex(num: number): string {
 export const generate6DigitCode = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
+
+export function omitKey<T extends Record<string, any>>(
+  obj: T,
+  keyToRemove: string
+): Omit<T, typeof keyToRemove> {
+  const filteredKeys = Object.keys(obj).filter((key) => key !== keyToRemove);
+  const result: Partial<T> = {};
+
+  filteredKeys.forEach((key) => {
+    result[key as keyof T] = obj[key as keyof T];
+  });
+
+  return result as Omit<T, typeof keyToRemove>;
+}

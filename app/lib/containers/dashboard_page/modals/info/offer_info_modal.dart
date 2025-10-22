@@ -2,6 +2,7 @@ import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/components/shared/image_component.dart';
 import 'package:excerbuys/components/shared/images/image_box.dart';
 import 'package:excerbuys/components/shared/positions/position_with_title.dart';
+import 'package:excerbuys/store/controllers/shop/claims_controller/claims_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/types/shop/offer.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
@@ -9,16 +10,24 @@ import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/modal/modal_content_wrapper.dart';
 import 'package:flutter/material.dart';
 
-class OfferInfoModal extends StatelessWidget {
+class OfferInfoModal extends StatefulWidget {
   final IOfferEntry offer;
   const OfferInfoModal({super.key, required this.offer});
+
+  @override
+  State<OfferInfoModal> createState() => _OfferInfoModalState();
+}
+
+class _OfferInfoModalState extends State<OfferInfoModal> {
+  bool _isClaiming = false;
+  bool? _isSuccess = null;
 
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
     return ModalContentWrapper(
-      title: 'Review offer',
+      title: '${widget.offer.partner.name} - ${widget.offer.catchString}',
       onClose: () {
         closeModal(context);
       },
@@ -35,10 +44,10 @@ class OfferInfoModal extends StatelessWidget {
                     height: 16,
                   ),
                   Container(
-                    height: 200,
+                    height: 130,
                     color: colors.primary,
                     child: ImageBox(
-                      image: offer.partner.bannerImage,
+                      image: widget.offer.partner.bannerImage,
                       placeholderImage:
                           'https://img.freepik.com/vector-premium/resumen-estetica-mediados-siglo-moderno-paisaje-oceanico-plantilla-portada-poster-boho-contemporaneo-ilustraciones-minimas-naturales-arte-impreso-postal-papel-tapiz-arte-pared_13824-550.jpg',
                       borderRadius: 16,
@@ -50,9 +59,9 @@ class OfferInfoModal extends StatelessWidget {
                   Row(
                     children: [
                       ImageComponent(
-                        size: 70,
+                        size: 60,
                         borderRadius: 10,
-                        image: offer.partner.image,
+                        image: widget.offer.partner.image,
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -60,7 +69,7 @@ class OfferInfoModal extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              offer.partner.name,
+                              widget.offer.partner.name,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500,
@@ -70,7 +79,7 @@ class OfferInfoModal extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
-                              offer.description,
+                              widget.offer.description,
                               style: TextStyle(
                                 fontSize: 14,
                                 color: colors.tertiaryContainer,
@@ -84,36 +93,13 @@ class OfferInfoModal extends StatelessWidget {
                     ],
                   ),
                   SizedBox(
-                    height: 24,
+                    height: 16,
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: colors.secondary.withAlpha(20),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Text(
-                      offer.catchString,
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: colors.secondary,
-                          fontWeight: FontWeight.w600),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    offer.details,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: colors.tertiaryContainer, fontSize: 12),
-                  ),
-                  SizedBox(height: 16),
                   StreamBuilder<double?>(
                       stream: userController.userBalanceStream,
                       builder: (context, snapshot) {
                         final bool hasEnoughPoints =
-                            (snapshot.data ?? 0) >= offer.points;
+                            (snapshot.data ?? 0) >= widget.offer.points;
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
@@ -131,9 +117,9 @@ class OfferInfoModal extends StatelessWidget {
                             Row(
                               children: [
                                 Text(
-                                  '${offer.points.toInt()} points',
+                                  '${widget.offer.points.toInt()} points',
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 20,
                                     fontWeight: FontWeight.w500,
                                     color: hasEnoughPoints
                                         ? colors.tertiary
@@ -169,29 +155,64 @@ class OfferInfoModal extends StatelessWidget {
                           ],
                         );
                       }),
+                  SizedBox(
+                    height: 16,
+                  ),
                   PositionWithTitle(
                     title: 'Valid until',
-                    value: parseDate(DateTime.parse(offer.validUntil)),
+                    value: parseDate(DateTime.parse(widget.offer.validUntil)),
                     icon: 'assets/svg/clock.svg',
                   ),
                   PositionWithTitle(
                     title: 'Claimed by others',
-                    value: '${offer.totalRedeemed.toString()} times',
+                    value: '${widget.offer.totalRedeemed.toString()} times',
                     icon: 'assets/svg/gift.svg',
                   ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Text(
+                    widget.offer.details,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                        color: colors.tertiaryContainer, fontSize: 12),
+                  ),
+                  SizedBox(height: 16),
                 ],
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 16.0),
-            child: MainButton(
-                label: 'Claim',
-                icon: 'assets/svg/gift.svg',
-                backgroundColor: colors.secondary,
-                textColor: colors.primary,
-                onPressed: () {}),
-          )
+          StreamBuilder<double?>(
+              stream: userController.userBalanceStream,
+              builder: (context, snapshot) {
+                final bool hasEnoughPoints =
+                    (snapshot.data ?? 0) >= widget.offer.points;
+                return MainButton(
+                    label: 'Claim',
+                    icon: 'assets/svg/gift.svg',
+                    backgroundColor: colors.secondary,
+                    isDisabled: !hasEnoughPoints,
+                    textColor: colors.primary,
+                    loading: _isClaiming,
+                    isSuccess: !_isClaiming && _isSuccess == true,
+                    isError: !_isClaiming && _isSuccess == false,
+                    onPressed: () async {
+                      setState(() {
+                        _isClaiming = true;
+                      });
+                      final bool response =
+                          await claimsController.claimReward(widget.offer.id);
+
+                      setState(() {
+                        _isSuccess = response;
+                        _isClaiming = false;
+                      });
+                      await Future.delayed(Duration(milliseconds: 1500));
+                      setState(() {
+                        _isSuccess = null;
+                      });
+                    });
+              })
         ],
       ),
     );

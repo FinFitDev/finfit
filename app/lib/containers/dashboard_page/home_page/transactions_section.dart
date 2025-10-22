@@ -1,17 +1,20 @@
 import 'package:excerbuys/components/dashboard_page/home_page/transaction_card/transaction_card.dart';
 import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/transaction_info_modal.dart';
+import 'package:excerbuys/store/controllers/dashboard/history_controller/history_controller.dart';
+import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
+import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/types/transaction.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/shop/transaction/utils.dart';
 import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
+import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class TransactionsSection extends StatefulWidget {
   final Map<String, ITransactionEntry> recentTransactions;
   final bool? isLoading;
-  final bool? isDaily;
   final bool? hideTitle;
   final bool? allowLoadMore;
 
@@ -19,7 +22,6 @@ class TransactionsSection extends StatefulWidget {
       {super.key,
       required this.recentTransactions,
       this.isLoading,
-      this.isDaily,
       this.hideTitle,
       this.allowLoadMore});
 
@@ -61,8 +63,7 @@ class _TransactionsSectionState extends State<TransactionsSection> {
 
     return Builder(builder: (BuildContext context) {
       if (widget.recentTransactions.isEmpty && widget.isLoading != true) {
-        return emptyActivity(
-            colors, texts, widget.isDaily ?? false, widget.hideTitle ?? false);
+        return emptyActivity(colors, texts, widget.hideTitle ?? false);
       }
 
       return Container(
@@ -72,11 +73,32 @@ class _TransactionsSectionState extends State<TransactionsSection> {
             Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           widget.hideTitle == true
               ? SizedBox.shrink()
-              : Text(
-                  widget.isDaily == true
-                      ? 'Daily transactions'
-                      : 'Last transactions',
-                  style: texts.headlineLarge,
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('Last transactions', style: texts.headlineLarge),
+                    RippleWrapper(
+                      onPressed: () {
+                        historyController.setActiveCategory(
+                            RECENT_DATA_CATEGORY.TRANSACTIONS);
+                        dashboardController.setActivePage(3);
+                      },
+                      child: Row(
+                        spacing: 4,
+                        children: [
+                          Text('See all',
+                              style: TextStyle(
+                                  color: colors.secondary, fontSize: 14)),
+                          SvgPicture.asset(
+                            'assets/svg/arrowSend.svg',
+                            colorFilter: ColorFilter.mode(
+                                colors.secondary, BlendMode.srcIn),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
                 ),
           Builder(builder: (context) {
             if (widget.isLoading == true) {
@@ -120,8 +142,7 @@ class _TransactionsSectionState extends State<TransactionsSection> {
   }
 }
 
-Widget emptyActivity(
-    ColorScheme colors, TextTheme texts, bool isDaily, bool hideTitle) {
+Widget emptyActivity(ColorScheme colors, TextTheme texts, bool hideTitle) {
   return Container(
     margin: EdgeInsets.only(
         left: HORIZOTAL_PADDING, right: HORIZOTAL_PADDING, bottom: 24),
@@ -132,16 +153,14 @@ Widget emptyActivity(
         Container(
           margin: EdgeInsets.only(bottom: 12),
           child: Text(
-            isDaily == true ? 'Daily transactions' : 'No transactions yet',
+            'No transactions yet',
             textAlign: TextAlign.start,
             style: texts.headlineLarge,
           ),
         ),
         Text(
           textAlign: TextAlign.start,
-          isDaily == true
-              ? 'Could not find transactions for the selected date. '
-              : 'Start working out to earn finpoints and claim your discounts in the shop!',
+          'Start working out to earn finpoints and claim your discounts in the shop!',
           style: TextStyle(
             color: colors.primaryFixedDim,
           ),

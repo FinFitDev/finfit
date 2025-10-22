@@ -28,14 +28,13 @@ class AppbarIconButton extends StatelessWidget {
       onPressed: onPressed,
       child: Container(
         color: Colors.transparent,
-        width: 65,
-        height: 60,
-        margin: EdgeInsets.only(right: isLast == true ? 0 : 20),
+        width: 50,
+        height: 50,
         child: Column(
           children: [
             isProfile == true
                 ? ProfileImageGenerator(
-                    seed: userController.currentUser?.image, size: 32)
+                    seed: userController.currentUser?.image, size: 26)
                 : SvgPicture.asset(
                     icon,
                     colorFilter: ColorFilter.mode(
@@ -43,8 +42,8 @@ class AppbarIconButton extends StatelessWidget {
                             ? Theme.of(context).colorScheme.secondary
                             : Theme.of(context).colorScheme.tertiaryContainer,
                         BlendMode.srcIn),
-                    width: 32,
-                    height: 32,
+                    width: 26,
+                    height: 26,
                   ),
             SizedBox(
               height: 5,
@@ -56,7 +55,7 @@ class AppbarIconButton extends StatelessWidget {
                   color: isActive == true
                       ? Theme.of(context).colorScheme.secondary
                       : Theme.of(context).colorScheme.tertiaryContainer,
-                  fontSize: 12),
+                  fontSize: 10),
             )
           ],
         ),

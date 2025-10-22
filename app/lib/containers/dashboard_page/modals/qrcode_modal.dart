@@ -15,7 +15,7 @@ class QrcodeModal extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
 
     return ModalContentWrapper(
-      title: 'Receive finpoints',
+      title: 'Receive points',
       onClose: () {
         closeModal(context);
       },
@@ -45,7 +45,7 @@ class QrcodeModal extends StatelessWidget {
                   height: 16,
                 ),
                 Text(
-                  'Use the scanner option in the send modal on another device to scan this code. You will then need to refresh the app to see the received points.',
+                  'Use the scanner option in the send modal on another device to scan this code. ',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: colors.primaryFixedDim, fontSize: 13),
                 ),

@@ -10,7 +10,17 @@ export const fetchTransactions = async (
     `
     SELECT
       t.uuid,
-      t.amount_points,
+
+      CASE
+        WHEN $1 = ANY(ARRAY(
+          SELECT jsonb_array_elements_text(t.second_user_ids)::uuid
+        ))
+        THEN t.amount_points / GREATEST(
+          jsonb_array_length(t.second_user_ids), 1
+        )
+        ELSE t.amount_points
+      END AS amount_points,
+
       t.created_at,
       (to_jsonb(o) || jsonb_build_object('partner', to_jsonb(p))) AS offer,
 
@@ -70,7 +80,15 @@ export const fetchRecentUserTransactions = async (userId: string) => {
     `
     SELECT
       t.uuid,
-      t.amount_points,
+
+      CASE
+        WHEN $1 = ANY(ARRAY(
+          SELECT jsonb_array_elements_text(t.second_user_ids)::uuid
+        ))
+        THEN t.amount_points / GREATEST(jsonb_array_length(t.second_user_ids), 1)
+        ELSE t.amount_points
+      END AS amount_points,
+
       t.created_at,
       (to_jsonb(o) || jsonb_build_object('partner', to_jsonb(p))) AS offer,
 

@@ -4,6 +4,8 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import authRouter from "./routes/auth/authRouter";
 import apiRouter from "./routes/api/apiRouter";
+import webhookRouter from "./routes/webhook";
+
 import { middleware } from "./routes/api/middleware";
 
 const app: Express = express();
@@ -19,6 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 app.use(bodyParser.json({ limit: "50mb" }));
 
 app.use("/auth", authRouter);
+app.use("/webhook", webhookRouter);
 app.use("/api/v1", middleware, apiRouter);
 
 app.listen(port, () => {

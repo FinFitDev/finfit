@@ -78,6 +78,8 @@ export interface IOffer {
   // category: string;
   total_redeemed: number;
   featured?: boolean;
+  api_payload?: string;
+  code_expiration_period: number;
 }
 
 export interface IPartner {

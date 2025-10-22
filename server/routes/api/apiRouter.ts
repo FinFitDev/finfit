@@ -19,6 +19,10 @@ import {
   getFeaturedOffersHandler,
   getOffersHandler,
 } from "./routes/offersRoute";
+import {
+  claimDiscountHandler,
+  getAllClaimsHandler,
+} from "./routes/claimsRoute";
 
 const apiRouter: Router = express.Router();
 
@@ -39,6 +43,10 @@ apiRouter.post("/trainings", addTrainingsHandler);
 apiRouter.get("/offers/featured", getFeaturedOffersHandler);
 
 apiRouter.get("/offers", getOffersHandler);
+
+apiRouter.post("/offers/claim/:id", claimDiscountHandler);
+
+apiRouter.get("/claims/:id", getAllClaimsHandler);
 
 // apiRouter.get("/product_ranges", getProductRangesHandler);
 

@@ -68,7 +68,6 @@ class _DailyDataContainerState extends State<DailyDataContainer> {
                               return RecentTrainingSection(
                                 isLoading: snapshot.data?.isLoading ?? false,
                                 recentTraining: trainings,
-                                isDaily: true,
                               );
                             }),
                         StreamBuilder<
@@ -88,7 +87,6 @@ class _DailyDataContainerState extends State<DailyDataContainer> {
                               return TransactionsSection(
                                 isLoading: snapshot.data?.isLoading ?? false,
                                 recentTransactions: transactions,
-                                isDaily: true,
                               );
                             }),
                       ],

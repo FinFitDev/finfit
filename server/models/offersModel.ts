@@ -1,3 +1,4 @@
+import { PoolClient } from "pg";
 import { IFiltersQuery, ORDER_TYPE } from "../shared/types/shop";
 import { pool } from "../shared/utils/db";
 
@@ -239,5 +240,35 @@ export const fetchAffordableOffers = async (
     `,
     [points, limit, offset]
   );
+  return response;
+};
+
+export const fetchOfferCodeDetails = async (
+  offerId: number,
+  client?: PoolClient
+) => {
+  const executor = client ?? pool;
+  const response = await executor.query(
+    `SELECT o.points, o.code_expiration_period, o.api_payload, p.uuid, p.api_key, p.api_url, p.shop_type FROM offers o
+      JOIN partners p ON p.uuid = o.partner_id
+      WHERE o.id = $1`,
+    [offerId]
+  );
+
+  return response;
+};
+
+export const updateOfferTotalRedeemed = async (
+  offerId: number,
+  client?: PoolClient
+) => {
+  const executor = client ?? pool;
+  const response = await executor.query(
+    `UPDATE offers
+    SET total_redeemed = total_redeemed + 1
+    WHERE id = $1`,
+    [offerId]
+  );
+
   return response;
 };

@@ -1,11 +1,7 @@
 import 'dart:async';
-import 'package:excerbuys/components/input_with_icon.dart';
-import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/featured_offers_container.dart';
-import 'package:excerbuys/containers/dashboard_page/modals/offer_info_modal.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/info/offer_info_modal.dart';
 import 'package:excerbuys/containers/dashboard_page/offers_page/all_offers_container.dart';
-import 'package:excerbuys/containers/dashboard_page/offers_page/product_owner_header_container.dart';
-import 'package:excerbuys/containers/dashboard_page/offers_page/products_row_container.dart';
 import 'package:excerbuys/containers/dashboard_page/offers_page/offers_top_container.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
@@ -13,8 +9,6 @@ import 'package:excerbuys/store/controllers/shop/offers_controller/offers_contro
 import 'package:excerbuys/store/controllers/shop/product_owners_controller/product_owners_controller.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/store/selectors/offers/offers.dart';
-import 'package:excerbuys/types/general.dart';
-import 'package:excerbuys/types/shop/offer.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/infinite_list_wrapper_v2.dart';
 import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
@@ -41,14 +35,10 @@ class _OffersPageState extends State<OffersPage> {
   @override
   void initState() {
     super.initState();
-    // its cached
-    shopController.fetchMaxRanges();
-    shopController.fetchAvailableCategories();
 
     _activePageSubscription =
         dashboardController.activePageStream.listen((activePage) {
-      if (activePage == 1 && !_shopPageInitialized) {
-        print('Initializing shop page');
+      if (activePage == 2 && !_shopPageInitialized) {
         _shopPageInitialized = true;
         offersController.fetchAllOffers();
 
@@ -56,22 +46,6 @@ class _OffersPageState extends State<OffersPage> {
             .debounceTime(Duration(milliseconds: 100))
             .distinct()
             .listen((data) {});
-
-        _selectedProductOwnerSubscription =
-            shopController.selectedProductOwnerStream.distinct().listen((data) {
-          setState(() {
-            _isAnimating = true;
-          });
-          animationProgressTimer = Timer(Duration(milliseconds: 250), () {
-            setState(() {
-              _isAnimating = false;
-            });
-          });
-        });
-
-        if (productOwnersController.allProductOwners.content.isEmpty) {
-          productOwnersController.fetchProductOwners('');
-        }
       }
     });
   }

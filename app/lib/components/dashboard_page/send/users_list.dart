@@ -71,7 +71,7 @@ Widget userCard(
       ),
       child: Row(
         children: [
-          ProfileImageGenerator(seed: image, size: 50),
+          ProfileImageGenerator(seed: image, size: 40),
           SizedBox(
             width: 12,
           ),
@@ -82,15 +82,14 @@ Widget userCard(
               children: [
                 Text(name,
                     overflow: TextOverflow.ellipsis,
-                    style: texts.headlineMedium?.copyWith(
-                      color: colors.tertiary,
-                    )),
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                 Text(
                   email,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: colors.primaryFixedDim,
-                    fontSize: 13,
+                    color: colors.tertiaryContainer,
+                    fontSize: 12,
                   ),
                 )
               ],
@@ -108,11 +107,6 @@ Widget userCard(
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          'Recent',
-                          style: TextStyle(
-                              fontSize: 11, color: colors.tertiaryContainer),
-                        ),
                         Container(
                           padding: EdgeInsets.all(5),
                           child: SvgPicture.asset(
