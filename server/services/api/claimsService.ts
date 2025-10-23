@@ -2,20 +2,17 @@ import {
   fetchUserClaims,
   insertDiscountCode,
   setDicountCodeUsed,
-} from "../../../models/discountCodeModel";
+} from "../../models/discountCodeModel";
 import {
   fetchOfferCodeDetails,
   updateOfferTotalRedeemed,
-} from "../../../models/offersModel";
-import { insertTransactions } from "../../../models/transactionsModel";
-import { subtractPointsScoreWithReturn } from "../../../models/userModel";
-import {
-  IShopApiData,
-  SHOP_PROVIDER,
-} from "../../../shared/types/integrations";
-import { IClaim } from "../../../shared/types/shop";
-import { pool } from "../../../shared/utils/db";
-import { decryptShopApiParams } from "../../../shared/utils/encryption";
+} from "../../models/offersModel";
+import { insertTransactions } from "../../models/transactionsModel";
+import { subtractPointsScoreWithReturn } from "../../models/userModel";
+import { IShopApiData, SHOP_PROVIDER } from "../../shared/types/integrations";
+import { IClaim } from "../../shared/types/shop";
+import { pool } from "../../shared/utils/db";
+import { decryptShopApiParams } from "../../shared/utils/encryption";
 import { insertShopDiscountCode } from "./shops";
 
 export const issueDiscountCode = async (offerId: number, userId: string) => {

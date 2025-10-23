@@ -6,7 +6,6 @@ import 'package:excerbuys/containers/dashboard_page/home_page/balance_container.
 import 'package:excerbuys/containers/dashboard_page/home_page/transactions_section.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/offer_info_modal.dart';
 import 'package:excerbuys/store/controllers/activity/activity_controller/activity_controller.dart';
-import 'package:excerbuys/store/controllers/activity/steps_controller/steps_controller.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard/send_controller/send_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
@@ -19,6 +18,7 @@ import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/shop/offer.dart';
 import 'package:excerbuys/types/transaction.dart';
+import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/refresh_wrapper.dart';
@@ -57,7 +57,6 @@ class _HomePageState extends State<HomePage> {
 
     await Future.delayed(Duration(milliseconds: 300));
     activityController.setTodaysPoints(0);
-    await stepsController.fetchsSteps();
     await transactionsController.refresh();
     await offersController.refreshFeaturedOffers();
     await sendController.refresh();
@@ -141,10 +140,10 @@ class _HomePageState extends State<HomePage> {
                                 }),
                             StreamBuilder<
                                     ContentWithLoading<
-                                        Map<String, ITrainingEntry>>>(
+                                        Map<int, ITrainingEntry>>>(
                                 stream: trainingsController.userTrainingsStream,
                                 builder: (context, snapshot) {
-                                  final Map<String, ITrainingEntry> trainings =
+                                  final Map<int, ITrainingEntry> trainings =
                                       getTopRecentEntries(
                                           snapshot.data?.content,
                                           (a, b) => b.value.createdAt

@@ -1,4 +1,4 @@
-import { ErrorWithCode } from "../../../exceptions/errorWithCode";
+import { ErrorWithCode } from "../../exceptions/errorWithCode";
 import {
   fetchUserByEmail,
   fetchUserById,
@@ -8,8 +8,8 @@ import {
   updateImageSeed,
   updatePointsScore,
   updatePointsScoreWithUpdateTimestamp,
-} from "../../../models/userModel";
-import { IUserNoPassword } from "../../../shared/types";
+} from "../../models/userModel";
+import { IUserNoPassword } from "../../shared/types";
 
 export const getUserById = async (user_id: string) => {
   const foundUser = await fetchUserById(user_id);

@@ -30,6 +30,7 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<!-- TODO remove -->
 	<key>NSHealthShareUsageDescription</key>
 	<string>We will sync your data with the Apple Health app to give you better insights</string>
 	<key>NSHealthUpdateUsageDescription</key>
@@ -48,19 +49,38 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+
+	<!-- Google Sign-In -->
 	<key>GIDClientID</key>
 	<string>675848705064-7q99pkk565e17ii3r5j2tssfengi7h32.apps.googleusercontent.com</string>
+
+	<!-- URL Schemes -->
 	<key>CFBundleURLTypes</key>
 	<array>
-	<dict>
-		<key>CFBundleTypeRole</key>
-		<string>Editor</string>
-		<key>CFBundleURLSchemes</key>
-		<array>
-			<string>com.googleusercontent.apps.675848705064-7q99pkk565e17ii3r5j2tssfengi7h32</string>
-		</array>
-	</dict>
+		<!-- Google Sign-In -->
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.675848705064-7q99pkk565e17ii3r5j2tssfengi7h32</string>
+			</array>
+		</dict>
+
+		<!-- Deep Link -->
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>CFBundleURLName</key>
+			<string>com.yourcompany.excercise</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+			<string>finfit</string>
+			</array>
+		</dict>
 	</array>
+
+	<!-- Permissions -->
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need your location to track your workouts</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>

@@ -11,7 +11,7 @@ extension HistoryControllerSelectors on HistoryController {
       (RECENT_DATA_CATEGORY category,
           ContentWithLoading<int> transactionsOffset,
           ContentWithLoading<int> trainingsOffset,
-          ContentWithLoading<Map<String, ITrainingEntry>> trainings,
+          ContentWithLoading<Map<int, ITrainingEntry>> trainings,
           ContentWithLoading<Map<String, ITransactionEntry>> transactions) {
         return category;
       },

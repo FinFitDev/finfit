@@ -108,6 +108,14 @@ int parseInt(dynamic value) {
   return value is String ? int.tryParse(value) : value;
 }
 
+double? safeParseDouble(dynamic value) {
+  if (value == null) return null;
+  if (value is double) return value;
+  if (value is int) return value.toDouble();
+  if (value is String) return double.tryParse(value);
+  return null;
+}
+
 String getDayName(int daysAgo) {
   final DateTime now = DateTime.now();
   final DateTime nDaysAgo = now.subtract(Duration(days: daysAgo));
@@ -152,19 +160,18 @@ String formatNumber(num number) {
   return formatted;
 }
 
-String parseDuration(int durationMilliseconds) {
-  int seconds = durationMilliseconds ~/ 1000;
-  if (seconds < 60) {
-    return '$seconds second${seconds == 1 ? '' : 's'}';
+String parseDuration(int seconds) {
+  if (seconds < 180) {
+    return '$seconds sec';
   }
 
   int minutes = seconds ~/ 60;
-  return '$minutes minute${minutes == 1 ? '' : 's'}';
+  return '$minutes min';
 }
 
 String parseDistance(double meters) {
   if (meters < 1000) {
-    return '${meters.toStringAsFixed(0)} meter${meters == 1 ? '' : 's'}';
+    return '${meters.toStringAsFixed(0)} m';
   }
 
   double kilometers = meters / 1000;

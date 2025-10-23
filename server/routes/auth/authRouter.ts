@@ -1,23 +1,23 @@
 import express, { Router, Request, Response } from "express";
-import { signUpUser } from "./services/signup";
-import { logInUser } from "./services/login";
-import { regenerateAccessTokenFromRefreshToken } from "./services/refresh";
-import { logOut } from "./services/logout";
 import { RequestWithPayload } from "../../shared/types";
-import { ILoginPayload, ISignupPayload } from "./types";
+
+import path from "path";
+import { signUpUser } from "../../services/auth/signup";
 import {
   resendEmailVerify,
   verifyAccessToken,
   verifyEmailFlow,
-  verifyEmailToken,
   verifyGoogleAuth,
-} from "./services/verify";
-import path from "path";
+} from "../../services/auth/verify";
+import { logInUser } from "../../services/auth/login";
+import { regenerateAccessTokenFromRefreshToken } from "../../services/auth/refresh";
+import { logOut } from "../../services/auth/logout";
 import {
   resetPassword,
   resolveSendResetPasswordMail,
   verifyResetCode,
-} from "./services/resetPassword";
+} from "../../services/auth/resetPassword";
+import { ILoginPayload, ISignupPayload } from "../../shared/types/auth";
 
 const authRouter: Router = express.Router();
 

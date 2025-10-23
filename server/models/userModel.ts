@@ -128,8 +128,13 @@ export const updateVerifyUser = async (user_id: string) => {
   return response;
 };
 
-export const updatePointsScore = async (user_id: string, points: number) => {
-  const response = await pool.query(
+export const updatePointsScore = async (
+  user_id: string,
+  points: number,
+  client?: PoolClient
+) => {
+  const executor = client ?? pool;
+  const response = await executor.query(
     "UPDATE users SET points = points + $1 WHERE uuid = $2;",
     [points, user_id]
   );

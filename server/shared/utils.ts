@@ -1,11 +1,12 @@
+import { IDailyStepEntry, IHourlyStepEntry } from "./types";
+import bcrypt from "bcryptjs";
 import {
   IGoogleLoginPayload,
   IGoogleSignUpPayload,
   ILoginPayload,
   ISignupPayload,
-} from "../routes/auth/types";
-import { IDailyStepEntry, IHourlyStepEntry } from "./types";
-import bcrypt from "bcryptjs";
+} from "./types/auth";
+import { IStravaActivityInfoResponse } from "./types/strava";
 
 export const isUserGoogleLogin = (
   user: ILoginPayload | IGoogleLoginPayload
@@ -80,4 +81,12 @@ export function omitKey<T extends Record<string, any>>(
   });
 
   return result as Omit<T, typeof keyToRemove>;
+}
+
+export function calculatePoints(activity: IStravaActivityInfoResponse): number {
+  const caloriePoints = activity.calories ?? 0;
+
+  const timePoints = activity.moving_time / 60;
+
+  return Math.floor(caloriePoints) + Math.floor(timePoints);
 }

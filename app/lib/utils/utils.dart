@@ -81,8 +81,8 @@ bool isNetworkImage(String imageUrl) {
   return imageUrl.contains('http://') || imageUrl.contains('https://');
 }
 
-Map<String, T> getTopRecentEntries<T extends Object>(Map<String, T>? data,
-    int Function(MapEntry<String, T>, MapEntry<String, T>) sortFunc, int n) {
+Map<S, T> getTopRecentEntries<S, T extends Object>(Map<S, T>? data,
+    int Function(MapEntry<S, T>, MapEntry<S, T>) sortFunc, int n) {
   if (data == null) return {};
 
   final entries = data.entries.toList()..sort(sortFunc);

@@ -1,5 +1,5 @@
-import { SHOP_PROVIDER } from "../../../../shared/types/integrations";
-import { IIssueDiscountCodeShopPayload } from "../../../../shared/types/integrations/general";
+import { SHOP_PROVIDER } from "../../../shared/types/integrations";
+import { IIssueDiscountCodeShopPayload } from "../../../shared/types/integrations/general";
 
 import { insertPrestashopDiscountCode } from "./prestahop";
 

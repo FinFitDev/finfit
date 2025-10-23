@@ -7,6 +7,7 @@ import apiRouter from "./routes/api/apiRouter";
 import webhookRouter from "./routes/webhook";
 
 import { middleware } from "./routes/api/middleware";
+import stravaRouter from "./routes/stravaRouter";
 
 const app: Express = express();
 app.use(cors());
@@ -22,6 +23,7 @@ app.use(bodyParser.json({ limit: "50mb" }));
 
 app.use("/auth", authRouter);
 app.use("/webhook", webhookRouter);
+app.use("/strava", stravaRouter);
 app.use("/api/v1", middleware, apiRouter);
 
 app.listen(port, () => {

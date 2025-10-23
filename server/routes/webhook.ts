@@ -1,5 +1,5 @@
 import express, { Router, Request, Response } from "express";
-import { setClaimUsed } from "./api/services/claimsService";
+import { setClaimUsed } from "../services/api/claimsService";
 
 const webhookRouter: Router = express.Router();
 

@@ -6,16 +6,16 @@ import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_contr
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/utils/constants.dart';
+import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/home/utils.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:health/health.dart';
 
 class RecentTrainingSection extends StatefulWidget {
-  final Map<String, ITrainingEntry> recentTraining;
+  final Map<int, ITrainingEntry> recentTraining;
   final bool? isLoading;
   final bool? hideTitle;
   final bool? allowLoadMore;
@@ -40,6 +40,7 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
 
     // Empty state
     if (widget.recentTraining.isEmpty && widget.isLoading != true) {
+      print("HERE");
       return emptyActivity(colors, texts, widget.hideTitle == true);
     }
 
@@ -91,23 +92,21 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
               itemCount: widget.recentTraining.values.length,
               itemBuilder: (context, index) {
                 final entry = widget.recentTraining.values.elementAt(index);
-                final type = HealthWorkoutActivityType.values
-                    .firstWhere((el) => el.name == entry.type);
 
                 return Container(
-                  margin: EdgeInsets.only(top: index != 0 ? 8 : 0),
+                  margin: EdgeInsets.only(top: index != 0 ? 12 : 0),
                   child: ActivityCard(
-                    activityType: parseActivityType(type),
+                    activityType: entry.type,
                     points: entry.points,
                     date: parseDate(entry.createdAt),
                     duration: entry.duration,
-                    // TODO: change to dstance
-
-                    distance: entry.calories,
+                    calories: entry.calories,
+                    distance: entry.distance,
+                    isStrava: entry.stravaId != null,
                     onPressed: () {
                       openModal(
                         context,
-                        WorkoutInfoModal(workoutId: entry.uuid),
+                        WorkoutInfoModal(workoutId: entry.id),
                       );
                     },
                   ),

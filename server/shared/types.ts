@@ -35,8 +35,10 @@ export interface ITrainingEntry {
   distance?: number;
   type: string;
   user_id: string;
-  uuid: number;
   created_at?: string;
+  strava_id?: number;
+  polyline?: string;
+  elevation_change?: number;
 }
 
 export interface ITrainingEntryResponse {
@@ -47,6 +49,9 @@ export interface ITrainingEntryResponse {
   calories?: number;
   distance?: number;
   type: string;
+  strava_id?: number;
+  polyline?: string;
+  elevation_change?: number;
 }
 
 export interface IHourlyStepEntry {

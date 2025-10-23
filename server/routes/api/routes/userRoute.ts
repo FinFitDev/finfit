@@ -8,7 +8,7 @@ import {
   updateUserImage,
   updateUserPointsScore,
   updateUserPointsScoreWithUpdateTimestamp,
-} from "../services/userService";
+} from "../../../services/api/userService";
 
 export const getUserByIdHandler = async (
   req: RequestWithPayload<undefined, { id: string }>,

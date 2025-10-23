@@ -1,4 +1,6 @@
 import 'package:excerbuys/components/shared/activity_icon.dart';
+import 'package:excerbuys/components/shared/image_component.dart';
+import 'package:excerbuys/components/shared/positions/strava_import_badge.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/enums.dart';
@@ -15,16 +17,19 @@ class ActivityCard extends StatefulWidget {
   final String date;
   final int? distance;
   final int? duration;
+  final int? calories;
+  final bool? isStrava;
 
-  const ActivityCard({
-    super.key,
-    required this.activityType,
-    required this.date,
-    required this.points,
-    this.distance,
-    this.duration,
-    required this.onPressed,
-  });
+  const ActivityCard(
+      {super.key,
+      required this.activityType,
+      required this.date,
+      required this.points,
+      this.distance,
+      this.duration,
+      required this.onPressed,
+      this.calories,
+      this.isStrava});
 
   @override
   State<ActivityCard> createState() => _ActivityCardState();
@@ -71,7 +76,7 @@ class _ActivityCardState extends State<ActivityCard> {
             Positioned(
               top: 0,
               bottom: 0,
-              left: 3,
+              left: 4,
               right: 0,
               child: Container(
                 padding: EdgeInsets.all(16),
@@ -103,11 +108,19 @@ class _ActivityCardState extends State<ActivityCard> {
                                       style: texts.titleMedium?.copyWith(
                                           fontWeight: FontWeight.w600)),
                                 ),
-                                Container(
-                                  margin: EdgeInsets.only(top: 2),
-                                  child: Text(widget.date,
-                                      style: texts.bodyMedium?.copyWith(
-                                          color: colors.tertiaryContainer)),
+                                Row(
+                                  spacing: 16,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(top: 2),
+                                      child: Text(widget.date,
+                                          style: texts.bodyMedium?.copyWith(
+                                              color: colors.tertiaryContainer)),
+                                    ),
+                                    widget.isStrava == true
+                                        ? StravaImportBadge()
+                                        : SizedBox.shrink(),
+                                  ],
                                 ),
                               ],
                             ),
@@ -155,7 +168,19 @@ class _ActivityCardState extends State<ActivityCard> {
                                 colors.tertiaryContainer, BlendMode.srcIn),
                           ),
                           SizedBox(width: 6),
-                          Text(formatNumber(widget.distance ?? 0) + 'km',
+                          Text(parseDistance((widget.distance ?? 0).toDouble()),
+                              style: texts.bodyMedium
+                                  ?.copyWith(color: colors.tertiaryContainer)),
+                        ]),
+                        Row(children: [
+                          SvgPicture.asset(
+                            'assets/svg/fire.svg',
+                            width: 16,
+                            colorFilter: ColorFilter.mode(
+                                colors.tertiaryContainer, BlendMode.srcIn),
+                          ),
+                          SizedBox(width: 6),
+                          Text('${widget.calories ?? 0} kcal',
                               style: texts.bodyMedium
                                   ?.copyWith(color: colors.tertiaryContainer)),
                         ]),

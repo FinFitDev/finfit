@@ -1,14 +1,14 @@
 import jwt from "jsonwebtoken";
-import { getDataFromIdToken } from "../../../shared/utils/google";
 import {
   fetchUserByEmail,
   fetchUserById,
   updateVerifyUser,
-} from "../../../models/userModel";
+} from "../../models/userModel";
+import { generateEmailVerificationToken } from "../../models/tokenModel";
+import { sendVerificationEmail } from "../../shared/utils/email";
+import { getDataFromIdToken } from "../../shared/utils/google";
 import { logInUser } from "./login";
 import { signUpUser } from "./signup";
-import { generateEmailVerificationToken } from "../../../models/tokenModel";
-import { sendVerificationEmail } from "../../../shared/utils/email";
 
 export const verifyAccessToken = (access_token: string) => {
   return new Promise((resolve, reject) => {

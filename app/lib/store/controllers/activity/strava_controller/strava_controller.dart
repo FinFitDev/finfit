@@ -1,17 +1,17 @@
 import 'dart:io';
 import 'package:excerbuys/store/controllers/activity/trainings_controller/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
+import 'package:excerbuys/utils/activity/requests.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'mutations.dart';
 part 'effects.dart';
 part 'selectors.dart';
 
-class ActivityController {
+class StravaController {
   final BehaviorSubject<bool> _healthAuthorized = BehaviorSubject.seeded(false);
   Stream<bool> get healthAuthorizedStream => _healthAuthorized.stream;
   bool get healthAuthorized => _healthAuthorized.value;
@@ -31,4 +31,4 @@ class ActivityController {
   double get totalPointsToAdd => _totalPointsToAdd.value;
 }
 
-ActivityController activityController = ActivityController();
+StravaController stravaController = StravaController();

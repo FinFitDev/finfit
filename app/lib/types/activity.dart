@@ -1,3 +1,5 @@
+import 'package:excerbuys/types/enums.dart';
+import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:flutter/material.dart';
 
 class ActivityMetadata {
@@ -14,36 +16,65 @@ class ActivityMetadata {
 }
 
 class ITrainingEntry {
-  final String uuid;
+  final int id;
   final int points;
-  final String type;
+  final ACTIVITY_TYPE type;
   final String userId;
   final int duration;
   final DateTime createdAt;
   final int? calories;
   final int? distance;
+  final int? stravaId;
+  final String? polyline;
+  final double? elevationChange;
 
-  const ITrainingEntry(
-      {required this.uuid,
-      required this.points,
-      required this.duration,
-      this.calories,
-      this.distance,
-      required this.type,
-      required this.userId,
-      required this.createdAt});
+  const ITrainingEntry({
+    required this.id,
+    required this.points,
+    required this.duration,
+    required this.type,
+    required this.userId,
+    required this.createdAt,
+    this.calories,
+    this.distance,
+    this.stravaId,
+    this.polyline,
+    this.elevationChange,
+  });
 
-  String toJson() {
-    return """{
-        "uuid":"${uuid}",
-        "points":"${points}",
-        "type":"${type}",
-        "user_id":"${userId}",
-        "duration":"${duration}",
-        "calories":"${calories}",
-        "distance":"${distance}",
-        "created_at":"${createdAt}"
-      }""";
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "points": points,
+      "type": type.value, // Convert enum to string
+      "user_id": userId,
+      "duration": duration,
+      "calories": calories,
+      "distance": distance,
+      "strava_id": stravaId,
+      "polyline": polyline,
+      "elevation_change": elevationChange,
+      "created_at": createdAt.toIso8601String(),
+    };
+  }
+
+  factory ITrainingEntry.fromJson(Map<String, dynamic> json) {
+    return ITrainingEntry(
+      id: json['id'] is String ? int.parse(json['id']) : json['id'] as int,
+      points: json['points'] as int,
+      type: ACTIVITY_TYPE
+          .fromString(json['type'] as String), // Convert string to enum
+      userId: json['user_id'] as String,
+      duration: json['duration'] as int,
+      createdAt: DateTime.parse(json['created_at'] as String),
+      calories: json['calories'] as int?,
+      distance: json['distance'] as int?,
+      stravaId: json['strava_id'] is String
+          ? int.tryParse(json['strava_id'])
+          : json['strava_id'] as int?,
+      polyline: json['polyline'] as String?,
+      elevationChange: safeParseDouble(json['elevation_change']),
+    );
   }
 }
 

@@ -2,7 +2,7 @@ part of 'trainings_controller.dart';
 
 extension TrainingsControllerMutations on TrainingsController {
   reset() {
-    final newData = ContentWithLoading(content: Map<String, ITrainingEntry>());
+    final newData = ContentWithLoading(content: Map<int, ITrainingEntry>());
     newData.isLoading = userTrainings.isLoading;
     _userTrainings.add(newData);
 
@@ -13,13 +13,14 @@ extension TrainingsControllerMutations on TrainingsController {
     _lazyLoadOffset.add(newLazyLoadData);
   }
 
-  refresh() {
+  refresh() async {
     reset();
+    await Cache.removeKeysByPattern(RegExp(r'.*/api/v1/trainings'));
     fetchTrainings();
   }
 
-  addUserTrainings(Map<String, ITrainingEntry> activity) {
-    Map<String, ITrainingEntry> newTrainings = {
+  addUserTrainings(Map<int, ITrainingEntry> activity) {
+    Map<int, ITrainingEntry> newTrainings = {
       ...userTrainings.content,
       ...activity
     };

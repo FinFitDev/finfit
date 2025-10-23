@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 
-import { getFeaturedOffers, getOffers } from "../services/offersService";
+import {
+  getFeaturedOffers,
+  getOffers,
+} from "../../../services/api/offersService";
 
 export const getFeaturedOffersHandler = async (req: Request, res: Response) => {
   try {

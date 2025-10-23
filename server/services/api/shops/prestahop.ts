@@ -1,12 +1,12 @@
-import { HTTP_METHOD } from "../../../../shared/types/general";
-import { IShopApiData } from "../../../../shared/types/integrations";
-import { IIssueDiscountCodeShopPayload } from "../../../../shared/types/integrations/general";
-import { IPrestashopDiscountCodeInsert } from "../../../../shared/types/integrations/prestashop";
-import { fetchHandler } from "../../../../shared/utils/fetching";
+import { HTTP_METHOD } from "../../../shared/types/general";
+import { IShopApiData } from "../../../shared/types/integrations";
+import { IIssueDiscountCodeShopPayload } from "../../../shared/types/integrations/general";
+import { IPrestashopDiscountCodeInsert } from "../../../shared/types/integrations/prestashop";
+import { fetchHandler } from "../../../shared/utils/fetching";
 import {
   createPrestashopXML,
   formatDateForPrestashop,
-} from "../../../../shared/utils/integrations/prestashop";
+} from "../../../shared/utils/integrations/prestashop";
 
 export const insertPrestashopDiscountCode = async ({
   codeExpirationPeriod,

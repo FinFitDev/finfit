@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import { Request, Response, NextFunction } from "express";
-import { RequestWithPayload } from "../../shared/types";
 
 export const middleware = (req: Request, res: Response, next: NextFunction) => {
   const auth_header = req.headers["authorization"];

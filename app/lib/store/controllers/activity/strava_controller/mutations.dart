@@ -1,6 +1,6 @@
-part of 'activity_controller.dart';
+part of 'strava_controller.dart';
 
-extension ActivityControllerMutations on ActivityController {
+extension StravaControllerMutations on StravaController {
   reset() {
     trainingsController.reset();
   }

@@ -1,15 +1,12 @@
+import bcrypt from "bcryptjs";
+import { fetchUserByEmail, updateUserPassword } from "../../models/userModel";
 import {
   getCodeByCodeFromDb,
   getCodeByUserIdFromDb,
   insertCodeToDb,
-} from "../../../models/codeModel";
-import {
-  fetchUserByEmail,
-  updateUserPassword,
-} from "../../../models/userModel";
-import { generate6DigitCode } from "../../../shared/utils";
-import { sendPasswordResetEmail } from "../../../shared/utils/email";
-import bcrypt from "bcryptjs";
+} from "../../models/codeModel";
+import { generate6DigitCode } from "../../shared/utils";
+import { sendPasswordResetEmail } from "../../shared/utils/email";
 
 export const resolveSendResetPasswordMail = async (email: string) => {
   if (!email) {

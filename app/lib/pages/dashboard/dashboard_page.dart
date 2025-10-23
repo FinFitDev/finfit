@@ -29,11 +29,6 @@ class _DashboardPageState extends State<DashboardPage> {
     Health().configure();
     transactionsController.fetchTransactions();
     offersController.fetchFeaturedOffers();
-
-    await activityController.authorize();
-    if (Platform.isAndroid) {
-      await activityController.checkHealthConnectSdk();
-    }
     activityController.fetchActivity();
     claimsController.fetchAllClaims();
   }

@@ -1,22 +1,19 @@
-import { insertDiscountCode } from "../../../models/discountCodeModel";
+import { insertDiscountCode } from "../../models/discountCodeModel";
 import {
   fetchAffordableOffers,
   fetchFeaturedOffers,
   fetchOfferCodeDetails,
   fetchPaginatedOffers,
-} from "../../../models/offersModel";
-import { insertTransactions } from "../../../models/transactionsModel";
+} from "../../models/offersModel";
+import { insertTransactions } from "../../models/transactionsModel";
 import {
   fetchUserById,
   subtractPointsScoreWithReturn,
-} from "../../../models/userModel";
-import { IOffer } from "../../../shared/types";
-import {
-  IShopApiData,
-  SHOP_PROVIDER,
-} from "../../../shared/types/integrations";
-import { pool } from "../../../shared/utils/db";
-import { decryptShopApiParams } from "../../../shared/utils/encryption";
+} from "../../models/userModel";
+import { IOffer } from "../../shared/types";
+import { IShopApiData, SHOP_PROVIDER } from "../../shared/types/integrations";
+import { pool } from "../../shared/utils/db";
+import { decryptShopApiParams } from "../../shared/utils/encryption";
 import { insertShopDiscountCode } from "./shops";
 
 export const getOffers = async (

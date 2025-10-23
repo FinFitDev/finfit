@@ -1,17 +1,16 @@
 import bcrypt from "bcryptjs";
-import { ErrorWithCode } from "../../../exceptions/errorWithCode";
+import { IGoogleSignUpPayload, ISignupPayload } from "../../shared/types/auth";
+import { ErrorWithCode } from "../../exceptions/errorWithCode";
+import { isUserGoogleSignup } from "../../shared/utils";
 import {
   fetchUserByEmail,
-  fetchUserById,
   fetchUserByUsername,
   insertGoogleAuthUser,
   insertUser,
-} from "../../../models/userModel";
-import { IGoogleSignUpPayload, ISignupPayload } from "../types";
-import { isUserGoogleSignup } from "../../../shared/utils";
+} from "../../models/userModel";
 import { v4 as uuidv4 } from "uuid";
-import { sendVerificationEmail } from "../../../shared/utils/email";
-import { generateEmailVerificationToken } from "../../../models/tokenModel";
+import { generateEmailVerificationToken } from "../../models/tokenModel";
+import { sendVerificationEmail } from "../../shared/utils/email";
 
 export const signUpUser = async (
   user: ISignupPayload | IGoogleSignUpPayload

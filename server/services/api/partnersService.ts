@@ -1,5 +1,5 @@
-import { fetchPartnersByRegex } from "../../../models/partnerModel";
-import { IPartner } from "../../../shared/types";
+import { fetchPartnersByRegex } from "../../models/partnerModel";
+import { IPartner } from "../../shared/types";
 
 export const getPartnersBySearch = async (
   limit: number,

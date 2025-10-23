@@ -1,16 +1,20 @@
 import bcrypt from "bcryptjs";
-import { ErrorWithCode } from "../../../exceptions/errorWithCode";
-import { fetchUserByUsernameOrEmail } from "../../../models/userModel";
+import {
+  IGoogleLoginPayload,
+  ILoginPayload,
+  ILoginResponse,
+} from "../../shared/types/auth";
+import { ErrorWithCode } from "../../exceptions/errorWithCode";
+import { isUserGoogleLogin } from "../../shared/utils";
+import { fetchUserByUsernameOrEmail } from "../../models/userModel";
+import { IUser } from "../../shared/types";
 import {
   generateAccessToken,
   generateEmailVerificationToken,
   generateRefreshToken,
   insertRefreshToken,
-} from "../../../models/tokenModel";
-import { IGoogleLoginPayload, ILoginPayload, ILoginResponse } from "../types";
-import { IUser } from "../../../shared/types";
-import { isUserGoogleLogin } from "../../../shared/utils";
-import { sendVerificationEmail } from "../../../shared/utils/email";
+} from "../../models/tokenModel";
+import { sendVerificationEmail } from "../../shared/utils/email";
 
 export const logInUser = async (
   user: ILoginPayload | IGoogleLoginPayload,

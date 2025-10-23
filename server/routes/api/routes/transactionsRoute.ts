@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import {
   addTransactionsToDb,
   getTransactions,
-} from "../services/transactionsService";
+} from "../../../services/api/transactionsService";
 import { RequestWithPayload } from "../../../shared/types";
 
 export const addTransactionsHandler = async (req: Request, res: Response) => {

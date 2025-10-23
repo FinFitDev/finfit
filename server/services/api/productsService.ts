@@ -6,10 +6,10 @@ import {
   fetchProducts,
   fetchProductsByFilters,
   fetchProductsForProductOwner,
-} from "../../../models/productModel";
-import { fetchUserById } from "../../../models/userModel";
-import { IFiltersQuery } from "../../../shared/types";
-import { IProduct } from "../../../shared/types/shop";
+} from "../../models/productModel";
+import { fetchUserById } from "../../models/userModel";
+import { IFiltersQuery } from "../../shared/types";
+import { IProduct } from "../../shared/types/shop";
 
 export const getAffordableProducts = async (
   userId: string,

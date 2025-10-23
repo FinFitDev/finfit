@@ -1,7 +1,10 @@
 import { Response } from "express";
 import { RequestWithPayload } from "../../../shared/types";
 import { IClaimDiscountPayload } from "../../../shared/types/offers";
-import { claimDiscount, getAllUserClaims } from "../services/claimsService";
+import {
+  claimDiscount,
+  getAllUserClaims,
+} from "../../../services/api/claimsService";
 import { fetchUserClaims } from "../../../models/discountCodeModel";
 
 export const claimDiscountHandler = async (

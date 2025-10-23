@@ -2,12 +2,12 @@ import {
   fetchRecentUserTransactions,
   fetchTransactions,
   insertTransactions,
-} from "../../../models/transactionsModel";
+} from "../../models/transactionsModel";
 import {
   ITrainingEntryResponse,
   ITransactionEntryResponse,
   ITransactionInsert,
-} from "../../../shared/types";
+} from "../../shared/types";
 
 export const addTransactionsToDb = async (
   transactions: ITransactionInsert[]

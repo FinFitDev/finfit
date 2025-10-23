@@ -25,7 +25,26 @@ class Cache {
     if (data == null) {
       return null;
     }
-    return ContentWithTimestamp.fromJson(data, deserializer);
+
+    // Data should be a JSON string that needs decoding
+    if (data is String) {
+      try {
+        return ContentWithTimestamp.fromJson(data, deserializer);
+      } catch (e) {
+        print('Error parsing cached data: $e');
+        return null;
+      }
+    }
+    // If data is already a Map, it means it wasn't properly encoded
+    else if (data is Map<String, dynamic>) {
+      print('CACHE WARNING: Found Map instead of JSON string, re-caching...');
+      return null; // Force re-cache with proper format
+    }
+    // Unexpected data type
+    else {
+      print('CACHE WARNING: Unexpected data type: ${data.runtimeType}');
+      return null;
+    }
   }
 
   static Future<void> set<T>(

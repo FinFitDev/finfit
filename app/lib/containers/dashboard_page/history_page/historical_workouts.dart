@@ -24,42 +24,19 @@ class _HistoricalWorkoutsState extends State<HistoricalWorkouts> {
         builder: (context, _) {
           return Column(
             children: [
-              StreamBuilder<ContentWithLoading<Map<String, ITrainingEntry>>>(
+              StreamBuilder<ContentWithLoading<Map<int, ITrainingEntry>>>(
                   stream: trainingsController.userTrainingsStream,
                   builder: (context, snapshot) {
-                    final Map<String, ITrainingEntry> trainings =
-                        snapshot.hasData
-                            ? Map.fromEntries(
-                                snapshot.data!.content.entries.toList())
-                            : {};
+                    final Map<int, ITrainingEntry> trainings = snapshot.hasData
+                        ? Map.fromEntries(
+                            snapshot.data!.content.entries.toList())
+                        : {};
                     return RecentTrainingSection(
                       isLoading: snapshot.data?.isLoading ?? false,
                       recentTraining: trainings,
                       hideTitle: true,
                     );
                   }),
-              // StreamBuilder<ContentWithLoading<int>>(
-              //     stream: trainingsController.lazyLoadOffsetStream,
-              //     builder: (context, loadingSnapshot) {
-              //       return Container(
-              //         margin: EdgeInsets.only(
-              //             top: loadingSnapshot.data?.isLoading == true ? 20 : 0,
-              //             bottom:
-              //                 loadingSnapshot.data?.isLoading == true ? 40 : 0),
-              //         child: loadingSnapshot.data?.isLoading == true
-              //             ? SpinKitCircle(
-              //                 color: colors.secondary,
-              //                 size: 30.0,
-              //                 controller: _animationController,
-              //               )
-              //             : trainingsController.canFetchMore
-              //                 ? LoadMoreIndicator(
-              //                     scrollLoadMoreProgress:
-              //                         widget.scrollLoadMoreProgress,
-              //                   )
-              //                 : SizedBox.shrink(),
-              //       );
-              //     }),
             ],
           );
         });

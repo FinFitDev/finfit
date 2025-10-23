@@ -6,8 +6,8 @@ import {
   getMaxPriceRanges,
   getProductsByFilters,
   getProductsForProductOwner,
-} from "../services/productsService";
-import { getProductOwnersBySearch } from "../services/productOwnerService";
+} from "../../../services/api/productsService";
+import { getProductOwnersBySearch } from "../../../services/api/productOwnerService";
 
 export const getHomeProductsHandler = async (
   req: RequestWithPayload<undefined, { id: string }>,

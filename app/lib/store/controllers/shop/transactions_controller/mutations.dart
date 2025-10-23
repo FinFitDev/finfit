@@ -14,8 +14,9 @@ extension TransactionsControllerMutations on TransactionsController {
     _lazyLoadOffset.add(newLazyLoadData);
   }
 
-  refresh() {
+  refresh() async {
     reset();
+    await Cache.removeKeysByPattern(RegExp(r'.*/api/v1/transactions'));
     fetchTransactions();
   }
 

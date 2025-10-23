@@ -1,13 +1,12 @@
 import "dotenv/config";
 import jwt from "jsonwebtoken";
-
-import { ErrorWithCode } from "../../../exceptions/errorWithCode";
+import { ErrorWithCode } from "../../exceptions/errorWithCode";
+import { IAccessToken, IRefreshToken } from "../../shared/types";
 import {
-  generateAccessToken,
   fetchTokenFromDb,
+  generateAccessToken,
   ITokenData,
-} from "../../../models/tokenModel";
-import { IAccessToken, IRefreshToken } from "../../../shared/types";
+} from "../../models/tokenModel";
 
 export const regenerateAccessTokenFromRefreshToken = async (
   refresh_token: IRefreshToken
