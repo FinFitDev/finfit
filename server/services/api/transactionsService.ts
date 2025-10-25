@@ -29,10 +29,10 @@ export const getTransactions = async (
     throw new Error("No userId provided");
   }
 
-  // Fetch recent trainings if no offset or offset is 0
+  // Fetch recent transactions if no offset or offset is 0
   let foundTransactions =
     !offset || offset === 0
-      ? await fetchRecentUserTransactions(userId)
+      ? await fetchRecentUserTransactions(userId, limit ?? 5)
       : undefined;
 
   // If offset exists or we need more data based on row count

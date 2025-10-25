@@ -1,11 +1,6 @@
 import { PoolClient } from "pg";
-import {
-  IDailyStepEntry,
-  IHourlyStepEntry,
-  ITrainingEntry,
-} from "../shared/types";
+import { ITrainingEntry } from "../shared/types";
 import { pool } from "../shared/utils/db";
-import { updatePointsScore } from "./userModel";
 
 export const fetchUserTrainings = async (
   user_id: string,
@@ -46,10 +41,11 @@ export const insertTraining = async ({
   strava_id,
   polyline,
   elevation_change,
+  average_speed,
 }: ITrainingEntry) => {
   const response = await pool.query(
-    `INSERT INTO trainings (type, points, duration, calories, distance, user_id, uuid, created_at, strava_id, polyline, elevation_change)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    `INSERT INTO trainings (type, points, duration, calories, distance, user_id, created_at, strava_id, polyline, elevation_change, average_speed)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 `,
     [
       type,
@@ -62,6 +58,7 @@ export const insertTraining = async ({
       strava_id,
       polyline,
       elevation_change,
+      average_speed,
     ]
   );
 
@@ -77,7 +74,7 @@ export const insertTrainingsBulk = async (
   const insertResult = await executor.query(
     `
       WITH inserted_rows AS (
-        INSERT INTO trainings (type, points, duration, calories, distance, user_id, created_at, strava_id, polyline, elevation_change)
+        INSERT INTO trainings (type, points, duration, calories, distance, user_id, created_at, strava_id, polyline, elevation_change, average_speed)
         VALUES ${placeholders}
         RETURNING points
       )

@@ -56,11 +56,13 @@ class _HomePageState extends State<HomePage> {
     );
 
     await Future.delayed(Duration(milliseconds: 300));
-    activityController.setTodaysPoints(0);
-    await transactionsController.refresh();
-    await offersController.refreshFeaturedOffers();
-    await sendController.refresh();
-    await claimsController.refresh();
+    await Future.wait<dynamic>([
+      transactionsController.refresh(),
+      offersController.refreshFeaturedOffers(),
+      sendController.refresh(),
+      claimsController.refresh(),
+      trainingsController.refresh(),
+    ]);
   }
 
   @override

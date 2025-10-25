@@ -9,11 +9,8 @@ extension TrainingsControllerEffects on TrainingsController {
 
       setTrainingsLoading(true);
 
-      print('RUNININININ');
       final List<ITrainingEntry>? fetchedTrainings = await loadTrainingsRequest(
           userController.currentUser!.uuid, TRAINING_DATA_CHUNK_SIZE, 0);
-
-      print(fetchedTrainings);
 
       if (fetchedTrainings == null || fetchedTrainings.isEmpty) {
         throw 'No trainings found';

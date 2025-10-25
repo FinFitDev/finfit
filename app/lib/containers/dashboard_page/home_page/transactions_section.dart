@@ -112,10 +112,18 @@ class _TransactionsSectionState extends State<TransactionsSection> {
               itemBuilder: (context, index) {
                 final transactionData = _transactions[index];
                 return Container(
-                  margin: EdgeInsets.only(top: index != 0 ? 8 : 0),
+                  margin: EdgeInsets.only(top: index != 0 ? 12 : 0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: colors.primaryContainer,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withAlpha(50),
+                        spreadRadius: -5,
+                        blurRadius: 10,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
                   ),
                   child: TransactionCard(
                     points: transactionData.amountPoints?.round() ?? 0,

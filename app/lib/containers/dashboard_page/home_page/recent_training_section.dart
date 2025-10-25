@@ -38,9 +38,7 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
 
-    // Empty state
     if (widget.recentTraining.isEmpty && widget.isLoading != true) {
-      print("HERE");
       return emptyActivity(colors, texts, widget.hideTitle == true);
     }
 

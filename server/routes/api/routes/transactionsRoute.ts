@@ -26,6 +26,7 @@ export const getTransactionsHandler = async (
     const userId = req.params.user_id as string;
     const limit = req.query.limit as string;
     const offset = req.query.offset as string;
+
     const response = await getTransactions(
       userId,
       limit ? +limit : undefined,

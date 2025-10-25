@@ -75,7 +75,10 @@ export const fetchTransactions = async (
   return response;
 };
 
-export const fetchRecentUserTransactions = async (userId: string) => {
+export const fetchRecentUserTransactions = async (
+  userId: string,
+  limit: number
+) => {
   const response = await pool.query(
     `
     SELECT
@@ -136,8 +139,9 @@ export const fetchRecentUserTransactions = async (userId: string) => {
       AND t.created_at >= NOW() - INTERVAL '7 days'
 
     ORDER BY t.created_at DESC
+    LIMIT $2
     `,
-    [userId]
+    [userId, limit]
   );
 
   return response;

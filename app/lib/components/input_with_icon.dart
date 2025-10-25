@@ -77,6 +77,14 @@ class _InputWithIconState extends State<InputWithIcon> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(widget.borderRadius ?? 20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(50),
+            spreadRadius: -5,
+            blurRadius: 10,
+            offset: Offset(0, 3),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -24,7 +24,7 @@ class ITransactionEntry {
       'type': type,
       'second_users': secondUsers?.map((el) => el.toString()).toList() ?? [],
       'amount_points': amountPoints,
-      'created_at': createdAt,
+      'created_at': createdAt.toIso8601String(),
       'offer': offer?.toJson(),
     };
   }

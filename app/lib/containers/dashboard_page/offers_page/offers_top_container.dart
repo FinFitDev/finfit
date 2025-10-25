@@ -63,10 +63,18 @@ class _OffersTopContainerState extends State<OffersTopContainer>
                 end: Alignment.bottomRight,
                 colors: [
                   colors.secondary,
-                  colors.secondary.withAlpha(150),
+                  Color.fromARGB(255, 165, 177, 255),
                 ],
               ),
               borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withAlpha(50),
+                  spreadRadius: -5,
+                  blurRadius: 10,
+                  offset: Offset(0, 3),
+                ),
+              ],
             ),
             child: Row(
               children: [

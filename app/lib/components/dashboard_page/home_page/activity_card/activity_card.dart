@@ -53,6 +53,14 @@ class _ActivityCardState extends State<ActivityCard> {
         decoration: BoxDecoration(
           // color: colors.error,
           borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withAlpha(50),
+              spreadRadius: -5,
+              blurRadius: 10,
+              offset: Offset(0, 3),
+            ),
+          ],
         ),
         child: Stack(
           children: [
@@ -103,13 +111,20 @@ class _ActivityCardState extends State<ActivityCard> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
-                                  child: Text(activityMetadata.name,
-                                      style: texts.titleMedium?.copyWith(
-                                          fontWeight: FontWeight.w600)),
+                                Row(
+                                  spacing: 8,
+                                  children: [
+                                    Container(
+                                      child: Text(activityMetadata.name,
+                                          style: texts.titleMedium?.copyWith(
+                                              fontWeight: FontWeight.w600)),
+                                    ),
+                                    widget.isStrava == true
+                                        ? StravaImportBadge()
+                                        : SizedBox.shrink(),
+                                  ],
                                 ),
                                 Row(
-                                  spacing: 16,
                                   children: [
                                     Container(
                                       margin: EdgeInsets.only(top: 2),
@@ -117,9 +132,6 @@ class _ActivityCardState extends State<ActivityCard> {
                                           style: texts.bodyMedium?.copyWith(
                                               color: colors.tertiaryContainer)),
                                     ),
-                                    widget.isStrava == true
-                                        ? StravaImportBadge()
-                                        : SizedBox.shrink(),
                                   ],
                                 ),
                               ],
@@ -146,7 +158,7 @@ class _ActivityCardState extends State<ActivityCard> {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      spacing: 20,
+                      spacing: 10,
                       children: [
                         Row(children: [
                           SvgPicture.asset(

@@ -24,6 +24,20 @@ class UsersList extends StatelessWidget {
                 ? StreamBuilder<String?>(
                     stream: sendController.searchValueStream,
                     builder: (context, snapshot) {
+                      if (snapshot.data == null || snapshot.data!.isEmpty) {
+                        return Container(
+                          height: 500,
+                          child: Center(
+                            child: Text(
+                              'No recent users.',
+                              style: TextStyle(
+                                color: colors.tertiaryContainer,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
                       return emptyList(snapshot.data ?? '', colors, texts);
                     })
                 : StreamBuilder<List<String>>(
@@ -64,10 +78,18 @@ Widget userCard(
     child: Container(
       height: 70,
       padding: EdgeInsets.all(10),
-      margin: EdgeInsets.only(top: 4),
+      margin: EdgeInsets.only(top: 12),
       decoration: BoxDecoration(
         color: colors.primaryContainer,
         borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(30),
+            spreadRadius: -5,
+            blurRadius: 10,
+            offset: Offset(0, 3),
+          ),
+        ],
       ),
       child: Row(
         children: [

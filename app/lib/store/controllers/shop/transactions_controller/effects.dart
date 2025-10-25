@@ -13,6 +13,8 @@ extension TransactionsControllerEffects on TransactionsController {
           await loadTransactionRequest(
               userController.currentUser!.uuid, TRANSACTION_DATA_CHUNK_SIZE, 0);
 
+      print(fetchedTransactions);
+
       if (fetchedTransactions == null || fetchedTransactions.isEmpty) {
         throw 'No transactions found';
       }

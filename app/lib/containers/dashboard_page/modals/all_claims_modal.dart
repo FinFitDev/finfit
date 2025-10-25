@@ -88,18 +88,27 @@ class _ClaimCard extends StatelessWidget {
       onPressed: () {
         openModal(context, OfferInfoModal(offer: entry.offer));
       },
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: Container(
-          height: 325,
-          decoration: BoxDecoration(
-            color: colors.primaryContainer,
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
+      child: Container(
+        height: 325,
+        decoration: BoxDecoration(
+          color: colors.primaryContainer,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withAlpha(50),
+              spreadRadius: -5,
+              blurRadius: 10,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+              child: Container(
                 height: 100,
                 color: colors.primary,
                 child: ImageBox(
@@ -107,184 +116,183 @@ class _ClaimCard extends StatelessWidget {
                   borderRadius: 0,
                 ),
               ),
-              Expanded(
-                flex: 2,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Row(
-                        children: [
-                          ImageComponent(
-                            size: 70,
-                            borderRadius: 10,
-                            image: entry.offer.partner.image,
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Row(
-                              spacing: 8,
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        entry.offer.partner.name,
-                                        style: TextStyle(
-                                          fontSize: 18,
+            ),
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      children: [
+                        ImageComponent(
+                          size: 70,
+                          borderRadius: 10,
+                          image: entry.offer.partner.image,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Row(
+                            spacing: 8,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      entry.offer.partner.name,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                        color: colors.tertiary,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    Text(
+                                      entry.offer.catchString,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: colors.tertiaryContainer,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              RippleWrapper(
+                                onPressed: () {
+                                  openLink(entry.offer.partner.link ?? '');
+                                },
+                                child: Row(
+                                  spacing: 8,
+                                  children: [
+                                    Text(
+                                      'Visit shop',
+                                      style: TextStyle(
+                                          color: colors.secondary,
                                           fontWeight: FontWeight.w500,
-                                          color: colors.tertiary,
+                                          fontSize: 13),
+                                    ),
+                                    RippleWrapper(
+                                      onPressed: () {},
+                                      child: SvgPicture.asset(
+                                        'assets/svg/external.svg',
+                                        colorFilter: ColorFilter.mode(
+                                          colors.secondary,
+                                          BlendMode.srcIn,
                                         ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
+                                        width: 18,
                                       ),
-                                      Text(
-                                        entry.offer.catchString,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: colors.tertiaryContainer,
-                                        ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                                RippleWrapper(
-                                  onPressed: () {
-                                    openLink(entry.offer.partner.link ?? '');
-                                  },
-                                  child: Row(
-                                    spacing: 8,
-                                    children: [
-                                      Text(
-                                        'Visit shop',
-                                        style: TextStyle(
-                                            color: colors.secondary,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 13),
-                                      ),
-                                      RippleWrapper(
-                                        onPressed: () {},
-                                        child: SvgPicture.asset(
-                                          'assets/svg/external.svg',
-                                          colorFilter: ColorFilter.mode(
-                                            colors.secondary,
-                                            BlendMode.srcIn,
-                                          ),
-                                          width: 18,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    CopyText(textToCopy: entry.code),
+                    // RippleWrapper(
+                    //   onPressed: () {
+                    //     Clipboard.setData(ClipboardData(text: entry.code));
+                    //   },
+                    //   child: Container(
+                    //     padding: const EdgeInsets.all(16),
+                    //     decoration: BoxDecoration(
+                    //       borderRadius: BorderRadius.circular(10),
+                    //       color: colors.tertiary.withAlpha(10),
+                    //     ),
+                    //     child: Row(
+                    //       spacing: 16,
+                    //       children: [
+                    //         Expanded(
+                    //           child: Text(
+                    //             entry.code,
+                    //             style: TextStyle(
+                    //               color: colors.tertiary,
+                    //               fontSize: 14,
+                    //               fontWeight: FontWeight.w600,
+                    //             ),
+                    //             softWrap: true,
+                    //             overflow: TextOverflow.visible,
+                    //           ),
+                    //         ),
+                    //         SvgPicture.asset(
+                    //           'assets/svg/copy.svg',
+                    //           colorFilter: ColorFilter.mode(
+                    //             colors.tertiary,
+                    //             BlendMode.srcIn,
+                    //           ),
+                    //           width: 24,
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Claimed at',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: colors.tertiaryContainer,
+                              ),
+                              textAlign: TextAlign.left,
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      CopyText(textToCopy: entry.code),
-                      // RippleWrapper(
-                      //   onPressed: () {
-                      //     Clipboard.setData(ClipboardData(text: entry.code));
-                      //   },
-                      //   child: Container(
-                      //     padding: const EdgeInsets.all(16),
-                      //     decoration: BoxDecoration(
-                      //       borderRadius: BorderRadius.circular(10),
-                      //       color: colors.tertiary.withAlpha(10),
-                      //     ),
-                      //     child: Row(
-                      //       spacing: 16,
-                      //       children: [
-                      //         Expanded(
-                      //           child: Text(
-                      //             entry.code,
-                      //             style: TextStyle(
-                      //               color: colors.tertiary,
-                      //               fontSize: 14,
-                      //               fontWeight: FontWeight.w600,
-                      //             ),
-                      //             softWrap: true,
-                      //             overflow: TextOverflow.visible,
-                      //           ),
-                      //         ),
-                      //         SvgPicture.asset(
-                      //           'assets/svg/copy.svg',
-                      //           colorFilter: ColorFilter.mode(
-                      //             colors.tertiary,
-                      //             BlendMode.srcIn,
-                      //           ),
-                      //           width: 24,
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Claimed at',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: colors.tertiaryContainer,
-                                ),
-                                textAlign: TextAlign.left,
+                            Text(
+                              parseDate(DateTime.parse(entry.createdAt)),
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: colors.tertiary,
                               ),
-                              Text(
-                                parseDate(DateTime.parse(entry.createdAt)),
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: colors.tertiary,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(width: 16),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              'Expires',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: colors.tertiaryContainer,
                               ),
-                              const SizedBox(width: 16),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                'Expires',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: colors.tertiaryContainer,
-                                ),
-                                textAlign: TextAlign.right,
+                              textAlign: TextAlign.right,
+                            ),
+                            Text(
+                              parseDate(DateTime.parse(entry.validUntil)),
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: colors.tertiary,
                               ),
-                              Text(
-                                parseDate(DateTime.parse(entry.validUntil)),
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: colors.tertiary,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              const SizedBox(width: 16),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(width: 16),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

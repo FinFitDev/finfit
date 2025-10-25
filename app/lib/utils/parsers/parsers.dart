@@ -161,12 +161,30 @@ String formatNumber(num number) {
 }
 
 String parseDuration(int seconds) {
-  if (seconds < 180) {
-    return '$seconds sec';
+  if (seconds < 60) {
+    return '$seconds s';
   }
 
-  int minutes = seconds ~/ 60;
-  return '$minutes min';
+  if (seconds < 3600) {
+    int minutes = seconds ~/ 60;
+    int remainingSeconds = seconds % 60;
+
+    if (remainingSeconds == 0) {
+      return '$minutes m';
+    } else {
+      return '$minutes m ${remainingSeconds}s';
+    }
+  }
+
+  int hours = seconds ~/ 3600;
+  int remainingSeconds = seconds % 3600;
+  int minutes = remainingSeconds ~/ 60;
+
+  if (minutes == 0) {
+    return '$hours h';
+  } else {
+    return '$hours h ${minutes}m';
+  }
 }
 
 String parseDistance(double meters) {

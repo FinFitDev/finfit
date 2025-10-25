@@ -37,10 +37,9 @@ extension ProductsControllerEffects on OffersController {
       }
       setLoadingMoreData(true);
       final offset = reset ? 0 : lazyLoadOffset.content;
-      print('fetching offers from offset $offset');
+
       final List<IOfferEntry>? fetchedOffers = await loadAllOffersRequest(
           searchQuery, OFFERS_DATA_CHUNK_SIZE, offset, cancelToken);
-      smartPrint('FTECHCH< OFFERE', fetchedOffers);
 
       if (fetchedOffers == null || fetchedOffers.isEmpty) {
         setCanFetchMore(false);

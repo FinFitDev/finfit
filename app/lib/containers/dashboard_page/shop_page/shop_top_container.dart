@@ -69,28 +69,6 @@ class _ShopTopContainerState extends State<ShopTopContainer>
             margin: EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING),
             child: Row(
               children: [
-                Expanded(
-                  child: StreamBuilder<List<String>>(
-                      stream: shopController.availableCategoriesStream,
-                      builder: (context, allCategories) {
-                        final List<String> categoriesFilled = [
-                          'All products',
-                          ...(allCategories.data ?? [])
-                        ];
-                        return StreamBuilder<int>(
-                            stream: shopController.activeShopCategoryStream,
-                            builder: (context, snapshot) {
-                              return DropdownTrigger<String>(
-                                options: categoriesFilled,
-                                onSelect: (int option) {
-                                  shopController.setActiveShopCategory(option);
-                                  closeModal(context);
-                                },
-                                activeOptionIndex: snapshot.data ?? 0,
-                              );
-                            });
-                      }),
-                ),
                 SizedBox(
                   width: 16,
                 ),

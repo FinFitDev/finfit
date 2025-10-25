@@ -53,13 +53,11 @@ Future<List<IClaimEntry>?> loadAllClaimsRequest(
     }
   }
 
-  return handler();
-
-  // return await Cache.fetch<List<IClaimEntry>>(
-  //     "${BACKEND_BASE_URL}api/v1/claims/$userId",
-  //     () async => await handler(),
-  //     (list) => list.map((e) => e.toJson()).toList(),
-  //     (data) => (data as List<dynamic>).map((e) {
-  //           return IClaimEntry.fromJson(e);
-  //         }).toList());
+  return await Cache.fetch<List<IClaimEntry>>(
+      "${BACKEND_BASE_URL}api/v1/claims/$userId",
+      () async => await handler(),
+      (list) => list.map((e) => e.toJson()).toList(),
+      (data) => (data as List<dynamic>).map((e) {
+            return IClaimEntry.fromJson(e);
+          }).toList());
 }

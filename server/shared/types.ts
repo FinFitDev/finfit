@@ -39,6 +39,7 @@ export interface ITrainingEntry {
   strava_id?: number;
   polyline?: string;
   elevation_change?: number;
+  average_speed?: number;
 }
 
 export interface ITrainingEntryResponse {
@@ -52,6 +53,7 @@ export interface ITrainingEntryResponse {
   strava_id?: number;
   polyline?: string;
   elevation_change?: number;
+  average_speed?: number;
 }
 
 export interface IHourlyStepEntry {

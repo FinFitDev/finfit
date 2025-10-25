@@ -1,7 +1,7 @@
 part of 'claims_controller.dart';
 
 extension ClaimsControllerMutations on ClaimsController {
-  refresh() {
+  refresh() async {
     setAllClaims({});
     setIsClaiming(false);
     fetchAllClaims();

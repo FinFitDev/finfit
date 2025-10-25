@@ -101,6 +101,7 @@ export const handleStravaActivityInfo = async ({
     strava_id: response.id,
     polyline: response.map.summary_polyline ?? undefined,
     elevation_change: response.elev_high - response.elev_low,
+    average_speed: response.average_speed ?? 0,
   };
 
   const totalAddedPoints = await addTrainings([
@@ -132,18 +133,12 @@ export const handleStravaWebhookEvent = async ({
     throw new Error("No user info found for strava integration");
   }
   const data = stravaUserInfo.rows[0];
-
-  if (
-    "type" in Object.keys(updates) &&
-    aspect_type === STRAVA_EVENT_TYPE.UPDATE
-  ) {
+  if ("type" in updates && aspect_type === STRAVA_EVENT_TYPE.UPDATE) {
     return await updateStravaTraining(updates["type"], object_id);
   }
 
   let accessToken = data.access_token;
   const tokenExpiresAt = new Date(data.token_expires_at);
-
-  console.log(accessToken, tokenExpiresAt);
 
   if (tokenExpiresAt < new Date(Date.now())) {
     const refreshToken = data.refresh_token;

@@ -27,6 +27,7 @@ class ITrainingEntry {
   final int? stravaId;
   final String? polyline;
   final double? elevationChange;
+  final double? averageSpeed;
 
   const ITrainingEntry({
     required this.id,
@@ -40,6 +41,7 @@ class ITrainingEntry {
     this.stravaId,
     this.polyline,
     this.elevationChange,
+    this.averageSpeed,
   });
 
   Map<String, dynamic> toJson() {
@@ -54,27 +56,28 @@ class ITrainingEntry {
       "strava_id": stravaId,
       "polyline": polyline,
       "elevation_change": elevationChange,
+      "average_speed": averageSpeed,
       "created_at": createdAt.toIso8601String(),
     };
   }
 
   factory ITrainingEntry.fromJson(Map<String, dynamic> json) {
     return ITrainingEntry(
-      id: json['id'] is String ? int.parse(json['id']) : json['id'] as int,
-      points: json['points'] as int,
-      type: ACTIVITY_TYPE
-          .fromString(json['type'] as String), // Convert string to enum
-      userId: json['user_id'] as String,
-      duration: json['duration'] as int,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      calories: json['calories'] as int?,
-      distance: json['distance'] as int?,
-      stravaId: json['strava_id'] is String
-          ? int.tryParse(json['strava_id'])
-          : json['strava_id'] as int?,
-      polyline: json['polyline'] as String?,
-      elevationChange: safeParseDouble(json['elevation_change']),
-    );
+        id: json['id'] is String ? int.parse(json['id']) : json['id'] as int,
+        points: json['points'] as int,
+        type: ACTIVITY_TYPE
+            .fromString(json['type'] as String), // Convert string to enum
+        userId: json['user_id'] as String,
+        duration: json['duration'] as int,
+        createdAt: DateTime.parse(json['created_at'] as String),
+        calories: json['calories'] as int?,
+        distance: json['distance'] as int?,
+        stravaId: json['strava_id'] is String
+            ? int.tryParse(json['strava_id'])
+            : json['strava_id'] as int?,
+        polyline: json['polyline'] as String?,
+        elevationChange: safeParseDouble(json['elevation_change']),
+        averageSpeed: safeParseDouble(json['average_speed']));
   }
 }
 
