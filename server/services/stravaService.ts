@@ -104,11 +104,9 @@ export const handleStravaActivityInfo = async ({
     average_speed: response.average_speed ?? 0,
   };
 
-  const totalAddedPoints = await addTrainings([
-    JSON.stringify(activityToInsert),
-  ]);
+  const addTrainingsResponse = await addTrainings([activityToInsert]);
 
-  if (totalAddedPoints <= 0) {
+  if (addTrainingsResponse.points <= 0) {
     throw new Error("Points not awarded");
   }
 };

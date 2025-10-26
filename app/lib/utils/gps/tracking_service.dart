@@ -24,7 +24,14 @@ class WorkoutTrackingService {
       print('Error getting initial position: $e');
     }
     _positionStream = Geolocator.getPositionStream(
-      locationSettings: _getLocationSettings(),
+      locationSettings: _getLocationSettings(1),
+    ).listen(_handlePositionUpdate);
+  }
+
+  void updateDistanceInterval(int distance) {
+    _positionStream?.cancel();
+    _positionStream = Geolocator.getPositionStream(
+      locationSettings: _getLocationSettings(distance),
     ).listen(_handlePositionUpdate);
   }
 
@@ -48,10 +55,10 @@ class WorkoutTrackingService {
     }
   }
 
-  LocationSettings _getLocationSettings() {
+  LocationSettings _getLocationSettings(int distance) {
     return LocationSettings(
       accuracy: LocationAccuracy.bestForNavigation,
-      distanceFilter: 3,
+      distanceFilter: distance,
     );
   }
 

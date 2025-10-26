@@ -1,10 +1,13 @@
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
+import 'package:excerbuys/store/selectors/activity/trainings.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/activity/requests.dart';
+import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:excerbuys/store/persistence/cache.dart';
+import 'package:excerbuys/types/enums.dart';
 
 part 'effects.dart';
 part 'selectors.dart';
@@ -29,6 +32,14 @@ class TrainingsController {
   final BehaviorSubject<bool> _canFetchMore = BehaviorSubject.seeded(true);
   Stream<bool> get canFetchMoreStream => _canFetchMore.stream;
   bool get canFetchMore => _canFetchMore.value;
+
+  final BehaviorSubject<bool> _isTracking = BehaviorSubject.seeded(false);
+  Stream<bool> get isTrackingStream => _isTracking.stream;
+  bool get isTracking => _isTracking.value;
+
+  final BehaviorSubject<bool> _isInserting = BehaviorSubject.seeded(false);
+  Stream<bool> get isInsertingStream => _isInserting.stream;
+  bool get isInserting => _isInserting.value;
 }
 
 TrainingsController trainingsController = TrainingsController();

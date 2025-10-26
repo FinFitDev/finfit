@@ -79,6 +79,36 @@ class ITrainingEntry {
         elevationChange: safeParseDouble(json['elevation_change']),
         averageSpeed: safeParseDouble(json['average_speed']));
   }
+
+  ITrainingEntry copyWith({
+    int? id,
+    int? points,
+    ACTIVITY_TYPE? type,
+    String? userId,
+    int? duration,
+    DateTime? createdAt,
+    int? calories,
+    int? distance,
+    int? stravaId,
+    String? polyline,
+    double? elevationChange,
+    double? averageSpeed,
+  }) {
+    return ITrainingEntry(
+      id: id ?? this.id,
+      points: points ?? this.points,
+      type: type ?? this.type,
+      userId: userId ?? this.userId,
+      duration: duration ?? this.duration,
+      createdAt: createdAt ?? this.createdAt,
+      calories: calories ?? this.calories,
+      distance: distance ?? this.distance,
+      stravaId: stravaId ?? this.stravaId,
+      polyline: polyline ?? this.polyline,
+      elevationChange: elevationChange ?? this.elevationChange,
+      averageSpeed: averageSpeed ?? this.averageSpeed,
+    );
+  }
 }
 
 class IHourlyStepsEntry {

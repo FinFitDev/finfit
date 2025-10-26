@@ -6,6 +6,7 @@ import 'package:excerbuys/pages/dashboard/recent_page.dart';
 import 'package:excerbuys/pages/dashboard/offers_page.dart';
 import 'package:excerbuys/pages/dashboard/track_page.dart';
 import 'package:excerbuys/store/controllers/activity/activity_controller/activity_controller.dart';
+import 'package:excerbuys/store/controllers/activity/trainings_controller/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/claims_controller/claims_controller.dart';
@@ -29,7 +30,7 @@ class _DashboardPageState extends State<DashboardPage> {
     Health().configure();
     transactionsController.fetchTransactions();
     offersController.fetchFeaturedOffers();
-    activityController.fetchActivity();
+    trainingsController.fetchTrainings();
     claimsController.fetchAllClaims();
   }
 

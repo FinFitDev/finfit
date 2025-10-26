@@ -71,4 +71,52 @@ extension TrainingsControllerEffects on TrainingsController {
       setLoadingMoreData(false);
     }
   }
+
+  Future<int?> insertTraining(
+      {required double distance,
+      required int duration,
+      required double elevationChange,
+      required ACTIVITY_TYPE type,
+      String? polyline}) async {
+    try {
+      setIsInserting(true);
+
+      if (userController.currentUser?.uuid == null) {
+        throw Exception('Current user is null');
+      }
+      final int calories = calculateWorkoutCalories(
+              distanceMeters: distance,
+              durationSeconds: duration.toDouble(),
+              type: type,
+              elevationChangeMeters: elevationChange)
+          .round();
+
+      final ITrainingEntry newTrainingEntry = ITrainingEntry(
+          id: 0,
+          points: calories,
+          duration: duration,
+          distance: distance.round(),
+          type: type,
+          userId: userController.currentUser!.uuid,
+          createdAt: DateTime.now(),
+          calories: calories,
+          elevationChange: elevationChange,
+          averageSpeed: (distance / duration) * 3.6, // in km/h
+          polyline: polyline);
+
+      final List<int> savedIds = await saveTrainingsRequest([newTrainingEntry]);
+      if (savedIds.isEmpty) {
+        throw "No trainings saved";
+      }
+
+      final int newId = savedIds[0];
+      addUserTrainings({newId: newTrainingEntry.copyWith(id: newId)});
+      userController.addUserBalance(calories.toDouble());
+      return newId;
+    } catch (error) {
+      print(error);
+    } finally {
+      setIsInserting(false);
+    }
+  }
 }

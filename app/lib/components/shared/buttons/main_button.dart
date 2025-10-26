@@ -171,125 +171,142 @@ class _MainButtonState extends State<MainButton> with TickerProviderStateMixin {
     final colors = Theme.of(context).colorScheme;
     return Opacity(
       opacity: widget.isDisabled == true ? 0.2 : 1,
-      child: SizedBox(
-        height: widget.height ?? 50,
-        child: GestureDetector(
-          onLongPressStart: (e) {
-            if (widget.holdToConfirm != true || disabled) return;
-            _incrementProgress();
-          },
-          onLongPressEnd: (e) {
-            if (widget.holdToConfirm != true || disabled) return;
-            progressTimer?.cancel();
-            holdProgressNotifier.value = 0;
-          },
-          child: AnimatedBuilder(
-            animation: _wiggleController,
-            builder: (context, child) {
-              Offset offset = Offset.zero;
-              switch (_activeWiggle) {
-                case _WiggleType.success:
-                  offset = Offset(0, _successWiggle.value);
-                  break;
-                case _WiggleType.error:
-                  offset = Offset(_errorWiggle.value, 0);
-                  break;
-                case _WiggleType.none:
-                  offset = Offset.zero;
-                  break;
-              }
-
-              return Transform.translate(
-                offset: offset,
-                child: child,
-              );
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withAlpha(30),
+              spreadRadius: -5,
+              blurRadius: 8,
+              offset: Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: colors.primary,
+          ),
+          height: widget.height ?? 50,
+          child: GestureDetector(
+            onLongPressStart: (e) {
+              if (widget.holdToConfirm != true || disabled) return;
+              _incrementProgress();
             },
-            child: TextButton(
-              onPressed: (disabled)
-                  ? null
-                  : widget.holdToConfirm == true
-                      ? () {}
-                      : () {
-                          widget.onPressed();
-                          triggerVibrate(FeedbackType.selection);
-                        },
-              style: TextButton.styleFrom(
-                backgroundColor: widget.isError == true
-                    ? colors.error.withAlpha(50)
-                    : widget.isSuccess == true
-                        ? colors.secondaryContainer.withAlpha(50)
-                        : widget.backgroundColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+            onLongPressEnd: (e) {
+              if (widget.holdToConfirm != true || disabled) return;
+              progressTimer?.cancel();
+              holdProgressNotifier.value = 0;
+            },
+            child: AnimatedBuilder(
+              animation: _wiggleController,
+              builder: (context, child) {
+                Offset offset = Offset.zero;
+                switch (_activeWiggle) {
+                  case _WiggleType.success:
+                    offset = Offset(0, _successWiggle.value);
+                    break;
+                  case _WiggleType.error:
+                    offset = Offset(_errorWiggle.value, 0);
+                    break;
+                  case _WiggleType.none:
+                    offset = Offset.zero;
+                    break;
+                }
+
+                return Transform.translate(
+                  offset: offset,
+                  child: child,
+                );
+              },
+              child: TextButton(
+                onPressed: (disabled)
+                    ? null
+                    : widget.holdToConfirm == true
+                        ? () {}
+                        : () {
+                            widget.onPressed();
+                            triggerVibrate(FeedbackType.selection);
+                          },
+                style: TextButton.styleFrom(
+                  backgroundColor: widget.isError == true
+                      ? colors.error.withAlpha(50)
+                      : widget.isSuccess == true
+                          ? colors.secondaryContainer.withAlpha(50)
+                          : widget.backgroundColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
-              ),
-              child: widget.loading == true
-                  ? SpinKitCircle(
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 25.0,
-                      controller: _animationController,
-                    )
-                  : ValueListenableBuilder(
-                      valueListenable: holdProgressNotifier,
-                      builder: (context, value, child) {
-                        if (widget.holdToConfirm == true && value > 0) {
-                          return CircleProgress(
-                            size: 30,
-                            progress: value / 100,
-                            color: Theme.of(context).colorScheme.primary,
-                          );
-                        }
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            widget.isError == true
-                                ? SvgPicture.asset(
-                                    'assets/svg/close.svg',
-                                    width: 24,
-                                    height: 24,
-                                    colorFilter: ColorFilter.mode(
-                                        colors.error, BlendMode.srcIn),
-                                  )
-                                : widget.isSuccess == true
-                                    ? SvgPicture.asset(
-                                        'assets/svg/tick.svg',
-                                        width: 24,
-                                        height: 24,
-                                        colorFilter: ColorFilter.mode(
-                                            colors.secondaryContainer,
-                                            BlendMode.srcIn),
-                                      )
-                                    : Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          widget.icon != null
-                                              ? Container(
-                                                  margin:
-                                                      EdgeInsets.only(right: 8),
-                                                  child: SvgPicture.asset(
-                                                    widget.icon!,
-                                                    width: 24,
-                                                    height: 24,
-                                                    colorFilter:
-                                                        ColorFilter.mode(
-                                                            widget.textColor,
-                                                            BlendMode.srcIn),
-                                                  ),
-                                                )
-                                              : SizedBox.shrink(),
-                                          Text(
-                                            widget.label,
-                                            style:
-                                                texts.headlineMedium?.copyWith(
-                                              color: widget.textColor,
+                child: widget.loading == true
+                    ? SpinKitCircle(
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 25.0,
+                        controller: _animationController,
+                      )
+                    : ValueListenableBuilder(
+                        valueListenable: holdProgressNotifier,
+                        builder: (context, value, child) {
+                          if (widget.holdToConfirm == true && value > 0) {
+                            return CircleProgress(
+                              size: 30,
+                              progress: value / 100,
+                              color: Theme.of(context).colorScheme.primary,
+                            );
+                          }
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              widget.isError == true
+                                  ? SvgPicture.asset(
+                                      'assets/svg/close.svg',
+                                      width: 24,
+                                      height: 24,
+                                      colorFilter: ColorFilter.mode(
+                                          colors.error, BlendMode.srcIn),
+                                    )
+                                  : widget.isSuccess == true
+                                      ? SvgPicture.asset(
+                                          'assets/svg/tick.svg',
+                                          width: 24,
+                                          height: 24,
+                                          colorFilter: ColorFilter.mode(
+                                              colors.secondaryContainer,
+                                              BlendMode.srcIn),
+                                        )
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            widget.icon != null
+                                                ? Container(
+                                                    margin: EdgeInsets.only(
+                                                        right: 8),
+                                                    child: SvgPicture.asset(
+                                                      widget.icon!,
+                                                      width: 24,
+                                                      height: 24,
+                                                      colorFilter:
+                                                          ColorFilter.mode(
+                                                              widget.textColor,
+                                                              BlendMode.srcIn),
+                                                    ),
+                                                  )
+                                                : SizedBox.shrink(),
+                                            Text(
+                                              widget.label,
+                                              style: texts.headlineMedium
+                                                  ?.copyWith(
+                                                color: widget.textColor,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      )
-                          ],
-                        );
-                      }),
+                                          ],
+                                        )
+                            ],
+                          );
+                        }),
+              ),
             ),
           ),
         ),

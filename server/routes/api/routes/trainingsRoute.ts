@@ -30,7 +30,7 @@ export const getTrainingsForUserIdHadler = async (
 
 export const addTrainingsHandler = async (req: Request, res: Response) => {
   try {
-    const trainings = JSON.parse(req.body.trainings);
+    const trainings = req.body.trainings;
     const response = await addTrainings(trainings);
     res.status(200).json({ message: "Trainings added", content: response });
   } catch (error: any) {

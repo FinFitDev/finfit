@@ -86,7 +86,7 @@ Widget userCard(
           BoxShadow(
             color: Colors.black.withAlpha(30),
             spreadRadius: -5,
-            blurRadius: 10,
+            blurRadius: 8,
             offset: Offset(0, 3),
           ),
         ],

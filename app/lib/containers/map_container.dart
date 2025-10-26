@@ -15,9 +15,11 @@ class MapContainer extends StatefulWidget {
   final Color? polylineColor;
   final bool? showPosition;
   final bool? isPaused;
+  final bool? isTracking;
   final void Function(Position position)? addPosition;
   final WorkoutTrackingService? trackingService;
   final void Function(LatLng pos)? setCurrentPosition;
+
   const MapContainer(
       {super.key,
       required this.mapController,
@@ -27,14 +29,15 @@ class MapContainer extends StatefulWidget {
       this.isPaused,
       this.addPosition,
       this.trackingService,
-      this.setCurrentPosition});
+      this.setCurrentPosition,
+      this.isTracking});
 
   @override
   State<MapContainer> createState() => _MapContainerState();
 }
 
 class _MapContainerState extends State<MapContainer> {
-  final List<Position> _trackingPositions = [];
+  List<Position> _trackingPositions = [];
   LatLng? _currentPosition = null;
   bool _isTracking = false;
 
@@ -61,6 +64,9 @@ class _MapContainerState extends State<MapContainer> {
             widget.isPaused == true;
     final bool startTracking = oldWidget.isPaused == true &&
         (widget.isPaused == false || widget.isPaused == null);
+
+    final bool stopWorkout = oldWidget.isTracking == true &&
+        (widget.isTracking == false || widget.isTracking == null);
     if (startTracking) {
       setState(() {
         _isTracking = true;
@@ -69,6 +75,12 @@ class _MapContainerState extends State<MapContainer> {
     if (stopTracking) {
       setState(() {
         _isTracking = false;
+      });
+    }
+
+    if (stopWorkout) {
+      setState(() {
+        _trackingPositions = [];
       });
     }
   }
@@ -81,6 +93,7 @@ class _MapContainerState extends State<MapContainer> {
         widget.mapController.camera.zoom,
       );
     }
+    if (!mounted) return;
     setState(() {
       _currentPosition = LatLng(position.latitude, position.longitude);
     });
@@ -88,7 +101,6 @@ class _MapContainerState extends State<MapContainer> {
         ?.call(LatLng(position.latitude, position.longitude));
     if (_isTracking) {
       // start collecting
-      smartPrint('FINAL', position);
       setState(() {
         _trackingPositions.add(position);
       });
@@ -99,6 +111,8 @@ class _MapContainerState extends State<MapContainer> {
   void _decodePolyline(String polyline) {
     try {
       final points = decodePolylinePoints(polyline);
+      if (!mounted) return;
+
       setState(() {
         _routePoints = points;
         _calculating = false;
@@ -128,6 +142,7 @@ class _MapContainerState extends State<MapContainer> {
       if (point.longitude < minLng) minLng = point.longitude;
       if (point.longitude > maxLng) maxLng = point.longitude;
     }
+    if (!mounted) return;
 
     setState(() {
       _routeBounds = LatLngBounds(

@@ -234,6 +234,14 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
                         borderRadius: BorderRadius.circular(12),
                         border:
                             Border.all(color: colors.outline.withAlpha(100)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withAlpha(30),
+                            spreadRadius: -5,
+                            blurRadius: 8,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
                       ),
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),

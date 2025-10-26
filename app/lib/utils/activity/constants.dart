@@ -1,6 +1,4 @@
 import 'package:excerbuys/types/enums.dart';
-import 'package:excerbuys/types/general.dart';
-import 'package:excerbuys/utils/home/utils.dart';
 
 class WorkoutType {
   final ACTIVITY_TYPE name;
@@ -18,3 +16,9 @@ List<ACTIVITY_TYPE> AVAILABLE_WORKOUT_TYPES = [
   ACTIVITY_TYPE.Walk,
   ACTIVITY_TYPE.Ride
 ];
+
+Map<ACTIVITY_TYPE, int> TRACKING_DISTANCE_INTERVALS = {
+  ACTIVITY_TYPE.Walk: 1,
+  ACTIVITY_TYPE.Run: 2,
+  ACTIVITY_TYPE.Ride: 3
+};

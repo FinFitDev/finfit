@@ -48,4 +48,12 @@ extension TrainingsControllerMutations on TrainingsController {
   setCanFetchMore(bool canFetchMore) {
     _canFetchMore.add(canFetchMore);
   }
+
+  setIsTracking(bool val) {
+    _isTracking.add(val);
+  }
+
+  setIsInserting(bool val) {
+    _isInserting.add(val);
+  }
 }

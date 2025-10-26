@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -171,4 +173,153 @@ List<LatLng> decodePolylinePoints(String encoded) {
     points.add(LatLng(lat / 1e5, lng / 1e5));
   }
   return points;
+}
+
+String encodePolylinePoints(List<LatLng> points) {
+  int encodeCoordinate(double value) => (value * 1e5).round();
+
+  String encode(int coordinate) {
+    int coord = coordinate;
+    coord = coord < 0 ? ~(coord << 1) : (coord << 1);
+    StringBuffer encoded = StringBuffer();
+    while (coord >= 0x20) {
+      encoded.writeCharCode((0x20 | (coord & 0x1f)) + 63);
+      coord >>= 5;
+    }
+    encoded.writeCharCode(coord + 63);
+    return encoded.toString();
+  }
+
+  StringBuffer result = StringBuffer();
+  int lastLat = 0, lastLng = 0;
+
+  for (LatLng point in points) {
+    int lat = encodeCoordinate(point.latitude);
+    int lng = encodeCoordinate(point.longitude);
+
+    int dLat = lat - lastLat;
+    int dLng = lng - lastLng;
+
+    result.write(encode(dLat));
+    result.write(encode(dLng));
+
+    lastLat = lat;
+    lastLng = lng;
+  }
+
+  return result.toString();
+}
+
+double calculateHaversineDistance(
+    double lat1, double lon1, double lat2, double lon2) {
+  const earthRadius = 6371000.0; // meters
+
+  final dLat = toRadians(lat2 - lat1);
+  final dLon = toRadians(lon2 - lon1);
+
+  final a = sin(dLat / 2) * sin(dLat / 2) +
+      cos(toRadians(lat1)) *
+          cos(toRadians(lat2)) *
+          sin(dLon / 2) *
+          sin(dLon / 2);
+
+  final c = 2 * atan2(sqrt(a), sqrt(1 - a));
+
+  return earthRadius * c;
+}
+
+double toRadians(double degrees) {
+  return degrees * pi / 180;
+}
+
+double calculateWorkoutCalories({
+  required double distanceMeters,
+  required double durationSeconds,
+  required double elevationChangeMeters,
+  required ACTIVITY_TYPE type,
+}) {
+  if (distanceMeters <= 0 || durationSeconds <= 0) return 0.0;
+
+  final double distanceKm = distanceMeters / 1000.0;
+  final double durationMin = durationSeconds / 60.0;
+  final double durationHours = durationSeconds / 3600.0;
+
+  // Base calorie factors (per km)
+  const double runBaseKm = 60.0; // calories per km
+  const double walkBaseKm = 40.0;
+  const double bikeBaseKm = 25.0;
+
+  // Elevation factor (extra calories per meter climbed)
+  const double runElevationFactor = 0.5;
+  const double walkElevationFactor = 0.3;
+  const double bikeElevationFactor = 0.2;
+
+  // Pace/speed normalization
+  const double runPaceWeight = 6.0;
+  const double walkPaceWeight = 20.0;
+  const double bikeBaselineKmh = 25.0;
+
+  const double runIntensityMin = 0.5;
+  const double runIntensityMax = 2.0;
+  const double walkIntensityMin = 0.4;
+  const double walkIntensityMax = 1.3;
+  const double bikeIntensityMin = 0.4;
+  const double bikeIntensityMax = 1.6;
+
+  double intensity;
+  double baseKmFactor;
+  double elevationFactor;
+
+  switch (type) {
+    case ACTIVITY_TYPE.Run:
+      final double paceMinPerKm = durationMin / distanceKm;
+      intensity = (runPaceWeight / paceMinPerKm)
+          .clamp(runIntensityMin, runIntensityMax);
+      baseKmFactor = runBaseKm;
+      elevationFactor = runElevationFactor;
+      break;
+    case ACTIVITY_TYPE.Ride:
+      final double speedKmh =
+          distanceKm / (durationHours > 0 ? durationHours : 1e-6);
+      intensity = (speedKmh / bikeBaselineKmh)
+          .clamp(bikeIntensityMin, bikeIntensityMax);
+      baseKmFactor = bikeBaseKm;
+      elevationFactor = bikeElevationFactor;
+      break;
+    case ACTIVITY_TYPE.Walk:
+    default:
+      final double paceMinPerKm = durationMin / distanceKm;
+      intensity = (walkPaceWeight / paceMinPerKm)
+          .clamp(walkIntensityMin, walkIntensityMax);
+      baseKmFactor = walkBaseKm;
+      elevationFactor = walkElevationFactor;
+      break;
+  }
+
+  // Calories = distance calories + elevation calories
+  double calories = (distanceKm * baseKmFactor * intensity) +
+      (elevationChangeMeters * elevationFactor);
+
+  // Optional small adjustment for very long workouts
+  if (durationHours >= 3) {
+    calories *= 0.95; // slight fatigue adjustment
+  }
+
+  return double.parse(calories.toStringAsFixed(1));
+}
+
+double calcluateTotalElevationChange(List<Position> positions) {
+  double gain = 0;
+  double loss = 0;
+
+  for (int i = 1; i < positions.length; i++) {
+    double delta = positions[i].altitude - positions[i - 1].altitude;
+    if (delta > 0) {
+      gain += delta;
+    } else if (delta < 0) {
+      loss += -delta;
+    }
+  }
+
+  return gain + loss;
 }

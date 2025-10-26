@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:excerbuys/store/controllers/shop/product_owners_controller/product_owners_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/store/persistence/storage_controller.dart';
-import 'package:excerbuys/store/selectors/offers/shop.dart';
+import 'package:excerbuys/store/selectors/offers/transactions.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/owner.dart';

@@ -8,13 +8,12 @@ import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/fetching/utils.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 
-Future<String?> saveTrainingsRequest(
+Future<List<int>> saveTrainingsRequest(
     List<ITrainingEntry>? parsedTrainingData) async {
   try {
     if (parsedTrainingData != null) {
       final serializedData =
-          jsonEncode(parsedTrainingData.map((el) => el.toJson()).toList());
-
+          parsedTrainingData.map((el) => el.toJson()).toList();
       final res = await handleBackendRequests(
           method: HTTP_METHOD.POST,
           endpoint: 'api/v1/trainings',
@@ -24,13 +23,18 @@ Future<String?> saveTrainingsRequest(
         throw res['error'];
       }
 
-      return res['content'];
+      final ids = res['content']['ids'];
+      if (ids is List) {
+        return ids.map((e) => int.tryParse(e.toString()) ?? 0).toList();
+      } else {
+        return [];
+      }
     }
   } catch (error) {
     print('Error saving trainings to database $error');
     rethrow;
   }
-  return null;
+  return [];
 }
 
 Future<List<ITrainingEntry>?> loadTrainingsRequest(
@@ -59,8 +63,6 @@ Future<List<ITrainingEntry>?> loadTrainingsRequest(
       rethrow;
     }
   }
-
-  // handler();
 
   return await Cache.fetch<List<ITrainingEntry>>(
       "${BACKEND_BASE_URL}api/v1/trainings/$userId?limit=$limit&offset=$offset",

@@ -47,14 +47,14 @@ export const getUserTrainings = async (
   return foundTrainings?.rows as ITrainingEntryResponse[];
 };
 
-export const addTrainings = async (trainings: string[]) => {
+export const addTrainings = async (
+  trainings: ITrainingEntry[]
+): Promise<{ points: number; ids: string[] }> => {
   if (!trainings.length) {
-    return "0";
+    return { points: 0, ids: [] };
   }
-  const parsedTrainings: ITrainingEntry[] = trainings.map((training) =>
-    JSON.parse(training)
-  );
-  const userId = parsedTrainings[0].user_id;
+
+  const userId = trainings[0].user_id;
   const client = await pool.connect();
 
   try {
@@ -62,7 +62,7 @@ export const addTrainings = async (trainings: string[]) => {
     await client.query("BEGIN");
 
     const values: any[] = [];
-    const placeholders = parsedTrainings
+    const placeholders = trainings
       .map((training, index) => {
         const offset = index * 11;
         values.push(
@@ -94,12 +94,13 @@ export const addTrainings = async (trainings: string[]) => {
     );
 
     const totalAddedPoints = insertResult.rows[0].total_added_points;
+    const insertedIds = insertResult.rows[0].inserted_ids;
 
     await updatePointsScore(userId, totalAddedPoints, client);
 
     await client.query("COMMIT");
 
-    return totalAddedPoints;
+    return { points: totalAddedPoints, ids: insertedIds };
   } catch (err) {
     await client.query("ROLLBACK");
     console.error("Error adding trainings and updating user:", err);

@@ -10,7 +10,7 @@ export const fetchUserTrainings = async (
   const response = await pool.query(
     `SELECT * 
     FROM trainings 
-    WHERE trainings.user_id = $3 
+    WHERE trainings.user_id = $3 AND trainings.points > 0
     ORDER BY trainings.created_at DESC 
     LIMIT $1 OFFSET $2`,
     [limit, offset, user_id]
@@ -23,7 +23,7 @@ export const fetchRecentUserTrainings = async (user_id: string) => {
   const response = await pool.query(
     `SELECT * 
     FROM trainings 
-    WHERE trainings.user_id = $1 AND trainings.created_at >= NOW() - INTERVAL '7 days'
+    WHERE trainings.user_id = $1 AND trainings.created_at >= NOW() - INTERVAL '7 days' AND trainings.points > 0
     ORDER BY trainings.created_at DESC`,
     [user_id]
   );
@@ -73,12 +73,15 @@ export const insertTrainingsBulk = async (
   const executor = client ?? pool;
   const insertResult = await executor.query(
     `
-      WITH inserted_rows AS (
-        INSERT INTO trainings (type, points, duration, calories, distance, user_id, created_at, strava_id, polyline, elevation_change, average_speed)
+     WITH inserted_rows AS (
+        INSERT INTO trainings (
+          type, points, duration, calories, distance, user_id, created_at, strava_id, polyline, elevation_change, average_speed
+        )
         VALUES ${placeholders}
-        RETURNING points
+        RETURNING id, points
       )
-      SELECT COALESCE(SUM(points), 0) AS total_added_points FROM inserted_rows;
+      SELECT array_agg(id) AS inserted_ids, COALESCE(SUM(points), 0) AS total_added_points
+      FROM inserted_rows;
     `,
     values
   );

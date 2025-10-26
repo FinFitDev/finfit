@@ -14,6 +14,7 @@ import 'package:excerbuys/store/controllers/shop/claims_controller/claims_contro
 import 'package:excerbuys/store/controllers/shop/offers_controller/offers_controller.dart';
 import 'package:excerbuys/store/controllers/shop/transactions_controller/transactions_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
+import 'package:excerbuys/store/selectors/activity/trainings.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/shop/offer.dart';
@@ -143,19 +144,15 @@ class _HomePageState extends State<HomePage> {
                             StreamBuilder<
                                     ContentWithLoading<
                                         Map<int, ITrainingEntry>>>(
-                                stream: trainingsController.userTrainingsStream,
+                                stream: trainingsController.sortedWorkouts,
                                 builder: (context, snapshot) {
-                                  final Map<int, ITrainingEntry> trainings =
-                                      getTopRecentEntries(
-                                          snapshot.data?.content,
-                                          (a, b) => b.value.createdAt
-                                              .compareTo(a.value.createdAt),
-                                          5);
-
+                                  print(snapshot.data?.isLoading);
                                   return RecentTrainingSection(
                                       isLoading:
-                                          snapshot.data?.isLoading ?? false,
-                                      recentTraining: trainings);
+                                          snapshot.data?.isLoading == true,
+                                      recentTraining: snapshot.data == null
+                                          ? {}
+                                          : snapshot.data!.content);
                                 }),
                             SizedBox(
                               height: 24,
@@ -163,17 +160,13 @@ class _HomePageState extends State<HomePage> {
                             StreamBuilder<
                                     ContentWithLoading<
                                         Map<String, ITransactionEntry>>>(
-                                stream: transactionsController
-                                    .allTransactionsStream,
+                                stream:
+                                    transactionsController.sortedTransactions,
                                 builder: (context, snapshot) {
-                                  final Map<String, ITransactionEntry>
-                                      transactions = getTopRecentEntries(
-                                          snapshot.data?.content,
-                                          (a, b) => b.value.createdAt
-                                              .compareTo(a.value.createdAt),
-                                          5);
                                   return TransactionsSection(
-                                    recentTransactions: transactions,
+                                    recentTransactions: snapshot.data == null
+                                        ? {}
+                                        : snapshot.data!.content,
                                     isLoading: snapshot.data?.isLoading,
                                   );
                                 })

@@ -8,6 +8,7 @@ class IconContainer extends StatelessWidget {
   final Color? iconColor;
   final double? ratio;
   final double? borderRadius;
+  final bool? isLoading;
   const IconContainer(
       {super.key,
       required this.icon,
@@ -15,7 +16,8 @@ class IconContainer extends StatelessWidget {
       this.backgroundColor,
       this.iconColor,
       this.ratio,
-      this.borderRadius});
+      this.borderRadius,
+      this.isLoading});
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +34,13 @@ class IconContainer extends StatelessWidget {
         child: SizedBox(
           width: size / 2,
           height: size / 2,
-          child: SvgPicture.asset(icon,
-              colorFilter: ColorFilter.mode(
-                  iconColor ?? colors.secondary, BlendMode.srcIn)),
+          child: isLoading == true
+              ? CircularProgressIndicator(
+                  color: iconColor ?? colors.secondary,
+                )
+              : SvgPicture.asset(icon,
+                  colorFilter: ColorFilter.mode(
+                      iconColor ?? colors.secondary, BlendMode.srcIn)),
         ),
       ),
     );

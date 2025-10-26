@@ -1,5 +1,6 @@
 import 'package:excerbuys/store/controllers/shop/offers_controller/offers_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
+import 'package:excerbuys/store/selectors/offers/transactions.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/transaction.dart';
 import 'package:excerbuys/utils/shop/transaction/requests.dart';

@@ -14,8 +14,17 @@ class PositionWithTitle extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: 8),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: colors.primaryContainer),
+        borderRadius: BorderRadius.circular(15),
+        color: colors.primaryContainer,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(30),
+            spreadRadius: -5,
+            blurRadius: 8,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
       padding: EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

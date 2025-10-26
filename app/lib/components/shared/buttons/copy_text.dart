@@ -58,8 +58,9 @@ class _CopyTextState extends State<CopyText> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: colors.primaryFixedDim.withAlpha(20)),
+          borderRadius: BorderRadius.circular(10),
+          color: colors.primaryFixedDim.withAlpha(20),
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

@@ -1,5 +1,4 @@
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
-import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
 

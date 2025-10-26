@@ -97,7 +97,7 @@ class _ClaimCard extends StatelessWidget {
             BoxShadow(
               color: Colors.black.withAlpha(50),
               spreadRadius: -5,
-              blurRadius: 10,
+              blurRadius: 8,
               offset: Offset(0, 3),
             ),
           ],
