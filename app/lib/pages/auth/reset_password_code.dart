@@ -119,14 +119,17 @@ class _ResetPasswordCodePageState extends State<ResetPasswordCodePage> {
                                 });
                               },
                             )),
+                        SizedBox(
+                          height: 16,
+                        ),
                         RichText(
-                            textAlign: TextAlign.center,
+                            textAlign: TextAlign.left,
                             text: TextSpan(children: [
                               TextSpan(
                                 text:
                                     'The email with the code has been sent to ',
                                 style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w400,
                                     color: colors.primaryFixedDim),
@@ -134,7 +137,7 @@ class _ResetPasswordCodePageState extends State<ResetPasswordCodePage> {
                               TextSpan(
                                 text: "jackod@gmail.com",
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                   color: colors.secondary,
                                   fontFamily: 'Poppins',
@@ -142,9 +145,9 @@ class _ResetPasswordCodePageState extends State<ResetPasswordCodePage> {
                               ),
                               TextSpan(
                                 text:
-                                    '. Enter the code above to be able to enter a new password.',
+                                    '. Enter the code above to set a new password.',
                                 style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w400,
                                     color: colors.primaryFixedDim),

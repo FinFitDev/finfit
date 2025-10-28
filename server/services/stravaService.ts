@@ -1,6 +1,7 @@
 import {
   getStravaUserInfoByAthleteId,
   insertStravaCredentials,
+  setStravaEnabled,
   updateStravaTokens,
 } from "../models/userStravaModel";
 import { HTTP_METHOD } from "../shared/types/general";
@@ -131,6 +132,9 @@ export const handleStravaWebhookEvent = async ({
     throw new Error("No user info found for strava integration");
   }
   const data = stravaUserInfo.rows[0];
+  if (!data.enabled) {
+    return;
+  }
   if ("type" in updates && aspect_type === STRAVA_EVENT_TYPE.UPDATE) {
     return await updateStravaTraining(updates["type"], object_id);
   }
@@ -161,4 +165,13 @@ export const handleStravaWebhookVerification = ({
   } else {
     throw new Error("Verification failed");
   }
+};
+
+export const setStravaEnabledService = async (
+  enabled: boolean,
+  userId: string
+) => {
+  await setStravaEnabled(userId, enabled);
+
+  return true;
 };

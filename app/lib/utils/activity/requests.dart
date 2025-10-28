@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:excerbuys/store/persistence/cache.dart';
 import 'package:excerbuys/types/activity.dart';
+import 'package:excerbuys/utils/activity/constants.dart';
 import 'package:excerbuys/utils/backend/utils.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/debug.dart';
@@ -73,25 +74,44 @@ Future<List<ITrainingEntry>?> loadTrainingsRequest(
           }).toList());
 }
 
-Future<void> authorizeStravaRequest(String userId) async {
-  const clientId = '182205';
+Future<String> authorizeStravaRequest(String userId) async {
   final String redirectUri = '${BACKEND_BASE_URL}strava/auth?user_id=$userId';
-  const scopes = 'activity:read,activity:read_all';
   try {
-    final authUrl = 'https://www.strava.com/oauth/authorize?client_id=$clientId'
+    final authUrl =
+        'https://www.strava.com/oauth/authorize?client_id=$STRAVA_CLIENT_ID'
         '&response_type=code'
         '&redirect_uri=$redirectUri'
-        '&scope=$scopes'
+        '&scope=$STRAVA_SCOPES'
         '&approval_prompt=auto';
-    print(authUrl);
 
     final result = await FlutterWebAuth2.authenticate(
       url: authUrl,
       callbackUrlScheme: 'finfit',
     );
-    smartPrint("RESULT", result);
+    print(result);
+    return result;
   } catch (error) {
-    print('Error loading claimed rewards from database $error');
+    print('Error authorizing strava $error');
+    rethrow;
+  }
+}
+
+Future<bool> updateStravaEnabledRequest(String userId, bool value) async {
+  try {
+    final res = await handleBackendRequests(
+      method: HTTP_METHOD.PUT,
+      endpoint: 'api/v1/users/strava/enabled/$userId?enabled=$value',
+    );
+
+    print(res);
+
+    if (res['error'] != null) {
+      throw res['error'];
+    }
+
+    return res['content'];
+  } catch (error) {
+    print('Error updating strava permissions $error');
     rethrow;
   }
 }

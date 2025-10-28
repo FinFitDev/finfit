@@ -9,6 +9,7 @@ import {
   updateUserPointsScore,
   updateUserPointsScoreWithUpdateTimestamp,
 } from "../../../services/api/userService";
+import { setStravaEnabledService } from "../../../services/stravaService";
 
 export const getUserByIdHandler = async (
   req: RequestWithPayload<undefined, { id: string }>,
@@ -125,6 +126,31 @@ export const sendPointsHandler = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(error.statusCode ?? 404).json({
       message: "Something went wrong when sending points",
+      error: error.message,
+    });
+  }
+};
+
+export const updateStravaPermissions = async (
+  req: Request<{ id: string }>,
+  res: Response
+) => {
+  try {
+    const enabled = req.query.enabled;
+    const userId = req.params.id as string;
+    const response = await setStravaEnabledService(enabled == "true", userId);
+
+    if (!response) {
+      throw new Error("Invalid response");
+    }
+
+    res
+      .status(200)
+      .json({ message: "Updated strava permissions", content: response });
+  } catch (error: any) {
+    console.log("Failed to update strava permissions", error);
+    res.status(error.statusCode ?? 404).json({
+      message: "Something went wrong when updating strava permissions",
       error: error.message,
     });
   }

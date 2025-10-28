@@ -31,7 +31,7 @@ stravaRouter.post("/webhook", async (req: Request, res: Response) => {
     const response = handleStravaWebhookEvent(req.body);
     console.log(response);
 
-    res.status(200).json({ anything: "" });
+    res.status(200).json();
   } catch (error: any) {
     res.status(403);
   }

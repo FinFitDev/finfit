@@ -32,7 +32,8 @@ class MainHeader extends StatelessWidget {
 
                 return AnimatedPositioned(
                   top: isActive ? 0 : -70,
-                  duration: const Duration(milliseconds: 200),
+                  duration:
+                      Duration(milliseconds: pageSnapshot.data != 0 ? 0 : 200),
                   child: Stack(
                     children: [
                       AnimatedOpacity(

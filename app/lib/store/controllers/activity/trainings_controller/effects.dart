@@ -79,6 +79,10 @@ extension TrainingsControllerEffects on TrainingsController {
       required ACTIVITY_TYPE type,
       String? polyline}) async {
     try {
+      if (isInserting) {
+        return null;
+      }
+
       setIsInserting(true);
 
       if (userController.currentUser?.uuid == null) {

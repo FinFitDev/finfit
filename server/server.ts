@@ -8,6 +8,7 @@ import webhookRouter from "./routes/webhook";
 
 import { middleware } from "./routes/api/middleware";
 import stravaRouter from "./routes/stravaRouter";
+import { encrypt } from "./shared/utils/encryption";
 
 const app: Express = express();
 app.use(cors());
@@ -18,8 +19,14 @@ const port = process.env.PORT || "3000";
 
 // console.log(crypto.randomBytes(64).toString("hex"));
 
-app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
-app.use(bodyParser.json({ limit: "50mb" }));
+app.use((req, res, next) => {
+  if (req.originalUrl === "/webhook/woocommerce") return next();
+
+  bodyParser.urlencoded({ extended: true, limit: "50mb" })(req, res, (err) => {
+    if (err) return next(err);
+    bodyParser.json({ limit: "50mb" })(req, res, next);
+  });
+});
 
 app.use("/auth", authRouter);
 app.use("/webhook", webhookRouter);

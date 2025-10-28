@@ -249,7 +249,7 @@ export const fetchOfferCodeDetails = async (
 ) => {
   const executor = client ?? pool;
   const response = await executor.query(
-    `SELECT o.points, o.code_expiration_period, o.api_payload, p.uuid, p.api_key, p.api_url, p.shop_type FROM offers o
+    `SELECT o.points, o.code_expiration_period, o.api_payload, p.uuid, p.api_key, p.api_url, p.shop_type, p.consumer_key, p.consumer_secret FROM offers o
       JOIN partners p ON p.uuid = o.partner_id
       WHERE o.id = $1`,
     [offerId]

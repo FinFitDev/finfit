@@ -37,6 +37,9 @@ export function decrypt(encrypted: string): string {
 export function decryptShopApiParams(shopApiParams: IShopApiData[]) {
   return shopApiParams.map((param) => ({
     ...param,
-    api_key: decrypt(param.api_key!),
+    api_key: param.api_key ? decrypt(param.api_key) : undefined,
+    consumer_secret: param.consumer_secret
+      ? decrypt(param.consumer_secret)
+      : undefined,
   }));
 }

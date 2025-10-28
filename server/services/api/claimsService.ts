@@ -35,6 +35,8 @@ export const issueDiscountCode = async (offerId: number, userId: string) => {
         api_key: offerData.api_key,
         api_url: offerData.api_url,
         shop_type: offerData.shop_type as SHOP_PROVIDER,
+        consumer_key: offerData.consumer_key,
+        consumer_secret: offerData.consumer_secret,
       },
     ]);
 

@@ -2,6 +2,7 @@ part of 'claims_controller.dart';
 
 extension ClaimsControllerMutations on ClaimsController {
   refresh() async {
+    await Cache.removeKeysByPattern(RegExp(r'.*/api/v1/claims/.*'));
     setAllClaims({});
     setIsClaiming(false);
     fetchAllClaims();

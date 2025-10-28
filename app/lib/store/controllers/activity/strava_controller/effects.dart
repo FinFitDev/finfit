@@ -1,44 +1,56 @@
 part of 'strava_controller.dart';
 
 extension StravaControllerEffects on StravaController {
-// authorizing all neccessary libs
   Future<void> authorize() async {
     if (userController.currentUser == null) {
       throw "User is not defined";
     }
 
-    authorizeStravaRequest(userController.currentUser!.uuid);
+    final String response =
+        await authorizeStravaRequest(userController.currentUser!.uuid);
+
+    if (response == "finfit://strava/auth?success=true") {
+      setAuthroized(true);
+      setEnabled(true);
+    } else {
+      final uri = Uri.parse(response);
+      final errorMessage = uri.queryParameters['error'];
+      print(errorMessage);
+      if (errorMessage ==
+          'error: duplicate key value violates unique constraint "user_strava_athlete_id_key"') {
+        await FlutterPlatformAlert.showAlert(
+          windowTitle: "Couldn't connect",
+          text:
+              'This STRAVA account has already been connected to another user.',
+          alertStyle: AlertButtonStyle.ok,
+        );
+      }
+    }
   }
 
-  // Future<void> checkHealthConnectSdk() async {
-  //   HealthConnectSdkStatus? status = await Health().getHealthConnectSdkStatus();
-  //   if (status != HealthConnectSdkStatus.sdkAvailable) {
-  //     await Health().installHealthConnect();
-  //     status = await Health().getHealthConnectSdkStatus();
-  //   }
-  //   setHealthSdkStatus(status ?? HealthConnectSdkStatus.sdkUnavailable);
-  // }
+  Future<void> updateEnabled(bool value) async {
+    bool prevValue = enabled;
+    setEnabled(value);
+    try {
+      if (updatingPermission) {
+        return;
+      }
+      setUpdatingPermission(true);
+      if (userController.currentUser == null) {
+        throw "User is not defined";
+      }
 
-  // Future<void> fetchActivity() async {
-  //   if (!healthAuthorized) {
-  //     print('Health unauthorized');
-  //     return;
-  //   }
+      final bool response = await updateStravaEnabledRequest(
+          userController.currentUser!.uuid, value);
 
-  //   if (Platform.isAndroid &&
-  //       healthSdkStatus != HealthConnectSdkStatus.sdkAvailable) {
-  //     print('Health connect unauthorized');
-  //     return;
-  //   }
-  //   // await userController
-  //   //     .getCurrentUser('afd90984-17ec-456b-a735-0be89e48300f');
-
-  //   // await userController.getCurrentUser('b1588072-8da4-4ab2-a79e-70816401d3f6');
-
-  //   setTodaysPoints(0);
-  //   await trainingsController.fetchTrainings();
-  //   await stepsController.fetchsSteps();
-  //   userController.addUserBalance(totalPointsToAdd);
-  //   setPointsToAdd(0);
-  // }
+      // rollback
+      if (response != true) {
+        setEnabled(prevValue);
+      }
+    } catch (err) {
+      setEnabled(prevValue);
+    } finally {
+      setUpdatingPermission(false);
+    }
+  }
 }

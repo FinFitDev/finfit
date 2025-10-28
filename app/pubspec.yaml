@@ -62,6 +62,9 @@ dependencies:
   flutter_map: ^8.2.2
   latlong2: ^0.9.1
   flutter_web_auth_2: ^4.1.0
+  background_locator_2: ^2.0.6
+  flutter_switch: ^0.3.2
+  flutter_platform_alert: ^0.8.0
 
   # payu:
   #   git:

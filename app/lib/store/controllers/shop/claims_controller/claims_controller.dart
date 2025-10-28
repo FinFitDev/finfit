@@ -8,6 +8,7 @@ import 'package:excerbuys/types/shop/reward.dart';
 import 'package:excerbuys/utils/shop/claims/requests.dart';
 import 'package:excerbuys/utils/shop/claims/utils.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:excerbuys/store/persistence/cache.dart';
 
 part 'effects.dart';
 part 'selectors.dart';

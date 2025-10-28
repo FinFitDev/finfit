@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   desktop_webview_window
+  flutter_platform_alert
   flutter_secure_storage_linux
   rive_common
   url_launcher_linux

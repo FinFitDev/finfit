@@ -176,6 +176,19 @@ List<LatLng> decodePolylinePoints(String encoded) {
 }
 
 String encodePolylinePoints(List<LatLng> points) {
+  List<LatLng> finalPoints = points;
+
+  if (points.length > 100) {
+    // Determine a step size dynamically
+    int step = (points.length / 200).ceil(); // keep ~200 points max
+    finalPoints = points
+        .asMap()
+        .entries
+        .where((entry) => entry.key % step == 0)
+        .map((entry) => entry.value)
+        .toList();
+  }
+
   int encodeCoordinate(double value) => (value * 1e5).round();
 
   String encode(int coordinate) {
@@ -193,7 +206,7 @@ String encodePolylinePoints(List<LatLng> points) {
   StringBuffer result = StringBuffer();
   int lastLat = 0, lastLng = 0;
 
-  for (LatLng point in points) {
+  for (LatLng point in finalPoints) {
     int lat = encodeCoordinate(point.latitude);
     int lng = encodeCoordinate(point.longitude);
 

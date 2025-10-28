@@ -21,6 +21,8 @@ Future<dynamic> handleBackendRequests(
         body: body,
         cancelToken: cancelToken);
 
+    print(response);
+
     if (response['error'] == "You are not authorized" ||
         response["error"] == "Token invalid or expired") {
       // // verify access token

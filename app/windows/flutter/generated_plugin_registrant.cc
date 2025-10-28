@@ -7,6 +7,7 @@
 #include "generated_plugin_registrant.h"
 
 #include <desktop_webview_window/desktop_webview_window_plugin.h>
+#include <flutter_platform_alert/flutter_platform_alert_plugin.h>
 #include <flutter_secure_storage_windows/flutter_secure_storage_windows_plugin.h>
 #include <geolocator_windows/geolocator_windows.h>
 #include <permission_handler_windows/permission_handler_windows_plugin.h>
@@ -18,6 +19,8 @@
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   DesktopWebviewWindowPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("DesktopWebviewWindowPlugin"));
+  FlutterPlatformAlertPluginRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("FlutterPlatformAlertPlugin"));
   FlutterSecureStorageWindowsPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FlutterSecureStorageWindowsPlugin"));
   GeolocatorWindowsRegisterWithRegistrar(

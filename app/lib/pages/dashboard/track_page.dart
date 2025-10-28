@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:excerbuys/components/dashboard_page/track_page/workout_tracker_dashboard.dart';
+import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/workout_info_modal.dart';
+import 'package:excerbuys/containers/dialogs/location_permission_dialog.dart';
 import 'package:excerbuys/containers/map_container.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
@@ -38,8 +40,14 @@ class _TrackPageState extends State<TrackPage> {
 
   Timer? timer;
 
-  void _toggleTrackingState() {
+  void _toggleTrackingState() async {
     if (_isPaused) {
+      final permissions = await _trackingService.requestPermissions();
+      if (permissions == false && mounted) {
+        showDialog(
+            context: context, builder: (_) => LocationPermissionDialog());
+        return;
+      }
       final ACTIVITY_TYPE activeType =
           AVAILABLE_WORKOUT_TYPES[_activeWorkoutType.value];
       _trackingService
@@ -58,7 +66,9 @@ class _TrackPageState extends State<TrackPage> {
 
   void _finishWorkout() async {
     timer?.cancel();
-    if (_trackedPositions.isNotEmpty) {
+    if (_trackedPositions.isNotEmpty &&
+        distance.value > 0 &&
+        duration.value > 0) {
       final int? id = await trainingsController.insertTraining(
           distance: distance.value,
           duration: duration.value,
@@ -94,12 +104,16 @@ class _TrackPageState extends State<TrackPage> {
     super.initState();
 
     _activePageSubscription =
-        dashboardController.activePageStream.listen((activePage) {
+        dashboardController.activePageStream.listen((activePage) async {
       if (activePage == 1) {
         setState(() {
           _isDisposed = false;
         });
-        _trackingService.init();
+        bool permissions = await _trackingService.init();
+        if (!permissions && mounted) {
+          showDialog(
+              context: context, builder: (_) => LocationPermissionDialog());
+        }
       } else if (!_isTracking && !_isDisposed) {
         _trackingService.dispose();
         setState(() {

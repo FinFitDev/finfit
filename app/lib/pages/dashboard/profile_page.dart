@@ -1,7 +1,9 @@
+import 'package:excerbuys/components/shared/positions/strava_toggle_position.dart';
 import 'package:excerbuys/components/shared/postition.dart';
 import 'package:excerbuys/components/shared/profile_image_generator.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/regenerate_image_modal.dart';
 import 'package:excerbuys/store/controllers/activity/activity_controller/activity_controller.dart';
+import 'package:excerbuys/store/controllers/activity/strava_controller/strava_controller.dart';
 import 'package:excerbuys/store/controllers/auth_controller/auth_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
@@ -68,25 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
             textAlign: TextAlign.center,
           ),
           SizedBox(
-            height: 24,
-          ),
-          Row(children: [
-            Text(
-              'Your statistics',
-              style: texts.headlineMedium
-                  ?.copyWith(color: colors.tertiaryContainer),
-            ),
-            SizedBox(
-              width: 16,
-            ),
-            Expanded(
-                child: Container(
-              height: 0.5,
-              color: colors.tertiaryContainer,
-            ))
-          ]),
-          SizedBox(
-            height: 16,
+            height: 32,
           ),
           Wrap(
             runSpacing: 6,
@@ -158,33 +142,18 @@ class _ProfilePageState extends State<ProfilePage> {
           SizedBox(
             height: 24,
           ),
-          Row(children: [
-            Text(
-              'Settings',
-              style: texts.headlineMedium
-                  ?.copyWith(color: colors.tertiaryContainer),
-            ),
-            SizedBox(
-              width: 16,
-            ),
-            Expanded(
-                child: Container(
-              height: 0.5,
-              color: colors.tertiaryContainer,
-            ))
-          ]),
-          SizedBox(
-            height: 16,
-          ),
           Wrap(
             runSpacing: 6,
             children: [
-              Postition(
-                label: 'Language',
-                onPressed: () {},
-                iconRight: 'assets/svg/arrow-right.svg',
-                iconLeft: 'assets/svg/language.svg',
-              ),
+              StreamBuilder<bool>(
+                  stream: stravaController.authorizedStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.data == true) {
+                      return StravaTogglePosition();
+                    } else {
+                      return SizedBox.shrink();
+                    }
+                  }),
               Postition(
                 label: 'Contact us',
                 onPressed: () {},
@@ -197,6 +166,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   navigateWithClear(route: '/welcome');
                   dashboardController.reset();
                   activityController.reset();
+                  stravaController.reset();
                 },
                 color: colors.error,
                 iconLeft: 'assets/svg/logout.svg',

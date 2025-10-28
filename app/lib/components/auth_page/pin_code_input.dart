@@ -51,8 +51,7 @@ class _PinCodeInputState extends State<PinCodeInput> {
           cursorColor: Colors.transparent,
           textStyle: TextStyle(
               fontSize: 20,
-              color:
-                  widget.error != null ? colors.error : colors.primaryFixedDim),
+              color: widget.error != null ? colors.error : colors.tertiary),
           enableActiveFill: true,
           keyboardType: TextInputType.number,
           onChanged: widget.setCode,

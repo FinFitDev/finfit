@@ -82,6 +82,9 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
                     ),
                     child: Column(
                       children: [
+                        SizedBox(
+                          height: 16,
+                        ),
                         InputWithIcon(
                           error: error != null
                               ? error == RESET_PASSWORD_ERROR.WRONG_EMAIL

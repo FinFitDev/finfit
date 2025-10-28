@@ -150,35 +150,40 @@ class WorkoutTrackerDashboard extends StatelessWidget {
     }
 
     if (isPaused) {
-      return RippleWrapper(
-        onPressed: onFinishWorkout,
-        child: Column(
-          spacing: 4,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            StreamBuilder<bool>(
-                stream: trainingsController.isInsertingStream,
-                builder: (context, snapshot) {
-                  return IconContainer(
+      return StreamBuilder<bool>(
+          stream: trainingsController.isInsertingStream,
+          builder: (context, snapshot) {
+            return RippleWrapper(
+              onPressed: () {
+                if (snapshot.data == true) {
+                  return;
+                }
+                onFinishWorkout();
+              },
+              child: Column(
+                spacing: 4,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconContainer(
                     borderRadius: 100,
                     icon: 'assets/svg/stop.svg',
                     size: 50,
                     iconColor: colors.error,
                     backgroundColor: colors.error.withAlpha(30),
                     isLoading: snapshot.data == true,
-                  );
-                }),
-            Text(
-              'Finish',
-              style: TextStyle(
-                color: colors.tertiary,
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
+                  ),
+                  Text(
+                    'Finish',
+                    style: TextStyle(
+                      color: colors.tertiary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-      );
+            );
+          });
     }
 
     return ValueListenableBuilder<double>(

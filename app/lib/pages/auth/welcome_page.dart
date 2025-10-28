@@ -1,5 +1,6 @@
 import 'package:excerbuys/components/rive/logo_rive.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
+import 'package:excerbuys/components/shared/image_component.dart';
 import 'package:excerbuys/store/controllers/auth_controller/auth_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/types/enums.dart';
@@ -23,14 +24,9 @@ class _WelcomePageState extends State<WelcomePage> {
     return Scaffold(
       body: Stack(
         children: [
-          Positioned(
-              bottom: -30,
-              child: Opacity(
-                  opacity: 1,
-                  child: SvgPicture.asset('assets/svg/welcomePageWater.svg'))),
           Padding(
             padding: EdgeInsets.only(
-                top: 15 + layoutController.statusBarHeight,
+                top: 75 + layoutController.statusBarHeight,
                 bottom: 15 + layoutController.bottomPadding,
                 left: HORIZOTAL_PADDING,
                 right: HORIZOTAL_PADDING),
@@ -40,9 +36,27 @@ class _WelcomePageState extends State<WelcomePage> {
                 Expanded(
                     child: Column(
                   children: [
-                    LogoRive(),
+                    Container(
+                      width: 250,
+                      height: 250,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(200),
+                        // boxShadow: [
+                        //   BoxShadow(
+                        //     color: Colors.black.withAlpha(50),
+                        //     spreadRadius: -5,
+                        //     blurRadius: 8,
+                        //     offset: Offset(0, 3),
+                        //   ),
+                        // ],
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/icon.png'),
+                          fit: BoxFit.cover, // optional: cover, contain, etc.
+                        ),
+                      ),
+                    ), // LogoRive(),
                     SizedBox(
-                      height: 12,
+                      height: 24,
                     ),
                     RichText(
                         textAlign: TextAlign.center,
@@ -65,7 +79,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       height: 8,
                     ),
                     Text(
-                      "Financing your fitness is now reality",
+                      "Fitness that pays off",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 16,
@@ -78,8 +92,8 @@ class _WelcomePageState extends State<WelcomePage> {
                 )),
                 MainButton(
                     label: 'Sign up',
-                    backgroundColor: colors.primary,
-                    textColor: colors.secondary,
+                    backgroundColor: colors.tertiaryContainer.withAlpha(50),
+                    textColor: colors.primaryFixedDim,
                     onPressed: () {
                       authController.setActiveAuthMethod(AUTH_METHOD.SIGNUP);
                       navigate(route: '/login');

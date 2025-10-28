@@ -167,6 +167,30 @@ class _LoginContainerState extends State<LoginContainer> {
               disabled: _loading,
               borderRadius: 10,
             ),
+            SizedBox(
+              height: 32,
+            ),
+            Row(
+              spacing: 16,
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 0.5,
+                    color: colors.tertiaryContainer,
+                  ),
+                ),
+                Text(
+                  'Or use',
+                  style: TextStyle(color: colors.tertiaryContainer),
+                ),
+                Expanded(
+                  child: Container(
+                    height: 0.5,
+                    color: colors.tertiaryContainer,
+                  ),
+                ),
+              ],
+            ),
             loginOptions(colors),
           ]),
           SizedBox(
@@ -207,13 +231,22 @@ class _LoginContainerState extends State<LoginContainer> {
   }
 
   Widget loginOptions(ColorScheme colors) => Container(
-        margin: EdgeInsets.symmetric(vertical: 20),
+        margin: EdgeInsets.symmetric(vertical: 30),
         child: Row(
           children: [
             Expanded(
               child: Container(
-                height: 60,
-                margin: EdgeInsets.only(right: Platform.isIOS ? 12 : 0),
+                height: 50,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withAlpha(50),
+                      spreadRadius: -5,
+                      blurRadius: 8,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
                 child: TextButton.icon(
                   style: TextButton.styleFrom(
                     backgroundColor: colors.primaryContainer,
@@ -232,30 +265,30 @@ class _LoginContainerState extends State<LoginContainer> {
                 ),
               ),
             ),
-            Platform.isIOS
-                ? Expanded(
-                    child: Container(
-                      height: 60,
-                      padding: const EdgeInsets.only(left: 12),
-                      child: TextButton.icon(
-                        style: TextButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            padding: const EdgeInsets.only(right: 15)),
-                        onPressed: () {},
-                        label: Text(
-                          'Apple',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: colors.primaryContainer,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        icon: SvgPicture.asset('assets/svg/apple.svg'),
-                      ),
-                    ),
-                  )
-                : SizedBox.shrink()
+            // Platform.isIOS
+            //     ? Expanded(
+            //         child: Container(
+            //           height: 60,
+            //           padding: const EdgeInsets.only(left: 12),
+            //           child: TextButton.icon(
+            //             style: TextButton.styleFrom(
+            //                 backgroundColor: Colors.black,
+            //                 shape: RoundedRectangleBorder(
+            //                     borderRadius: BorderRadius.circular(10)),
+            //                 padding: const EdgeInsets.only(right: 15)),
+            //             onPressed: () {},
+            //             label: Text(
+            //               'Apple',
+            //               style: TextStyle(
+            //                   fontSize: 16,
+            //                   color: colors.primaryContainer,
+            //                   fontWeight: FontWeight.w500),
+            //             ),
+            //             icon: SvgPicture.asset('assets/svg/apple.svg'),
+            //           ),
+            //         ),
+            //       )
+            //     : SizedBox.shrink()
           ],
         ),
       );

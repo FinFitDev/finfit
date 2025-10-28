@@ -4,6 +4,7 @@ extension AppControllerMutations on AppController {
   restoreStateFromStorage() async {
     await authController.restoreAuthStateFromStorage();
     await userController.restoreCurrentUserStateFromStorage();
+    await stravaController.restoreStravaStateFromStorage();
   }
 
   setDeviceId(String id) {

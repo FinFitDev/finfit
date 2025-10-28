@@ -77,14 +77,6 @@ class _InputWithIconState extends State<InputWithIcon> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(widget.borderRadius ?? 20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(50),
-            spreadRadius: -5,
-            blurRadius: 8,
-            offset: Offset(0, 3),
-          ),
-        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -100,99 +92,115 @@ class _InputWithIconState extends State<InputWithIcon> {
                 ),
               ),
             ),
-          TextField(
-            controller: _controller,
-            keyboardType: widget.inputType ?? TextInputType.text,
-            inputFormatters: widget.inputFormatters ??
-                (widget.inputType == TextInputType.number
-                    ? <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ]
-                    : []),
-            obscureText: isPassword && _obscureText,
-            enableSuggestions: !isPassword,
-            enabled: !(widget.disabled ?? false),
-            onChanged: widget.onChange,
-            onTap: widget.onTap,
-            cursorColor: iconsColor,
-            style: texts.headlineMedium
-                ?.copyWith(color: colors.tertiary, fontSize: 14),
-            decoration: InputDecoration(
-              hintText: widget.outsideLabel != null ? null : widget.placeholder,
-              hintStyle: TextStyle(
-                color: colors.tertiaryContainer,
-                fontWeight: FontWeight.w300,
-                fontSize: 14,
-              ),
-              prefixIcon: widget.leftIcon != null
-                  ? Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: SvgPicture.asset(
-                        widget.leftIcon!,
-                        height: 20,
-                        colorFilter:
-                            ColorFilter.mode(iconsColor, BlendMode.srcIn),
-                      ),
-                    )
-                  : null,
-              suffixIcon: isPassword && value.isNotEmpty
-                  ? RippleWrapper(
-                      onPressed: () {
-                        setState(() => _obscureText = !_obscureText);
-                      },
-                      child: Container(
-                        color: Colors.transparent,
+          Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withAlpha(50),
+                  spreadRadius: -5,
+                  blurRadius: 8,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            child: TextField(
+              controller: _controller,
+              keyboardType: widget.inputType ?? TextInputType.text,
+              inputFormatters: widget.inputFormatters ??
+                  (widget.inputType == TextInputType.number
+                      ? <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ]
+                      : []),
+              obscureText: isPassword && _obscureText,
+              enableSuggestions: !isPassword,
+              enabled: !(widget.disabled ?? false),
+              onChanged: widget.onChange,
+              onTap: widget.onTap,
+              cursorColor: iconsColor,
+              style: texts.headlineMedium
+                  ?.copyWith(color: colors.tertiary, fontSize: 14),
+              decoration: InputDecoration(
+                hintText:
+                    widget.outsideLabel != null ? null : widget.placeholder,
+                hintStyle: TextStyle(
+                  color: colors.tertiaryContainer,
+                  fontWeight: FontWeight.w300,
+                  fontSize: 14,
+                ),
+                prefixIcon: widget.leftIcon != null
+                    ? Container(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: SvgPicture.asset(
-                          _obscureText
-                              ? 'assets/svg/eye.svg'
-                              : 'assets/svg/eye-close.svg',
-                          height: 22,
+                          widget.leftIcon!,
+                          height: 20,
                           colorFilter:
                               ColorFilter.mode(iconsColor, BlendMode.srcIn),
                         ),
-                      ),
-                    )
-                  : widget.rightIcon != null
-                      ? RippleWrapper(
-                          onPressed: () {
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            widget.onPressRightIcon?.call();
-                          },
-                          child: Container(
-                            color: Colors.transparent,
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: SvgPicture.asset(
-                              widget.rightIcon!,
-                              height: 22,
-                              colorFilter:
-                                  ColorFilter.mode(iconsColor, BlendMode.srcIn),
-                            ),
+                      )
+                    : null,
+                suffixIcon: isPassword && value.isNotEmpty
+                    ? RippleWrapper(
+                        onPressed: () {
+                          setState(() => _obscureText = !_obscureText);
+                        },
+                        child: Container(
+                          color: Colors.transparent,
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: SvgPicture.asset(
+                            _obscureText
+                                ? 'assets/svg/eye.svg'
+                                : 'assets/svg/eye-close.svg',
+                            height: 22,
+                            colorFilter:
+                                ColorFilter.mode(iconsColor, BlendMode.srcIn),
                           ),
-                        )
-                      : null,
-              contentPadding: EdgeInsets.symmetric(
-                vertical: widget.verticalPadding ?? 18,
-                horizontal: 20,
+                        ),
+                      )
+                    : widget.rightIcon != null
+                        ? RippleWrapper(
+                            onPressed: () {
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              widget.onPressRightIcon?.call();
+                            },
+                            child: Container(
+                              color: Colors.transparent,
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: SvgPicture.asset(
+                                widget.rightIcon!,
+                                height: 22,
+                                colorFilter: ColorFilter.mode(
+                                    iconsColor, BlendMode.srcIn),
+                              ),
+                            ),
+                          )
+                        : null,
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: widget.verticalPadding ?? 18,
+                  horizontal: 20,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius:
+                      BorderRadius.circular(widget.borderRadius ?? 20),
+                  borderSide: BorderSide(
+                      color: isError
+                          ? colors.error
+                          : colors.primaryFixedDim.withAlpha(50),
+                      width: 1),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius:
+                      BorderRadius.circular(widget.borderRadius ?? 20),
+                  borderSide: BorderSide(
+                      color: isError
+                          ? colors.error
+                          : colors.primaryFixedDim.withAlpha(50),
+                      width: 1),
+                ),
+                filled: true,
+                fillColor: colors.primaryContainer,
               ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(widget.borderRadius ?? 20),
-                borderSide: BorderSide(
-                    color: isError
-                        ? colors.error
-                        : colors.primaryFixedDim.withAlpha(50),
-                    width: 1),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(widget.borderRadius ?? 20),
-                borderSide: BorderSide(
-                    color: isError
-                        ? colors.error
-                        : colors.primaryFixedDim.withAlpha(50),
-                    width: 1),
-              ),
-              filled: true,
-              fillColor: colors.primaryContainer,
             ),
           ),
           if (isError)

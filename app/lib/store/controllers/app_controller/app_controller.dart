@@ -1,5 +1,5 @@
+import 'package:excerbuys/store/controllers/activity/strava_controller/strava_controller.dart';
 import 'package:excerbuys/store/controllers/auth_controller/auth_controller.dart';
-import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/store/persistence/storage_controller.dart';
 import 'package:excerbuys/utils/constants.dart';

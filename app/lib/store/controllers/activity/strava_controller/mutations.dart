@@ -2,30 +2,52 @@ part of 'strava_controller.dart';
 
 extension StravaControllerMutations on StravaController {
   reset() {
-    trainingsController.reset();
+    _authorized.add(false);
+    _enabled.add(false);
   }
 
-  setHealthAuth(bool isAuth) {
-    _healthAuthorized.add(isAuth);
+  setAuthroized(bool val) {
+    _authorized.add(val);
+    if (userController.currentUser == null) {
+      return;
+    }
+    storageController.saveStateLocal(
+        '${STRAVA_AUTHORIZED_KEY}_${userController.currentUser!.uuid}',
+        val.toString());
   }
 
-  setHealthSdkStatus(HealthConnectSdkStatus status) {
-    __healthSdkStatus.add(status);
+  restoreStravaStateFromStorage() async {
+    try {
+      if (userController.currentUser == null) {
+        return;
+      }
+      final String? stravaAuthSaved = await storageController.loadStateLocal(
+          '${STRAVA_AUTHORIZED_KEY}_${userController.currentUser!.uuid}');
+      final String? stravaEnabledSaved =
+          await storageController.loadStateLocal(STRAVA_ENABLED_KEY);
+
+      if (stravaAuthSaved != null && stravaAuthSaved.isNotEmpty) {
+        setAuthroized(jsonDecode(stravaAuthSaved));
+      }
+
+      if (stravaEnabledSaved != null && stravaEnabledSaved.isNotEmpty) {
+        setEnabled(jsonDecode(stravaEnabledSaved));
+      }
+    } catch (err) {
+      print('Loading data from storage failed $err');
+    }
   }
 
-  addTodaysPoints(double toAdd) {
-    _todaysPoints.add(todaysPoints + toAdd);
+  setEnabled(bool val) {
+    _enabled.add(val);
+    storageController.saveStateLocal(STRAVA_ENABLED_KEY, val.toString());
   }
 
-  setTodaysPoints(double points) {
-    _todaysPoints.add(points);
+  toggleEnabled() {
+    _enabled.add(!enabled);
   }
 
-  compundPointsToAdd(double toAdd) {
-    _totalPointsToAdd.add(totalPointsToAdd + toAdd);
-  }
-
-  setPointsToAdd(double value) {
-    _totalPointsToAdd.add(value);
+  setUpdatingPermission(bool val) {
+    _updatingPermission.add(val);
   }
 }

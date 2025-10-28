@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 
 const String APP_TITLE = 'FinFit';
-const String BACKEND_BASE_URL = 'http://192.168.1.2:3000/';
+const String BACKEND_BASE_URL = 'http://192.168.1.15:3000/';
 GlobalKey<NavigatorState> NAVIGATOR_KEY = GlobalKey<NavigatorState>();
 RegExp EMAIL_REGEX = RegExp(r'^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$');
 const String WEB_CLIENT_GOOGLE_ID =
@@ -30,6 +30,8 @@ const String RECENT_RECIPIENTS_KEY = 'recent_recipients';
 const String CART_STATE_KEY = 'cart_state';
 const String MAX_PRICE_RANGES_KEY = 'max_price_ranges';
 const String AVAILABLE_SHOP_CATEGORIES_KEY = 'available_shop_categories';
+const String STRAVA_AUTHORIZED_KEY = 'strava_authorized';
+const String STRAVA_ENABLED_KEY = 'strava_enabled';
 
 // one hour
 const int ONE_HOUR_CACHE_VALIDITY_PERIOD = 1000 * 60 * 60;
