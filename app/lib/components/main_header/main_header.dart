@@ -1,16 +1,8 @@
 import 'package:excerbuys/components/main_header/regular_main_header_content.dart';
-import 'package:excerbuys/components/main_header/product_owner_header_content.dart';
-import 'package:excerbuys/store/controllers/activity/activity_controller/activity_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
-import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
-import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/utils/constants.dart';
-import 'package:excerbuys/utils/parsers/parsers.dart';
-import 'package:excerbuys/wrappers/animated_switcher_wrapper.dart';
-import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class MainHeader extends StatelessWidget {
   const MainHeader({super.key});
@@ -18,7 +10,6 @@ class MainHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final texts = Theme.of(context).textTheme;
 
     return StreamBuilder<double>(
         stream: dashboardController.scrollDistanceStream,

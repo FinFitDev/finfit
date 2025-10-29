@@ -55,7 +55,7 @@ class _ActivityCardState extends State<ActivityCard> {
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withAlpha(50),
+              color: Colors.black.withAlpha(30),
               spreadRadius: -5,
               blurRadius: 8,
               offset: Offset(0, 3),

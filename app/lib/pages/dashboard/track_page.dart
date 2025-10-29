@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:excerbuys/components/dashboard_page/track_page/workout_tracker_dashboard.dart';
-import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/workout_info_modal.dart';
 import 'package:excerbuys/containers/dialogs/location_permission_dialog.dart';
 import 'package:excerbuys/containers/map_container.dart';
@@ -205,7 +204,7 @@ class _TrackPageState extends State<TrackPage> {
                   color: colors.primaryContainer,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withAlpha(50),
+                      color: Colors.black.withAlpha(30),
                       spreadRadius: -5,
                       blurRadius: 8,
                       offset: Offset(0, 3),
