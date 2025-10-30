@@ -29,3 +29,23 @@ export const fetchProductOwnerAPIById = async (uuid: string) => {
   );
   return response.rows;
 };
+
+export const fetchPartnerByPasscode = async (token: string) => {
+  const response = await pool.query(
+    `SELECT uuid, name, image FROM partners
+    WHERE api_key = $1 
+      `,
+    [token]
+  );
+  return response;
+};
+
+export const fetchPartnerMinimalMetadataByUuid = async (uuid: string) => {
+  const response = await pool.query(
+    `SELECT uuid, name, image FROM partners
+    WHERE uuid = $1 
+      `,
+    [uuid]
+  );
+  return response;
+};

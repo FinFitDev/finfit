@@ -13,7 +13,7 @@ part 'effects.dart';
 part 'selectors.dart';
 part 'mutations.dart';
 
-const TRAINING_DATA_CHUNK_SIZE = 5; // TODO change
+const TRAINING_DATA_CHUNK_SIZE = 10; // TODO change
 
 class TrainingsController {
   final BehaviorSubject<ContentWithLoading<Map<int, ITrainingEntry>>>

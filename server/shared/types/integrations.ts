@@ -1,6 +1,7 @@
 export enum SHOP_PROVIDER {
   PRESTASHOP = "prestashop",
   WOOCOMMERCE = "woocommerce",
+  UPON_DELIVERY = "upon_delivery",
 }
 
 export interface IShopApiData {

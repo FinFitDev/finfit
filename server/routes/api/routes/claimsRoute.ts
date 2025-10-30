@@ -13,6 +13,13 @@ export const claimDiscountHandler = async (
 ) => {
   try {
     const userId = req.body.user_id;
+    // @ts-expect-error
+    if (userId !== req.userId) {
+      return res.status(401).json({
+        message: "Unauthorized user",
+        error: "You don't have a valid token to access this user's account",
+      });
+    }
     const offerId = req.params.id;
     const response = await claimDiscount(userId, offerId);
 
@@ -33,6 +40,13 @@ export const getAllClaimsHandler = async (
 ) => {
   try {
     const userId = req.params.id;
+    // @ts-expect-error
+    if (userId !== req.userId) {
+      return res.status(401).json({
+        message: "Unauthorized user",
+        error: "You don't have a valid token to access this user's account",
+      });
+    }
     const response = await getAllUserClaims(userId);
 
     res.status(200).json({ message: "User claims fetched", content: response });

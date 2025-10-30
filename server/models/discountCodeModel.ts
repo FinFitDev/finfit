@@ -47,3 +47,17 @@ export const setDicountCodeUsed = async (code: string) => {
 
   return response;
 };
+
+export const getDiscountCodeForPartner = async (
+  code: string,
+  partnerId: string
+) => {
+  const response = await pool.query(
+    `SELECT code FROM discount_codes dc
+    JOIN offers o ON o.id = dc.offer_id
+    WHERE dc.code = $1 AND o.partner_id = $2 AND dc.status = 'ACTIVE' AND dc.valid_until > NOW()`,
+    [code, partnerId]
+  );
+
+  return response;
+};

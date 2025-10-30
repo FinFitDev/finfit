@@ -1,5 +1,5 @@
 import crypto, { BinaryLike, CipherKey } from "crypto";
-import { IShopApiData } from "../types/integrations";
+import { IShopApiData, SHOP_PROVIDER } from "../types/integrations";
 
 export function encrypt(text: string): string {
   const iv = crypto.randomBytes(16);
@@ -35,9 +35,13 @@ export function decrypt(encrypted: string): string {
 }
 
 export function decryptShopApiParams(shopApiParams: IShopApiData[]) {
+  console.log(shopApiParams);
   return shopApiParams.map((param) => ({
     ...param,
-    api_key: param.api_key ? decrypt(param.api_key) : undefined,
+    api_key:
+      param.api_key && param.shop_type !== SHOP_PROVIDER.UPON_DELIVERY
+        ? decrypt(param.api_key)
+        : undefined,
     consumer_secret: param.consumer_secret
       ? decrypt(param.consumer_secret)
       : undefined,

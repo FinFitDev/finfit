@@ -1,7 +1,9 @@
 import 'package:excerbuys/components/shared/buttons/copy_text.dart';
 import 'package:excerbuys/components/shared/image_component.dart';
 import 'package:excerbuys/components/shared/images/image_box.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/claim_qrcode_modal.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/offer_info_modal.dart';
+import 'package:excerbuys/containers/dashboard_page/modals/qrcode_modal.dart';
 import 'package:excerbuys/store/controllers/shop/claims_controller/claims_controller.dart';
 import 'package:excerbuys/types/shop/reward.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
@@ -196,7 +198,25 @@ class _ClaimCard extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    CopyText(textToCopy: entry.code),
+                    Row(
+                      spacing: 8,
+                      children: [
+                        Expanded(child: CopyText(textToCopy: entry.code)),
+                        GestureDetector(
+                            child: SvgPicture.asset(
+                              'assets/svg/qrcode.svg',
+                              colorFilter: ColorFilter.mode(
+                                  colors.primaryFixedDim, BlendMode.srcIn),
+                            ),
+                            onTap: () {
+                              openModal(
+                                  context,
+                                  ClaimQrcodeModal(
+                                    code: entry.code,
+                                  ));
+                            })
+                      ],
+                    ),
                     // RippleWrapper(
                     //   onPressed: () {
                     //     Clipboard.setData(ClipboardData(text: entry.code));

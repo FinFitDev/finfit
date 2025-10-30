@@ -12,11 +12,18 @@ import {
 import { setStravaEnabledService } from "../../../services/stravaService";
 
 export const getUserByIdHandler = async (
-  req: RequestWithPayload<undefined, { id: string }>,
+  req: Request<{ id: string }>,
   res: Response
 ) => {
   try {
     const user_id = req.params.id;
+    // @ts-expect-error
+    if (user_id !== req.userId) {
+      return res.status(401).json({
+        message: "Unauthorized user",
+        error: "You don't have a valid token to access this user's account",
+      });
+    }
     const response = await getUserById(user_id);
 
     res.status(200).json({ message: "User found", content: response });
@@ -38,6 +45,13 @@ export const updateUserPointsScoreHandler = async (
 ) => {
   try {
     const user_id = req.params.id;
+    // @ts-expect-error
+    if (user_id !== req.userId) {
+      return res.status(401).json({
+        message: "Unauthorized user",
+        error: "You don't have a valid token to access this user's account",
+      });
+    }
     const { points, steps_updated_at } = req.body;
     let response;
     if (steps_updated_at) {
@@ -69,6 +83,13 @@ export const updateUserImageHandler = async (
 ) => {
   try {
     const user_id = req.params.id;
+    // @ts-expect-error
+    if (user_id !== req.userId) {
+      return res.status(401).json({
+        message: "Unauthorized user",
+        error: "You don't have a valid token to access this user's account",
+      });
+    }
     const { image } = req.body;
 
     const response = await updateUserImage(user_id, image);
@@ -116,6 +137,14 @@ export const sendPointsHandler = async (req: Request, res: Response) => {
     const amount = req.body.amount;
     const user_id = req.params.id;
 
+    // @ts-expect-error
+    if (user_id !== req.userId) {
+      return res.status(401).json({
+        message: "Unauthorized user",
+        error: "You don't have a valid token to access this user's account",
+      });
+    }
+
     const response = await transferPointsToOtherUsers(
       user_id,
       recipients_ids,
@@ -138,6 +167,14 @@ export const updateStravaPermissions = async (
   try {
     const enabled = req.query.enabled;
     const userId = req.params.id as string;
+
+    // @ts-expect-error
+    if (userId !== req.userId) {
+      return res.status(401).json({
+        message: "Unauthorized user",
+        error: "You don't have a valid token to access this user's account",
+      });
+    }
     const response = await setStravaEnabledService(enabled == "true", userId);
 
     if (!response) {

@@ -6,12 +6,14 @@ import authRouter from "./routes/auth/authRouter";
 import apiRouter from "./routes/api/apiRouter";
 import webhookRouter from "./routes/webhook";
 
-import { middleware } from "./routes/api/middleware";
+import { apiMiddleware, shopMiddleware } from "./routes/api/middlewares";
 import stravaRouter from "./routes/stravaRouter";
 import { encrypt } from "./shared/utils/encryption";
-
+import uponDeliveryRouter from "./routes/uponDeliveryShopRouter";
+import cookieParser from "cookie-parser";
 const app: Express = express();
 app.use(cors());
+app.use(cookieParser());
 
 // const pool = require("./utils/db");
 
@@ -31,7 +33,8 @@ app.use((req, res, next) => {
 app.use("/auth", authRouter);
 app.use("/webhook", webhookRouter);
 app.use("/strava", stravaRouter);
-app.use("/api/v1", middleware, apiRouter);
+app.use("/api/v1", apiMiddleware, apiRouter);
+app.use("/upon-delivery", shopMiddleware, uponDeliveryRouter);
 
 app.listen(port, () => {
   console.log("App running on port 3000");

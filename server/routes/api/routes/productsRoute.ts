@@ -15,7 +15,13 @@ export const getHomeProductsHandler = async (
 ) => {
   try {
     const userId = req.params.id as string;
-
+    // @ts-expect-error
+    if (userId !== req.userId) {
+      return res.status(401).json({
+        message: "Unauthorized user",
+        error: "You don't have a valid token to access this user's account",
+      });
+    }
     const response = await getHomeProducts(userId);
 
     res.status(200).json({ message: "Home products found", content: response });

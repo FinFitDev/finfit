@@ -24,6 +24,13 @@ export const getTransactionsHandler = async (
 ) => {
   try {
     const userId = req.params.user_id as string;
+    // @ts-expect-error
+    if (userId !== req.userId) {
+      return res.status(401).json({
+        message: "Unauthorized user",
+        error: "You don't have a valid token to access this user's account",
+      });
+    }
     const limit = req.query.limit as string;
     const offset = req.query.offset as string;
 

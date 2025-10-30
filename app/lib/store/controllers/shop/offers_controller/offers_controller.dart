@@ -10,7 +10,7 @@ part 'effects.dart';
 part 'selectors.dart';
 part 'mutations.dart';
 
-const OFFERS_DATA_CHUNK_SIZE = 6; // TODO change
+const OFFERS_DATA_CHUNK_SIZE = 10; // TODO change
 const FEATURED_PRODUCTS_DATA_LENGTH = 5; // TODO change
 
 typedef IAllOffersData = ContentWithLoading<Map<BigInt, IOfferEntry>>;

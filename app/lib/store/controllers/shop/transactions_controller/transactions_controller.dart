@@ -13,7 +13,7 @@ part 'effects.dart';
 part 'selectors.dart';
 part 'mutations.dart';
 
-const TRANSACTION_DATA_CHUNK_SIZE = 5; // TODO change
+const TRANSACTION_DATA_CHUNK_SIZE = 10; // TODO change
 
 class TransactionsController {
   final BehaviorSubject<ContentWithLoading<Map<String, ITransactionEntry>>>

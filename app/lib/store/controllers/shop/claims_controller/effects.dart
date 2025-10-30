@@ -28,6 +28,8 @@ extension ClaimControllerEffects on ClaimsController {
               createdAt: DateTime.now().toString(),
               validUntil: DateTime.now().add(Duration(days: 6 * 30)).toString())
         });
+        await Cache.removeKeysByPattern(RegExp(r'.*/api/v1/claims/.*'));
+
         userController.subtractUserBalance((offer.points));
         transactionsController.refresh();
         return true;

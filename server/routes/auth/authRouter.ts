@@ -18,6 +18,7 @@ import {
   verifyResetCode,
 } from "../../services/auth/resetPassword";
 import { ILoginPayload, ISignupPayload } from "../../shared/types/auth";
+import { verifyShop } from "../../services/api/shops/uponDelivery";
 
 const authRouter: Router = express.Router();
 
@@ -260,6 +261,29 @@ authRouter.post(
     } catch (error: any) {
       res.status(500).json({
         message: "Password reset error",
+        error: error.message,
+      });
+    }
+  }
+);
+
+authRouter.post(
+  "/shop/verify",
+  async (req: RequestWithPayload<{ token: string }>, res: Response) => {
+    try {
+      const { token } = req.body;
+      const { response, access_token } = await verifyShop(token);
+
+      // Send access_token in response
+      res.status(200).json({
+        message: "Shop verification success",
+        content: response,
+        access_token,
+      });
+    } catch (error: any) {
+      console.log(error);
+      res.status(500).json({
+        message: "Error verifying shop",
         error: error.message,
       });
     }
