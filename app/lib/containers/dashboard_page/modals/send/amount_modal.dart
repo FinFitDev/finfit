@@ -3,11 +3,8 @@ import 'dart:math';
 
 import 'package:excerbuys/components/dashboard_page/send/chosen_recipients_list.dart';
 import 'package:excerbuys/components/input_with_icon.dart';
-import 'package:excerbuys/components/modal/modal_header.dart';
 import 'package:excerbuys/components/shared/buttons/main_button.dart';
-import 'package:excerbuys/components/shared/list/list_component.dart';
 import 'package:excerbuys/components/shared/positions/position_with_title.dart';
-import 'package:excerbuys/store/controllers/app_controller/app_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard/send_controller/send_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
@@ -159,10 +156,10 @@ class _AmountModalState extends State<AmountModal> {
                               value:
                                   '${formatNumber((userController.userBalance ?? 0).round())} points'),
                           SizedBox(
-                            height: 16,
+                            height: 32,
                           ),
                           Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
                                 'Summary',

@@ -11,7 +11,6 @@ import 'package:excerbuys/store/controllers/shop/transactions_controller/transac
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/animated_switcher_wrapper.dart';
-import 'package:excerbuys/wrappers/infinite_list_wrapper.dart';
 import 'package:excerbuys/wrappers/infinite_list_wrapper_v2.dart';
 import 'package:flutter/material.dart';
 
@@ -64,14 +63,14 @@ class _RecentPageState extends State<RecentPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        'All activity',
+                        'Moves & Points',
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.w600),
                         textAlign: TextAlign.left,
                       ),
                       SizedBox(height: 4),
                       Text(
-                        "Check out your entire historical activity!",
+                        "Track your workouts, and every point you gain.",
                         style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,

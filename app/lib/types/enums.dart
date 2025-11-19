@@ -26,48 +26,81 @@ enum SORTING_ORDER { ASCENDING, DESCENDING }
 enum AUTH_METHOD { LOGIN, SIGNUP }
 
 enum ACTIVITY_TYPE {
-  Walk,
-  Run,
+  AlpineSki,
+  BackcountrySki,
+  Badminton,
+  Canoeing,
+  Crossfit,
+  EBikeRide,
+  Elliptical,
+  EMountainBikeRide,
+  Golf,
+  GravelRide,
+  Handcycle,
+  HighIntensityIntervalTraining,
+  Hike,
+  IceSkate,
+  InlineSkate,
+  Kayaking,
+  Kitesurf,
+  MountainBikeRide,
+  NordicSki,
+  Pickleball,
+  Pilates,
+  Racquetball,
   Ride,
-  Swim;
+  RockClimbing,
+  RollerSki,
+  Rowing,
+  Run,
+  Sail,
+  Skateboard,
+  Snowboard,
+  Snowshoe,
+  Soccer,
+  Squash,
+  StairStepper,
+  StandUpPaddling,
+  Surfing,
+  Swim,
+  TableTennis,
+  Tennis,
+  TrailRun,
+  Velomobile,
+  VirtualRide,
+  VirtualRow,
+  VirtualRun,
+  Walk,
+  WeightTraining,
+  Wheelchair,
+  Windsurf,
+  Workout,
+  Yoga,
+  Other;
 
-  // Convert enum to string
-  String get value {
-    switch (this) {
-      case ACTIVITY_TYPE.Walk:
-        return 'Walk';
-      case ACTIVITY_TYPE.Run:
-        return 'Run';
-      case ACTIVITY_TYPE.Ride:
-        return 'Ride';
-      case ACTIVITY_TYPE.Swim:
-        return 'Swim';
-    }
+  String get value => toString().split('.').last;
+
+  String get label => _toLabel(value);
+
+  static String _toLabel(String text) {
+    final spaced = text.replaceAllMapped(
+        RegExp(r'(?<!^)([A-Z])'), (match) => ' ${match.group(1)}');
+    return spaced
+        .replaceAll('E Bike', 'E-bike')
+        .replaceAll('E Mountain', 'E-mountain')
+        .toLowerCase()
+        .replaceFirstMapped(RegExp(r'^\w'), (m) => m.group(0)!.toUpperCase());
   }
 
-  // Convert string to enum
   static ACTIVITY_TYPE fromString(String value) {
-    switch (value) {
-      case 'Walk':
-        return ACTIVITY_TYPE.Walk;
-      case 'Run':
-        return ACTIVITY_TYPE.Run;
-      case 'Ride':
-        return ACTIVITY_TYPE.Ride;
-      case 'Swim':
-        return ACTIVITY_TYPE.Swim;
-      default:
-        throw ArgumentError('Invalid activity type: $value');
-    }
+    return ACTIVITY_TYPE.values.firstWhere(
+      (type) => type.value == value,
+      orElse: () => ACTIVITY_TYPE.Other,
+    );
   }
 
-  // Safe conversion with fallback
   static ACTIVITY_TYPE? tryFromString(String? value) {
     if (value == null) return null;
-    try {
-      return fromString(value);
-    } catch (_) {
-      return null;
-    }
+    return fromString(value);
   }
 }
