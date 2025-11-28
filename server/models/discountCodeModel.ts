@@ -53,7 +53,7 @@ export const getDiscountCodeForPartner = async (
   partnerId: string
 ) => {
   const response = await pool.query(
-    `SELECT code FROM discount_codes dc
+    `SELECT dc.code, o.api_payload FROM discount_codes dc
     JOIN offers o ON o.id = dc.offer_id
     WHERE dc.code = $1 AND o.partner_id = $2 AND dc.status = 'ACTIVE' AND dc.valid_until > NOW()`,
     [code, partnerId]

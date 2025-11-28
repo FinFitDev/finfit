@@ -49,7 +49,7 @@ class _ActivityCardState extends State<ActivityCard> {
         widget.onPressed();
       },
       child: Container(
-        height: 115,
+        height: 132,
         decoration: BoxDecoration(
           // color: colors.error,
           borderRadius: BorderRadius.circular(15),
@@ -64,27 +64,27 @@ class _ActivityCardState extends State<ActivityCard> {
         ),
         child: Stack(
           children: [
+            // Positioned(
+            //   top: 0,
+            //   bottom: 0,
+            //   left: 0,
+            //   child: Container(
+            //     width: 20,
+            //     decoration: BoxDecoration(
+            //       color: activityMetadata.color,
+            //       borderRadius: BorderRadius.only(
+            //         topLeft: Radius.circular(15),
+            //         bottomLeft: Radius.circular(15),
+            //         bottomRight: Radius.circular(10),
+            //         topRight: Radius.circular(10),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             Positioned(
               top: 0,
               bottom: 0,
               left: 0,
-              child: Container(
-                width: 20,
-                decoration: BoxDecoration(
-                  color: activityMetadata.color,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    bottomLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 0,
-              bottom: 0,
-              left: 4,
               right: 0,
               child: Container(
                 padding: EdgeInsets.all(16),
@@ -103,9 +103,8 @@ class _ActivityCardState extends State<ActivityCard> {
                             IconContainer(
                               icon: activityMetadata.icon,
                               size: 50,
-                              iconColor: activityMetadata.color,
-                              backgroundColor:
-                                  activityMetadata.color.withAlpha(20),
+                              iconColor: colors.primary,
+                              backgroundColor: activityMetadata.color,
                             ),
                             SizedBox(width: 16),
                             Column(
@@ -155,6 +154,11 @@ class _ActivityCardState extends State<ActivityCard> {
                           ],
                         ),
                       ],
+                    ),
+                    Container(
+                      height: 0.2,
+                      color: colors.primaryFixedDim,
+                      margin: EdgeInsets.symmetric(vertical: 8),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,

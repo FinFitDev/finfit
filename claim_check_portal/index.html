@@ -3,190 +3,526 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Discount Scanner</title>
+    <title>Claim Check Portal</title>
 
     <script src="https://unpkg.com/html5-qrcode" defer></script>
 
     <style>
+      :root {
+        --bg: #edf1f7;
+        --surface: #ffffff;
+        --surface-alt: #f8fafc;
+        --primary: rgb(83, 132, 245);
+        --primary-dark: #2044b3;
+        --accent: #03c6a1;
+        --danger: #f15656;
+        --text: #111822;
+        --muted: #5b6574;
+        --border: #e1e6ef;
+        --shadow: 0 15px 35px rgba(30, 38, 58, 0.12);
+      }
+
       * {
         box-sizing: border-box;
       }
 
       body {
-        font-family: system-ui, sans-serif;
+        font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        background: var(--bg);
+        color: var(--text);
         margin: 0;
-        padding: 0;
-        background: #f4f7f9;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
         min-height: 100vh;
-        padding: 16px;
-      }
-
-      .card {
-        width: 100%;
-        max-width: 700px;
-        min-height: calc(100vh - 32px);
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        overflow: hidden;
+        padding: 40px 20px 60px;
         display: flex;
-        flex-direction: column;
-        align-items: center;
+        justify-content: center;
         position: relative;
       }
 
-      .login-small {
-        width: 100%;
-        font-size: 16px;
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(
+            circle at 20% 20%,
+            rgba(47, 98, 255, 0.2),
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 80% 0%,
+            rgba(3, 198, 161, 0.15),
+            transparent 40%
+          ),
+          linear-gradient(135deg, rgba(255, 255, 255, 0.6), transparent 65%);
+        z-index: 0;
+      }
+
+      main.portal-shell {
+        width: min(1200px, 100%);
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero {
+        background: var(--surface);
+        border-radius: 20px;
+        padding: 32px;
+        box-shadow: var(--shadow);
+        text-align: center;
+      }
+
+      .eyebrow {
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        font-size: 11px;
+        color: var(--muted);
+        margin: 0 0 10px;
+      }
+
+      h1 {
+        font-size: clamp(2.1rem, 4vw, 2.8rem);
+        margin: 0 0 12px;
+      }
+
+      .hero p {
+        color: var(--muted);
+        max-width: 640px;
+        margin: 0 auto 18px;
+        font-size: 1rem;
+        line-height: 1.5;
+      }
+
+      .pill-group {
+        display: inline-flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .pill {
+        background: var(--surface-alt);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 8px 16px;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+
+      .layout-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 24px;
+      }
+
+      .card {
+        background: var(--surface);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
       }
 
       .card-header {
-        width: 100%;
-        background: #eaeaea;
-        color: rgb(0, 0, 0);
-        padding: 18px;
-        text-align: center;
-        font-size: 20px;
-        letter-spacing: 0.4px;
-        font-weight: 600;
+        padding: 26px 28px 18px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .card-header h2 {
+        margin: 4px 0 0;
+        font-size: 1.4rem;
       }
 
       .card-content {
-        width: 100%;
-        padding: 32px 16px;
+        padding: 26px 28px 32px;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        overflow: hidden;
+        gap: 18px;
+      }
+
+      input,
+      button {
+        font: inherit;
       }
 
       input {
-        padding: 14px;
-        margin-top: 12px;
         width: 100%;
-        font-size: 16px;
-        border-radius: 8px;
-        border: 1px solid #cccccc;
+        padding: 15px 16px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: var(--surface-alt);
+        font-size: 1rem;
+        transition: border 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(47, 98, 255, 0.15);
         outline: none;
       }
 
-      button {
-        margin-top: 12px;
-        width: 100%;
-        padding: 14px;
-        font-size: 16px;
-        background: #0077ff;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: 0.2s ease-in-out;
+      .field-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--muted);
       }
 
-      button:hover {
-        background: #005fcc;
+      .btn {
+        border: none;
+        border-radius: 12px;
+        padding: 14px 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.15s ease, background 0.15s ease,
+          box-shadow 0.15s ease;
+      }
+
+      .btn:active {
+        transform: translateY(1px);
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: #fff;
+        box-shadow: 0 8px 20px rgba(47, 98, 255, 0.2);
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-dark);
+      }
+
+      .btn-secondary {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        color: var(--text);
+      }
+
+      .btn-secondary:hover {
+        border-color: var(--primary);
+        color: var(--primary-dark);
+      }
+
+      .btn-ghost {
+        background: transparent;
+        color: var(--muted);
+        border: 1px solid transparent;
+        padding-inline: 10px;
+      }
+
+      .btn-ghost:hover {
+        color: var(--text);
+      }
+
+      .btn-danger {
+        background: var(--danger);
+        color: #fff;
+        box-shadow: 0 8px 20px rgba(241, 86, 86, 0.3);
+      }
+
+      .status-message {
+        min-height: 24px;
+        font-weight: 600;
+        color: var(--muted);
+      }
+
+      .status-message.error {
+        color: var(--danger);
       }
 
       #scanner {
-        margin-top: 20px;
         width: 100%;
-        max-width: 450px;
-        border-radius: 12px;
+        min-height: 360px;
+        border-radius: 16px;
+        border: 1px dashed var(--border);
+        background: repeating-linear-gradient(
+            135deg,
+            rgba(47, 98, 255, 0.04),
+            rgba(47, 98, 255, 0.04) 20px,
+            transparent 20px,
+            transparent 40px
+          ),
+          var(--surface-alt);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         overflow: hidden;
+        position: relative;
       }
 
       #shopInfo {
         display: none;
-        flex-direction: column;
         align-items: center;
-        margin-bottom: 20px;
-        text-align: center;
+        gap: 16px;
+        padding: 18px;
+        background: var(--surface-alt);
+        border-radius: 16px;
       }
 
       #shopLogo {
-        width: 100px;
-        height: 100px;
-        border-radius: 12px;
+        width: 72px;
+        height: 72px;
         object-fit: cover;
-        margin-bottom: 10px;
-        border: 2px solid #eee;
+        border-radius: 16px;
+        border: 1px solid var(--border);
       }
 
       #result {
-        margin-top: 18px;
-        font-weight: bold;
-        color: #0077ff;
+        padding: 12px 16px;
+        border-radius: 12px;
+        background: var(--surface-alt);
       }
 
-      #logoutBtn {
-        background: #ececec;
-        color: black;
+      #productListContainer {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 20px;
+        background: #fff;
       }
 
-      #logoutBtn:hover {
-        background: #d5d5d5;
+      #productList {
+        margin: 12px 0 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 10px;
+      }
+
+      #productList li {
+        padding: 10px 14px;
+        border-radius: 12px;
+        background: var(--surface-alt);
+        border: 1px solid var(--border);
+        color: var(--muted);
+      }
+
+      .info-card {
+        gap: 0;
+      }
+
+      .info-card ul {
+        list-style: none;
+        padding: 0 28px 32px;
+        margin: 0;
+        display: grid;
+        gap: 12px;
+      }
+
+      .info-card li {
+        padding: 16px;
+        border-radius: 14px;
+        background: var(--surface-alt);
+        border: 1px solid var(--border);
+      }
+
+      .helper-text {
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin: 0;
+      }
+
+      footer {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
+      @media (max-width: 640px) {
+        body {
+          padding: 24px 16px 40px;
+        }
+
+        .card-header,
+        .card-content {
+          padding: 22px;
+        }
+
+        #scanner {
+          min-height: 280px;
+        }
+
+        .hero {
+          padding: 24px;
+        }
       }
     </style>
   </head>
 
   <body>
-    <!-- LOGIN SCREEN -->
-    <div id="login" class="card">
-      <div class="card-header" id="loginHeader">Partner Login</div>
-      <div class="card-content">
-        <img
-          width="300px"
-          style="border-radius: 200px"
-          src="https://finfitdev.github.io/registry/bradning/images/icon.png"
-        />
-        <input
-          id="secretInput"
-          type="password"
-          placeholder="Enter Access Code"
-        />
+    <main class="portal-shell">
+      <section class="hero">
+        <p class="eyebrow">FinFit Partner Portal</p>
+        <h1>Claim Check</h1>
+        <p>
+          A clean way to validate discount codes upon delivery. Log in with your
+          secure partner credential, scan or enter the code, review the eligible
+          products, then mark the claim as used in a single flow.
+        </p>
+        <div class="pill-group">
+          <span class="pill">Secure access</span>
+          <span class="pill">Real-time verification</span>
+          <span class="pill">Product-level visibility</span>
+        </div>
+      </section>
 
-        <p id="loginError" style="color: red"></p>
-        <button class="login-small" onclick="login()">Login</button>
-      </div>
-    </div>
+      <section class="layout-grid">
+        <div class="card" id="login">
+          <div class="card-header">
+            <p class="eyebrow">Partner Login</p>
+            <h2>Authenticate to begin</h2>
+          </div>
+          <div class="card-content">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 18px;
+                border-radius: 16px;
+                background: var(--surface-alt);
+              "
+            >
+              <img
+                src="https://finfitdev.github.io/registry/bradning/images/icon.png"
+                alt="Excerbuys"
+                style="width: 120px; height: 120px; border-radius: 999px"
+              />
+            </div>
 
-    <!-- DASHBOARD -->
-    <div id="dashboard" class="card" style="display: none">
-      <div class="card-header" id="dashboardHeader">Partner Dashboard</div>
-
-      <div class="card-content">
-        <div
-          id="shopInfo"
-          style="display: flex; flex-direction: row; gap: 16px"
-        >
-          <img id="shopLogo" src="" alt="Shop Logo" />
-          <h2 id="shopName"></h2>
+            <label class="field-label" for="secretInput">Access code</label>
+            <input
+              id="secretInput"
+              type="password"
+              placeholder="Enter access code"
+              autocomplete="current-password"
+            />
+            <p id="loginError" class="status-message error"></p>
+            <button class="btn btn-primary" onclick="login()">
+              Access dashboard
+            </button>
+            <p class="helper-text">
+              Having trouble? Reach your Excerbuys success partner for help.
+            </p>
+          </div>
         </div>
 
-        <div id="scanner" style="min-height: 350px"></div>
+        <div class="card" id="dashboard" style="display: none">
+          <div
+            class="card-header"
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-start;
+              gap: 12px;
+            "
+            id="dashboardHeader"
+          >
+            <div>
+              <p class="eyebrow">Partner Dashboard</p>
+              <h2>Scan &amp; verify discounts</h2>
+            </div>
+            <button class="btn btn-ghost" id="logoutBtn" onclick="logout()">
+              Logout
+            </button>
+          </div>
+          <div class="card-content">
+            <div id="shopInfo">
+              <img id="shopLogo" src="" alt="Shop Logo" />
+              <div>
+                <p class="eyebrow">Currently serving</p>
+                <h3 id="shopName" style="margin: 4px 0 0"></h3>
+              </div>
+            </div>
 
-        <input id="textCode" placeholder="Or type code manually" />
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <p class="field-label">Camera scanner</p>
+              <small class="helper-text"
+                >Point the device at the customer QR.</small
+              >
+              <div id="scanner"></div>
+            </div>
 
-        <!-- NEW: First check button -->
-        <button onclick="checkCode()">Check Code</button>
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <label class="field-label" for="textCode">Manual entry</label>
+              <input
+                id="textCode"
+                placeholder="Or type code manually"
+                inputmode="numeric"
+              />
+              <button class="btn btn-secondary" onclick="checkCode()">
+                Check code
+              </button>
+            </div>
 
-        <!-- NEW: Hidden until code is validated -->
-        <button id="markUsedBtn" onclick="triggerMark()" style="display: none">
-          Mark Code as Used
-        </button>
+            <button
+              id="markUsedBtn"
+              class="btn btn-danger"
+              onclick="triggerMark()"
+              style="display: none"
+            >
+              Mark code as used
+            </button>
 
-        <p id="result"></p>
+            <p id="result" class="status-message"></p>
 
-        <button id="logoutBtn" onclick="logout()">Logout</button>
-      </div>
-    </div>
+            <div id="productListContainer" style="display: none">
+              <div
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  gap: 4px;
+                  margin-bottom: 6px;
+                "
+              >
+                <h4 style="margin: 0">Eligible products</h4>
+                <p class="helper-text">
+                  Double-check that the order lines up with the code
+                  permissions.
+                </p>
+              </div>
+              <ul id="productList"></ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card info-card">
+        <div class="card-header">
+          <p class="eyebrow">Quick guidance</p>
+          <h2>How the process works</h2>
+        </div>
+        <ul style="padding-top: 16px">
+          <li>
+            <strong>1. Authenticate securely.</strong> Use your rotating access
+            code. Sessions expire automatically after 15 minutes of inactivity.
+          </li>
+          <li>
+            <strong>2. Scan or type the code.</strong> Let the camera lock onto
+            the QR, or paste the value in manually if the label is damaged.
+          </li>
+          <li>
+            <strong>3. Review the payload.</strong> We highlight every product
+            attached to the discount so you can verify before handing off the
+            order.
+          </li>
+          <li>
+            <strong>4. Mark it used.</strong> Once the delivery is confirmed,
+            mark the code as used to prevent accidental reuse.
+          </li>
+        </ul>
+      </section>
+
+      <footer>© <span id="year"></span> Excerbuys. All rights reserved.</footer>
+    </main>
 
     <script>
-      const BACKEND_URL = "https://stay-oops-index-conflict.trycloudflare.com";
+      const BACKEND_URL =
+        "https://brakes-sharing-society-technician.trycloudflare.com";
       const SESSION_DURATION = 15 * 60 * 1000;
+
+      document.getElementById("year").textContent = new Date().getFullYear();
 
       async function login() {
         const secret = document.getElementById("secretInput").value.trim();
@@ -201,7 +537,6 @@
         const data = await res.json();
 
         if (data.content) {
-          // Store access_token along with shop data and expiration
           const sessionObj = {
             data: data.content,
             token: data.access_token,
@@ -209,6 +544,7 @@
           };
           localStorage.setItem("SHOP_DATA", JSON.stringify(sessionObj));
           showDashboard();
+          document.getElementById("loginError").innerText = "";
         } else {
           document.getElementById("loginError").innerText =
             "Invalid access code.";
@@ -230,14 +566,12 @@
       }
 
       function startScanner() {
-        const scannerContainer = document.getElementById("scanner");
         const html5QrCode = new Html5Qrcode("scanner");
 
         html5QrCode.start(
           { facingMode: "environment" },
           { fps: 10, qrbox: 300 },
           (decodedText) => {
-            console.log(decodedText);
             document.getElementById("textCode").value = decodedText;
           }
         );
@@ -246,7 +580,7 @@
       async function checkCode(scannedText = null) {
         const resultEl = document.getElementById("result");
         resultEl.innerText = "";
-        resultEl.style.color = "#0077ff";
+        resultEl.style.color = varColor("--primary");
 
         const code =
           scannedText ?? document.getElementById("textCode").value.trim();
@@ -270,7 +604,6 @@
               }),
             }
           );
-          console.log(res);
 
           const data = await res.json();
 
@@ -279,26 +612,46 @@
             throw new Error(data.error);
           }
 
-          if (data.content === true) {
+          if (data.content.valid === true) {
             resultEl.innerText = data.message;
-            resultEl.style.color = "#0077ff";
+            resultEl.style.color = varColor("--primary");
             document.getElementById("markUsedBtn").style.display = "block";
             document.getElementById("markUsedBtn").dataset.code = code;
+            const productListEl = document.getElementById("productList");
+            productListEl.innerHTML = "";
+            const payload = data.content.payload;
+            if (payload.products && payload.products.length > 0) {
+              document.getElementById("productListContainer").style.display =
+                "block";
+              productListEl.style.display = "grid";
+
+              payload.products.forEach((p) => {
+                const li = document.createElement("li");
+                li.innerText = p;
+                productListEl.appendChild(li);
+              });
+            } else {
+              productListEl.style.display = "none";
+            }
           } else {
-            resultEl.innerText = data.message || "Invalid code.";
-            resultEl.style.color = "red";
-            document.getElementById("markUsedBtn").style.display = "none";
+            handleInvalid(resultEl, data.message || "Invalid code.");
           }
         } catch (err) {
-          resultEl.innerText = "Invalid code";
-          resultEl.style.color = "red";
-          document.getElementById("markUsedBtn").style.display = "none";
+          handleInvalid(resultEl, "Invalid code");
         }
+      }
+
+      function handleInvalid(resultEl, message) {
+        resultEl.innerText = message;
+        resultEl.style.color = varColor("--danger");
+        document.getElementById("markUsedBtn").style.display = "none";
+        document.getElementById("productList").style.display = "none";
+        document.getElementById("productListContainer").style.display = "none";
       }
 
       function triggerMark() {
         const confirmed = confirm(
-          "Are you sure you want to mark the code as used? This action cannot be undone"
+          "Are you sure you want to mark the code as used? This action cannot be undone. Make sure the code is valid for the product being sold"
         );
         if (confirmed) {
           markCodeUsed();
@@ -323,7 +676,9 @@
         );
 
         const data = await res.json();
-        document.getElementById("result").innerText = data.message;
+        const resultEl = document.getElementById("result");
+        resultEl.innerText = data.message;
+        resultEl.style.color = varColor("--primary");
         document.getElementById("markUsedBtn").style.display = "none";
       }
 
@@ -336,6 +691,12 @@
         const saved = JSON.parse(localStorage.getItem("SHOP_DATA"));
         if (saved && Date.now() < saved.expiresAt) showDashboard();
       };
+
+      function varColor(token) {
+        return getComputedStyle(document.documentElement).getPropertyValue(
+          token
+        );
+      }
     </script>
   </body>
 </html>

@@ -1,6 +1,17 @@
 version: "3.1"
 
 services:
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      DATABASE_URL_DEV: ${DATABASE_URL_DEV}
+      DATABASE_URL: ${DATABASE_URL}
+
   db:
     image: "postgres"
     ports:

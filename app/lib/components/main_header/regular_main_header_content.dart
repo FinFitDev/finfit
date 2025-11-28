@@ -29,8 +29,8 @@ class RegularMainHeaderContent extends StatelessWidget {
             builder: (context, snapshot) {
               return Text(
                   dashboardController.balanceHidden
-                      ? '****** points total'
-                      : '${formatNumber((snapshot.data ?? 0).round())} points total',
+                      ? '****** points'
+                      : '${formatNumber((snapshot.data ?? 0).round())} points',
                   style: texts.headlineMedium
                       ?.copyWith(color: colors.primaryFixedDim));
             }),

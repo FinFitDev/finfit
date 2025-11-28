@@ -13,6 +13,7 @@ export const insertWoocommerceDiscountCode = async ({
   code,
 }: IIssueDiscountCodeShopPayload) => {
   try {
+    console.log(shopApiData);
     const wooCommerce = getWooCommerceRestApi(shopApiData);
     const validUntil = new Date(Date.now() + +codeExpirationPeriod);
 

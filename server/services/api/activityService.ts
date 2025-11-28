@@ -1,19 +1,9 @@
-import { QueryResult } from "pg";
-import { ErrorWithCode } from "../../exceptions/errorWithCode";
 import {
   fetchRecentUserTrainings,
   fetchUserTrainings,
-  insertTraining,
   insertTrainingsBulk,
 } from "../../models/activityModel";
-import { ONE_DAY_MILLISECONDS } from "../../shared/constants";
-import {
-  IDailyStepEntry,
-  IHourlyStepEntry,
-  ITrainingEntry,
-  ITrainingEntryResponse,
-} from "../../shared/types";
-import { aggregateDailyDataObject } from "../../shared/utils";
+import { ITrainingEntry, ITrainingEntryResponse } from "../../shared/types";
 import { pool } from "../../shared/utils/db";
 import { updatePointsScore } from "../../models/userModel";
 

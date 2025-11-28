@@ -1,5 +1,3 @@
-import { IDailyStepEntry, IHourlyStepEntry } from "./types";
-import bcrypt from "bcryptjs";
 import {
   IGoogleLoginPayload,
   IGoogleSignUpPayload,
@@ -38,27 +36,6 @@ export const getUtcMidnightDate = (date: Date) => {
       0
     )
   );
-};
-
-export const aggregateDailyDataObject = (data: IHourlyStepEntry[]) => {
-  return data.reduce((acc: Record<string, IDailyStepEntry>, item) => {
-    const date = new Date(item.timestamp);
-    const utcMidnightDate = getUtcMidnightDate(date);
-    const uuid = `${utcMidnightDate.toISOString()}_${item.user_id}`;
-    if (Object.keys(acc).includes(uuid)) {
-      acc[uuid].total += item.total;
-      acc[uuid].mean += item.total / 24;
-    } else {
-      acc[uuid] = {
-        timestamp: `${utcMidnightDate.toISOString()}`,
-        uuid,
-        total: item.total,
-        mean: item.total / 24,
-        user_id: item.user_id,
-      };
-    }
-    return acc;
-  }, {});
 };
 
 function toHex(num: number): string {

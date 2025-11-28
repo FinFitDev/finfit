@@ -46,5 +46,10 @@ export const checkCodeValid = async (code: string, partnerId?: string) => {
     throw new Error("Entry not found for uuid");
   }
 
-  return response.rowCount! > 0;
+  console.log(response.rows[0]);
+
+  return {
+    valid: !!response.rows[0].code,
+    payload: response.rows[0].api_payload,
+  };
 };

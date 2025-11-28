@@ -56,21 +56,6 @@ export interface ITrainingEntryResponse {
   average_speed?: number;
 }
 
-export interface IHourlyStepEntry {
-  uuid: string;
-  timestamp: string;
-  total: number;
-  user_id: string;
-}
-
-export interface IDailyStepEntry {
-  uuid: string;
-  timestamp: string;
-  total: number;
-  user_id: string;
-  mean: number;
-}
-
 export type IResetPasswordCode = string;
 
 export interface IOffer {
@@ -125,17 +110,4 @@ export interface ITransactionInsert {
   user_id: string;
   second_user_ids?: string[];
   offer_id?: string;
-}
-
-export interface IFiltersQuery {
-  search?: string;
-  category?: string;
-  min_price?: number;
-  max_price?: number;
-  min_finpoints?: number;
-  max_finpoints?: number;
-  sort_by?: string;
-  order?: ORDER_TYPE;
-  limit?: number;
-  offset?: number;
 }

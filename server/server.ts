@@ -17,7 +17,7 @@ app.use(cookieParser());
 
 // const pool = require("./utils/db");
 
-const port = process.env.PORT || "3000";
+const port = Number(process.env.PORT) || "3000";
 
 // console.log(crypto.randomBytes(64).toString("hex"));
 

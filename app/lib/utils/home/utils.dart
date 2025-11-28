@@ -9,7 +9,7 @@ ActivityMetadata getActivityMetadata(
       return ActivityMetadata(
           icon: 'assets/svg/walking.svg',
           name: activity.label,
-          color: colors.secondary);
+          color: const Color.fromARGB(255, 233, 201, 113));
 
     /// RUNNING
     case ACTIVITY_TYPE.Run:
@@ -18,7 +18,7 @@ ActivityMetadata getActivityMetadata(
       return ActivityMetadata(
           icon: 'assets/svg/footprints.svg',
           name: activity.label,
-          color: const Color.fromARGB(255, 255, 102, 7));
+          color: const Color.fromARGB(255, 57, 82, 144));
 
     /// CYCLING
     case ACTIVITY_TYPE.Ride:
@@ -43,7 +43,7 @@ ActivityMetadata getActivityMetadata(
       return ActivityMetadata(
           icon: 'assets/svg/swimming.svg',
           name: activity.label,
-          color: const Color.fromARGB(255, 102, 207, 255));
+          color: colors.secondary);
 
     /// WINTER SPORTS
     case ACTIVITY_TYPE.AlpineSki:

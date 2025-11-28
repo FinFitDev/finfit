@@ -33,7 +33,6 @@ uponDeliveryRouter.post(
     res: Response
   ) => {
     try {
-      console.log(req.body);
       const code = req.params.code;
       const partnerId = req.body.partner_id;
       const response = await checkCodeValid(code, partnerId);

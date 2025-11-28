@@ -14,7 +14,7 @@ export const getTransporter = () => {
       service: "gmail",
       auth: {
         user: "finfit.app.contact@gmail.com",
-        pass: "seja qcbq gsqk szif",
+        pass: process.env.SMTP_APP_PASSWORD,
       },
     });
   }
