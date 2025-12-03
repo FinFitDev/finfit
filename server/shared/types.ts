@@ -72,6 +72,7 @@ export interface IOffer {
   featured?: boolean;
   api_payload?: string;
   code_expiration_period: number;
+  image?: string;
 }
 
 export interface IPartner {

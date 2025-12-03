@@ -1,4 +1,5 @@
 import 'package:excerbuys/types/enums.dart';
+import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,7 @@ class ITrainingEntry {
   final int duration;
   final DateTime createdAt;
   final int? calories;
-  final int? distance;
+  final double? distance;
   final int? stravaId;
   final String? polyline;
   final double? elevationChange;
@@ -62,6 +63,7 @@ class ITrainingEntry {
   }
 
   factory ITrainingEntry.fromJson(Map<String, dynamic> json) {
+    smartPrint('JSON', json);
     return ITrainingEntry(
         id: json['id'] is String ? int.parse(json['id']) : json['id'] as int,
         points: json['points'] as int,
@@ -71,7 +73,7 @@ class ITrainingEntry {
         duration: json['duration'] as int,
         createdAt: DateTime.parse(json['created_at'] as String),
         calories: json['calories'] as int?,
-        distance: json['distance'] as int?,
+        distance: safeParseDouble(json['distance']),
         stravaId: json['strava_id'] is String
             ? int.tryParse(json['strava_id'])
             : json['strava_id'] as int?,
@@ -88,7 +90,7 @@ class ITrainingEntry {
     int? duration,
     DateTime? createdAt,
     int? calories,
-    int? distance,
+    double? distance,
     int? stravaId,
     String? polyline,
     double? elevationChange,

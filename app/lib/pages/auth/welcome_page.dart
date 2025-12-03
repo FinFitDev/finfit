@@ -50,7 +50,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         //   ),
                         // ],
                         image: DecorationImage(
-                          image: AssetImage('assets/images/icon.png'),
+                          image: AssetImage('assets/images/logo.png'),
                           fit: BoxFit.cover, // optional: cover, contain, etc.
                         ),
                       ),

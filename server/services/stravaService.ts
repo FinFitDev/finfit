@@ -15,7 +15,7 @@ import {
   STRAVA_EVENT_TYPE,
   STRAVA_WEBHOOK_MODE,
 } from "../shared/types/strava";
-import { fetchHandler } from "../shared/utils/fetching";
+import { fetchHandler, stravaFetchHandler } from "../shared/utils/fetching";
 import "dotenv/config";
 import { addTrainings } from "./api/activityService";
 import { ITrainingEntry } from "../shared/types";
@@ -78,17 +78,20 @@ export const refreshStravaToken = async (
 
 export const handleStravaActivityInfo = async ({
   accessToken,
+  refreshToken,
   activityId,
   userId,
 }: IStravaActivityInfoRequest) => {
-  const response: IStravaActivityInfoResponse = await fetchHandler(
+  const response: IStravaActivityInfoResponse = await stravaFetchHandler(
     `https://www.strava.com/api/v3/activities/${activityId}`,
     {
       method: HTTP_METHOD.GET,
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    }
+    },
+    refreshToken,
+    userId
   );
 
   const activityToInsert: ITrainingEntry = {
@@ -143,12 +146,14 @@ export const handleStravaWebhookEvent = async ({
   const tokenExpiresAt = new Date(data.token_expires_at);
 
   if (tokenExpiresAt < new Date(Date.now())) {
+    console.log("REFRESH BEFORE");
     const refreshToken = data.refresh_token;
     accessToken = await refreshStravaToken(refreshToken, data.user_id);
   }
 
   await handleStravaActivityInfo({
     accessToken,
+    refreshToken: data.refresh_token,
     activityId: object_id,
     userId: data.user_id,
   });

@@ -99,7 +99,7 @@ extension TrainingsControllerEffects on TrainingsController {
           id: 0,
           points: calories,
           duration: duration,
-          distance: distance.round(),
+          distance: distance,
           type: type,
           userId: userController.currentUser!.uuid,
           createdAt: DateTime.now(),

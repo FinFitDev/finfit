@@ -57,7 +57,6 @@ Future<List<ITrainingEntry>?> loadTrainingsRequest(
         result.add(ITrainingEntry.fromJson(el));
       }
 
-      print(result);
       return result;
     } catch (error) {
       print('Error loading trainings from database $error');

@@ -14,6 +14,10 @@ class DashboardController {
   final BehaviorSubject<bool> _balanceHidden = BehaviorSubject.seeded(false);
   Stream<bool> get balanceHiddenStream => _balanceHidden.stream;
   bool get balanceHidden => _balanceHidden.value;
+
+  final BehaviorSubject<bool?> _trackingPlayed = BehaviorSubject.seeded(null);
+  Stream<bool?> get trackingPlayedStream => _trackingPlayed.stream;
+  bool? get trackingPlayed => _trackingPlayed.value;
 }
 
 DashboardController dashboardController = DashboardController();

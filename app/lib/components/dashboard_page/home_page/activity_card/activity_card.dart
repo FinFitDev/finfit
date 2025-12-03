@@ -1,21 +1,19 @@
 import 'package:excerbuys/components/shared/activity_icon.dart';
-import 'package:excerbuys/components/shared/image_component.dart';
+import 'package:excerbuys/components/shared/positions/position_with_background.dart';
 import 'package:excerbuys/components/shared/positions/strava_import_badge.dart';
-import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/utils/home/utils.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class ActivityCard extends StatefulWidget {
   final void Function() onPressed;
   final ACTIVITY_TYPE activityType;
   final int points;
   final String date;
-  final int? distance;
+  final double? distance;
   final int? duration;
   final int? calories;
   final bool? isStrava;
@@ -51,7 +49,6 @@ class _ActivityCardState extends State<ActivityCard> {
       child: Container(
         height: 132,
         decoration: BoxDecoration(
-          // color: colors.error,
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
@@ -105,6 +102,7 @@ class _ActivityCardState extends State<ActivityCard> {
                               size: 50,
                               iconColor: colors.primary,
                               backgroundColor: activityMetadata.color,
+                              borderRadius: 100,
                             ),
                             SizedBox(width: 16),
                             Column(
@@ -164,42 +162,25 @@ class _ActivityCardState extends State<ActivityCard> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       spacing: 10,
                       children: [
-                        Row(children: [
-                          SvgPicture.asset(
-                            'assets/svg/clock.svg',
-                            width: 16,
-                            colorFilter: ColorFilter.mode(
-                                colors.tertiaryContainer, BlendMode.srcIn),
-                          ),
-                          SizedBox(width: 6),
-                          Text(parseDuration(widget.duration ?? 0),
-                              style: texts.bodyMedium
-                                  ?.copyWith(color: colors.tertiaryContainer)),
-                        ]),
-                        Row(children: [
-                          SvgPicture.asset(
-                            'assets/svg/trend_up.svg',
-                            width: 16,
-                            colorFilter: ColorFilter.mode(
-                                colors.tertiaryContainer, BlendMode.srcIn),
-                          ),
-                          SizedBox(width: 6),
-                          Text(parseDistance((widget.distance ?? 0).toDouble()),
-                              style: texts.bodyMedium
-                                  ?.copyWith(color: colors.tertiaryContainer)),
-                        ]),
-                        Row(children: [
-                          SvgPicture.asset(
-                            'assets/svg/fire.svg',
-                            width: 16,
-                            colorFilter: ColorFilter.mode(
-                                colors.tertiaryContainer, BlendMode.srcIn),
-                          ),
-                          SizedBox(width: 6),
-                          Text('${widget.calories ?? 0} kcal',
-                              style: texts.bodyMedium
-                                  ?.copyWith(color: colors.tertiaryContainer)),
-                        ]),
+                        PositionWithBackground(
+                          name: parseDuration(widget.duration ?? 0),
+                          image: 'assets/svg/clock.svg',
+                          textStyle: texts.bodyMedium
+                              ?.copyWith(color: colors.primaryFixedDim),
+                        ),
+                        PositionWithBackground(
+                          name:
+                              parseDistance((widget.distance ?? 0).toDouble()),
+                          image: 'assets/svg/trend_up.svg',
+                          textStyle: texts.bodyMedium
+                              ?.copyWith(color: colors.primaryFixedDim),
+                        ),
+                        PositionWithBackground(
+                          name: '${widget.calories ?? 0} kcal',
+                          image: 'assets/svg/fire.svg',
+                          textStyle: texts.bodyMedium
+                              ?.copyWith(color: colors.primaryFixedDim),
+                        ),
                       ],
                     )
                   ],

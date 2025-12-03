@@ -11,19 +11,20 @@ class IOfferEntry {
   final BigInt totalRedeemed;
   final String catchString;
   final String details;
+  final String? image;
 
-  IOfferEntry({
-    required this.id,
-    required this.description,
-    required this.partner,
-    required this.points,
-    required this.validUntil,
-    required this.createdAt,
-    this.featured,
-    required this.totalRedeemed,
-    required this.catchString,
-    required this.details,
-  });
+  IOfferEntry(
+      {required this.id,
+      required this.description,
+      required this.partner,
+      required this.points,
+      required this.validUntil,
+      required this.createdAt,
+      this.featured,
+      required this.totalRedeemed,
+      required this.catchString,
+      required this.details,
+      this.image});
 
   Map<String, dynamic> toJson() {
     return {
@@ -37,21 +38,22 @@ class IOfferEntry {
       'total_redeemed': totalRedeemed.toString(),
       'catch': catchString,
       'details': details,
+      'image': image
     };
   }
 
   factory IOfferEntry.fromJson(Map<String, dynamic> json) {
     return IOfferEntry(
-      id: BigInt.parse(json['id'].toString()),
-      description: json['description'] ?? '',
-      partner: IPartnerEntry.fromJson(json['partner']),
-      points: (json['points'] as num?)?.toDouble() ?? 0,
-      validUntil: json['valid_until'] ?? '',
-      createdAt: json['created_at'] ?? '',
-      featured: json['featured'],
-      totalRedeemed: BigInt.parse((json['total_redeemed'] ?? '0').toString()),
-      catchString: json['catch'] ?? '',
-      details: json['details'] ?? '',
-    );
+        id: BigInt.parse(json['id'].toString()),
+        description: json['description'] ?? '',
+        partner: IPartnerEntry.fromJson(json['partner']),
+        points: (json['points'] as num?)?.toDouble() ?? 0,
+        validUntil: json['valid_until'] ?? '',
+        createdAt: json['created_at'] ?? '',
+        featured: json['featured'],
+        totalRedeemed: BigInt.parse((json['total_redeemed'] ?? '0').toString()),
+        catchString: json['catch'] ?? '',
+        details: json['details'] ?? '',
+        image: json['image']);
   }
 }

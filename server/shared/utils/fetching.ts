@@ -1,3 +1,4 @@
+import { refreshStravaToken } from "../../services/stravaService";
 import { FetchHandlerOptions, HTTP_METHOD } from "../types/general";
 
 export const fetchHandler = async (
@@ -41,3 +42,83 @@ export const fetchHandler = async (
     throw error;
   }
 };
+export const stravaFetchHandler = async (
+  url: string,
+  options: FetchHandlerOptions = {},
+  refreshToken: string,
+  userId: string
+): Promise<any> => {
+  const {
+    method = HTTP_METHOD.GET,
+    headers = {},
+    body,
+    isXML = false,
+  } = options;
+
+  const defaultHeaders = {
+    "Content-Type": isXML ? "application/xml" : "application/json",
+  };
+
+  const prepareBody = body ? (isXML ? body : JSON.stringify(body)) : undefined;
+
+  const doRequest = async (extraHeaders = {}) => {
+    const response = await fetch(url, {
+      method,
+      headers: {
+        ...defaultHeaders,
+        ...headers,
+        ...extraHeaders,
+      },
+      body: prepareBody,
+    });
+
+    if (!response.ok) {
+      const error = await parseError(response);
+      throw new HttpError(response.status, error);
+    }
+
+    return parseResponse(response);
+  };
+
+  try {
+    return await doRequest();
+  } catch (err: any) {
+    console.log(err, "ERROR STRAVA FETCH HANDLER");
+    if (err instanceof HttpError && err.status === 401) {
+      console.log("Strava token expired — refreshing…");
+      const accessToken = await refreshStravaToken(refreshToken, userId);
+      return await doRequest({ Authorization: `Bearer ${accessToken}` });
+    }
+
+    throw err;
+  }
+};
+
+class HttpError extends Error {
+  status: number;
+  constructor(status: number, message: string) {
+    super(message);
+    this.status = status;
+  }
+}
+
+async function parseResponse(response: Response) {
+  const contentType = response.headers.get("content-type");
+  return contentType?.includes("application/json")
+    ? response.json()
+    : response.text();
+}
+
+async function parseError(response: Response): Promise<string> {
+  try {
+    const text = await response.text();
+    try {
+      const json = JSON.parse(text);
+      return json.error ?? JSON.stringify(json);
+    } catch {
+      return text;
+    }
+  } catch {
+    return "Unknown error";
+  }
+}

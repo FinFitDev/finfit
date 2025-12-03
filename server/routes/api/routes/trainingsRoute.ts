@@ -20,7 +20,6 @@ export const getTrainingsForUserIdHadler = async (
       });
     }
 
-    console.log("NOWNOWn");
     const limit = req.query.limit;
     const offset = req.query.offset;
     const response = await getUserTrainings(

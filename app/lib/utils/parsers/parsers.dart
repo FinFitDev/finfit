@@ -59,6 +59,15 @@ String padTimeString(String value) {
 
 String parseDate(DateTime date) {
   final DateTime now = DateTime.now();
+  if (date.year != now.year) {
+    return parseDateYear(date);
+  } else {
+    return parseDateHour(date);
+  }
+}
+
+String parseDateHour(DateTime date) {
+  final DateTime now = DateTime.now();
 
   if (date.year == now.year && date.month == now.month) {
     if (date.day == now.day) {

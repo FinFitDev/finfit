@@ -28,6 +28,7 @@ class _TrackPageState extends State<TrackPage> {
   final MapController _mapController = MapController();
   final WorkoutTrackingService _trackingService = WorkoutTrackingService();
   bool _isTracking = false;
+  bool _isCentered = true;
   bool _isPaused = true;
   bool _isDisposed = false;
   late StreamSubscription _activePageSubscription;
@@ -41,6 +42,8 @@ class _TrackPageState extends State<TrackPage> {
 
   void _toggleTrackingState() async {
     if (_isPaused) {
+      // resume workout
+      dashboardController.setTrackingPlayed(true);
       final permissions = await _trackingService.requestPermissions();
       if (permissions == false && mounted) {
         showDialog(
@@ -55,8 +58,11 @@ class _TrackPageState extends State<TrackPage> {
         duration.value++;
       });
     } else {
+      // pause workout
+      dashboardController.setTrackingPlayed(false);
       timer?.cancel();
     }
+
     setState(() {
       _isPaused = !_isPaused;
       _isTracking = true;
@@ -65,9 +71,11 @@ class _TrackPageState extends State<TrackPage> {
 
   void _finishWorkout() async {
     timer?.cancel();
+    // finish workout
+    dashboardController.setTrackingPlayed(null);
     if (_trackedPositions.isNotEmpty &&
-        distance.value > 0 &&
-        duration.value > 0) {
+        distance.value > 5 &&
+        duration.value > 5) {
       final int? id = await trainingsController.insertTraining(
           distance: distance.value,
           duration: duration.value,
@@ -147,6 +155,19 @@ class _TrackPageState extends State<TrackPage> {
             setState(() {
               _currentPosition = pos;
             });
+            if (_isCentered) {
+              _mapController.move(
+                _currentPosition,
+                _mapController.camera.zoom,
+              );
+            }
+          },
+          onMapCameraPositionChanged: (camera, hasGesture) {
+            if (hasGesture) {
+              setState(() {
+                _isCentered = false;
+              });
+            }
           },
           addPosition: (position) {
             if (_trackedPositions.length > 1) {
@@ -191,6 +212,9 @@ class _TrackPageState extends State<TrackPage> {
             right: 16,
             child: RippleWrapper(
               onPressed: () {
+                setState(() {
+                  _isCentered = true;
+                });
                 _mapController.move(
                   _currentPosition,
                   18,

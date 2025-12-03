@@ -78,7 +78,6 @@ class WorkoutTrackingService {
     try {
       final initialPosition = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.bestForNavigation);
-      smartPrint('INITIAL', initialPosition);
       onPositionUpdate?.call(initialPosition);
     } catch (e) {
       print('Error getting initial position: $e');
@@ -102,11 +101,7 @@ class WorkoutTrackingService {
   }
 
   void _handlePositionUpdate(Position rawPosition) {
-    smartPrint('RAW', rawPosition);
-
     final finalPosition = _gpsTracker.processPosition(rawPosition);
-
-    smartPrint('PROCESSED', finalPosition);
 
     if (finalPosition != null) {
       _workoutPositions.add(finalPosition);

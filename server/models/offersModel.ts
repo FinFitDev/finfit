@@ -7,7 +7,7 @@ export const fetchFeaturedOffers = async (limit: number, offset: number) => {
         SELECT o.*, to_json(p) AS partner
         FROM offers o
         LEFT JOIN partners p ON o.partner_id = p.uuid
-        WHERE o.featured = TRUE
+        WHERE o.featured = TRUE AND o.valid_until >= NOW()
         ORDER BY o.total_redeemed DESC
         LIMIT $1
         OFFSET $2
@@ -29,7 +29,7 @@ export const fetchPaginatedOffers = async (
         SELECT o.*, to_json(p) AS partner
         FROM offers o
         LEFT JOIN partners p ON o.partner_id = p.uuid
-        WHERE LOWER(o.description) LIKE $1 OR LOWER(p.name) LIKE $1
+        WHERE LOWER(o.description) LIKE $1 OR LOWER(p.name) LIKE $1 AND o.valid_until >= NOW()
         ORDER BY o.total_redeemed DESC
         LIMIT $2
         OFFSET $3

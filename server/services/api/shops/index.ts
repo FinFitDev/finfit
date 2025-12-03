@@ -26,7 +26,6 @@ export const insertShopDiscountCode = async ({
         code,
       });
     case SHOP_PROVIDER.UPON_DELIVERY:
-      console.log("HERERE");
       return await Promise.resolve(true);
     default:
       throw new Error("Unsupported shop type");

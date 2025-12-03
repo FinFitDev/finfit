@@ -18,4 +18,8 @@ extension DashboardControllerMutations on DashboardController {
   setBalanceHidden(bool value) {
     _balanceHidden.add(value);
   }
+
+  setTrackingPlayed(bool? val) {
+    _trackingPlayed.add(val);
+  }
 }

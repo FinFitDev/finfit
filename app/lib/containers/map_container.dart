@@ -19,6 +19,8 @@ class MapContainer extends StatefulWidget {
   final void Function(Position position)? addPosition;
   final WorkoutTrackingService? trackingService;
   final void Function(LatLng pos)? setCurrentPosition;
+  final void Function(MapCamera camera, bool hasGesture)?
+      onMapCameraPositionChanged;
 
   const MapContainer(
       {super.key,
@@ -30,7 +32,8 @@ class MapContainer extends StatefulWidget {
       this.addPosition,
       this.trackingService,
       this.setCurrentPosition,
-      this.isTracking});
+      this.isTracking,
+      this.onMapCameraPositionChanged});
 
   @override
   State<MapContainer> createState() => _MapContainerState();
@@ -86,7 +89,6 @@ class _MapContainerState extends State<MapContainer> {
   }
 
   void _handlePositionUpdate(Position position) {
-    smartPrint('HANDLE POSITION UPDATE', position.latitude, position.longitude);
     if (_currentPosition == null) {
       widget.mapController.move(
         LatLng(position.latitude, position.longitude),
@@ -204,6 +206,7 @@ class _MapContainerState extends State<MapContainer> {
               interactionOptions: const InteractionOptions(
                 flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
               ),
+              onPositionChanged: widget.onMapCameraPositionChanged,
             ),
             children: [
               TileLayer(

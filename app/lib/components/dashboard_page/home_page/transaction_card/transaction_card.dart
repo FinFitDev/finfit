@@ -75,8 +75,9 @@ class _TransactionCardState extends State<TransactionCard> {
               IconContainer(
                 icon: getTransactionTypeIcon(widget.type),
                 size: 50,
-                backgroundColor: color.withAlpha(20),
-                iconColor: color,
+                backgroundColor: color,
+                iconColor: colors.primary,
+                borderRadius: 100,
               ),
               SizedBox(
                 width: 12,

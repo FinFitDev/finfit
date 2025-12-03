@@ -4,7 +4,7 @@ import 'package:excerbuys/utils/utils.dart';
 import 'package:geolocator/geolocator.dart';
 
 class ProfessionalGPSTracker {
-  static const double MAX_REALISTIC_SPEED = 16.0;
+  static const double MAX_REALISTIC_SPEED = 50.0;
   static const double MAX_ACCEPTABLE_ACCURACY = 25.0;
   static const double MIN_ACCEPTABLE_ACCURACY = 3.0;
   static const int SPEED_BUFFER_SIZE = 3;
@@ -162,7 +162,7 @@ class ProfessionalGPSTracker {
       final previousSpeed = _speedBuffer[_speedBuffer.length - 2];
       final acceleration = (currentSpeed - previousSpeed).abs() / timeDiff;
 
-      if (acceleration > 10.0) {
+      if (acceleration > 20.0) {
         print(
             'Rejected: Extreme acceleration ${acceleration.toStringAsFixed(1)} m/s²');
         return false;

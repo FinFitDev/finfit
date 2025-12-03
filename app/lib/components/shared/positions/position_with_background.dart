@@ -1,6 +1,7 @@
 import 'package:excerbuys/components/shared/image_component.dart';
 import 'package:excerbuys/components/shared/profile_image_generator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class PositionWithBackground extends StatelessWidget {
   final String name;
@@ -33,7 +34,14 @@ class PositionWithBackground extends StatelessWidget {
                   size: imageSize ?? 14,
                   image: image,
                 )
-              : ProfileImageGenerator(seed: image, size: imageSize ?? 14),
+              : image?.contains('assets/svg') == true
+                  ? SvgPicture.asset(
+                      image!,
+                      width: imageSize,
+                      colorFilter: ColorFilter.mode(
+                          textStyle?.color ?? colors.tertiary, BlendMode.srcIn),
+                    )
+                  : ProfileImageGenerator(seed: image, size: imageSize ?? 14),
           SizedBox(
             width: 6,
           ),

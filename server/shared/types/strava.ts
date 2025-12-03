@@ -72,6 +72,7 @@ export interface IUserStravaRefreshPayload
 
 export interface IStravaActivityInfoRequest {
   accessToken: string;
+  refreshToken: string;
   activityId: number;
   userId: string;
 }

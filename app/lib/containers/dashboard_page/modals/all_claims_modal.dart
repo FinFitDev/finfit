@@ -1,6 +1,9 @@
+import 'package:excerbuys/components/shared/activity_icon.dart';
 import 'package:excerbuys/components/shared/buttons/copy_text.dart';
+import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/components/shared/image_component.dart';
 import 'package:excerbuys/components/shared/images/image_box.dart';
+import 'package:excerbuys/components/shared/positions/position_with_background.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/claim_qrcode_modal.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/offer_info_modal.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/qrcode_modal.dart';
@@ -86,12 +89,19 @@ class _ClaimCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
 
-    return RippleWrapper(
-      onPressed: () {
-        openModal(context, OfferInfoModal(offer: entry.offer));
+    final isNearlyExpired =
+        DateTime.parse(entry.validUntil).difference(DateTime.now()).inDays < 10;
+
+    return GestureDetector(
+      onTap: () {
+        openModal(
+            context,
+            ClaimQrcodeModal(
+              code: entry.code,
+            ));
       },
       child: Container(
-        height: 325,
+        height: 200,
         decoration: BoxDecoration(
           color: colors.primaryContainer,
           borderRadius: BorderRadius.circular(15),
@@ -104,215 +114,94 @@ class _ClaimCard extends StatelessWidget {
             ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-              child: Container(
-                height: 100,
-                color: colors.primary,
-                child: ImageBox(
-                  image: entry.offer.partner.bannerImage,
-                  borderRadius: 0,
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      children: [
-                        ImageComponent(
-                          size: 70,
-                          borderRadius: 10,
-                          image: entry.offer.partner.image,
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Row(
-                            spacing: 8,
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      entry.offer.partner.name,
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
-                                        color: colors.tertiary,
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    Text(
-                                      entry.offer.catchString,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: colors.tertiaryContainer,
-                                      ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              RippleWrapper(
-                                onPressed: () {
-                                  openLink(entry.offer.partner.link ?? '');
-                                },
-                                child: Row(
-                                  spacing: 8,
-                                  children: [
-                                    Text(
-                                      'Visit shop',
-                                      style: TextStyle(
-                                          color: colors.secondary,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 13),
-                                    ),
-                                    RippleWrapper(
-                                      onPressed: () {},
-                                      child: SvgPicture.asset(
-                                        'assets/svg/external.svg',
-                                        colorFilter: ColorFilter.mode(
-                                          colors.secondary,
-                                          BlendMode.srcIn,
-                                        ),
-                                        width: 18,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RippleWrapper(
+                    onPressed: () {
+                      openModal(context, OfferInfoModal(offer: entry.offer));
+                    },
+                    child: ImageComponent(
+                      size: 70,
+                      borderRadius: 10,
+                      image: entry.offer.partner.image,
                     ),
-                    const SizedBox(height: 16),
-                    Row(
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
                       spacing: 8,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(child: CopyText(textToCopy: entry.code)),
-                        GestureDetector(
-                            child: SvgPicture.asset(
-                              'assets/svg/qrcode.svg',
-                              colorFilter: ColorFilter.mode(
-                                  colors.primaryFixedDim, BlendMode.srcIn),
+                        Text(
+                          entry.offer.description,
+                          style: TextStyle(color: colors.primaryFixedDim),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                        Row(
+                          children: [
+                            PositionWithBackground(
+                              name:
+                                  'Claimed: ${parseDate(DateTime.parse(entry.createdAt))}',
+                              image: 'assets/svg/calendar.svg',
+                              imageSize: 16,
+                              textStyle: TextStyle(
+                                  color: colors.primaryFixedDim, fontSize: 12),
                             ),
-                            onTap: () {
-                              openModal(
-                                  context,
-                                  ClaimQrcodeModal(
-                                    code: entry.code,
-                                  ));
-                            })
+                          ],
+                        )
                       ],
                     ),
-                    // RippleWrapper(
-                    //   onPressed: () {
-                    //     Clipboard.setData(ClipboardData(text: entry.code));
-                    //   },
-                    //   child: Container(
-                    //     padding: const EdgeInsets.all(16),
-                    //     decoration: BoxDecoration(
-                    //       borderRadius: BorderRadius.circular(10),
-                    //       color: colors.tertiary.withAlpha(10),
-                    //     ),
-                    //     child: Row(
-                    //       spacing: 16,
-                    //       children: [
-                    //         Expanded(
-                    //           child: Text(
-                    //             entry.code,
-                    //             style: TextStyle(
-                    //               color: colors.tertiary,
-                    //               fontSize: 14,
-                    //               fontWeight: FontWeight.w600,
-                    //             ),
-                    //             softWrap: true,
-                    //             overflow: TextOverflow.visible,
-                    //           ),
-                    //         ),
-                    //         SvgPicture.asset(
-                    //           'assets/svg/copy.svg',
-                    //           colorFilter: ColorFilter.mode(
-                    //             colors.tertiary,
-                    //             BlendMode.srcIn,
-                    //           ),
-                    //           width: 24,
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Claimed at',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: colors.tertiaryContainer,
-                              ),
-                              textAlign: TextAlign.left,
-                            ),
-                            Text(
-                              parseDate(DateTime.parse(entry.createdAt)),
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: colors.tertiary,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(width: 16),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              'Expires',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: colors.tertiaryContainer,
-                              ),
-                              textAlign: TextAlign.right,
-                            ),
-                            Text(
-                              parseDate(DateTime.parse(entry.validUntil)),
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: colors.tertiary,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(width: 16),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ),
-          ],
+              Column(
+                children: [
+                  Row(
+                    spacing: 8,
+                    children: [
+                      Expanded(child: CopyText(textToCopy: entry.code)),
+                      GestureDetector(
+                        onTap: () {
+                          openLink(entry.offer.partner.link ?? '');
+                        },
+                        child: IconContainer(
+                          icon: 'assets/svg/external.svg',
+                          size: 35,
+                          borderRadius: 100,
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      PositionWithBackground(
+                        name:
+                            '${isNearlyExpired ? 'Almost expired.' : ''} Expires: ${parseDate(DateTime.parse(entry.validUntil))}',
+                        image: 'assets/svg/forbid.svg',
+                        textStyle: TextStyle(
+                            color: isNearlyExpired
+                                ? colors.errorContainer
+                                : colors.primaryFixedDim,
+                            fontSize: 12),
+                        backgroundColor: isNearlyExpired
+                            ? colors.errorContainer.withAlpha(20)
+                            : colors.tertiary.withAlpha(10),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -53,14 +53,19 @@ class _BottomBarState extends State<BottomBar> {
                       },
                       isActive: snapshot.data == 0,
                     ),
-                    AppbarIconButton(
-                      name: 'Track',
-                      icon: 'assets/svg/footprints.svg',
-                      onPressed: () {
-                        dashboardController.setActivePage(1);
-                      },
-                      isActive: snapshot.data == 1,
-                    ),
+                    StreamBuilder<bool?>(
+                        stream: dashboardController.trackingPlayedStream,
+                        builder: (context, trackingSnapshot) {
+                          return AppbarIconButton(
+                            name: 'Track',
+                            icon: 'assets/svg/footprints.svg',
+                            onPressed: () {
+                              dashboardController.setActivePage(1);
+                            },
+                            isActive: snapshot.data == 1,
+                            trackingPlayed: trackingSnapshot.data,
+                          );
+                        }),
                     AppbarIconButton(
                       name: 'Offers',
                       icon: 'assets/svg/gift.svg',

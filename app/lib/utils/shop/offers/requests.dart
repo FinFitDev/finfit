@@ -10,7 +10,6 @@ Future<List<IOfferEntry>?> loadFeaturedOffersRequest() async {
   Future<List<IOfferEntry>?> handler() async {
     final List<IOfferEntry> result = [];
     try {
-      print('ANYHTINGIGNIGN');
       final res = await handleBackendRequests(
         method: HTTP_METHOD.GET,
         endpoint: 'api/v1/offers/featured',
