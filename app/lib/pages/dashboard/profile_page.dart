@@ -51,7 +51,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   stream: userController.currentUserStream,
                   builder: (context, userSnapshot) {
                     return ProfileImageGenerator(
-                        seed: userController.currentUser?.image, size: 130);
+                      seed: userController.currentUser?.image,
+                      size: 130,
+                      username: userController.currentUser?.username ?? '',
+                    );
                   }),
             ),
           ),

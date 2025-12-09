@@ -41,7 +41,11 @@ class PositionWithBackground extends StatelessWidget {
                       colorFilter: ColorFilter.mode(
                           textStyle?.color ?? colors.tertiary, BlendMode.srcIn),
                     )
-                  : ProfileImageGenerator(seed: image, size: imageSize ?? 14),
+                  : ProfileImageGenerator(
+                      seed: image,
+                      size: imageSize ?? 14,
+                      username: name,
+                    ),
           SizedBox(
             width: 6,
           ),

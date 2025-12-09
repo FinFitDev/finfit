@@ -1,3 +1,4 @@
+import { IPartnerInsertPayload } from "../shared/types/partners";
 import { pool } from "../shared/utils/db";
 
 export const fetchPartnersByRegex = async (
@@ -30,6 +31,19 @@ export const fetchProductOwnerAPIById = async (uuid: string) => {
   return response.rows;
 };
 
+export const fetchProductOwnerAPIByAPIURL = async (url: string) => {
+  const response = await pool.query(
+    `SELECT uuid, api_key, api_url, shop_type FROM partners
+    WHERE api_url IS NOT NULL 
+    AND api_key IS NOT NULL
+    AND shop_type IS NOT NULL
+    AND api_url = $1
+      `,
+    [url]
+  );
+  return response.rows;
+};
+
 export const fetchPartnerByPasscode = async (token: string) => {
   const response = await pool.query(
     `SELECT uuid, name, image FROM partners
@@ -46,6 +60,23 @@ export const fetchPartnerMinimalMetadataByUuid = async (uuid: string) => {
     WHERE uuid = $1 
       `,
     [uuid]
+  );
+  return response;
+};
+
+// used in shopify integration
+export const insertIntoPartners = async (data: IPartnerInsertPayload) => {
+  const response = await pool.query(
+    `INSERT INTO partners (name, description, api_key, api_url, shop_type) VALUES
+    ($1, $2, $3, $4, $5)
+      `,
+    [
+      data.name,
+      data.description,
+      data.apiKey,
+      data.apiUrl,
+      data.shopType.toString(),
+    ]
   );
   return response;
 };

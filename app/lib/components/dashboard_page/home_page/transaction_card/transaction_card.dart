@@ -178,6 +178,7 @@ class _TransactionCardState extends State<TransactionCard> {
                                                   ),
                                                   child: ProfileImageGenerator(
                                                     seed: user.image,
+                                                    username: user.username,
                                                     size: 14,
                                                   ),
                                                 ),

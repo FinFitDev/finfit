@@ -56,6 +56,8 @@ extension ProductsControllerEffects on OffersController {
 
       if (offersMap.length < OFFERS_DATA_CHUNK_SIZE) {
         setCanFetchMore(false);
+      } else {
+        setCanFetchMore(true);
       }
     } catch (error) {
       print(error);

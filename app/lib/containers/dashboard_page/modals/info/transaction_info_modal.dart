@@ -188,7 +188,10 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                                       spacing: 8,
                                       children: [
                                         ProfileImageGenerator(
-                                            seed: user.image, size: 35),
+                                          seed: user.image,
+                                          size: 35,
+                                          username: user.username,
+                                        ),
                                         Expanded(
                                           child: Text(
                                             user.username,

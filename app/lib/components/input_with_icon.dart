@@ -198,6 +198,15 @@ class _InputWithIconState extends State<InputWithIcon> {
                           : colors.primaryFixedDim.withAlpha(50),
                       width: 1),
                 ),
+                disabledBorder: OutlineInputBorder(
+                  borderRadius:
+                      BorderRadius.circular(widget.borderRadius ?? 20),
+                  borderSide: BorderSide(
+                      color: isError
+                          ? colors.error
+                          : colors.primaryFixedDim.withAlpha(50),
+                      width: 1),
+                ),
                 filled: true,
                 fillColor: colors.primaryContainer,
               ),

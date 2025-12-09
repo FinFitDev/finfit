@@ -168,16 +168,18 @@ class _ClaimCard extends StatelessWidget {
                     spacing: 8,
                     children: [
                       Expanded(child: CopyText(textToCopy: entry.code)),
-                      GestureDetector(
-                        onTap: () {
-                          openLink(entry.offer.partner.link ?? '');
-                        },
-                        child: IconContainer(
-                          icon: 'assets/svg/external.svg',
-                          size: 35,
-                          borderRadius: 100,
-                        ),
-                      )
+                      entry.offer.partner.link != null
+                          ? GestureDetector(
+                              onTap: () {
+                                openLink(entry.offer.partner.link ?? '');
+                              },
+                              child: IconContainer(
+                                icon: 'assets/svg/external.svg',
+                                size: 35,
+                                borderRadius: 100,
+                              ),
+                            )
+                          : SizedBox.shrink()
                     ],
                   ),
                   const SizedBox(height: 12),

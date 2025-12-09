@@ -56,7 +56,11 @@ Widget userCard(int index, ColorScheme colors, String name, String? image,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ProfileImageGenerator(seed: image, size: 50),
+            ProfileImageGenerator(
+              seed: image,
+              size: 50,
+              username: name,
+            ),
             SizedBox(
               height: 8,
             ),

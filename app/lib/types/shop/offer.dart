@@ -12,6 +12,7 @@ class IOfferEntry {
   final String catchString;
   final String details;
   final String? image;
+  final int? codeExpirationPeriod;
 
   IOfferEntry(
       {required this.id,
@@ -24,7 +25,8 @@ class IOfferEntry {
       required this.totalRedeemed,
       required this.catchString,
       required this.details,
-      this.image});
+      this.image,
+      this.codeExpirationPeriod});
 
   Map<String, dynamic> toJson() {
     return {
@@ -38,7 +40,8 @@ class IOfferEntry {
       'total_redeemed': totalRedeemed.toString(),
       'catch': catchString,
       'details': details,
-      'image': image
+      'image': image,
+      'code_expiration_period': codeExpirationPeriod.toString()
     };
   }
 
@@ -54,6 +57,9 @@ class IOfferEntry {
         totalRedeemed: BigInt.parse((json['total_redeemed'] ?? '0').toString()),
         catchString: json['catch'] ?? '',
         details: json['details'] ?? '',
-        image: json['image']);
+        image: json['image'],
+        codeExpirationPeriod: json['code_expiration_period'] != null
+            ? int.tryParse(json['code_expiration_period'].toString())
+            : null);
   }
 }

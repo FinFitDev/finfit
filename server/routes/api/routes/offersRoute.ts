@@ -10,7 +10,6 @@ export const getFeaturedOffersHandler = async (req: Request, res: Response) => {
     const limit = req.query.limit;
     const offset = req.query.offset;
     const response = await getFeaturedOffers(+(limit ?? 10), +(offset ?? 0));
-
     res
       .status(200)
       .json({ message: "Featured offers found", content: response });

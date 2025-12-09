@@ -24,9 +24,12 @@ extension ClaimControllerEffects on ClaimsController {
           codeResponse: IClaimEntry(
               code: codeResponse,
               offer: offer,
-              // TODO fix
               createdAt: DateTime.now().toString(),
-              validUntil: DateTime.now().add(Duration(days: 6 * 30)).toString())
+              validUntil: DateTime.now()
+                  .add(Duration(
+                      // half a year
+                      milliseconds: offer.codeExpirationPeriod ?? 15778476000))
+                  .toString())
         });
         await Cache.removeKeysByPattern(RegExp(r'.*/api/v1/claims/.*'));
 
@@ -36,7 +39,7 @@ extension ClaimControllerEffects on ClaimsController {
       }
       return false;
     } catch (err) {
-      print("Error claimimng reward");
+      smartPrint("Error claimimng reward", err);
       return false;
     } finally {
       setIsClaiming(false);

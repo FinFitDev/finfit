@@ -5,8 +5,8 @@ import 'package:geolocator/geolocator.dart';
 
 class ProfessionalGPSTracker {
   static const double MAX_REALISTIC_SPEED = 50.0;
-  static const double MAX_ACCEPTABLE_ACCURACY = 25.0;
-  static const double MIN_ACCEPTABLE_ACCURACY = 3.0;
+  static const double MAX_ACCEPTABLE_ACCURACY = 40.0;
+  static const double MIN_ACCEPTABLE_ACCURACY = 2.0;
   static const int SPEED_BUFFER_SIZE = 3;
   static const int MOVING_AVERAGE_BUFFER_SIZE = 5;
 
@@ -103,11 +103,13 @@ class ProfessionalGPSTracker {
   bool _isPositionValid(Position position) {
     // Accuracy check - reject poor quality signals
     if (position.accuracy > MAX_ACCEPTABLE_ACCURACY) {
+      smartPrint('TOO low ACCURACY', position.accuracy);
       return false;
     }
 
     // Reject suspiciously high accuracy (often GPS errors)
     if (position.accuracy < MIN_ACCEPTABLE_ACCURACY) {
+      smartPrint('TOO HIGH ACCURACY', position.accuracy);
       return false;
     }
 

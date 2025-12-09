@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 
 const String APP_TITLE = 'FinFit';
-// const String BACKEND_BASE_URL = 'http://192.168.1.2:3000/';
+// const String BACKEND_BASE_URL = 'http://192.168.1.13:3000/';
 const String BACKEND_BASE_URL =
     'https://finfit-server-214505318022.europe-west1.run.app/';
 GlobalKey<NavigatorState> NAVIGATOR_KEY = GlobalKey<NavigatorState>();

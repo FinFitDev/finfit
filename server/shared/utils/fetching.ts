@@ -77,17 +77,18 @@ export const stravaFetchHandler = async (
       throw new HttpError(response.status, error);
     }
 
-    return parseResponse(response);
+    const res = await parseResponse(response);
+    return res;
   };
 
   try {
     return await doRequest();
   } catch (err: any) {
-    console.log(err, "ERROR STRAVA FETCH HANDLER");
     if (err instanceof HttpError && err.status === 401) {
-      console.log("Strava token expired — refreshing…");
       const accessToken = await refreshStravaToken(refreshToken, userId);
-      return await doRequest({ Authorization: `Bearer ${accessToken}` });
+      return await doRequest({
+        Authorization: `Bearer ${accessToken.accessToken}`,
+      });
     }
 
     throw err;

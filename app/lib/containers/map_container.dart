@@ -9,6 +9,16 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
+class LatLngTween extends Tween<LatLng> {
+  LatLngTween({LatLng? begin, LatLng? end}) : super(begin: begin, end: end);
+
+  @override
+  LatLng lerp(double t) => LatLng(
+        begin!.latitude + (end!.latitude - begin!.latitude) * t,
+        begin!.longitude + (end!.longitude - begin!.longitude) * t,
+      );
+}
+
 class MapContainer extends StatefulWidget {
   final MapController mapController;
   final String? polyline;
@@ -39,7 +49,8 @@ class MapContainer extends StatefulWidget {
   State<MapContainer> createState() => _MapContainerState();
 }
 
-class _MapContainerState extends State<MapContainer> {
+class _MapContainerState extends State<MapContainer>
+    with SingleTickerProviderStateMixin {
   List<Position> _trackingPositions = [];
   LatLng? _currentPosition = null;
   bool _isTracking = false;
@@ -48,15 +59,31 @@ class _MapContainerState extends State<MapContainer> {
   LatLngBounds? _routeBounds;
   bool _calculating = true;
 
+  late AnimationController _markerController;
+  Animation<LatLng>? _markerAnimation;
+  LatLng? _lastPosition;
+
   @override
   void initState() {
     super.initState();
+
+    _markerController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+
     if (widget.polyline != null) {
       _decodePolyline(widget.polyline!);
     }
     if (widget.showPosition == true && widget.trackingService != null) {
       widget.trackingService!.onPositionUpdate = _handlePositionUpdate;
     }
+  }
+
+  @override
+  void dispose() {
+    _markerController.dispose();
+    super.dispose();
   }
 
   @override
@@ -89,25 +116,49 @@ class _MapContainerState extends State<MapContainer> {
   }
 
   void _handlePositionUpdate(Position position) {
+    final newPos = LatLng(position.latitude, position.longitude);
+
     if (_currentPosition == null) {
-      widget.mapController.move(
-        LatLng(position.latitude, position.longitude),
-        widget.mapController.camera.zoom,
-      );
+      _currentPosition = newPos;
+      widget.mapController.move(newPos, widget.mapController.camera.zoom);
+      setState(() {});
+      return;
     }
-    if (!mounted) return;
-    setState(() {
-      _currentPosition = LatLng(position.latitude, position.longitude);
-    });
-    widget.setCurrentPosition
-        ?.call(LatLng(position.latitude, position.longitude));
-    if (_isTracking) {
-      // start collecting
+
+    _lastPosition ??= _currentPosition;
+
+    _markerAnimation = LatLngTween(
+      begin: _lastPosition,
+      end: newPos,
+    ).animate(
+      CurvedAnimation(
+        parent: _markerController,
+        curve: Curves.easeOut,
+      ),
+    );
+
+    _markerController.forward(from: 0);
+
+    _markerController.addListener(() {
+      final animatedPos = _markerAnimation?.value;
+
+      if (animatedPos != null) {
+        widget.setCurrentPosition?.call(animatedPos);
+      }
+
       setState(() {
+        _currentPosition = animatedPos;
+      });
+    });
+
+    if (_isTracking) {
+      widget.addPosition?.call(position);
+      Future.delayed(Duration(milliseconds: 300), () {
         _trackingPositions.add(position);
       });
-      widget.addPosition?.call(position);
     }
+
+    _lastPosition = newPos;
   }
 
   void _decodePolyline(String polyline) {

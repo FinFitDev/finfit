@@ -58,6 +58,7 @@ class _RegenerateImageModalState extends State<RegenerateImageModal> {
                 children: [
                   ProfileImageGenerator(
                       seed: _seed,
+                      username: '',
                       size: MediaQuery.sizeOf(context).width -
                           8 * HORIZOTAL_PADDING),
                   Container(
@@ -80,6 +81,7 @@ class _RegenerateImageModalState extends State<RegenerateImageModal> {
                                     child: ProfileImageGenerator(
                                       seed: seed,
                                       size: 50,
+                                      username: '',
                                     ),
                                   ),
                                 ],

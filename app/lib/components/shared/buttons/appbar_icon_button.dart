@@ -40,7 +40,10 @@ class AppbarIconButton extends StatelessWidget {
               children: [
                 isProfile == true
                     ? ProfileImageGenerator(
-                        seed: userController.currentUser?.image, size: 26)
+                        seed: userController.currentUser?.image,
+                        size: 26,
+                        username: userController.currentUser?.username ?? '',
+                      )
                     : SvgPicture.asset(
                         icon,
                         colorFilter: ColorFilter.mode(

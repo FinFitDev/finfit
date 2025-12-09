@@ -30,7 +30,7 @@ export const issueDiscountCode = async (offerId: number, userId: string) => {
     const amountPoints = offerData.points;
     const expirationMs = offerData.code_expiration_period;
 
-    const apiParams: IShopApiData[] = decryptShopApiParams([
+    const apiParams: IShopApiData[] = await decryptShopApiParams([
       {
         uuid: offerData.uuid,
         api_key: offerData.api_key,

@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:excerbuys/components/shared/activity_icon.dart';
 import 'package:excerbuys/components/shared/image_component.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/background_container.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/featured_offers_container.dart';
@@ -7,7 +6,6 @@ import 'package:excerbuys/containers/dashboard_page/home_page/recent_training_se
 import 'package:excerbuys/containers/dashboard_page/home_page/balance_container.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/transactions_section.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/offer_info_modal.dart';
-import 'package:excerbuys/store/controllers/activity/activity_controller/activity_controller.dart';
 import 'package:excerbuys/store/controllers/activity/strava_controller/strava_controller.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard/send_controller/send_controller.dart';
@@ -17,13 +15,10 @@ import 'package:excerbuys/store/controllers/shop/claims_controller/claims_contro
 import 'package:excerbuys/store/controllers/shop/offers_controller/offers_controller.dart';
 import 'package:excerbuys/store/controllers/shop/transactions_controller/transactions_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
-import 'package:excerbuys/store/selectors/activity/trainings.dart';
 import 'package:excerbuys/types/activity.dart';
 import 'package:excerbuys/types/general.dart';
 import 'package:excerbuys/types/shop/offer.dart';
 import 'package:excerbuys/types/transaction.dart';
-import 'package:excerbuys/utils/debug.dart';
-import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/refresh_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
@@ -122,149 +117,166 @@ class _HomePageState extends State<HomePage> {
                                   topRight: Radius.circular(20)),
                               color: Theme.of(context).colorScheme.primary,
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                StreamBuilder<bool>(
-                                    stream: stravaController.authorizedStream,
-                                    builder: (context, snapshot) {
-                                      if (snapshot.data == true) {
-                                        return SizedBox.shrink();
-                                      }
-                                      return RippleWrapper(
-                                        onPressed: () {
-                                          stravaController.authorize();
-                                        },
-                                        child: Container(
-                                          height: 70,
-                                          margin: EdgeInsets.only(
-                                              left: 16, right: 16, top: 16),
-                                          decoration: BoxDecoration(
-                                            color: colors.primary,
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color:
-                                                    Colors.black.withAlpha(50),
-                                                spreadRadius: -5,
-                                                blurRadius: 8,
-                                                offset: Offset(0, 3),
-                                              ),
-                                            ],
-                                          ),
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(minHeight: 500),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  StreamBuilder<bool>(
+                                      stream: stravaController.authorizedStream,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.data == true) {
+                                          return SizedBox.shrink();
+                                        }
+                                        return RippleWrapper(
+                                          onPressed: () {
+                                            stravaController.authorize();
+                                          },
                                           child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 16, vertical: 8),
+                                            height: 70,
+                                            margin: EdgeInsets.only(
+                                                left: 16, right: 16, top: 16),
                                             decoration: BoxDecoration(
-                                                color: const Color.fromARGB(
-                                                        255, 255, 90, 7)
-                                                    .withAlpha(20),
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                                border: Border.all(
-                                                    width: 0.5,
-                                                    color: const Color.fromARGB(
-                                                        255, 255, 90, 7))),
-                                            child: Row(
-                                              spacing: 16,
-                                              children: [
-                                                ImageComponent(
-                                                  size: 40,
-                                                  image:
-                                                      "https://images.prismic.io/sacra/9232e343-6544-430f-aacd-ca85f968ca87_strava+logo.png?auto=compress,format",
-                                                ),
-                                                Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  spacing: 2,
-                                                  children: [
-                                                    Text(
-                                                      "Connect with STRAVA",
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          color: const Color
-                                                              .fromARGB(
-                                                              255, 255, 90, 7)),
-                                                    ),
-                                                    Text(
-                                                      "Sync your workouts automatically",
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: const Color
-                                                                  .fromARGB(255,
-                                                                  255, 90, 7)
-                                                              .withAlpha(120)),
-                                                    )
-                                                  ],
+                                              color: colors.primary,
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black
+                                                      .withAlpha(50),
+                                                  spreadRadius: -5,
+                                                  blurRadius: 8,
+                                                  offset: Offset(0, 3),
                                                 ),
                                               ],
                                             ),
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 16, vertical: 8),
+                                              decoration: BoxDecoration(
+                                                  color: const Color.fromARGB(
+                                                          255, 255, 90, 7)
+                                                      .withAlpha(20),
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  border: Border.all(
+                                                      width: 0.5,
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              255,
+                                                              255,
+                                                              90,
+                                                              7))),
+                                              child: Row(
+                                                spacing: 16,
+                                                children: [
+                                                  ImageComponent(
+                                                    size: 40,
+                                                    image:
+                                                        "https://images.prismic.io/sacra/9232e343-6544-430f-aacd-ca85f968ca87_strava+logo.png?auto=compress,format",
+                                                  ),
+                                                  Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    spacing: 2,
+                                                    children: [
+                                                      Text(
+                                                        "Connect with STRAVA",
+                                                        style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            color: const Color
+                                                                .fromARGB(255,
+                                                                255, 90, 7)),
+                                                      ),
+                                                      Text(
+                                                        "Sync your workouts automatically",
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            color: const Color
+                                                                    .fromARGB(
+                                                                    255,
+                                                                    255,
+                                                                    90,
+                                                                    7)
+                                                                .withAlpha(
+                                                                    120)),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    }),
-                                StreamBuilder<
-                                        ContentWithLoading<
-                                            Map<BigInt, IOfferEntry>>>(
-                                    stream:
-                                        offersController.featuredOffersStream,
-                                    builder: (context, snapshot) {
-                                      return FeaturedOffersContainer(
-                                        offers: snapshot.data?.content ?? {},
-                                        isLoading:
-                                            snapshot.data?.isLoading == true,
-                                        onPress: (id) {
-                                          final offer = snapshot
-                                              .data?.content.values
-                                              .firstWhere((element) =>
-                                                  element.id.toString() == id);
-                                          if (offer != null) {
-                                            openModal(
-                                                context,
-                                                OfferInfoModal(
-                                                  offer: offer,
-                                                ));
-                                          }
-                                        },
-                                      );
-                                    }),
-                                StreamBuilder<
-                                        ContentWithLoading<
-                                            Map<int, ITrainingEntry>>>(
-                                    stream: trainingsController.sortedWorkouts,
-                                    builder: (context, snapshot) {
-                                      return RecentTrainingSection(
+                                        );
+                                      }),
+                                  StreamBuilder<
+                                          ContentWithLoading<
+                                              Map<BigInt, IOfferEntry>>>(
+                                      stream:
+                                          offersController.featuredOffersStream,
+                                      builder: (context, snapshot) {
+                                        return FeaturedOffersContainer(
+                                          offers: snapshot.data?.content ?? {},
                                           isLoading:
                                               snapshot.data?.isLoading == true,
-                                          recentTraining: snapshot.data == null
-                                              ? {}
-                                              : snapshot.data!.content);
-                                    }),
-                                SizedBox(
-                                  height: 24,
-                                ),
-                                StreamBuilder<
-                                        ContentWithLoading<
-                                            Map<String, ITransactionEntry>>>(
-                                    stream: transactionsController
-                                        .sortedTransactions,
-                                    builder: (context, snapshot) {
-                                      return TransactionsSection(
-                                        recentTransactions:
-                                            snapshot.data == null
-                                                ? {}
-                                                : snapshot.data!.content,
-                                        isLoading: snapshot.data?.isLoading,
-                                      );
-                                    })
-                              ],
+                                          onPress: (id) {
+                                            final offer = snapshot
+                                                .data?.content.values
+                                                .firstWhere((element) =>
+                                                    element.id.toString() ==
+                                                    id);
+                                            if (offer != null) {
+                                              openModal(
+                                                  context,
+                                                  OfferInfoModal(
+                                                    offer: offer,
+                                                  ));
+                                            }
+                                          },
+                                        );
+                                      }),
+                                  StreamBuilder<
+                                          ContentWithLoading<
+                                              Map<int, ITrainingEntry>>>(
+                                      stream:
+                                          trainingsController.sortedWorkouts,
+                                      builder: (context, snapshot) {
+                                        return RecentTrainingSection(
+                                            isLoading:
+                                                snapshot.data?.isLoading ==
+                                                    true,
+                                            recentTraining:
+                                                snapshot.data == null
+                                                    ? {}
+                                                    : snapshot.data!.content);
+                                      }),
+                                  SizedBox(
+                                    height: 24,
+                                  ),
+                                  StreamBuilder<
+                                          ContentWithLoading<
+                                              Map<String, ITransactionEntry>>>(
+                                      stream: transactionsController
+                                          .sortedTransactions,
+                                      builder: (context, snapshot) {
+                                        return TransactionsSection(
+                                          recentTransactions:
+                                              snapshot.data == null
+                                                  ? {}
+                                                  : snapshot.data!.content,
+                                          isLoading: snapshot.data?.isLoading,
+                                        );
+                                      })
+                                ],
+                              ),
                             ),
                           ),
                         ),

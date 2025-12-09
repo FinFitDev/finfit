@@ -43,13 +43,14 @@ class _TrackPageState extends State<TrackPage> {
   void _toggleTrackingState() async {
     if (_isPaused) {
       // resume workout
-      dashboardController.setTrackingPlayed(true);
       final permissions = await _trackingService.requestPermissions();
       if (permissions == false && mounted) {
         showDialog(
             context: context, builder: (_) => LocationPermissionDialog());
         return;
       }
+      dashboardController.setTrackingPlayed(true);
+
       final ACTIVITY_TYPE activeType =
           AVAILABLE_WORKOUT_TYPES[_activeWorkoutType.value];
       _trackingService
@@ -217,7 +218,7 @@ class _TrackPageState extends State<TrackPage> {
                 });
                 _mapController.move(
                   _currentPosition,
-                  18,
+                  _mapController.camera.zoom ?? 18,
                 );
               },
               child: Container(

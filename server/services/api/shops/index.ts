@@ -2,6 +2,7 @@ import { SHOP_PROVIDER } from "../../../shared/types/integrations";
 import { IIssueDiscountCodeShopPayload } from "../../../shared/types/integrations/general";
 
 import { insertPrestashopDiscountCode } from "./prestahop";
+import { insertShopifyDiscountCode } from "./shopify";
 import { insertWoocommerceDiscountCode } from "./woocommerce";
 
 export const insertShopDiscountCode = async ({
@@ -20,6 +21,13 @@ export const insertShopDiscountCode = async ({
       });
     case SHOP_PROVIDER.WOOCOMMERCE:
       return await insertWoocommerceDiscountCode({
+        codeExpirationPeriod,
+        apiPayloadDetails,
+        shopApiData,
+        code,
+      });
+    case SHOP_PROVIDER.SHOPIFY:
+      return await insertShopifyDiscountCode({
         codeExpirationPeriod,
         apiPayloadDetails,
         shopApiData,

@@ -146,9 +146,10 @@ export const handleStravaWebhookEvent = async ({
   const tokenExpiresAt = new Date(data.token_expires_at);
 
   if (tokenExpiresAt < new Date(Date.now())) {
-    console.log("REFRESH BEFORE");
     const refreshToken = data.refresh_token;
-    accessToken = await refreshStravaToken(refreshToken, data.user_id);
+
+    accessToken = (await refreshStravaToken(refreshToken, data.user_id))
+      .accessToken;
   }
 
   await handleStravaActivityInfo({

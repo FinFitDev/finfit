@@ -1,5 +1,6 @@
 import crypto, { BinaryLike, CipherKey } from "crypto";
 import { IShopApiData, SHOP_PROVIDER } from "../types/integrations";
+import { getShopifyAccessToken } from "./integrations/shopify";
 
 export function encrypt(text: string): string {
   const iv = crypto.randomBytes(16);
@@ -34,16 +35,39 @@ export function decrypt(encrypted: string): string {
   return decrypted;
 }
 
-export function decryptShopApiParams(shopApiParams: IShopApiData[]) {
-  console.log(shopApiParams);
-  return shopApiParams.map((param) => ({
-    ...param,
-    api_key:
-      param.api_key && param.shop_type !== SHOP_PROVIDER.UPON_DELIVERY
-        ? decrypt(param.api_key)
-        : undefined,
-    consumer_secret: param.consumer_secret
-      ? decrypt(param.consumer_secret)
-      : undefined,
-  }));
+export async function decryptShopApiParams(
+  shopApiParams: IShopApiData[]
+): Promise<IShopApiData[]> {
+  return await Promise.all(
+    shopApiParams.map(async (param) => {
+      const isUponDelivery = param.shop_type === SHOP_PROVIDER.UPON_DELIVERY;
+
+      let decryptedApiKey: string | undefined;
+
+      if (param.api_key && !isUponDelivery) {
+        const decryptedKey = decrypt(param.api_key);
+
+        if (param.shop_type === SHOP_PROVIDER.SHOPIFY) {
+          decryptedApiKey = await getShopifyAccessToken({
+            code: decryptedKey,
+            shop: param.api_url,
+          });
+        } else {
+          decryptedApiKey = decryptedKey;
+        }
+      } else {
+        decryptedApiKey = undefined;
+      }
+
+      const decryptedConsumerSecret = param.consumer_secret
+        ? decrypt(param.consumer_secret)
+        : undefined;
+
+      return {
+        ...param,
+        api_key: decryptedApiKey,
+        consumer_secret: decryptedConsumerSecret,
+      };
+    })
+  );
 }

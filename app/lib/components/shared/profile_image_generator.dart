@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 class ProfileImageGenerator extends StatefulWidget {
   final String? seed;
   final double size;
+  final String username;
   const ProfileImageGenerator(
-      {super.key, required this.seed, required this.size});
+      {super.key,
+      required this.seed,
+      required this.size,
+      required this.username});
 
   @override
   State<ProfileImageGenerator> createState() => _ProfileImageGeneratorState();
@@ -43,6 +47,18 @@ class _ProfileImageGeneratorState extends State<ProfileImageGenerator> {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: generateColors(widget.seed ?? ""),
+            ),
+          ),
+          child: Center(
+            child: Text(
+              widget.username.length > 0
+                  ? widget.username[0].toUpperCase()
+                  : '',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: widget.size / 2,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ));

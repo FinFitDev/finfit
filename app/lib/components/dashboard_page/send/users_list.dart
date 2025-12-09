@@ -93,7 +93,11 @@ Widget userCard(
       ),
       child: Row(
         children: [
-          ProfileImageGenerator(seed: image, size: 40),
+          ProfileImageGenerator(
+            seed: image,
+            size: 40,
+            username: name,
+          ),
           SizedBox(
             width: 12,
           ),
