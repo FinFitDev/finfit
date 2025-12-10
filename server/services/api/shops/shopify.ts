@@ -37,12 +37,10 @@ export const handleShopifyInit = async (query: IShopifyInitQuery) => {
     shop,
   });
 
-  console.log(accessToken);
-
   await insertIntoPartners({
     name: shop,
     description: "",
-    apiKey: encrypt(code),
+    apiKey: encrypt(accessToken),
     apiUrl: shop,
     shopType: SHOP_PROVIDER.SHOPIFY,
   });

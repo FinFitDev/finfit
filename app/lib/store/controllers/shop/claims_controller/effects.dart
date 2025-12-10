@@ -16,7 +16,9 @@ extension ClaimControllerEffects on ClaimsController {
           offerId.toString(), userController.currentUser!.uuid);
 
       if (codeResponse != null && codeResponse.isNotEmpty) {
-        final IOfferEntry? offer = offersController.allOffers.content[offerId];
+        final IOfferEntry? offer =
+            offersController.allOffers.content[offerId] ??
+                offersController.featuredOffers.content[offerId];
         if (offer == null) {
           throw 'Invalid offer';
         }

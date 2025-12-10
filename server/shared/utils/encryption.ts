@@ -45,16 +45,16 @@ export async function decryptShopApiParams(
       let decryptedApiKey: string | undefined;
 
       if (param.api_key && !isUponDelivery) {
-        const decryptedKey = decrypt(param.api_key);
+        decryptedApiKey = decrypt(param.api_key);
 
-        if (param.shop_type === SHOP_PROVIDER.SHOPIFY) {
-          decryptedApiKey = await getShopifyAccessToken({
-            code: decryptedKey,
-            shop: param.api_url,
-          });
-        } else {
-          decryptedApiKey = decryptedKey;
-        }
+        // if (param.shop_type === SHOP_PROVIDER.SHOPIFY) {
+        //   decryptedApiKey = await getShopifyAccessToken({
+        //     code: decryptedKey,
+        //     shop: param.api_url,
+        //   });
+        // } else {
+        //   decryptedApiKey = decryptedKey;
+        // }
       } else {
         decryptedApiKey = undefined;
       }
