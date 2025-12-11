@@ -56,7 +56,6 @@ class _OffersPageState extends State<OffersPage> {
     _activePageSubscription.cancel();
     _selectedProductOwnerSubscription.cancel();
     animationProgressTimer?.cancel();
-
     super.dispose();
   }
 
@@ -81,7 +80,7 @@ class _OffersPageState extends State<OffersPage> {
             padding: EdgeInsets.only(
                 bottom: APPBAR_HEIGHT + layoutController.bottomPadding),
             children: [
-              Container(height: 60),
+              Container(height: layoutController.statusBarHeight + 10),
               OffersTopContainer(),
               FeaturedOffersContainer(
                 offers: snapshot.data?.featuredOffers.content ?? {},

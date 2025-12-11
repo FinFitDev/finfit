@@ -1,84 +1,121 @@
 import 'dart:async';
-import 'dart:isolate';
-import 'dart:ui';
-import 'package:background_locator_2/background_locator.dart';
-import 'package:background_locator_2/settings/android_settings.dart'
-    as AndroidSettings;
-import 'package:background_locator_2/settings/ios_settings.dart' as IOSSettings;
-import 'package:background_locator_2/settings/locator_settings.dart'
-    as LocatorSettings;
 import 'package:excerbuys/handlers/location_callback_handler.dart';
 import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/gps/gps_tracker.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
 
 class WorkoutTrackingService {
   final ProfessionalGPSTracker _gpsTracker = ProfessionalGPSTracker();
   final List<Position> _workoutPositions = [];
-  StreamSubscription<Position>? _positionStream;
-  ReceivePort port = ReceivePort();
+
+  final FlutterBackgroundService _service = FlutterBackgroundService();
+  StreamSubscription? _serviceSubscription;
+
+  // used when not tracking
+  StreamSubscription<Position>? _idleLocationSubscription;
 
   void Function(Position)? onPositionUpdate;
 
-  Future<bool> init({int distance = 2}) async {
+  bool _isTracking = false;
+  bool _isInitialized = false;
+
+// run only once - dont start yet
+  Future<bool> initializeService() async {
+    if (!_isInitialized) {
+      final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+      const channelId = 'workout_tracking';
+
+      const AndroidNotificationChannel channel = AndroidNotificationChannel(
+        channelId,
+        'Workout Tracking',
+        description: 'Used for tracking workout in background',
+        importance: Importance.low,
+      );
+
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.createNotificationChannel(channel);
+
+      await _service.configure(
+        androidConfiguration: AndroidConfiguration(
+          onStart: onStart,
+          autoStart: false,
+          isForegroundMode: true,
+          notificationChannelId: channelId,
+          initialNotificationTitle: 'Workout in progress',
+          initialNotificationContent: 'Tracking your workout...',
+          foregroundServiceNotificationId: 888,
+        ),
+        iosConfiguration: IosConfiguration(
+          autoStart: false,
+          onForeground: onStart,
+          onBackground: onIosBackground,
+        ),
+      );
+
+      _isInitialized = true;
+    }
+
     if (!await requestPermissions()) return false;
-    port = ReceivePort();
 
-    IsolateNameServer.removePortNameMapping(
-        LocationCallbackHandler.isolateName);
-    IsolateNameServer.registerPortWithName(
-        port.sendPort, LocationCallbackHandler.isolateName);
+    await startIdleListening();
+    return true;
+  }
 
-    port.listen((dynamic data) {
-      if (data is Map) {
-        final position = Position(
-          latitude: data['latitude'],
-          longitude: data['longitude'],
-          timestamp: DateTime.now(),
-          accuracy: data['accuracy'],
-          altitude: data['altitude'],
-          heading: data['heading'],
-          speed: data['speed'],
-          speedAccuracy: data['speedAccuracy'],
-          altitudeAccuracy: 0,
-          headingAccuracy: 0,
-        );
-        _handlePositionUpdate(position);
+  Future<void> startIdleListening() async {
+    if (_isTracking) return;
+
+    if (!await requestPermissions()) return;
+
+    await _idleLocationSubscription?.cancel();
+
+    print("Starting IDLE location listener");
+    _idleLocationSubscription = Geolocator.getPositionStream(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+        distanceFilter: 2,
+      ),
+    ).listen((Position position) {
+      onPositionUpdate?.call(position);
+    });
+  }
+
+  Future<void> stopIdleListening() async {
+    await _idleLocationSubscription?.cancel();
+    _idleLocationSubscription = null;
+  }
+
+  /// Starts the workout tracking (runs in background).
+  Future<bool> startTracking({int distance = 2}) async {
+    if (!await requestPermissions()) return false;
+
+    await stopIdleListening();
+    _workoutPositions.clear();
+    _gpsTracker.reset();
+    _isTracking = true;
+
+    if (!await _service.isRunning()) {
+      await _service.startService();
+    }
+
+    _service.invoke('set_config', {'distance': distance});
+
+    _serviceSubscription?.cancel();
+    _serviceSubscription = _service.on('location_update').listen((event) {
+      if (event != null) {
+        _parseAndProcessLocation(event);
       }
     });
 
-    // 🆕 Initialize Background Locator
-    await BackgroundLocator.initialize();
-    await BackgroundLocator.registerLocationUpdate(
-      LocationCallbackHandler.callback,
-      initCallback: LocationCallbackHandler.initCallback,
-      disposeCallback: LocationCallbackHandler.disposeCallback,
-      iosSettings: IOSSettings.IOSSettings(
-        accuracy: LocatorSettings.LocationAccuracy.NAVIGATION,
-        distanceFilter: distance.toDouble(),
-      ),
-      autoStop: false,
-      androidSettings: AndroidSettings.AndroidSettings(
-        accuracy: LocatorSettings.LocationAccuracy.NAVIGATION,
-        interval: 1000,
-        distanceFilter: distance.toDouble(),
-        client: AndroidSettings.LocationClient.google,
-        androidNotificationSettings:
-            AndroidSettings.AndroidNotificationSettings(
-          notificationChannelName: 'Workout Tracking',
-          notificationTitle: 'Workout in progress',
-          notificationMsg: 'Tracking your workout...',
-          notificationIcon: '',
-          notificationTapCallback: LocationCallbackHandler.notificationCallback,
-        ),
-      ),
-    );
-
     try {
       final initialPosition = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.bestForNavigation);
-      onPositionUpdate?.call(initialPosition);
+        desiredAccuracy: LocationAccuracy.bestForNavigation,
+      );
+      _handlePositionUpdate(initialPosition);
     } catch (e) {
       print('Error getting initial position: $e');
     }
@@ -86,18 +123,39 @@ class WorkoutTrackingService {
     return true;
   }
 
-  void updateDistanceInterval(int distance) async {
-    await BackgroundLocator.unRegisterLocationUpdate();
-    init(distance: distance);
+  /// Stops the workout tracking.
+  Future<void> stopTracking() async {
+    print('STOPPING TRACKING');
+
+    _isTracking = false;
+    _service.invoke('stopService');
+    await _serviceSubscription?.cancel();
+    _gpsTracker.reset();
+
+    await startIdleListening();
   }
 
-  void dispose() async {
-    print('DISPOSED');
-    await BackgroundLocator.unRegisterLocationUpdate();
-    IsolateNameServer.removePortNameMapping(
-        LocationCallbackHandler.isolateName);
-    _gpsTracker.reset();
-    _workoutPositions.clear();
+  /// Helper to parse the raw Map data from background service back into a Position object
+  void _parseAndProcessLocation(Map<String, dynamic> data) {
+    print(data);
+    try {
+      final position = Position(
+        latitude: double.tryParse(data['lat'].toString()) ?? 0.0,
+        longitude: double.tryParse(data['lng'].toString()) ?? 0.0,
+        timestamp: DateTime.parse(data['time']),
+        accuracy: double.tryParse(data['accuracy'].toString()) ?? 0.0,
+        altitude: double.tryParse(data['alt'].toString()) ?? 0.0,
+        heading: double.tryParse(data['heading'].toString()) ?? 0.0,
+        speed: double.tryParse(data['speed'].toString()) ?? 0.0,
+        speedAccuracy:
+            double.tryParse(data['speed_accuracy'].toString()) ?? 0.0,
+        altitudeAccuracy: 0,
+        headingAccuracy: 0,
+      );
+      _handlePositionUpdate(position);
+    } catch (e) {
+      print("Error parsing location data: $e");
+    }
   }
 
   void _handlePositionUpdate(Position rawPosition) {
@@ -107,13 +165,6 @@ class WorkoutTrackingService {
       _workoutPositions.add(finalPosition);
       onPositionUpdate?.call(finalPosition);
     }
-  }
-
-  LocationSettings _getLocationSettings(int distance) {
-    return LocationSettings(
-      accuracy: LocationAccuracy.bestForNavigation,
-      distanceFilter: distance,
-    );
   }
 
   Future<bool> requestPermissions() async {
@@ -139,15 +190,15 @@ class WorkoutTrackingService {
       return false;
     }
 
-    if (permission == LocationPermission.whileInUse) {
-      print('Only foreground permission granted. Requesting background...');
-
-      return false;
-    }
-    print('Background location permission granted');
     return true;
   }
 
-  List<Position> get currentPositions => List.from(_workoutPositions);
-  int get positionCount => _workoutPositions.length;
+  void dispose() {
+    print('DISPOSE');
+
+    _service.invoke('stopService');
+    _serviceSubscription?.cancel();
+    _gpsTracker.reset();
+    _idleLocationSubscription?.cancel();
+  }
 }

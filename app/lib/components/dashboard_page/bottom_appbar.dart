@@ -17,7 +17,8 @@ class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-
+    final padding = (MediaQuery.sizeOf(context).width / 420) * 24;
+    final gap = (MediaQuery.sizeOf(context).width / 420) * 20;
     return StreamBuilder<int>(
         stream: dashboardController.activePageStream,
         builder: (context, snapshot) {
@@ -26,8 +27,8 @@ class _BottomBarState extends State<BottomBar> {
               Container(
                 height: APPBAR_HEIGHT + layoutController.bottomPadding,
                 padding: EdgeInsets.only(
-                    left: 24,
-                    right: 24,
+                    left: padding,
+                    right: padding,
                     bottom: layoutController.bottomPadding,
                     top: 16),
                 decoration: BoxDecoration(
@@ -42,7 +43,7 @@ class _BottomBarState extends State<BottomBar> {
                   ],
                 ),
                 child: Row(
-                  spacing: 20,
+                  spacing: gap,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     AppbarIconButton(
@@ -105,8 +106,8 @@ class _BottomBarState extends State<BottomBar> {
                   duration: const Duration(milliseconds: 150),
                   curve: Curves.decelerate,
                   left: MediaQuery.sizeOf(context).width / 2 -
-                      165 +
-                      ((snapshot.data ?? 0) * 70),
+                      (125 + 2 * gap) +
+                      ((snapshot.data ?? 0) * (50 + gap)),
                   top: 0,
                   child: Container(
                     width: 50,

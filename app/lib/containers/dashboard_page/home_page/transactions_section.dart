@@ -182,13 +182,14 @@ Widget loadingTransactions(bool hideTitle) {
   return Container(
       margin: EdgeInsets.only(top: hideTitle ? 0 : 24),
       child: Column(
+        spacing: 12,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           UniversalLoaderBox(height: 80),
-          UniversalLoaderBox(height: 70),
-          UniversalLoaderBox(height: 70),
-          UniversalLoaderBox(height: 70),
-          UniversalLoaderBox(height: 70),
+          UniversalLoaderBox(height: 80),
+          UniversalLoaderBox(height: 80),
+          UniversalLoaderBox(height: 80),
+          UniversalLoaderBox(height: 80),
         ],
       ));
 }

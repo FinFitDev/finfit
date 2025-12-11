@@ -1,42 +1,77 @@
-import 'dart:isolate';
+import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
-import 'package:background_locator_2/location_dto.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:geolocator/geolocator.dart';
 
 @pragma('vm:entry-point')
-class LocationCallbackHandler {
-  static const String isolateName = "LocatorIsolate";
+void onStart(ServiceInstance service) async {
+  DartPluginRegistrant.ensureInitialized();
 
-  @pragma('vm:entry-point')
-  static Future<void> initCallback(Map<dynamic, dynamic> params) async {
-    // Called once when background locator starts
-    print('Background locator initialized');
-  }
+  int currentDistance = 2;
+  StreamSubscription<Position>? _positionStream;
 
-  @pragma('vm:entry-point')
-  static Future<void> disposeCallback() async {
-    print('Background locator disposed');
-  }
+  void startStream(int distance) {
+    _positionStream?.cancel();
 
-  @pragma('vm:entry-point')
-  static Future<void> callback(LocationDto locationDto) async {
-    // This runs every time a new location is available
-    print(
-        'Location in background: ${locationDto.latitude}, ${locationDto.longitude}');
+    LocationSettings settings;
+    if (Platform.isIOS) {
+      settings = AppleSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+        activityType: ActivityType.fitness,
+        distanceFilter: distance,
+        pauseLocationUpdatesAutomatically: false,
+        showBackgroundLocationIndicator: true,
+        allowBackgroundLocationUpdates: true,
+      );
+    } else {
+      settings = AndroidSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+        distanceFilter: distance,
+        forceLocationManager: true,
+        intervalDuration: const Duration(seconds: 1),
+      );
+    }
 
-    final SendPort? send = IsolateNameServer.lookupPortByName(isolateName);
-    send?.send({
-      'latitude': locationDto.latitude,
-      'longitude': locationDto.longitude,
-      'accuracy': locationDto.accuracy,
-      'altitude': locationDto.altitude,
-      'heading': locationDto.heading,
-      'speed': locationDto.speed,
-      'speedAccuracy': locationDto.speedAccuracy,
+    _positionStream = Geolocator.getPositionStream(locationSettings: settings)
+        .listen((Position position) {
+      if (service is AndroidServiceInstance) {
+        service.setForegroundNotificationInfo(
+          title: "Workout in Progress",
+          content:
+              "GPS: ${position.latitude.toStringAsFixed(4)}, ${position.longitude.toStringAsFixed(4)}",
+        );
+      }
+
+      service.invoke('location_update', {
+        'lat': position.latitude,
+        'lng': position.longitude,
+        'accuracy': position.accuracy,
+        'alt': position.altitude,
+        'heading': position.heading,
+        'speed': position.speed,
+        'speed_accuracy': position.speedAccuracy,
+        'time': position.timestamp.toIso8601String(),
+      });
     });
   }
 
-  @pragma('vm:entry-point')
-  static Future<void> notificationCallback() async {
-    print('Notification clicked');
-  }
+  service.on('set_config').listen((event) {
+    if (event != null && event.containsKey('distance')) {
+      int newDistance = event['distance'] as int;
+      print("Background: Setting distance filter to $newDistance");
+      startStream(newDistance);
+    }
+  });
+
+  service.on('stopService').listen((event) {
+    service.stopSelf();
+  });
+
+  startStream(currentDistance);
+}
+
+@pragma('vm:entry-point')
+Future<bool> onIosBackground(ServiceInstance service) async {
+  return true;
 }

@@ -10,6 +10,7 @@ class PositionWithBackground extends StatelessWidget {
   final TextStyle? textStyle;
   final EdgeInsetsGeometry? padding;
   final Color? backgroundColor;
+  final bool? isExpanded;
   const PositionWithBackground(
       {super.key,
       required this.name,
@@ -17,7 +18,8 @@ class PositionWithBackground extends StatelessWidget {
       this.imageSize,
       this.textStyle,
       this.padding,
-      this.backgroundColor});
+      this.backgroundColor,
+      this.isExpanded});
 
   @override
   Widget build(BuildContext context) {
@@ -49,16 +51,29 @@ class PositionWithBackground extends StatelessWidget {
           SizedBox(
             width: 6,
           ),
-          Text(
-            name,
-            overflow: TextOverflow.ellipsis,
-            style: textStyle ??
-                TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w300,
-                  color: colors.tertiary,
+          isExpanded == true
+              ? Expanded(
+                  child: Text(
+                    name,
+                    overflow: TextOverflow.ellipsis,
+                    style: textStyle ??
+                        TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w300,
+                          color: colors.tertiary,
+                        ),
+                  ),
+                )
+              : Text(
+                  name,
+                  overflow: TextOverflow.ellipsis,
+                  style: textStyle ??
+                      TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w300,
+                        color: colors.tertiary,
+                      ),
                 ),
-          ),
         ],
       ),
     );

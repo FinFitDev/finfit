@@ -26,7 +26,7 @@ class LocationPermissionDialog extends StatelessWidget {
             style: TextStyle(color: colors.primaryFixedDim),
           ),
           Text(
-            'Location > Always',
+            'Location > Allow',
             style: TextStyle(
                 color: colors.secondary,
                 fontWeight: FontWeight.w600,

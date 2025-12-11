@@ -75,16 +75,20 @@ class WorkoutTrackerDashboard extends StatelessWidget {
                   Expanded(
                     child: GestureDetector(
                       onTap: onTogglePause,
-                      child: IconContainer(
-                        borderRadius: 100,
-                        icon: isPaused
-                            ? 'assets/svg/play.svg'
-                            : 'assets/svg/pause.svg',
-                        size: 80,
-                        iconColor: isPaused ? colors.secondary : colors.error,
-                        backgroundColor:
-                            (isPaused ? colors.secondary : colors.error)
-                                .withAlpha(30),
+                      child: ConstrainedBox(
+                        constraints:
+                            BoxConstraints(minHeight: 80, minWidth: 80),
+                        child: IconContainer(
+                          borderRadius: 100,
+                          icon: isPaused
+                              ? 'assets/svg/play.svg'
+                              : 'assets/svg/pause.svg',
+                          size: 80,
+                          iconColor: isPaused ? colors.secondary : colors.error,
+                          backgroundColor:
+                              (isPaused ? colors.secondary : colors.error)
+                                  .withAlpha(30),
+                        ),
                       ),
                     ),
                   ),

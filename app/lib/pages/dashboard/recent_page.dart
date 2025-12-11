@@ -56,7 +56,7 @@ class _RecentPageState extends State<RecentPage> {
                   ? trainingsController.userTrainings.isLoading
                   : transactionsController.allTransactions.isLoading,
               children: [
-                Container(height: 60),
+                Container(height: layoutController.statusBarHeight + 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(

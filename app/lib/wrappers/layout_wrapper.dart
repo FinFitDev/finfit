@@ -23,7 +23,7 @@ class _LayoutWrapperState extends State<LayoutWrapper>
         .setRelativeConetntHeight(MediaQuery.sizeOf(context).height);
 
     // set height of the bottom padding based on user platform
-    layoutController.setBottomPadding(Platform.isIOS ? 25 : 0);
+    layoutController.setBottomPadding(Platform.isIOS ? 25 : 12);
 
     return SizedBox(
         height: MediaQuery.sizeOf(context).height,

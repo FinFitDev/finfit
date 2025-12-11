@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:excerbuys/components/dashboard_page/track_page/workout_tracker_dashboard.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/workout_info_modal.dart';
 import 'package:excerbuys/containers/dialogs/location_permission_dialog.dart';
 import 'package:excerbuys/containers/map_container.dart';
 import 'package:excerbuys/store/controllers/activity/trainings_controller/trainings_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
+import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/utils/activity/constants.dart';
 import 'package:excerbuys/utils/gps/tracking_service.dart';
@@ -49,12 +51,14 @@ class _TrackPageState extends State<TrackPage> {
             context: context, builder: (_) => LocationPermissionDialog());
         return;
       }
-      dashboardController.setTrackingPlayed(true);
 
       final ACTIVITY_TYPE activeType =
           AVAILABLE_WORKOUT_TYPES[_activeWorkoutType.value];
-      _trackingService
-          .updateDistanceInterval(TRACKING_DISTANCE_INTERVALS[activeType] ?? 2);
+
+      dashboardController.setTrackingPlayed(true);
+      _trackingService.startTracking(
+          distance: TRACKING_DISTANCE_INTERVALS[activeType] ?? 2);
+
       timer = Timer.periodic(const Duration(seconds: 1), (_) {
         duration.value++;
       });
@@ -72,6 +76,7 @@ class _TrackPageState extends State<TrackPage> {
 
   void _finishWorkout() async {
     timer?.cancel();
+    await _trackingService.stopTracking();
     // finish workout
     dashboardController.setTrackingPlayed(null);
     if (_trackedPositions.isNotEmpty &&
@@ -117,7 +122,7 @@ class _TrackPageState extends State<TrackPage> {
         setState(() {
           _isDisposed = false;
         });
-        bool permissions = await _trackingService.init();
+        bool permissions = await _trackingService.initializeService();
         if (!permissions && mounted) {
           showDialog(
               context: context, builder: (_) => LocationPermissionDialog());
@@ -182,7 +187,7 @@ class _TrackPageState extends State<TrackPage> {
           },
         ),
         Positioned(
-          bottom: 120,
+          bottom: 95 + layoutController.bottomPadding,
           left: 16,
           right: 16,
           child: WorkoutTrackerDashboard(
@@ -209,7 +214,7 @@ class _TrackPageState extends State<TrackPage> {
         AnimatedPositioned(
             curve: Curves.decelerate,
             duration: Duration(milliseconds: 200),
-            bottom: _isTracking ? 305 : 255,
+            bottom: (_isTracking ? 280 : 230) + layoutController.bottomPadding,
             right: 16,
             child: RippleWrapper(
               onPressed: () {

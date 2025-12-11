@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:excerbuys/components/shared/indicators/circle_progress/load_more_indicator.dart';
+import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,6 @@ class _InfiniteListWrapperV2State extends State<InfiniteListWrapperV2>
 
   void setLoadMoreDataProgressIndicator() {
     if (!widget.scrollController.hasClients) return;
-
     if (widget.scrollController.position.pixels > 200 && !isScrolledDown) {
       setState(() {
         isScrolledDown = true;
@@ -86,7 +86,6 @@ class _InfiniteListWrapperV2State extends State<InfiniteListWrapperV2>
         canRefresh = false;
       });
     }
-    // TODO change refresh timeout
     progressTimer = Timer(Duration(seconds: 5), () {
       setState(() {
         canRefresh = true;
@@ -108,6 +107,7 @@ class _InfiniteListWrapperV2State extends State<InfiniteListWrapperV2>
   @override
   void didUpdateWidget(covariant InfiniteListWrapperV2 oldWidget) {
     super.didUpdateWidget(oldWidget);
+
     // Ensure ScrollController is attached before accessing position
     if (mounted && widget.scrollController.hasClients) {
       widget.scrollController.removeListener(setLoadMoreDataProgressIndicator);
@@ -117,6 +117,9 @@ class _InfiniteListWrapperV2State extends State<InfiniteListWrapperV2>
         widget.scrollController.addListener(setLoadMoreDataProgressIndicator);
         widget.scrollController.addListener(setRefreshProgress);
       }
+    } else {
+      widget.scrollController.removeListener(setLoadMoreDataProgressIndicator);
+      widget.scrollController.removeListener(setRefreshProgress);
     }
   }
 
@@ -162,8 +165,9 @@ class _InfiniteListWrapperV2State extends State<InfiniteListWrapperV2>
               isScrolling.value = true;
             },
             child: ListView.builder(
-                physics: const AlwaysScrollableScrollPhysics(),
                 controller: widget.scrollController,
+                physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics()),
                 padding: widget.padding ?? EdgeInsets.all(0),
                 itemCount: widget.children.length + 2,
                 itemBuilder: (context, index) {

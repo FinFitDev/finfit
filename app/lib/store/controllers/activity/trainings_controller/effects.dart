@@ -95,6 +95,10 @@ extension TrainingsControllerEffects on TrainingsController {
               elevationChangeMeters: elevationChange)
           .round();
 
+      if (calories <= 0) {
+        return null;
+      }
+
       final ITrainingEntry newTrainingEntry = ITrainingEntry(
           id: 0,
           points: calories,

@@ -200,7 +200,7 @@ class AllOffersContainer extends StatelessWidget {
                                                 ),
                                                 PositionWithBackground(
                                                   name:
-                                                      '${offer.totalRedeemed} claimed',
+                                                      '${offer.totalRedeemed}',
                                                   padding: EdgeInsets.symmetric(
                                                       horizontal: 8,
                                                       vertical: 5),
@@ -263,17 +263,21 @@ class AllOffersContainer extends StatelessWidget {
                                             const SizedBox(width: 12),
                                             hasEnoughPoints
                                                 ? SizedBox.shrink()
-                                                : PositionWithBackground(
-                                                    name: 'Not enough',
-                                                    image:
-                                                        'assets/svg/forbid.svg',
-                                                    imageSize: 13,
-                                                    backgroundColor: colors
-                                                        .error
-                                                        .withAlpha(20),
-                                                    textStyle: TextStyle(
-                                                        color: colors.error,
-                                                        fontSize: 12),
+                                                : Expanded(
+                                                    child:
+                                                        PositionWithBackground(
+                                                      name: 'Not enough',
+                                                      isExpanded: true,
+                                                      image:
+                                                          'assets/svg/forbid.svg',
+                                                      imageSize: 13,
+                                                      backgroundColor: colors
+                                                          .error
+                                                          .withAlpha(20),
+                                                      textStyle: TextStyle(
+                                                          color: colors.error,
+                                                          fontSize: 12),
+                                                    ),
                                                   )
                                             // Container(
                                             //     padding: const EdgeInsets
