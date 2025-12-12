@@ -23,7 +23,7 @@ class CartModalSummary extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Finpoints price',
+              Text('Points price',
                   style: TextStyle(
                       fontWeight: FontWeight.w400,
                       color: colors.tertiaryContainer,

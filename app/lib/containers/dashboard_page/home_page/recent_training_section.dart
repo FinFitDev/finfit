@@ -128,16 +128,15 @@ Widget emptyActivity(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (!hideTitle)
-          Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            child: Text(
-              'No workouts yet',
-              style: texts.headlineLarge,
-            ),
+        Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          child: Text(
+            'No workouts yet',
+            style: texts.headlineLarge,
           ),
+        ),
         Text(
-          'Start working out to earn finpoints and claim your discounts in the shop!',
+          'Start working out to earn points and claim your discounts in the shop!',
           style: TextStyle(color: colors.primaryFixedDim),
         ),
       ],

@@ -120,7 +120,8 @@ extension SendControllerEffects on SendController {
 
   Future<void> fetchQrCodeUser(String userId) async {
     try {
-      User? foundUser = await fetchUserByIdRequest(userId, cancelToken);
+      User? foundUser =
+          await fetchUserByIdRequest(userId, cancelToken, isQr: true);
 
       if (foundUser != null) {
         addUsersToList({foundUser.uuid: foundUser});

@@ -168,7 +168,7 @@ Widget emptyActivity(ColorScheme colors, TextTheme texts, bool hideTitle) {
         ),
         Text(
           textAlign: TextAlign.start,
-          'Start working out to earn finpoints and claim your discounts in the shop!',
+          'You haven\'t made any transactions yet.',
           style: TextStyle(
             color: colors.primaryFixedDim,
           ),

@@ -16,9 +16,10 @@ export const getUserByIdHandler = async (
   res: Response
 ) => {
   try {
+    const isQr = req.query.is_qr === "true";
     const user_id = req.params.id;
     // @ts-expect-error
-    if (user_id !== req.userId) {
+    if (user_id !== req.userId && !isQr) {
       return res.status(401).json({
         message: "Unauthorized user",
         error: "You don't have a valid token to access this user's account",

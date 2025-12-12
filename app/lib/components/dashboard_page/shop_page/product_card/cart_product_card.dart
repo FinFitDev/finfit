@@ -71,7 +71,7 @@ class CartProductCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           text: TextSpan(
                             text:
-                                '${item.product.finpointsPrice.toStringAsFixed(0)} finpoints',
+                                '${item.product.finpointsPrice.toStringAsFixed(0)} points',
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 11,

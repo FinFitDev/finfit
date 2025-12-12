@@ -65,12 +65,12 @@ Future<bool> updateUserImageRequest(String userId, String image) async {
   }
 }
 
-Future<User?> fetchUserByIdRequest(
-    String userId, CancelToken? cancelToken) async {
+Future<User?> fetchUserByIdRequest(String userId, CancelToken? cancelToken,
+    {bool isQr = false}) async {
   try {
     final res = await handleBackendRequests(
         method: HTTP_METHOD.GET,
-        endpoint: 'api/v1/users/$userId',
+        endpoint: 'api/v1/users/$userId${isQr ? "?is_qr=true" : ""}',
         cancelToken: cancelToken);
 
     if (res['error'] != null) {
@@ -78,8 +78,6 @@ Future<User?> fetchUserByIdRequest(
     }
 
     final dynamic el = res['content'];
-
-    print(el);
 
     final User result = User.fromJson(el);
 
