@@ -38,6 +38,7 @@ class _FinFitAppState extends State<FinFitApp> {
           stream: appController.appLanguageStream,
           builder: (context, snapshot) {
             return MaterialApp(
+                debugShowCheckedModeBanner: false,
                 navigatorKey: NAVIGATOR_KEY,
                 locale: snapshot.data?.locale,
                 onGenerateTitle: (context) => context.l10n.appTitle,

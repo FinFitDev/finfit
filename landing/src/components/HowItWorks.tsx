@@ -5,30 +5,30 @@ const HowItWorks = () => {
     {
       icon: Download,
       step: "01",
-      title: "Download the App",
+      title: "Pobierz aplikację",
       description:
-        "Get FinFit free on iOS and Android. Create your account in seconds.",
+        "Pobierz FinFit na iOS lub Androida i załóż konto w kilka sekund - całkowicie za darmo",
     },
     {
       icon: Footprints,
       step: "02",
-      title: "Track or Connect",
+      title: "Śledź lub Połącz",
       description:
-        "Use our built-in tracker or connect Strava to sync your activities automatically.",
+        "Uywaj naszego trackera albo połącz Stravę, aby automatycznie synchronizować aktywności.",
     },
     {
       icon: Trophy,
       step: "03",
-      title: "Earn Points",
+      title: "Zdobywaj Punkty",
       description:
-        "Every run, ride, or walk earns you points. The more you move, the more you earn.",
+        "Każdy trening daje Ci punkty. Im więcej się ruszasz, tym więcej zyskujesz.",
     },
     {
       icon: Gift,
       step: "04",
-      title: "Claim Rewards",
+      title: "Odbieraj Nagrody",
       description:
-        "Redeem points for exclusive discounts at 200+ partner shops — online and in-store.",
+        "Wymieniaj punkty na ekskluzywne zniżki w wielu partnerskich sklepach - online i stacjonarnie.",
     },
   ];
 

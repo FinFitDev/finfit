@@ -38,7 +38,7 @@ const Navbar = () => {
         </div>
 
         <a href="#download" className="btn-primary text-sm px-6 py-3">
-          Pobierz aplikację mobilną
+          Pobierz aplikację
         </a>
       </div>
     </nav>

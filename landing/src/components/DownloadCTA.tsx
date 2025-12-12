@@ -1,5 +1,7 @@
-import { AppleIcon, PlayIcon } from "lucide-react";
+import appScreenshotHero from "@/assets/app_hero.png";
+import googlePlay from "@/assets/google_play.png";
 import logo from "@/assets/logo.png";
+import appStore from "@/assets/appstore.png";
 
 const DownloadCTA = () => {
   return (
@@ -14,11 +16,11 @@ const DownloadCTA = () => {
             {/* Content */}
             <div className="flex-1 text-center lg:text-left text-primary-foreground">
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-                Start Earning Rewards Today
+                Zacznij zdobywać nagrody już dziś
               </h2>
               <p className="text-lg md:text-xl text-white/90 max-w-lg mx-auto lg:mx-0 mb-8">
-                Join thousands of users who are already turning their workouts
-                into real rewards. Download FinFit for free.
+                Dołącz do tysięcy użytkowników, którzy zamieniają aktywność w
+                prawdziwe korzyści. Pobierz FinFit za darmo.
               </p>
 
               {/* App store buttons */}
@@ -27,9 +29,9 @@ const DownloadCTA = () => {
                   href="#"
                   className="inline-flex items-center gap-3 px-6 py-4 bg-foreground text-background rounded-xl hover:bg-foreground/90 transition-colors"
                 >
-                  <AppleIcon className="w-8 h-8" />
+                  <img src={appStore} className="w-10 h-10" />
                   <div className="text-left">
-                    <p className="text-xs opacity-70">Download on the</p>
+                    <p className="text-xs opacity-70">Pobierz w</p>
                     <p className="text-lg font-semibold">App Store</p>
                   </div>
                 </a>
@@ -37,9 +39,9 @@ const DownloadCTA = () => {
                   href="#"
                   className="inline-flex items-center gap-3 px-6 py-4 bg-foreground text-background rounded-xl hover:bg-foreground/90 transition-colors"
                 >
-                  <PlayIcon className="w-8 h-8" fill="currentColor" />
+                  <img src={googlePlay} className="w-10 h-10" />
                   <div className="text-left">
-                    <p className="text-xs opacity-70">Get it on</p>
+                    <p className="text-xs opacity-70">Pobierz z</p>
                     <p className="text-lg font-semibold">Google Play</p>
                   </div>
                 </a>
@@ -47,22 +49,14 @@ const DownloadCTA = () => {
             </div>
 
             {/* Phone mockup */}
-            <div className="flex-shrink-0">
+            <div className="hidden sm:block flex-shrink-0">
               <div className="phone-mockup w-56 md:w-64 bg-white animate-float">
-                <div className="phone-screen aspect-[9/19] flex items-center justify-center bg-gradient-to-br from-primary/10 to-white">
-                  <div className="text-center p-6">
-                    <img
-                      src={logo}
-                      alt="FinFit"
-                      className="w-20 h-20 mx-auto mb-4 rounded-2xl shadow-lg"
-                    />
-                    <p className="text-sm text-muted-foreground font-medium">
-                      App Screenshot
-                    </p>
-                    <p className="text-xs text-muted-foreground/70 mt-1">
-                      Coming Soon
-                    </p>
-                  </div>
+                <div className="phone-screen aspect-[9/19] flex items-center justify-center !bg-gradient-to-tr from-finfit-blue/50 to-white">
+                  <img
+                    src={logo}
+                    alt="FinFit"
+                    className="w-[120px] h-[120px] mx-auto mb-4 rounded-[40px] shadow-lg"
+                  />
                 </div>
               </div>
             </div>
