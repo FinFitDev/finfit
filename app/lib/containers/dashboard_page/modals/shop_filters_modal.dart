@@ -16,6 +16,8 @@ import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/modal/modal_content_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ShopFiltersModal extends StatefulWidget {
   const ShopFiltersModal({
@@ -88,6 +90,7 @@ class _ShopFiltersModalState extends State<ShopFiltersModal> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -95,7 +98,7 @@ class _ShopFiltersModalState extends State<ShopFiltersModal> {
             MediaQuery.of(context).viewInsets.bottom, // Adjust with keyboard
       ),
       child: ModalContentWrapper(
-          title: 'Shop filters',
+          title: l10n.textShopFiltersTitle,
           onClose: () {
             closeModal(context);
           },
@@ -118,7 +121,7 @@ class _ShopFiltersModalState extends State<ShopFiltersModal> {
                                   final maxRange =
                                       snapshot.data?['max_price'] ?? 1000;
                                   return RangeSliderComponent(
-                                    label: 'Price',
+                                    label: l10n.textPriceLabel,
                                     range: {'min': 0, 'max': maxRange},
                                     values: value,
                                     suffix: 'PLN',
@@ -141,11 +144,11 @@ class _ShopFiltersModalState extends State<ShopFiltersModal> {
                                   final maxRange =
                                       snapshot.data?['max_finpoints'] ?? 100000;
                                   return RangeSliderComponent(
-                                    label: 'Finpoints cost',
+                                    label: l10n.textFinpointsCostLabel,
                                     range: {'min': 0, 'max': maxRange},
                                     values: value,
                                     stepSize: (maxRange / 100).roundToDouble(),
-                                    suffix: 'finpoints',
+                                    suffix: l10n.labelFinpoints,
                                     onChanged: (SfRangeValues newValues) {
                                       _currentFinpointsCost.value = newValues;
                                     },
@@ -156,7 +159,7 @@ class _ShopFiltersModalState extends State<ShopFiltersModal> {
                         height: 16,
                       ),
                       Text(
-                        'Sort by',
+                        l10n.textSortByLabel,
                         textAlign: TextAlign.left,
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
@@ -174,7 +177,7 @@ class _ShopFiltersModalState extends State<ShopFiltersModal> {
                               _sortingOrder ??= SORTING_ORDER.ASCENDING;
                             });
                           },
-                          optionName: el,
+                          optionName: _mapFilterLabel(el, l10n),
                           isSelected: _sortByCategory == el,
                         );
                       }).toList()),
@@ -190,7 +193,7 @@ class _ShopFiltersModalState extends State<ShopFiltersModal> {
                             });
                           },
                           disabled: _sortByCategory == null,
-                          label: 'Ascending'),
+                          label: l10n.textAscendingLabel),
                       RadioButton(
                           value: SORTING_ORDER.DESCENDING,
                           activeValue: _sortingOrder,
@@ -200,7 +203,7 @@ class _ShopFiltersModalState extends State<ShopFiltersModal> {
                             });
                           },
                           disabled: _sortByCategory == null,
-                          label: 'Descending'),
+                          label: l10n.textDescendingLabel),
                       SizedBox(
                         height: 30,
                       ),
@@ -214,7 +217,7 @@ class _ShopFiltersModalState extends State<ShopFiltersModal> {
                   children: [
                     Expanded(
                       child: MainButton(
-                          label: 'Reset',
+                          label: l10n.actionReset,
                           backgroundColor:
                               colors.tertiaryContainer.withAlpha(80),
                           textColor: colors.primaryFixedDim,
@@ -228,7 +231,7 @@ class _ShopFiltersModalState extends State<ShopFiltersModal> {
                     ),
                     Expanded(
                       child: MainButton(
-                          label: 'Confirm',
+                          label: l10n.actionConfirm,
                           backgroundColor: colors.secondary,
                           textColor: colors.primary,
                           onPressed: () {
@@ -242,5 +245,21 @@ class _ShopFiltersModalState extends State<ShopFiltersModal> {
             ],
           )),
     );
+  }
+  String _mapFilterLabel(String filter, AppLocalizations l10n) {
+    switch (filter) {
+      case 'Price':
+        return l10n.textPriceLabel;
+      case 'Discount':
+        return l10n.textDiscountLabel;
+      case 'Cost in finpoints':
+        return l10n.textFinpointsCostLabel;
+      case 'Number of transactions':
+        return l10n.textTransactionsCount;
+      case 'Date of issue':
+        return l10n.textDateOfIssue;
+      default:
+        return filter;
+    }
   }
 }

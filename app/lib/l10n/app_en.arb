@@ -1,0 +1,316 @@
+{
+  "@@locale": "en",
+  "appTitle": "FinFit",
+  "loading": "Loading...",
+  "navHome": "Home",
+  "navTrack": "Track",
+  "navOffers": "Offers",
+  "navRecent": "Recent",
+  "navProfile": "Profile",
+  "actionSeeAll": "See all",
+  "actionResendEmail": "Resend email",
+  "actionContinue": "Continue",
+  "actionLogIn": "Log in",
+  "actionSignUp": "Sign up",
+  "actionReset": "Reset",
+  "actionConfirm": "Confirm",
+  "actionClose": "Close",
+  "actionShare": "Share",
+  "actionSend": "Send",
+  "actionReceive": "Receive",
+  "actionClaim": "Claim",
+  "actionCheckout": "Checkout",
+  "labelPoints": "points",
+  "labelPointsShort": "pts",
+  "labelFinpoints": "finpoints",
+  "textHiddenPoints": "****** points",
+  "textPointsValue": "{value} points",
+  "@textPointsValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "textFinpointsValue": "{value} finpoints",
+  "@textFinpointsValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "textPointsToGo": "Only {value} finpoints to go!",
+  "@textPointsToGo": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "textPointsToGoHidden": "Only ***** finpoints to go!",
+  "textNoWorkouts": "No workouts yet",
+  "textNoWorkoutsSubtitle": "Start working out to earn points and claim your discounts in the shop!",
+  "textNoTransactions": "No transactions yet",
+  "textNoTransactionsSubtitle": "You haven't made any transactions yet.",
+  "textFeaturedRewards": "Featured rewards",
+  "textLastWorkouts": "Last workouts",
+  "textLastTransactions": "Last transactions",
+  "textStravaConnect": "Connect with STRAVA",
+  "textStravaSync": "Sync your workouts automatically",
+  "textWelcomeTitle": "Welcome to {appName}",
+  "@textWelcomeTitle": {
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
+  },
+  "textWelcomeSubtitle": "Fitness that pays off",
+  "textLogoTagline": "Fitness is your currency",
+  "textAuthLoginTitle": "Log in below",
+  "textAuthSignupTitle": "Sign up below",
+  "textAuthLoginSubtitle": "And continue your journey with {appName}",
+  "@textAuthLoginSubtitle": {
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
+  },
+  "textAuthSignupSubtitle": "And start your journey with {appName}",
+  "@textAuthSignupSubtitle": {
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
+  },
+  "textAuthOrUse": "Or use",
+  "textAuthForgotPassword": "Forgot your password?",
+  "textAuthInputLogin": "Login",
+  "textAuthInputPassword": "Password",
+  "textAuthInputEmail": "Email",
+  "textAuthInputUsername": "Username",
+  "textAuthInputRepeatPassword": "Repeat password",
+  "textForgotPasswordTitle": "Forgot password",
+  "textForgotPasswordInstruction": "Enter an email that is connected with your existing account, and then copy the code that has been sent there.",
+  "textForgotPasswordPlaceholder": "Enter email",
+  "textForgotPasswordWrongEmail": "Wrong email",
+  "textForgotPasswordServerError": "Server error",
+  "textForgotPasswordSend": "Send email",
+  "textResetPasswordTitle": "Reset password",
+  "textResetPasswordInstruction": "The email with the code has been sent to {email}. Enter the code above to set a new password.",
+  "@textResetPasswordInstruction": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "textResetPasswordConfirm": "Confirm code",
+  "textResetPasswordInvalidCode": "Invalid code",
+  "textSetNewPasswordTitle": "Set new password",
+  "textSetNewPasswordSubtitle": "Then log in again, and enjoy!",
+  "textSetNewPasswordButton": "Set new password",
+  "textCheckInboxTitle": "Check your inbox",
+  "textCheckInboxDescription": "Verification email has been sent to your email. Come back here after successful verification to log into the app and start your journey with FinFit!",
+  "textCheckInboxSpam": "Make sure to check the spam folder if you don't see the message.",
+  "textContinueToApp": "Continue to app",
+  "textStravaIntegration": "STRAVA Integration",
+  "textImportedBadge": "Imported",
+  "textReceivePointsTitle": "Receive points",
+  "textScannerDescription": "Use the scanner option in the send modal on another device to scan this code.",
+  "textShareIdMessage": "Share your points with me. This is my ID - {id}",
+  "@textShareIdMessage": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "textPointsPrice": "Points price",
+  "textDiscounts": "Discounts",
+  "textCartTitle": "Your cart",
+  "textCartEmpty": "No products in cart yet",
+  "textCartPriceNote": "Final price doesn't include shipping costs",
+  "textNoAdditionalData": "No additional data",
+  "textUnknown": "Unknown",
+  "textMultipleUsers": "Multiple users",
+  "textTransactionRedeemed": "Redeemed",
+  "textTransactionSent": "Sent to",
+  "textTransactionReceived": "Received from",
+  "textTransactionRewardTitle": "Reward claimed",
+  "textTransactionSentTitle": "Points sent",
+  "textTransactionReceivedTitle": "Points received",
+  "textTransactionTimestamp": "Transaction timestamp",
+  "textNoOffersFound": "No offers found.",
+  "textModifyFiltersSuggestion": "Modify your filters, check the internet connection and try again!",
+  "textNoProductsFound": "No products found.",
+  "textPartnersTitle": "Partners",
+  "textAllRewardsTitle": "All rewards",
+  "textAvailablePoints": "Available points",
+  "textRewardsOffersTitle": "Rewards & offers",
+  "textRewardsOffersSubtitle": "Discover exclusive rewards just for you!",
+  "textAvailableForever": "Available forever",
+  "textProgressOffers": "Nearly there, keep going",
+  "textSearchOffersPlaceholder": "Search offers",
+  "textSearchShopPlaceholder": "Search shop",
+  "textProfileTotalPoints": "Total points earned",
+  "textProfileContactUs": "Contact us",
+  "textProfileLogOut": "Log out",
+  "textMovesAndPointsTitle": "Moves & Points",
+  "textMovesAndPointsSubtitle": "Track your workouts, and every point you gain.",
+  "textHistoryWorkoutsTab": "Workouts",
+  "textHistoryTransactionsTab": "Transactions",
+  "textCopied": "Copied!",
+  "textClaimedDiscountsTitle": "Claimed discounts",
+  "textNoClaimedDiscounts": "No claimed discounts yet.",
+  "textClaimedDate": "Claimed: {date}",
+  "@textClaimedDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "textExpiresDate": "Expires: {date}",
+  "@textExpiresDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "textAlmostExpired": "Almost expired.",
+  "textStepsCount": "{count} steps",
+  "@textStepsCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "textStepsCountToday": "{count} steps today",
+  "@textStepsCountToday": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "textUntilDate": "Until {date}",
+  "@textUntilDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "textLocationPermissionTitle": "Permissions missing",
+  "textLocationPermissionBody": "To track your workouts even when the app is closed, please allow background location access in system settings. Follow these steps after clicking the button below.",
+  "textLocationPermissionSteps": "Location > Allow",
+  "textViewTransactionDetails": "View transaction details",
+  "textViewTrainingDetails": "View training details",
+  "textTimesValue": "{count} times",
+  "@textTimesValue": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "textNotEnoughPoints": "Not enough points",
+  "textCost": "Cost",
+  "textValidUntil": "Valid until",
+  "textClaimedByOthers": "Claimed by others",
+  "textTodayLabel": "Today",
+  "textYesterdayLabel": "Yesterday",
+  "textPartnerSince": "Partner since",
+  "textTotalPurchases": "Total purchases",
+  "textTotalProducts": "Total products",
+  "textWorkoutDetailsTitle": "Workout details",
+  "textWorkoutNotFound": "Workout not found.",
+  "textNoRouteData": "No route data available",
+  "actionGoToSettings": "Go to settings",
+  "actionFinish": "Finish",
+  "actionHoldToConfirm": "Hold to confirm",
+  "actionRegenerateImage": "Regenerate image",
+  "actionSaveImage": "Save image",
+  "textAverageSpeed": "Average speed",
+  "textCalories": "Calories",
+  "textDailyGoals": "Daily goals",
+  "textDistance": "Distance",
+  "textDuration": "Duration",
+  "textElevation": "Elevation",
+  "textGoalsProgressSample": "3/5 goals completed",
+  "textGoodDay": "Good day!",
+  "textLoadMoreData": "Load more data",
+  "textNewsArrivals": "New arrivals",
+  "textNewsBlog": "Blog posts",
+  "textNewsCollabs": "Collabs",
+  "textNewsUpdates": "Product updates",
+  "textNoRecentUsers": "No recent recipients yet.",
+  "textNotEnough": "Not enough",
+  "textNotEnoughBalance": "Not enough balance",
+  "textNotEligible": "Not eligible",
+  "textPointsEarned": "Points earned",
+  "textUseDiscountTitle": "Use your discount",
+  "textValidationEmailInvalid": "Enter a valid email",
+  "textValidationEmailRequired": "Email is required",
+  "textValidationLoginRequired": "Login is required",
+  "textValidationMinChars": "Use at least 5 characters",
+  "textValidationPasswordRequired": "Password is required",
+  "textValidationPasswordsMismatch": "Passwords don't match",
+  "textValidationUsernameRequired": "Username is required",
+  "textViewInStrava": "View in Strava",
+  "textSendPointsTitle": "Send points",
+  "textAmountPlaceholder": "Amount",
+  "textInputAmountTitle": "Input amount",
+  "textRecipientsCount": "Number of recipients",
+  "textCurrentBalance": "Current balance",
+  "textSummaryLabel": "Summary",
+  "textConfirmRecipients": "Confirm recipients",
+  "textFindUsersPlaceholder": "Find users",
+  "textChangeImageTitle": "Change image",
+  "textShopFiltersTitle": "Shop filters",
+  "textPriceLabel": "Price",
+  "textFinpointsCostLabel": "Finpoints cost",
+  "textSortByLabel": "Sort by",
+  "textAscendingLabel": "Ascending",
+  "textDescendingLabel": "Descending",
+  "textTransactionsCount": "Number of transactions",
+  "textDateOfIssue": "Date of issue",
+  "textDiscountLabel": "Discount",
+  "textProductDataError": "Couldn't find product data",
+  "textProductOriginalPrice": "Original price",
+  "textProductFinpointsPrice": "Finpoints price",
+  "textProductStockLeft": "Left in store",
+  "textProductPurchasedCount": "Purchased items",
+  "textEmptyStateTitle": "No data available",
+  "textEmptyStateDescription": "Close the modal and try again",
+  "textNoUsersFound": "No users found for \"{query}\"",
+  "@textNoUsersFound": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "textWorkoutTrackingChannelName": "Workout Tracking",
+  "textWorkoutTrackingChannelDescription": "Used for tracking workout in background",
+  "textWorkoutTrackingNotificationTitle": "Workout in progress",
+  "textWorkoutTrackingNotificationContent": "Tracking your workout...",
+  "textWorkoutTrackingGpsContent": "GPS: {lat}, {lng}",
+  "@textWorkoutTrackingGpsContent": {
+    "placeholders": {
+      "lat": {
+        "type": "String"
+      },
+      "lng": {
+        "type": "String"
+      }
+    }
+  },
+  "textLanguageChange":"Change language"
+}

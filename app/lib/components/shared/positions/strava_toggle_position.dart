@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class StravaTogglePosition extends StatelessWidget {
   const StravaTogglePosition({
@@ -14,6 +15,7 @@ class StravaTogglePosition extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return Container(
       height: 45,
@@ -32,7 +34,7 @@ class StravaTogglePosition extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Text('STRAVA Integration',
+            child: Text(l10n.textStravaIntegration,
                 style: TextStyle(
                     color: const Color.fromARGB(255, 255, 90, 7),
                     fontSize: 13,

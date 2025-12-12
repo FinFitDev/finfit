@@ -5,6 +5,8 @@ import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UsersList extends StatelessWidget {
   final Map<String, User>? usersForSearch;
@@ -16,6 +18,7 @@ class UsersList extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
+    final l10n = context.l10n;
 
     return SingleChildScrollView(
         child: isLoading == true
@@ -29,7 +32,7 @@ class UsersList extends StatelessWidget {
                           height: 500,
                           child: Center(
                             child: Text(
-                              'No recent users.',
+                              l10n.textNoRecentUsers,
                               style: TextStyle(
                                 color: colors.tertiaryContainer,
                                 fontSize: 14,
@@ -38,7 +41,8 @@ class UsersList extends StatelessWidget {
                           ),
                         );
                       }
-                      return emptyList(snapshot.data ?? '', colors, texts);
+                      return emptyList(
+                          snapshot.data ?? '', colors, texts, l10n);
                     })
                 : StreamBuilder<List<String>>(
                     stream: sendController.chosenUsersIdsStream,
@@ -171,22 +175,23 @@ Widget loadingUsers() {
   );
 }
 
-Widget emptyList(String query, ColorScheme colors, TextTheme texts) {
-  return query.isNotEmpty
-      ? RichText(
+Widget emptyList(String query, ColorScheme colors, TextTheme texts,
+    AppLocalizations l10n) {
+  return Container(
+    height: 500,
+    alignment: Alignment.center,
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          l10n.textNoUsersFound(query),
           textAlign: TextAlign.center,
-          text: TextSpan(
-            style: texts.headlineMedium
-                ?.copyWith(color: colors.tertiaryContainer), // Default style
-            children: [
-              TextSpan(text: 'No results for query: '),
-              TextSpan(
-                text: query,
-                style: texts.headlineMedium?.copyWith(
-                    color: colors.secondary), // Different color for query
-              ),
-            ],
+          style: TextStyle(
+            color: colors.tertiaryContainer,
+            fontSize: 14,
           ),
-        )
-      : SizedBox.shrink();
+        ),
+      ],
+    ),
+  );
 }

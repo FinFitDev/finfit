@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class Logo extends StatelessWidget {
   const Logo({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -39,7 +41,7 @@ class Logo extends StatelessWidget {
                     ))
               ])),
           Text(
-            'Fitness is your currency',
+            l10n.textLogoTagline,
             style: TextStyle(
                 fontFamily: 'Calligraffiti',
                 fontSize: 16,

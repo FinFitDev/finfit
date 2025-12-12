@@ -9,6 +9,8 @@ import 'package:excerbuys/utils/home/utils.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WorkoutTrackerDashboard extends StatelessWidget {
   final bool isTracking;
@@ -41,6 +43,7 @@ class WorkoutTrackerDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final workoutOptions = _buildWorkoutOptions(colors);
+    final l10n = context.l10n;
 
     return AnimatedContainer(
       curve: Curves.decelerate,
@@ -61,7 +64,7 @@ class WorkoutTrackerDashboard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildHeader(colors),
+          _buildHeader(colors, l10n),
           Expanded(
             child: Padding(
               padding: EdgeInsets.all(16),
@@ -70,7 +73,7 @@ class WorkoutTrackerDashboard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                    child: _buildLeftColumn(colors, workoutOptions),
+                    child: _buildLeftColumn(colors, workoutOptions, l10n),
                   ),
                   Expanded(
                     child: GestureDetector(
@@ -98,7 +101,7 @@ class WorkoutTrackerDashboard extends StatelessWidget {
                           builder: (context, value, _) {
                             return _buildMetricColumn(
                               colors,
-                              label: 'Duration',
+                              label: l10n.textDuration,
                               value: parseDuration(duration.value),
                             );
                           })),
@@ -111,8 +114,8 @@ class WorkoutTrackerDashboard extends StatelessWidget {
     );
   }
 
-  Widget _buildLeftColumn(
-      ColorScheme colors, List<WorkoutType> workoutOptions) {
+  Widget _buildLeftColumn(ColorScheme colors, List<WorkoutType> workoutOptions,
+      AppLocalizations l10n) {
     if (!isTracking) {
       return DropdownTrigger<WorkoutType>(
         onSelect: onSelectWorkoutType,
@@ -126,7 +129,7 @@ class WorkoutTrackerDashboard extends StatelessWidget {
                 workoutType.name == availableWorkouts[activeWorkoutIndex.value],
           );
         },
-        renderChild: (WorkoutType workoutType) {
+        renderChild: (WorkoutType workoutType, {Function()? onPressed}) {
           return Column(
             spacing: 4,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -177,7 +180,7 @@ class WorkoutTrackerDashboard extends StatelessWidget {
                     isLoading: snapshot.data == true,
                   ),
                   Text(
-                    'Finish',
+                    l10n.actionFinish,
                     style: TextStyle(
                       color: colors.tertiary,
                       fontSize: 12,
@@ -195,7 +198,7 @@ class WorkoutTrackerDashboard extends StatelessWidget {
         builder: (context, value, _) {
           return _buildMetricColumn(
             colors,
-            label: 'Distance',
+            label: l10n.textDistance,
             value: parseDistance(distance.value),
           );
         });
@@ -227,7 +230,7 @@ class WorkoutTrackerDashboard extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(ColorScheme colors) {
+  Widget _buildHeader(ColorScheme colors, AppLocalizations l10n) {
     return ValueListenableBuilder<int>(
       valueListenable: activeWorkoutIndex,
       builder: (context, activeIndex, _) {
@@ -262,7 +265,7 @@ class WorkoutTrackerDashboard extends StatelessWidget {
                   color: colors.secondary.withAlpha(20),
                 ),
                 child: Text(
-                  '$rewardPoints points',
+                  l10n.textPointsValue(rewardPoints.toString()),
                   style: TextStyle(
                     color: colors.secondary,
                     fontWeight: FontWeight.w500,

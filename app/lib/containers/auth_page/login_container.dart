@@ -11,6 +11,7 @@ import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 enum LOGIN_FIELD_TYPE { LOGIN, PASSWORD }
 
@@ -40,13 +41,15 @@ class _LoginContainerState extends State<LoginContainer> {
       scopes: ['email', 'profile', 'openid']);
 
   void setErrors() {
+    final l10n = context.l10n;
     setState(() {
       final String login = _formFieldsState[LOGIN_FIELD_TYPE.LOGIN]!;
       final String password = _formFieldsState[LOGIN_FIELD_TYPE.PASSWORD]!;
       _formErrorsState = {
-        LOGIN_FIELD_TYPE.LOGIN: login.isEmpty ? 'Login is required' : null,
+        LOGIN_FIELD_TYPE.LOGIN:
+            login.isEmpty ? l10n.textValidationLoginRequired : null,
         LOGIN_FIELD_TYPE.PASSWORD:
-            password.isEmpty ? 'Password is required' : null
+            password.isEmpty ? l10n.textValidationPasswordRequired : null
       };
     });
   }
@@ -127,6 +130,7 @@ class _LoginContainerState extends State<LoginContainer> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     final bool isButtonDisabled = _formErrorsState.values
             .any((value) => value != null && value.isNotEmpty) ||
@@ -139,7 +143,7 @@ class _LoginContainerState extends State<LoginContainer> {
           Column(children: [
             InputWithIcon(
               leftIcon: 'assets/svg/login.svg',
-              placeholder: 'Login',
+              placeholder: l10n.textAuthInputLogin,
               onChange: (String val) {
                 setState(() {
                   _formFieldsState[LOGIN_FIELD_TYPE.LOGIN] = val;
@@ -155,7 +159,7 @@ class _LoginContainerState extends State<LoginContainer> {
             ),
             InputWithIcon(
               leftIcon: 'assets/svg/padlock.svg',
-              placeholder: 'Password',
+              placeholder: l10n.textAuthInputPassword,
               onChange: (String val) {
                 setState(() {
                   _formFieldsState[LOGIN_FIELD_TYPE.PASSWORD] = val;
@@ -180,7 +184,7 @@ class _LoginContainerState extends State<LoginContainer> {
                   ),
                 ),
                 Text(
-                  'Or use',
+                  l10n.textAuthOrUse,
                   style: TextStyle(color: colors.tertiaryContainer),
                 ),
                 Expanded(
@@ -204,7 +208,7 @@ class _LoginContainerState extends State<LoginContainer> {
                     margin: EdgeInsets.only(left: 10),
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Text(
-                      'Forgot your password?',
+                      l10n.textAuthForgotPassword,
                       style: TextStyle(
                           color: colors.tertiaryContainer, fontSize: 16),
                     ),
@@ -214,7 +218,7 @@ class _LoginContainerState extends State<LoginContainer> {
                         isFullHeight: false);
                   }),
               MainButton(
-                label: 'Log in',
+                label: l10n.actionLogIn,
                 backgroundColor: colors.secondary,
                 textColor: colors.primary,
                 onPressed: () {

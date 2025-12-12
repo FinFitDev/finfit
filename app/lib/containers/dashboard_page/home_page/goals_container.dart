@@ -1,6 +1,7 @@
 import 'package:excerbuys/components/shared/indicators/circle_progress/circle_progress_indicator.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class GoalsContainer extends StatefulWidget {
   final bool? isLoading;
@@ -15,6 +16,7 @@ class _GoalsContainerState extends State<GoalsContainer> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
+    final l10n = context.l10n;
     return Container(
       margin: EdgeInsets.symmetric(
           vertical: 2 * HORIZOTAL_PADDING, horizontal: HORIZOTAL_PADDING),
@@ -36,9 +38,9 @@ class _GoalsContainerState extends State<GoalsContainer> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Daily goals', style: texts.headlineMedium),
+              Text(l10n.textDailyGoals, style: texts.headlineMedium),
               SizedBox(height: 4),
-              Text('120 out of 500 finpoints',
+              Text(l10n.textGoalsProgressSample,
                   style: Theme.of(context)
                       .textTheme
                       .headlineMedium

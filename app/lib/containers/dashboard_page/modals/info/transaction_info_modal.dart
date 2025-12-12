@@ -19,6 +19,7 @@ import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class TransactionInfoModal extends StatefulWidget {
   final String transactionId;
@@ -73,12 +74,14 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
+    final l10n = context.l10n;
 
     final color = getTransactionTypeColor(
         _transactionType ?? TRANSACTION_TYPE.UNKNOWN, colors);
 
     return ModalContentWrapper(
-      title: getTransactionTitle(_transactionType ?? TRANSACTION_TYPE.UNKNOWN),
+      title:
+          getTransactionTitle(_transactionType ?? TRANSACTION_TYPE.UNKNOWN, l10n),
       onClose: () {
         closeModal(context);
       },
@@ -117,7 +120,7 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                                     color: color),
                               ),
                               Text(
-                                'points',
+                                l10n.labelPoints,
                                 style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w400,
@@ -129,9 +132,9 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                       ),
                     ),
                     PositionWithTitle(
-                      title: 'Transaction timestamp',
+                      title: l10n.textTransactionTimestamp,
                       value: _transaction != null
-                          ? parseDate(_transaction!.createdAt)
+                          ? parseDate(_transaction!.createdAt, l10n)
                           : "",
                       icon: 'assets/svg/clock.svg',
                     ),
@@ -165,8 +168,10 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
                                 height: 20,
                               ),
                               Text(
-                                getTransactionTypeText(_transactionType ??
-                                    TRANSACTION_TYPE.UNKNOWN),
+                                getTransactionTypeText(
+                                    _transactionType ??
+                                        TRANSACTION_TYPE.UNKNOWN,
+                                    l10n),
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: colors.primaryFixedDim,
@@ -272,7 +277,7 @@ class _TransactionInfoModalState extends State<TransactionInfoModal> {
           Container(
             padding: EdgeInsets.only(top: 16),
             child: MainButton(
-                label: 'Close',
+                label: l10n.actionClose,
                 backgroundColor: colors.tertiaryContainer.withAlpha(40),
                 textColor: colors.primaryFixedDim,
                 onPressed: () {

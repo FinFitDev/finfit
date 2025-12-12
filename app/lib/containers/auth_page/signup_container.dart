@@ -3,6 +3,7 @@ import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 enum SIGNUP_FIELD_TYPE { USERNAME, EMAIL, PASSWORD, PASSWORD_REPEAT }
 
@@ -32,6 +33,7 @@ class _SignupContainerState extends State<SignupContainer> {
   bool _loading = false;
 
   void setErrors() {
+    final l10n = context.l10n;
     setState(() {
       final String username = _formFieldsState[SIGNUP_FIELD_TYPE.USERNAME]!;
       final String email = _formFieldsState[SIGNUP_FIELD_TYPE.EMAIL]!;
@@ -41,23 +43,23 @@ class _SignupContainerState extends State<SignupContainer> {
 
       _formErrorsState = {
         SIGNUP_FIELD_TYPE.USERNAME: username.isEmpty
-            ? 'Username is required'
+            ? l10n.textValidationUsernameRequired
             : username.length < 5
-                ? 'Has to have at least 5 characters'
+                ? l10n.textValidationMinChars
                 : null,
         SIGNUP_FIELD_TYPE.EMAIL: email.isEmpty
-            ? 'Email is required'
+            ? l10n.textValidationEmailRequired
             : !EMAIL_REGEX.hasMatch(email)
-                ? 'Email invalid'
+                ? l10n.textValidationEmailInvalid
                 : null,
         SIGNUP_FIELD_TYPE.PASSWORD: password.isEmpty
-            ? 'Password is required'
+            ? l10n.textValidationPasswordRequired
             : password.length < 5
-                ? 'Has to have at least 5 characters'
+                ? l10n.textValidationMinChars
                 : null,
         SIGNUP_FIELD_TYPE.PASSWORD_REPEAT:
             password.length >= 5 && password != passwordRepeat
-                ? 'Passwords do not match'
+                ? l10n.textValidationPasswordsMismatch
                 : null
       };
     });
@@ -106,6 +108,7 @@ class _SignupContainerState extends State<SignupContainer> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     final bool isButtonDisabled = _formErrorsState.values
             .any((value) => value != null && value.isNotEmpty) ||
@@ -116,9 +119,9 @@ class _SignupContainerState extends State<SignupContainer> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Column(children: [
-          InputWithIcon(
-            leftIcon: 'assets/svg/profile.svg',
-            placeholder: 'Username',
+            InputWithIcon(
+              leftIcon: 'assets/svg/profile.svg',
+              placeholder: l10n.textAuthInputUsername,
             onChange: (String val) {
               setState(() {
                 _formFieldsState[SIGNUP_FIELD_TYPE.USERNAME] = val;
@@ -131,9 +134,9 @@ class _SignupContainerState extends State<SignupContainer> {
           SizedBox(
             height: 16,
           ),
-          InputWithIcon(
-            leftIcon: 'assets/svg/email.svg',
-            placeholder: 'Email',
+            InputWithIcon(
+              leftIcon: 'assets/svg/email.svg',
+              placeholder: l10n.textAuthInputEmail,
             onChange: (String val) {
               setState(() {
                 _formFieldsState[SIGNUP_FIELD_TYPE.EMAIL] = val;
@@ -147,9 +150,9 @@ class _SignupContainerState extends State<SignupContainer> {
           SizedBox(
             height: 16,
           ),
-          InputWithIcon(
-            leftIcon: 'assets/svg/padlock.svg',
-            placeholder: 'Password',
+            InputWithIcon(
+              leftIcon: 'assets/svg/padlock.svg',
+              placeholder: l10n.textAuthInputPassword,
             onChange: (String val) {
               setState(() {
                 _formFieldsState[SIGNUP_FIELD_TYPE.PASSWORD] = val;
@@ -163,9 +166,9 @@ class _SignupContainerState extends State<SignupContainer> {
           SizedBox(
             height: 16,
           ),
-          InputWithIcon(
-            leftIcon: 'assets/svg/padlock.svg',
-            placeholder: 'Repeat password',
+            InputWithIcon(
+              leftIcon: 'assets/svg/padlock.svg',
+              placeholder: l10n.textAuthInputRepeatPassword,
             onChange: (String val) {
               setState(() {
                 _formFieldsState[SIGNUP_FIELD_TYPE.PASSWORD_REPEAT] = val;
@@ -181,7 +184,7 @@ class _SignupContainerState extends State<SignupContainer> {
           ),
         ]),
         MainButton(
-            label: 'Sign up',
+            label: l10n.actionSignUp,
             backgroundColor: colors.secondary,
             textColor: colors.primary,
             isDisabled: isButtonDisabled,

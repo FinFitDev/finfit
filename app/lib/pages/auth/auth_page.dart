@@ -8,6 +8,7 @@ import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -21,6 +22,7 @@ class _AuthPageState extends State<AuthPage> {
   Widget build(BuildContext context) {
     final double height = layoutController.relativeContentHeight;
     final ColorScheme colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return Scaffold(
         body: SingleChildScrollView(
@@ -67,8 +69,8 @@ class _AuthPageState extends State<AuthPage> {
                                         children: [
                                           Text(
                                             snapshot.data == AUTH_METHOD.LOGIN
-                                                ? 'Log in below'
-                                                : 'Sign up below',
+                                                ? l10n.textAuthLoginTitle
+                                                : l10n.textAuthSignupTitle,
                                             style: TextStyle(
                                                 fontSize: 32,
                                                 fontWeight: FontWeight.w600),
@@ -78,8 +80,10 @@ class _AuthPageState extends State<AuthPage> {
                                           ),
                                           Text(
                                             snapshot.data == AUTH_METHOD.LOGIN
-                                                ? 'And continue your journey with FinFit'
-                                                : 'And start your journey with FinFit',
+                                                ? l10n.textAuthLoginSubtitle(
+                                                    l10n.appTitle)
+                                                : l10n.textAuthSignupSubtitle(
+                                                    l10n.appTitle),
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 fontFamily: 'Poppins',

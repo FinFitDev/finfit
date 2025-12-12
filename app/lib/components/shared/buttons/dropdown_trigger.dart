@@ -8,7 +8,7 @@ class DropdownTrigger<T> extends StatefulWidget {
   final void Function(int) onSelect;
   final List<T> options;
   final ValueNotifier<int> activeOptionIndex; // 👈 changed type
-  final Widget Function(T element) renderChild;
+  final Widget Function(T element, {void Function()? onPressed}) renderChild;
   final Widget Function(T element, void Function()) optionDisplay;
 
   const DropdownTrigger({
@@ -43,7 +43,18 @@ class _DropdownTriggerState<T> extends State<DropdownTrigger<T>> {
               isFullHeight: false,
             );
           },
-          child: widget.renderChild(widget.options[activeIndex]),
+          child: widget.renderChild(widget.options[activeIndex], onPressed: () {
+            openModal(
+              context,
+              DropdownOptionsModal<T>(
+                onSelect: widget.onSelect,
+                activeOptionIndex: widget.activeOptionIndex,
+                options: widget.options,
+                optionDisplay: widget.optionDisplay,
+              ),
+              isFullHeight: false,
+            );
+          }),
         );
       },
     );

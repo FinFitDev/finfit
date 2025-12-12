@@ -5,6 +5,7 @@ import 'package:excerbuys/store/controllers/user_controller/user_controller.dart
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key});
@@ -17,6 +18,7 @@ class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
     final padding = (MediaQuery.sizeOf(context).width / 420) * 24;
     final gap = (MediaQuery.sizeOf(context).width / 420) * 20;
     return StreamBuilder<int>(
@@ -47,7 +49,7 @@ class _BottomBarState extends State<BottomBar> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     AppbarIconButton(
-                      name: 'Home',
+                      name: l10n.navHome,
                       icon: 'assets/svg/home.svg',
                       onPressed: () {
                         dashboardController.setActivePage(0);
@@ -58,7 +60,7 @@ class _BottomBarState extends State<BottomBar> {
                         stream: dashboardController.trackingPlayedStream,
                         builder: (context, trackingSnapshot) {
                           return AppbarIconButton(
-                            name: 'Track',
+                            name: l10n.navTrack,
                             icon: 'assets/svg/footprints.svg',
                             onPressed: () {
                               dashboardController.setActivePage(1);
@@ -68,7 +70,7 @@ class _BottomBarState extends State<BottomBar> {
                           );
                         }),
                     AppbarIconButton(
-                      name: 'Offers',
+                      name: l10n.navOffers,
                       icon: 'assets/svg/gift.svg',
                       onPressed: () {
                         dashboardController.setActivePage(2);
@@ -76,7 +78,7 @@ class _BottomBarState extends State<BottomBar> {
                       isActive: snapshot.data == 2,
                     ),
                     AppbarIconButton(
-                      name: 'Recent',
+                      name: l10n.navRecent,
                       icon: 'assets/svg/clockBold.svg',
                       onPressed: () {
                         dashboardController.setActivePage(3);
@@ -87,7 +89,7 @@ class _BottomBarState extends State<BottomBar> {
                         stream: userController.currentUserStream,
                         builder: (context, userSnapshot) {
                           return AppbarIconButton(
-                            name: 'Profile',
+                            name: l10n.navProfile,
                             icon: 'assets/svg/profile.svg',
                             isProfile: userSnapshot.hasData,
                             onPressed: () {

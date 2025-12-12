@@ -2,6 +2,7 @@ import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class LocationPermissionDialog extends StatelessWidget {
   const LocationPermissionDialog({super.key});
@@ -9,12 +10,13 @@ class LocationPermissionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
     return AlertDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15), // smaller radius
       ),
       title: Text(
-        'Permissions missing',
+        l10n.textLocationPermissionTitle,
         style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
       ),
       content: Wrap(
@@ -22,11 +24,11 @@ class LocationPermissionDialog extends StatelessWidget {
         runSpacing: 16,
         children: [
           Text(
-            'To track your workouts even when the app is closed, please allow background location access in system settings. Follow these steps after clicking the button below.',
+            l10n.textLocationPermissionBody,
             style: TextStyle(color: colors.primaryFixedDim),
           ),
           Text(
-            'Location > Allow',
+            l10n.textLocationPermissionSteps,
             style: TextStyle(
                 color: colors.secondary,
                 fontWeight: FontWeight.w600,
@@ -34,7 +36,7 @@ class LocationPermissionDialog extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           MainButton(
-              label: 'Go to settings',
+              label: l10n.actionGoToSettings,
               backgroundColor: colors.secondary,
               textColor: colors.primary,
               onPressed: () async {

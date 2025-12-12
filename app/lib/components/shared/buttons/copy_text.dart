@@ -4,10 +4,12 @@ import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class CopyText extends StatefulWidget {
   final String textToCopy;
-  const CopyText({super.key, required this.textToCopy});
+  final double? fontSize;
+  const CopyText({super.key, required this.textToCopy, this.fontSize});
 
   @override
   State<CopyText> createState() => _CopyTextState();
@@ -34,12 +36,13 @@ class _CopyTextState extends State<CopyText> {
 
   void onCopy() async {
     Clipboard.setData(ClipboardData(text: widget.textToCopy));
-    if (_text == 'Copied!') {
+    final copiedText = context.l10n.textCopied;
+    if (_text == copiedText) {
       return;
     }
 
     setState(() {
-      _text = 'Copied!';
+      _text = copiedText;
     });
     await Future.delayed(Duration(seconds: 2));
     setState(() {
@@ -67,7 +70,7 @@ class _CopyTextState extends State<CopyText> {
             Text(
               _text,
               style: TextStyle(
-                  fontSize: 12,
+                  fontSize: widget.fontSize ?? 12,
                   color: colors.tertiary,
                   fontWeight: FontWeight.w600),
             ),

@@ -6,7 +6,6 @@ import 'package:excerbuys/containers/dashboard_page/offers_page/offers_top_conta
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/store/controllers/shop/offers_controller/offers_controller.dart';
-import 'package:excerbuys/store/controllers/shop/product_owners_controller/product_owners_controller.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/store/selectors/offers/offers.dart';
 import 'package:excerbuys/utils/constants.dart';
@@ -14,6 +13,7 @@ import 'package:excerbuys/wrappers/infinite_list_wrapper_v2.dart';
 import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OffersPage extends StatefulWidget {
   const OffersPage({super.key});
@@ -24,11 +24,9 @@ class OffersPage extends StatefulWidget {
 
 class _OffersPageState extends State<OffersPage> {
   late StreamSubscription _activePageSubscription;
-  late StreamSubscription _shopFiltersSubscription;
-  late StreamSubscription _selectedProductOwnerSubscription;
+  // late StreamSubscription _shopFiltersSubscription;
   Timer? animationProgressTimer;
 
-  bool _isAnimating = false;
   ScrollController scrollController = ScrollController();
   bool _shopPageInitialized = false;
 
@@ -42,26 +40,24 @@ class _OffersPageState extends State<OffersPage> {
         _shopPageInitialized = true;
         offersController.fetchAllOffers();
 
-        _shopFiltersSubscription = shopController.allShopFiltersStream
-            .debounceTime(Duration(milliseconds: 100))
-            .distinct()
-            .listen((data) {});
+        // _shopFiltersSubscription = shopController.allShopFiltersStream
+        //     .debounceTime(Duration(milliseconds: 100))
+        //     .distinct()
+        //     .listen((data) {});
       }
     });
   }
 
   @override
   void dispose() {
-    _shopFiltersSubscription.cancel();
+    // _shopFiltersSubscription.cancel();
     _activePageSubscription.cancel();
-    _selectedProductOwnerSubscription.cancel();
     animationProgressTimer?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
     return StreamBuilder<CombinedOffersData>(
         stream: offersController.combinedOffersStream,
         builder: (context, snapshot) {
@@ -118,7 +114,7 @@ class _OffersPageState extends State<OffersPage> {
   }
 }
 
-Widget emptyOffers(ColorScheme colors, TextTheme texts) {
+Widget emptyOffers(ColorScheme colors, TextTheme texts, AppLocalizations l10n) {
   return Padding(
     padding: const EdgeInsets.all(16.0),
     child: Column(
@@ -128,13 +124,13 @@ Widget emptyOffers(ColorScheme colors, TextTheme texts) {
         Container(
           margin: EdgeInsets.only(bottom: 12),
           child: Text(
-            'No offers found.',
+            l10n.textNoOffersFound,
             style: texts.headlineMedium,
           ),
         ),
         Text(
           textAlign: TextAlign.start,
-          'Modify your filters, check the internet connection and try again!',
+          l10n.textModifyFiltersSuggestion,
           style: TextStyle(
             color: colors.primaryFixedDim,
           ),

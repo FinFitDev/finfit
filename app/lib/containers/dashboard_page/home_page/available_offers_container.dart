@@ -10,6 +10,7 @@ import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class AvailableOffers extends StatefulWidget {
   final bool? isLoading;
@@ -60,6 +61,7 @@ class _AvailableOffersState extends State<AvailableOffers> {
   @override
   Widget build(BuildContext context) {
     final texts = Theme.of(context).textTheme;
+    final l10n = context.l10n;
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 2 * HORIZOTAL_PADDING),
@@ -71,7 +73,7 @@ class _AvailableOffersState extends State<AvailableOffers> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Available forevaaaa', style: texts.headlineLarge),
+                Text(l10n.textAvailableForever, style: texts.headlineLarge),
               ],
             ),
           ),

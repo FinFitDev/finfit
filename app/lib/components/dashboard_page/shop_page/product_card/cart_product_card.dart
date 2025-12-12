@@ -10,6 +10,7 @@ import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class CartProductCard extends StatelessWidget {
   final ICartItem item;
@@ -18,6 +19,7 @@ class CartProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: Slidable(
@@ -70,8 +72,8 @@ class CartProductCard extends StatelessWidget {
                         RichText(
                           overflow: TextOverflow.ellipsis,
                           text: TextSpan(
-                            text:
-                                '${item.product.finpointsPrice.toStringAsFixed(0)} points',
+                            text: l10n.textPointsValue(
+                                item.product.finpointsPrice.toStringAsFixed(0)),
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 11,
@@ -81,7 +83,7 @@ class CartProductCard extends StatelessWidget {
                             children: [
                               TextSpan(
                                   text: item.notEligible == true
-                                      ? ' (Not eligible)'
+                                      ? ' (${l10n.textNotEligible})'
                                       : '',
                                   style:
                                       TextStyle(color: colors.errorContainer)),

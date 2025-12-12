@@ -18,6 +18,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class TrackPage extends StatefulWidget {
   const TrackPage({super.key});
@@ -122,7 +123,8 @@ class _TrackPageState extends State<TrackPage> {
         setState(() {
           _isDisposed = false;
         });
-        bool permissions = await _trackingService.initializeService();
+        bool permissions =
+            await _trackingService.initializeService(context.l10n);
         if (!permissions && mounted) {
           showDialog(
               context: context, builder: (_) => LocationPermissionDialog());

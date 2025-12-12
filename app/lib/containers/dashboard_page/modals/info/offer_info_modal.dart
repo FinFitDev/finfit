@@ -11,6 +11,7 @@ import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/modal/modal_content_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class OfferInfoModal extends StatefulWidget {
   final IOfferEntry offer;
@@ -27,6 +28,7 @@ class _OfferInfoModalState extends State<OfferInfoModal> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return ModalContentWrapper(
       title: '${widget.offer.partner.name} - ${widget.offer.catchString}',
@@ -111,7 +113,7 @@ class _OfferInfoModalState extends State<OfferInfoModal> {
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   Text(
-                                    'Cost',
+                                    l10n.textCost,
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: colors.tertiaryContainer,
@@ -124,7 +126,10 @@ class _OfferInfoModalState extends State<OfferInfoModal> {
                                   Row(
                                     children: [
                                       Text(
-                                        '${widget.offer.points.toInt()} points',
+                                        l10n.textPointsValue(widget
+                                            .offer.points
+                                            .toInt()
+                                            .toString()),
                                         style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w500,
@@ -150,7 +155,7 @@ class _OfferInfoModalState extends State<OfferInfoModal> {
                                                     BorderRadius.circular(10),
                                               ),
                                               child: Text(
-                                                'Not enough points',
+                                                l10n.textNotEnoughPoints,
                                                 style: TextStyle(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.w500,
@@ -169,15 +174,15 @@ class _OfferInfoModalState extends State<OfferInfoModal> {
                           height: 16,
                         ),
                         PositionWithTitle(
-                          title: 'Valid until',
+                          title: l10n.textValidUntil,
                           value: parseDate(
-                              DateTime.parse(widget.offer.validUntil)),
+                              DateTime.parse(widget.offer.validUntil), l10n),
                           icon: 'assets/svg/clock.svg',
                         ),
                         PositionWithTitle(
-                          title: 'Claimed by others',
-                          value:
-                              '${widget.offer.totalRedeemed.toString()} times',
+                          title: l10n.textClaimedByOthers,
+                          value: l10n.textTimesValue(
+                              widget.offer.totalRedeemed.toString()),
                           icon: 'assets/svg/gift.svg',
                         ),
                         SizedBox(
@@ -205,7 +210,7 @@ class _OfferInfoModalState extends State<OfferInfoModal> {
                   final bool hasEnoughPoints =
                       (snapshot.data ?? 0) >= widget.offer.points;
                   return MainButton(
-                      label: 'Claim',
+                      label: l10n.actionClaim,
                       icon: 'assets/svg/gift.svg',
                       backgroundColor: colors.secondary,
                       isDisabled: !hasEnoughPoints,

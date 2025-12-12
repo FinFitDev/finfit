@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class QrscannerModal extends StatefulWidget {
   const QrscannerModal({super.key});
@@ -45,6 +46,7 @@ class _QrscannerModalState extends State<QrscannerModal> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
+    final l10n = context.l10n;
 
     return ClipRRect(
       borderRadius: BorderRadius.only(
@@ -57,7 +59,7 @@ class _QrscannerModalState extends State<QrscannerModal> {
         child: Column(
           children: [
             ModalHeader(
-              title: 'Send points',
+              title: l10n.textSendPointsTitle,
               goBack: () => Navigator.pop(context),
             ),
             Expanded(

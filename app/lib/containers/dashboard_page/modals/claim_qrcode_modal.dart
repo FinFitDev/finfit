@@ -6,6 +6,7 @@ import 'package:excerbuys/wrappers/modal/modal_content_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class ClaimQrcodeModal extends StatelessWidget {
   final String code;
@@ -14,9 +15,10 @@ class ClaimQrcodeModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return ModalContentWrapper(
-      title: 'Use discount',
+      title: l10n.textUseDiscountTitle,
       onClose: () {
         closeModal(context);
       },
@@ -53,7 +55,7 @@ class ClaimQrcodeModal extends StatelessWidget {
             height: 8,
           ),
           MainButton(
-              label: 'Close',
+              label: l10n.actionClose,
               backgroundColor: colors.tertiaryContainer.withAlpha(40),
               textColor: colors.primaryFixedDim,
               onPressed: () {

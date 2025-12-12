@@ -1,13 +1,18 @@
+import 'package:excerbuys/components/shared/activity_icon.dart';
+import 'package:excerbuys/components/shared/buttons/dropdown_trigger.dart';
 import 'package:excerbuys/components/shared/positions/strava_toggle_position.dart';
 import 'package:excerbuys/components/shared/postition.dart';
 import 'package:excerbuys/components/shared/profile_image_generator.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/regenerate_image_modal.dart';
+import 'package:excerbuys/containers/dashboard_page/profile_page/language_selector.dart';
 import 'package:excerbuys/store/controllers/activity/activity_controller/activity_controller.dart';
 import 'package:excerbuys/store/controllers/activity/strava_controller/strava_controller.dart';
+import 'package:excerbuys/store/controllers/app_controller/app_controller.dart';
 import 'package:excerbuys/store/controllers/auth_controller/auth_controller.dart';
 import 'package:excerbuys/store/controllers/dashboard_controller/dashboard_controller.dart';
 import 'package:excerbuys/store/controllers/layout_controller/layout_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
+import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
@@ -16,6 +21,7 @@ import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -25,11 +31,18 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final ValueNotifier<int> languageIndex = ValueNotifier<int>(0);
+
   @override
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
     final TextTheme texts = Theme.of(context).textTheme;
-
+    final l10n = context.l10n;
+    final currentLocale = Localizations.localeOf(context);
+    final currentLanguage = LANGUAGES.firstWhere(
+      (lang) => lang.languageCode == currentLocale.languageCode,
+      orElse: () => LANGUAGE.ENGLISH,
+    );
     return SingleChildScrollView(
       padding: EdgeInsets.only(
           top: layoutController.statusBarHeight + MAIN_HEADER_HEIGHT,
@@ -103,7 +116,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Total points earned',
+                              l10n.textProfileTotalPoints,
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -158,12 +171,45 @@ class _ProfilePageState extends State<ProfilePage> {
                     }
                   }),
               Postition(
-                label: 'Contact us',
+                label: l10n.textProfileContactUs,
                 onPressed: () {},
                 iconLeft: 'assets/svg/phone.svg',
               ),
+              DropdownTrigger<LANGUAGE>(
+                onSelect: (int index) {
+                  appController.setAppLanguage(LANGUAGES[index]);
+                  languageIndex.value = index;
+                },
+                options: LANGUAGES,
+                optionDisplay: (LANGUAGE language, void Function() onSelect) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Postition(
+                      label: language.displayTitle,
+                      onPressed: onSelect,
+                      iconLeft: language.icon,
+                      iconRight: language == appController.appLanguage
+                          ? 'assets/svg/tick.svg'
+                          : null,
+                      color: language == appController.appLanguage
+                          ? colors.secondary
+                          : null,
+                      disableleftIconColorFilter: true,
+                    ),
+                  );
+                },
+                renderChild: (LANGUAGE language, {void Function()? onPressed}) {
+                  return Postition(
+                    label: currentLanguage.displayTitle,
+                    onPressed: onPressed ?? () {},
+                    iconLeft: currentLanguage.icon,
+                    disableleftIconColorFilter: true,
+                  );
+                },
+                activeOptionIndex: languageIndex,
+              ),
               Postition(
-                label: 'Log out',
+                label: l10n.textProfileLogOut,
                 onPressed: () async {
                   await authController.logOut();
                   navigateWithClear(route: '/welcome');

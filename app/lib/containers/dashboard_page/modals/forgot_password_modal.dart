@@ -7,6 +7,7 @@ import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class ForgotPasswordModal extends StatefulWidget {
   const ForgotPasswordModal({super.key});
@@ -51,6 +52,7 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -71,7 +73,7 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
                 alignment: WrapAlignment.center,
                 children: [
                   ModalHeader(
-                    title: 'Forgot password',
+                    title: l10n.textForgotPasswordTitle,
                     onClose: () {
                       closeModal(context);
                     },
@@ -88,10 +90,10 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
                         InputWithIcon(
                           error: error != null
                               ? error == RESET_PASSWORD_ERROR.WRONG_EMAIL
-                                  ? 'Wrong email'
-                                  : 'Server error'
+                                  ? l10n.textForgotPasswordWrongEmail
+                                  : l10n.textForgotPasswordServerError
                               : null,
-                          placeholder: 'Enter email',
+                          placeholder: l10n.textForgotPasswordPlaceholder,
                           onChange: (val) {
                             setState(() {
                               _email = val;
@@ -106,7 +108,7 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
                           height: 16,
                         ),
                         Text(
-                          'Enter an email that is connected with your existing account, and then copy the code that has been sent there.',
+                          l10n.textForgotPasswordInstruction,
                           style: TextStyle(
                               fontSize: 12, color: colors.tertiaryContainer),
                         ),
@@ -116,7 +118,7 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
                         MainButton(
                             isDisabled:
                                 _email.isEmpty || !EMAIL_REGEX.hasMatch(_email),
-                            label: 'Send email',
+                            label: l10n.textForgotPasswordSend,
                             loading: _loading,
                             backgroundColor: colors.secondary,
                             textColor: colors.primary,

@@ -5,6 +5,7 @@ import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({super.key});
@@ -18,6 +19,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   Widget build(BuildContext context) {
     final double height = layoutController.relativeContentHeight;
     final ColorScheme colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return Scaffold(
         body: SingleChildScrollView(
@@ -59,7 +61,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                                 child: Column(
                                   children: [
                                     Text(
-                                      'Set new password',
+                                      l10n.textSetNewPasswordTitle,
                                       style: TextStyle(
                                           fontSize: 32,
                                           fontWeight: FontWeight.w600),
@@ -68,7 +70,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                                       height: 8,
                                     ),
                                     Text(
-                                      'Then log in again, and enjoy!',
+                                      l10n.textSetNewPasswordSubtitle,
                                       style: TextStyle(
                                           fontSize: 16,
                                           fontFamily: 'Poppins',

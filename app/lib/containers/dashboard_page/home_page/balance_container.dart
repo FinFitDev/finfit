@@ -11,6 +11,7 @@ import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class BalanceContainer extends StatefulWidget {
   final int balance;
@@ -43,6 +44,7 @@ class _BalanceContainerState extends State<BalanceContainer> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return SizedBox(
       width: MediaQuery.sizeOf(context).width,
@@ -64,7 +66,7 @@ class _BalanceContainerState extends State<BalanceContainer> {
 
                   return isHidden
                       ? Text(
-                          '******',
+                          l10n.textHiddenPoints,
                           style: TextStyle(color: colors.primary, fontSize: 54),
                         )
                       : AnimatedBalance(balance: _balance);
@@ -73,7 +75,7 @@ class _BalanceContainerState extends State<BalanceContainer> {
               height: 10,
             ),
             Text(
-              'points',
+              l10n.labelPoints,
               style: TextStyle(
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w600,
@@ -93,7 +95,7 @@ class _BalanceContainerState extends State<BalanceContainer> {
                         children: [
                           homeTopButton(context, () {
                             openModal(context, AllClaimsModal());
-                          }, 'assets/svg/gift.svg', 'Claimed'),
+                          }, 'assets/svg/gift.svg', l10n.actionClaim),
                           snapshot.data != null &&
                                   snapshot.data!.content.keys.isNotEmpty
                               ? Positioned(
@@ -128,13 +130,13 @@ class _BalanceContainerState extends State<BalanceContainer> {
                   if (userController.currentUser?.uuid != null) {
                     openModal(context, QrcodeModal());
                   }
-                }, 'assets/svg/qrcode.svg', 'Receive'),
+                }, 'assets/svg/qrcode.svg', l10n.actionReceive),
                 SizedBox(
                   width: 20,
                 ),
                 homeTopButton(context, () {
                   openModal(context, SendModal());
-                }, 'assets/svg/sent.svg', 'Send'),
+                }, 'assets/svg/sent.svg', l10n.actionSend),
               ],
             )
           ],

@@ -27,6 +27,8 @@ export const insertWoocommerceDiscountCode = async ({
       ...apiPayloadDetails,
     });
 
+    console.log("WooCommerce insert response:", response);
+
     if (!response || !response.data.id) {
       throw new Error("Response failed");
     }

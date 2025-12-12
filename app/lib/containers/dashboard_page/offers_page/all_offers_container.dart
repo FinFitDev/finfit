@@ -11,6 +11,7 @@ import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class AllOffersContainer extends StatelessWidget {
   final void Function(String) onPress;
@@ -26,6 +27,7 @@ class AllOffersContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
+    final l10n = context.l10n;
     final offersList = offers.values.toList();
 
     if (offersList.isEmpty) {
@@ -39,7 +41,7 @@ class AllOffersContainer extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING),
-            child: Text('All rewards', style: texts.headlineLarge),
+            child: Text(l10n.textAllRewardsTitle, style: texts.headlineLarge),
           ),
           Container(
             child: ListView.builder(
@@ -185,8 +187,11 @@ class AllOffersContainer extends StatelessWidget {
                                               spacing: 8,
                                               children: [
                                                 PositionWithBackground(
-                                                  name:
-                                                      'Until ${parseDateYear(DateTime.parse(offer.validUntil))}',
+                                                  name: l10n.textUntilDate(
+                                                      parseDateYear(
+                                                          DateTime.parse(
+                                                              offer.validUntil),
+                                                          l10n)),
                                                   padding: EdgeInsets.symmetric(
                                                       horizontal: 8,
                                                       vertical: 5),
@@ -196,7 +201,9 @@ class AllOffersContainer extends StatelessWidget {
                                                   textStyle: TextStyle(
                                                       color: colors
                                                           .primaryFixedDim,
-                                                      fontSize: 10),
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.w500),
                                                 ),
                                                 PositionWithBackground(
                                                   name:
@@ -209,7 +216,9 @@ class AllOffersContainer extends StatelessWidget {
                                                   textStyle: TextStyle(
                                                       color: colors
                                                           .primaryFixedDim,
-                                                      fontSize: 10),
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.w500),
                                                 ),
                                               ],
                                             )
@@ -248,7 +257,7 @@ class AllOffersContainer extends StatelessWidget {
                                             ),
                                             const SizedBox(width: 6),
                                             Text(
-                                              'pts',
+                                              l10n.labelPointsShort,
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w400,
@@ -266,14 +275,14 @@ class AllOffersContainer extends StatelessWidget {
                                                 : Expanded(
                                                     child:
                                                         PositionWithBackground(
-                                                      name: 'Not enough',
+                                                      name: l10n.textNotEnough,
                                                       isExpanded: true,
                                                       image:
                                                           'assets/svg/forbid.svg',
                                                       imageSize: 13,
                                                       backgroundColor: colors
                                                           .error
-                                                          .withAlpha(20),
+                                                          .withAlpha(0),
                                                       textStyle: TextStyle(
                                                           color: colors.error,
                                                           fontSize: 12),

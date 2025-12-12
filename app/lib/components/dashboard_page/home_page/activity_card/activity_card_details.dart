@@ -1,5 +1,6 @@
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class ActivityCardDetails extends StatelessWidget {
   final bool open;
@@ -9,6 +10,7 @@ class ActivityCardDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return AnimatedSize(
       duration: Duration(milliseconds: 200),
@@ -29,10 +31,10 @@ class ActivityCardDetails extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Duration',
+                      Text(l10n.textDuration,
                           style: TextStyle(
                               fontSize: 14, color: colors.tertiaryContainer)),
-                      Text('10min 22s',
+                      Text(l10n.textUnknown,
                           style:
                               TextStyle(fontSize: 14, color: colors.tertiary))
                     ],
@@ -41,10 +43,10 @@ class ActivityCardDetails extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Distance',
+                      Text(l10n.textDistance,
                           style: TextStyle(
                               fontSize: 14, color: colors.tertiaryContainer)),
-                      Text('45km',
+                      Text(l10n.textUnknown,
                           style:
                               TextStyle(fontSize: 14, color: colors.tertiary))
                     ],
@@ -53,10 +55,10 @@ class ActivityCardDetails extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Calories burned',
+                      Text(l10n.textCalories,
                           style: TextStyle(
                               fontSize: 14, color: colors.tertiaryContainer)),
-                      Text('132',
+                      Text(l10n.textUnknown,
                           style:
                               TextStyle(fontSize: 14, color: colors.tertiary))
                     ],
@@ -70,10 +72,10 @@ class ActivityCardDetails extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       RippleWrapper(
-                        child: Text(
-                          isPurchase == true
-                              ? 'View transaction details'
-                              : 'View training details',
+                          child: Text(
+                            isPurchase == true
+                                ? l10n.textViewTransactionDetails
+                                : l10n.textViewTrainingDetails,
                           style: TextStyle(
                               fontSize: 14,
                               color: isPurchase == true
@@ -84,7 +86,7 @@ class ActivityCardDetails extends StatelessWidget {
                       ),
                       isPurchase == true
                           ? Text(
-                              '122 \$',
+                              l10n.textUnknown,
                               style: TextStyle(
                                   fontSize: 18,
                                   color: colors.tertiary,

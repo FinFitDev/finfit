@@ -11,6 +11,7 @@ import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class ProductOwnerHeaderContainer extends StatelessWidget {
   final String? productOwnerId;
@@ -21,6 +22,7 @@ class ProductOwnerHeaderContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
     return Container(
       color: colors.primary,
       padding: EdgeInsets.only(
@@ -61,11 +63,12 @@ class ProductOwnerHeaderContainer extends StatelessWidget {
                             style: TextStyle(color: colors.tertiaryContainer),
                           ),
                           ListComponent(data: {
-                            'Partner since':
-                                parseDateYear(DateTime.parse(owner.createdAt)),
-                            'Total purchases':
+                            l10n.textPartnerSince: parseDateYear(
+                                DateTime.parse(owner.createdAt), l10n),
+                            l10n.textTotalPurchases:
                                 owner.totalTransactions.toString(),
-                            'Total products': owner.totalProducts.toString(),
+                            l10n.textTotalProducts:
+                                owner.totalProducts.toString(),
                           })
                         ],
                       ),

@@ -13,6 +13,7 @@ import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/animated_switcher_wrapper.dart';
 import 'package:excerbuys/wrappers/infinite_list_wrapper_v2.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class RecentPage extends StatefulWidget {
   const RecentPage({super.key});
@@ -32,6 +33,7 @@ class _RecentPageState extends State<RecentPage> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
     return StreamBuilder<RECENT_DATA_CATEGORY>(
         stream: historyController.recentPageUpdateTrigger(),
         builder: (context, snapshot) {
@@ -63,14 +65,14 @@ class _RecentPageState extends State<RecentPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        'Moves & Points',
+                        l10n.textMovesAndPointsTitle,
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.w600),
                         textAlign: TextAlign.left,
                       ),
                       SizedBox(height: 4),
                       Text(
-                        "Track your workouts, and every point you gain.",
+                        l10n.textMovesAndPointsSubtitle,
                         style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,

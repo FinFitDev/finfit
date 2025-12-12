@@ -2,6 +2,7 @@ import 'package:excerbuys/components/dashboard_page/shop_page/product_owner/part
 import 'package:excerbuys/types/owner.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class PartnersContainer extends StatefulWidget {
   final bool? isLoading;
@@ -22,6 +23,7 @@ class _PartnersContainerState extends State<PartnersContainer> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
+    final l10n = context.l10n;
 
     return Container(
       padding: const EdgeInsets.only(top: 0),
@@ -33,7 +35,7 @@ class _PartnersContainerState extends State<PartnersContainer> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Partners', style: texts.headlineLarge),
+                Text(l10n.textPartnersTitle, style: texts.headlineLarge),
               ],
             ),
           ),

@@ -9,6 +9,7 @@ import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart' as Rive;
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class FeaturedProductCard extends StatefulWidget {
   final bool? isLast;
@@ -45,6 +46,7 @@ class _FeaturedProductCardState extends State<FeaturedProductCard> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
+    final l10n = context.l10n;
 
     final isProgress = widget.pointsLeft != null && widget.pointsLeft! > 0;
 
@@ -140,8 +142,10 @@ class _FeaturedProductCardState extends State<FeaturedProductCard> {
                               children: [
                                 Text(
                                   isHidden
-                                      ? 'Only ***** finpoints to go!'
-                                      : 'Only ${formatNumber((widget.pointsLeft ?? 0).round())} finpoints to go!',
+                                      ? l10n.textPointsToGoHidden
+                                      : l10n.textPointsToGo(
+                                          formatNumber(
+                                              (widget.pointsLeft ?? 0).round())),
                                   textAlign: TextAlign.end,
                                   style: TextStyle(
                                       color: colors.tertiaryContainer,

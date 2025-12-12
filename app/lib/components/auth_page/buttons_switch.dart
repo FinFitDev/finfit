@@ -2,6 +2,7 @@ import 'package:excerbuys/components/shared/buttons/text_button.dart';
 import 'package:excerbuys/store/controllers/auth_controller/auth_controller.dart';
 import 'package:excerbuys/types/enums.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class ButtonSwitch extends StatelessWidget {
   const ButtonSwitch({super.key});
@@ -10,6 +11,7 @@ class ButtonSwitch extends StatelessWidget {
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
     final double width = MediaQuery.sizeOf(context).width;
+    final l10n = context.l10n;
 
     return Container(
       margin: EdgeInsets.only(bottom: 25),
@@ -30,7 +32,7 @@ class ButtonSwitch extends StatelessWidget {
                             },
                             isActive: snapshot.hasData &&
                                 snapshot.data == AUTH_METHOD.LOGIN,
-                            text: 'Log in'),
+                            text: l10n.actionLogIn),
                       ),
                       Expanded(
                         child: CustomTextButton(
@@ -41,7 +43,7 @@ class ButtonSwitch extends StatelessWidget {
                             },
                             isActive: snapshot.hasData &&
                                 snapshot.data == AUTH_METHOD.SIGNUP,
-                            text: 'Sign up'),
+                            text: l10n.actionSignUp),
                       )
                     ],
                   ),

@@ -7,6 +7,7 @@ import 'package:excerbuys/store/controllers/user_controller/user_controller.dart
 import 'package:excerbuys/types/user.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({super.key});
@@ -85,6 +86,7 @@ class _LoadingPageState extends State<LoadingPage>
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
     layoutController.setStatusBarHeight(MediaQuery.of(context).padding.top);
 
     return Scaffold(
@@ -121,7 +123,7 @@ class _LoadingPageState extends State<LoadingPage>
 
             // Optional loading text
             Text(
-              "Loading...",
+              l10n.loading,
               style: TextStyle(
                 color: colors.primary,
                 fontSize: 18,

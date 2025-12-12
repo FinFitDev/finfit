@@ -9,6 +9,7 @@ import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class ResetPasswordCodePage extends StatefulWidget {
   const ResetPasswordCodePage({super.key});
@@ -37,7 +38,7 @@ class _ResetPasswordCodePageState extends State<ResetPasswordCodePage> {
 
       if (verified != true) {
         setState(() {
-          _error = 'Invalid code';
+          _error = context.l10n.textResetPasswordInvalidCode;
         });
         return;
       }
@@ -58,6 +59,7 @@ class _ResetPasswordCodePageState extends State<ResetPasswordCodePage> {
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
     final double height = layoutController.relativeContentHeight;
+    final l10n = context.l10n;
 
     return Scaffold(
         resizeToAvoidBottomInset: true,
@@ -101,7 +103,7 @@ class _ResetPasswordCodePageState extends State<ResetPasswordCodePage> {
                           height: 32,
                         ),
                         Text(
-                          'Reset password',
+                          l10n.textResetPasswordTitle,
                           style: TextStyle(
                               fontSize: 32, fontWeight: FontWeight.w600),
                         ),
@@ -122,37 +124,16 @@ class _ResetPasswordCodePageState extends State<ResetPasswordCodePage> {
                         SizedBox(
                           height: 16,
                         ),
-                        RichText(
-                            textAlign: TextAlign.left,
-                            text: TextSpan(children: [
-                              TextSpan(
-                                text:
-                                    'The email with the code has been sent to ',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w400,
-                                    color: colors.primaryFixedDim),
-                              ),
-                              TextSpan(
-                                text: "jackod@gmail.com",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: colors.secondary,
-                                  fontFamily: 'Poppins',
-                                ),
-                              ),
-                              TextSpan(
-                                text:
-                                    '. Enter the code above to set a new password.',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w400,
-                                    color: colors.primaryFixedDim),
-                              ),
-                            ])),
+                        Text(
+                          l10n.textResetPasswordInstruction(
+                              authController.resetPasswordUser?.email ?? ''),
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w400,
+                              color: colors.primaryFixedDim),
+                          textAlign: TextAlign.left,
+                        ),
                       ],
                     )),
                     RippleWrapper(
@@ -160,7 +141,7 @@ class _ResetPasswordCodePageState extends State<ResetPasswordCodePage> {
                           margin: EdgeInsets.only(left: 10),
                           padding: const EdgeInsets.symmetric(vertical: 20),
                           child: Text(
-                            'Resend email',
+                            l10n.actionResendEmail,
                             style: TextStyle(
                                 color: colors.tertiaryContainer, fontSize: 16),
                           ),
@@ -172,7 +153,7 @@ class _ResetPasswordCodePageState extends State<ResetPasswordCodePage> {
                           }
                         }),
                     MainButton(
-                        label: 'Confirm code',
+                        label: l10n.textResetPasswordConfirm,
                         backgroundColor: colors.secondary,
                         textColor: colors.primary,
                         isDisabled: code == null || code!.length < 6,

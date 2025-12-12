@@ -1,5 +1,6 @@
 import 'package:excerbuys/components/shared/list/list_entry.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class ListComponent extends StatelessWidget {
   final Map<String, Object> data;
@@ -12,6 +13,7 @@ class ListComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return Container(
         padding: EdgeInsets.symmetric(vertical: 12),
@@ -51,7 +53,7 @@ class ListComponent extends StatelessWidget {
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: ListEntry(
-                      title: 'Summary',
+                      title: l10n.textSummaryLabel,
                       label: summary!,
                       textColor: summaryColor,
                     ),

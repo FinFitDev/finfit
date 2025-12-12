@@ -7,6 +7,7 @@ import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/modal/modal_content_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class CartModal extends StatelessWidget {
   const CartModal({super.key});
@@ -15,6 +16,7 @@ class CartModal extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
+    final l10n = context.l10n;
 
     return StreamBuilder<List<ICartItem>>(
         stream: shopController.cartItemsStream,
@@ -22,7 +24,7 @@ class CartModal extends StatelessWidget {
           final int totalQuantity =
               snapshot.data != null ? countQuantity(snapshot.data!) : 0;
           return ModalContentWrapper(
-              title: 'Your cart',
+              title: l10n.textCartTitle,
               onClose: () {
                 closeModal(context);
               },
@@ -35,7 +37,7 @@ class CartModal extends StatelessWidget {
                             children: [
                               Center(
                                   child: Text(
-                                'No products in cart yet',
+                                l10n.textCartEmpty,
                                 style: texts.headlineMedium
                                     ?.copyWith(color: colors.tertiaryContainer),
                               ))
@@ -94,7 +96,7 @@ class CartModal extends StatelessWidget {
                           ),
                   ),
                   CartModalSummary(),
-                  Text('Final price doesn’t include shipping costs',
+                  Text(l10n.textCartPriceNote,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
@@ -111,7 +113,7 @@ class CartModal extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: MainButton(
-                            label: 'Checkout',
+                            label: l10n.actionCheckout,
                             backgroundColor: colors.secondary,
                             textColor: colors.primary,
                             isDisabled: totalQuantity == 0,

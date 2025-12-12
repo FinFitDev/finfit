@@ -2,6 +2,7 @@ import 'package:excerbuys/components/shared/indicators/warning_box.dart';
 import 'package:excerbuys/store/controllers/shop/shop_controller/shop_controller.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class CartModalSummary extends StatelessWidget {
   const CartModalSummary({super.key});
@@ -9,6 +10,7 @@ class CartModalSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
     return Container(
       padding: EdgeInsets.all(16),
       margin: EdgeInsets.symmetric(vertical: 8),
@@ -23,7 +25,7 @@ class CartModalSummary extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Points price',
+              Text(l10n.textPointsPrice,
                   style: TextStyle(
                       fontWeight: FontWeight.w400,
                       color: colors.tertiaryContainer,
@@ -33,7 +35,7 @@ class CartModalSummary extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Discounts',
+              Text(l10n.textDiscounts,
                   style: TextStyle(
                       fontWeight: FontWeight.w400,
                       color: colors.tertiaryContainer,

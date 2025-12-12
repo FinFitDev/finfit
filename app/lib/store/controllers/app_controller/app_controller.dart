@@ -2,6 +2,7 @@ import 'package:excerbuys/store/controllers/activity/strava_controller/strava_co
 import 'package:excerbuys/store/controllers/auth_controller/auth_controller.dart';
 import 'package:excerbuys/store/controllers/user_controller/user_controller.dart';
 import 'package:excerbuys/store/persistence/storage_controller.dart';
+import 'package:excerbuys/types/enums.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
@@ -20,6 +21,11 @@ class AppController {
       BehaviorSubject.seeded(DateTime.now());
   Stream<DateTime> get installTimestampStream => _installTimestamp.stream;
   DateTime get installTimestamp => _installTimestamp.value;
+
+  final BehaviorSubject<LANGUAGE> _appLanguage =
+      BehaviorSubject.seeded(LANGUAGE.ENGLISH);
+  Stream<LANGUAGE> get appLanguageStream => _appLanguage.stream;
+  LANGUAGE get appLanguage => _appLanguage.value;
 }
 
 AppController appController = AppController();

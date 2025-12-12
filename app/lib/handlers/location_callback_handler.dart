@@ -10,6 +10,8 @@ void onStart(ServiceInstance service) async {
 
   int currentDistance = 2;
   StreamSubscription<Position>? _positionStream;
+  String notificationTitle = 'Workout in Progress';
+  String gpsTemplate = 'GPS: {lat}, {lng}';
 
   void startStream(int distance) {
     _positionStream?.cancel();
@@ -36,10 +38,12 @@ void onStart(ServiceInstance service) async {
     _positionStream = Geolocator.getPositionStream(locationSettings: settings)
         .listen((Position position) {
       if (service is AndroidServiceInstance) {
+        final content = gpsTemplate
+            .replaceFirst('{lat}', position.latitude.toStringAsFixed(4))
+            .replaceFirst('{lng}', position.longitude.toStringAsFixed(4));
         service.setForegroundNotificationInfo(
-          title: "Workout in Progress",
-          content:
-              "GPS: ${position.latitude.toStringAsFixed(4)}, ${position.longitude.toStringAsFixed(4)}",
+          title: notificationTitle,
+          content: content,
         );
       }
 
@@ -61,6 +65,16 @@ void onStart(ServiceInstance service) async {
       int newDistance = event['distance'] as int;
       print("Background: Setting distance filter to $newDistance");
       startStream(newDistance);
+    }
+  });
+
+  service.on('update_texts').listen((event) {
+    if (event == null) return;
+    if (event['title'] is String) {
+      notificationTitle = event['title'] as String;
+    }
+    if (event['gpsTemplate'] is String) {
+      gpsTemplate = event['gpsTemplate'] as String;
     }
   });
 

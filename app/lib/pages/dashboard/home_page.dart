@@ -4,6 +4,7 @@ import 'package:excerbuys/containers/dashboard_page/home_page/background_contain
 import 'package:excerbuys/containers/dashboard_page/home_page/featured_offers_container.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/recent_training_section.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/balance_container.dart';
+import 'package:excerbuys/containers/dashboard_page/home_page/strava_integration_card.dart';
 import 'package:excerbuys/containers/dashboard_page/home_page/transactions_section.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/offer_info_modal.dart';
 import 'package:excerbuys/store/controllers/activity/strava_controller/strava_controller.dart';
@@ -23,6 +24,7 @@ import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/refresh_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class HomePage extends StatefulWidget {
   final Future<void> Function() fetchData;
@@ -68,6 +70,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
     return Stack(
       children: [
         StreamBuilder<double>(
@@ -128,94 +131,7 @@ class _HomePageState extends State<HomePage> {
                                         if (snapshot.data == true) {
                                           return SizedBox.shrink();
                                         }
-                                        return RippleWrapper(
-                                          onPressed: () {
-                                            stravaController.authorize();
-                                          },
-                                          child: Container(
-                                            height: 70,
-                                            margin: EdgeInsets.only(
-                                                left: 16, right: 16, top: 16),
-                                            decoration: BoxDecoration(
-                                              color: colors.primary,
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black
-                                                      .withAlpha(50),
-                                                  spreadRadius: -5,
-                                                  blurRadius: 8,
-                                                  offset: Offset(0, 3),
-                                                ),
-                                              ],
-                                            ),
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 16, vertical: 8),
-                                              decoration: BoxDecoration(
-                                                  color: const Color.fromARGB(
-                                                          255, 255, 90, 7)
-                                                      .withAlpha(20),
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  border: Border.all(
-                                                      width: 0.5,
-                                                      color:
-                                                          const Color.fromARGB(
-                                                              255,
-                                                              255,
-                                                              90,
-                                                              7))),
-                                              child: Row(
-                                                spacing: 16,
-                                                children: [
-                                                  ImageComponent(
-                                                    size: 40,
-                                                    image:
-                                                        "https://images.prismic.io/sacra/9232e343-6544-430f-aacd-ca85f968ca87_strava+logo.png?auto=compress,format",
-                                                  ),
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    spacing: 2,
-                                                    children: [
-                                                      Text(
-                                                        "Connect with STRAVA",
-                                                        style: TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            color: const Color
-                                                                .fromARGB(255,
-                                                                255, 90, 7)),
-                                                      ),
-                                                      Text(
-                                                        "Sync your workouts automatically",
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: const Color
-                                                                    .fromARGB(
-                                                                    255,
-                                                                    255,
-                                                                    90,
-                                                                    7)
-                                                                .withAlpha(
-                                                                    120)),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        );
+                                        return StravaIntegrationCard();
                                       }),
                                   StreamBuilder<
                                           ContentWithLoading<

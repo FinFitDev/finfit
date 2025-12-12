@@ -6,6 +6,7 @@ import 'package:excerbuys/wrappers/modal/modal_content_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class QrcodeModal extends StatelessWidget {
   const QrcodeModal({super.key});
@@ -13,9 +14,10 @@ class QrcodeModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return ModalContentWrapper(
-      title: 'Receive points',
+      title: l10n.textReceivePointsTitle,
       onClose: () {
         closeModal(context);
       },
@@ -45,7 +47,7 @@ class QrcodeModal extends StatelessWidget {
                   height: 16,
                 ),
                 Text(
-                  'Use the scanner option in the send modal on another device to scan this code. ',
+                  l10n.textScannerDescription,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: colors.primaryFixedDim, fontSize: 13),
                 ),
@@ -60,12 +62,12 @@ class QrcodeModal extends StatelessWidget {
             height: 8,
           ),
           MainButton(
-              label: 'Share',
+              label: l10n.actionShare,
               backgroundColor: colors.secondary,
               textColor: colors.primary,
               onPressed: () {
-                Share.share(
-                    "Share your points with me. This is my ID - ${userController.currentUser?.uuid}");
+                Share.share(l10n.textShareIdMessage(
+                    userController.currentUser?.uuid ?? ''));
               })
         ],
       ),

@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:excerbuys/handlers/location_callback_handler.dart';
-import 'package:excerbuys/utils/debug.dart';
 import 'package:excerbuys/utils/gps/gps_tracker.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WorkoutTrackingService {
   final ProfessionalGPSTracker _gpsTracker = ProfessionalGPSTracker();
@@ -20,18 +20,23 @@ class WorkoutTrackingService {
 
   bool _isTracking = false;
   bool _isInitialized = false;
+  String? _notificationTitle;
+  String? _notificationContent;
 
 // run only once - dont start yet
-  Future<bool> initializeService() async {
+  Future<bool> initializeService(AppLocalizations l10n) async {
     if (!_isInitialized) {
       final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
       const channelId = 'workout_tracking';
 
-      const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      _notificationTitle = l10n.textWorkoutTrackingNotificationTitle;
+      _notificationContent = l10n.textWorkoutTrackingNotificationContent;
+
+      final AndroidNotificationChannel channel = AndroidNotificationChannel(
         channelId,
-        'Workout Tracking',
-        description: 'Used for tracking workout in background',
+        l10n.textWorkoutTrackingChannelName,
+        description: l10n.textWorkoutTrackingChannelDescription,
         importance: Importance.low,
       );
 
@@ -46,8 +51,10 @@ class WorkoutTrackingService {
           autoStart: false,
           isForegroundMode: true,
           notificationChannelId: channelId,
-          initialNotificationTitle: 'Workout in progress',
-          initialNotificationContent: 'Tracking your workout...',
+          initialNotificationTitle:
+              _notificationTitle ?? 'Workout in progress...',
+          initialNotificationContent:
+              _notificationContent ?? 'Tracking your workout...',
           foregroundServiceNotificationId: 888,
         ),
         iosConfiguration: IosConfiguration(

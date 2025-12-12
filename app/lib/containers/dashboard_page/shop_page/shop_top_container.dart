@@ -11,6 +11,7 @@ import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class ShopTopContainer extends StatefulWidget {
   final void Function(String?) onPressPartner;
@@ -31,6 +32,7 @@ class _ShopTopContainerState extends State<ShopTopContainer>
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
     super.build(context);
     return Container(
       color: colors.primary,
@@ -42,7 +44,7 @@ class _ShopTopContainerState extends State<ShopTopContainer>
           Container(
             margin: EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING),
             child: InputWithIcon(
-                placeholder: 'Search shop',
+                placeholder: l10n.textSearchShopPlaceholder,
                 borderRadius: 10,
                 verticalPadding: 12,
                 rightIcon: 'assets/svg/search.svg',

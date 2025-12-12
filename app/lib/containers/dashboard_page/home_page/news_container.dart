@@ -2,6 +2,8 @@ import 'package:excerbuys/components/shared/loaders/universal_loader_box.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NewsContainer extends StatefulWidget {
   final bool? isLoading;
@@ -17,6 +19,7 @@ class _NewsContainerState extends State<NewsContainer> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
+    final l10n = context.l10n;
 
     return Container(
       padding: const EdgeInsets.only(top: 24),
@@ -28,7 +31,7 @@ class _NewsContainerState extends State<NewsContainer> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Good day', style: texts.headlineLarge),
+                Text(l10n.textGoodDay, style: texts.headlineLarge),
               ],
             ),
           ),
@@ -38,7 +41,8 @@ class _NewsContainerState extends State<NewsContainer> {
               scrollDirection: Axis.horizontal,
               itemCount: 6,
               itemBuilder: (context, index) {
-                return _buildNewsItemCard(index, colors, widget.isLoading);
+                return _buildNewsItemCard(
+                    index, colors, widget.isLoading, l10n);
               },
             ),
           ),
@@ -122,7 +126,8 @@ Widget newsCardWithLoaderWrapper(bool? isLoading, Widget newsCard) {
       : newsCard;
 }
 
-Widget _buildNewsItemCard(int index, ColorScheme colors, bool? isLoading) {
+Widget _buildNewsItemCard(int index, ColorScheme colors, bool? isLoading,
+    AppLocalizations l10n) {
   switch (index) {
     case 0:
       return Row(
@@ -131,26 +136,26 @@ Widget _buildNewsItemCard(int index, ColorScheme colors, bool? isLoading) {
             width: 6,
           ),
           newsCardWithLoaderWrapper(
-              isLoading, newsCard(0, colors, 'Updates', () {})),
+              isLoading, newsCard(0, colors, l10n.textNewsUpdates, () {})),
         ],
       );
     case 1:
       return newsCardWithLoaderWrapper(
-          isLoading, newsCard(1, colors, 'Collabs', () {}));
+          isLoading, newsCard(1, colors, l10n.textNewsCollabs, () {}));
     case 2:
       return newsCardWithLoaderWrapper(
-          isLoading, newsCard(2, colors, 'Arrivals', () {}));
+          isLoading, newsCard(2, colors, l10n.textNewsArrivals, () {}));
     case 3:
       return newsCardWithLoaderWrapper(
-          isLoading, newsCard(3, colors, 'Blog', () {}));
+          isLoading, newsCard(3, colors, l10n.textNewsBlog, () {}));
     case 4:
       return newsCardWithLoaderWrapper(
-          isLoading, newsCard(4, colors, 'Updates', () {}));
+          isLoading, newsCard(4, colors, l10n.textNewsUpdates, () {}));
     case 5:
       return Row(
         children: [
           newsCardWithLoaderWrapper(
-              isLoading, newsCard(5, colors, 'Blog', () {})),
+              isLoading, newsCard(5, colors, l10n.textNewsBlog, () {})),
           SizedBox(
             width: 6,
           )

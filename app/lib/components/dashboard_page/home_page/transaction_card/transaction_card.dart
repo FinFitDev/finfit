@@ -8,6 +8,8 @@ import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/shop/transaction/utils.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TransactionCard extends StatefulWidget {
   final int points;
@@ -38,13 +40,13 @@ class TransactionCard extends StatefulWidget {
 }
 
 class _TransactionCardState extends State<TransactionCard> {
-  String getUsersText(List<User> secondUsers) {
+  String getUsersText(List<User> secondUsers, AppLocalizations l10n) {
     if (secondUsers.isEmpty) {
-      return 'Unknown';
+      return l10n.textUnknown;
     }
 
     if (secondUsers.length > 2) {
-      return 'Multiple users';
+      return l10n.textMultipleUsers;
     }
 
     String result =
@@ -61,6 +63,7 @@ class _TransactionCardState extends State<TransactionCard> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
+    final l10n = context.l10n;
 
     final color = getTransactionTypeColor(widget.type, colors);
 
@@ -90,7 +93,9 @@ class _TransactionCardState extends State<TransactionCard> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(getTransactionTypeText(widget.type),
+                        Text(
+                            getTransactionTypeText(
+                                widget.type, l10n),
                             style: texts.titleMedium
                                 ?.copyWith(fontWeight: FontWeight.w600)),
                         Text(
@@ -188,7 +193,8 @@ class _TransactionCardState extends State<TransactionCard> {
                                         ),
                                         Expanded(
                                           child: Text(
-                                            getUsersText(widget.userInfo!),
+                                            getUsersText(
+                                                widget.userInfo!, l10n),
                                             style: TextStyle(
                                                 color: colors.tertiaryContainer,
                                                 fontSize: 12),
@@ -200,14 +206,14 @@ class _TransactionCardState extends State<TransactionCard> {
                                     ),
                                   )
                                 : Text(
-                                    'No additional data',
+                                    l10n.textNoAdditionalData,
                                     style: TextStyle(
                                       color: colors.tertiaryContainer,
                                       fontSize: 13,
                                     ),
                                   ),
                         Text(
-                          parseDate(widget.date),
+                          parseDate(widget.date, l10n),
                           style: TextStyle(
                               color: colors.tertiaryContainer, fontSize: 12),
                         )

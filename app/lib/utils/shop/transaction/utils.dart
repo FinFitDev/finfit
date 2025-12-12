@@ -4,6 +4,7 @@ import 'package:excerbuys/types/shop/offer.dart';
 import 'package:excerbuys/types/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 TRANSACTION_TYPE transactionTypeStringToEnum(String stringCategory) {
   switch (stringCategory) {
@@ -44,27 +45,29 @@ String getTransactionTypeIcon(TRANSACTION_TYPE type) {
   }
 }
 
-String getTransactionTypeText(TRANSACTION_TYPE type) {
+String getTransactionTypeText(
+    TRANSACTION_TYPE type, AppLocalizations localizations) {
   switch (type) {
     case TRANSACTION_TYPE.REDEEM:
-      return 'Redeemed';
+      return localizations.textTransactionRedeemed;
     case TRANSACTION_TYPE.SEND:
-      return 'Sent to';
+      return localizations.textTransactionSent;
     case TRANSACTION_TYPE.RECEIVE:
-      return 'Received from';
+      return localizations.textTransactionReceived;
     default:
       return '';
   }
 }
 
-String getTransactionTitle(TRANSACTION_TYPE type) {
+String getTransactionTitle(
+    TRANSACTION_TYPE type, AppLocalizations localizations) {
   switch (type) {
     case TRANSACTION_TYPE.REDEEM:
-      return 'Reward claimed';
+      return localizations.textTransactionRewardTitle;
     case TRANSACTION_TYPE.SEND:
-      return 'Points sent';
+      return localizations.textTransactionSentTitle;
     case TRANSACTION_TYPE.RECEIVE:
-      return 'Points received';
+      return localizations.textTransactionReceivedTitle;
     default:
       return '';
   }

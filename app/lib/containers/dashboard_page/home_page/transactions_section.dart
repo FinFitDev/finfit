@@ -11,6 +11,8 @@ import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TransactionsSection extends StatefulWidget {
   final Map<String, ITransactionEntry> recentTransactions;
@@ -60,10 +62,11 @@ class _TransactionsSectionState extends State<TransactionsSection> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
+    final l10n = context.l10n;
 
     return Builder(builder: (BuildContext context) {
       if (widget.recentTransactions.isEmpty && widget.isLoading != true) {
-        return emptyActivity(colors, texts, widget.hideTitle ?? false);
+        return emptyActivity(colors, texts, widget.hideTitle ?? false, l10n);
       }
 
       return Container(
@@ -77,7 +80,10 @@ class _TransactionsSectionState extends State<TransactionsSection> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('Last transactions', style: texts.headlineLarge),
+                    Expanded(
+                        child: Text(l10n.textLastTransactions,
+                            style: texts.headlineLarge
+                                ?.copyWith(overflow: TextOverflow.ellipsis))),
                     RippleWrapper(
                       onPressed: () {
                         historyController.setActiveCategory(
@@ -87,7 +93,7 @@ class _TransactionsSectionState extends State<TransactionsSection> {
                       child: Row(
                         spacing: 4,
                         children: [
-                          Text('See all',
+                          Text(l10n.actionSeeAll,
                               style: TextStyle(
                                   color: colors.secondary, fontSize: 14)),
                           SvgPicture.asset(
@@ -150,7 +156,8 @@ class _TransactionsSectionState extends State<TransactionsSection> {
   }
 }
 
-Widget emptyActivity(ColorScheme colors, TextTheme texts, bool hideTitle) {
+Widget emptyActivity(ColorScheme colors, TextTheme texts, bool hideTitle,
+    AppLocalizations l10n) {
   return Container(
     margin: EdgeInsets.only(
         left: HORIZOTAL_PADDING, right: HORIZOTAL_PADDING, bottom: 24),
@@ -161,14 +168,14 @@ Widget emptyActivity(ColorScheme colors, TextTheme texts, bool hideTitle) {
         Container(
           margin: EdgeInsets.only(bottom: 12),
           child: Text(
-            'No transactions yet',
+            l10n.textNoTransactions,
             textAlign: TextAlign.start,
             style: texts.headlineLarge,
           ),
         ),
         Text(
           textAlign: TextAlign.start,
-          'You haven\'t made any transactions yet.',
+          l10n.textNoTransactionsSubtitle,
           style: TextStyle(
             color: colors.primaryFixedDim,
           ),

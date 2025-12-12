@@ -6,6 +6,7 @@ import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class FeaturedOffersContainer extends StatelessWidget {
   final void Function(String) onPress;
@@ -21,6 +22,7 @@ class FeaturedOffersContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
+    final l10n = context.l10n;
     final offersList = offers.values.toList();
 
     if (offersList.isEmpty) {
@@ -38,7 +40,10 @@ class FeaturedOffersContainer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('Featured rewards', style: texts.headlineLarge),
+                Expanded(
+                    child: Text(l10n.textFeaturedRewards,
+                        style: texts.headlineLarge
+                            ?.copyWith(overflow: TextOverflow.ellipsis))),
                 RippleWrapper(
                   onPressed: () {
                     dashboardController.setActivePage(2);
@@ -46,7 +51,7 @@ class FeaturedOffersContainer extends StatelessWidget {
                   child: Row(
                     spacing: 4,
                     children: [
-                      Text('See all',
+                      Text(l10n.actionSeeAll,
                           style:
                               TextStyle(color: colors.secondary, fontSize: 14)),
                       SvgPicture.asset(
@@ -156,7 +161,8 @@ class FeaturedOffersContainer extends StatelessWidget {
                                     ],
                                   ),
                                   Text(
-                                    '${points.toInt()} points',
+                                    l10n.textPointsValue(
+                                        points.toInt().toString()),
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,

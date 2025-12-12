@@ -1,12 +1,9 @@
 import 'package:excerbuys/components/shared/activity_icon.dart';
 import 'package:excerbuys/components/shared/buttons/copy_text.dart';
-import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/components/shared/image_component.dart';
-import 'package:excerbuys/components/shared/images/image_box.dart';
 import 'package:excerbuys/components/shared/positions/position_with_background.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/claim_qrcode_modal.dart';
 import 'package:excerbuys/containers/dashboard_page/modals/info/offer_info_modal.dart';
-import 'package:excerbuys/containers/dashboard_page/modals/qrcode_modal.dart';
 import 'package:excerbuys/store/controllers/shop/claims_controller/claims_controller.dart';
 import 'package:excerbuys/types/shop/reward.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
@@ -15,8 +12,7 @@ import 'package:excerbuys/wrappers/modal/modal_content_wrapper.dart';
 import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class AllClaimsModal extends StatefulWidget {
   const AllClaimsModal({super.key});
@@ -31,7 +27,7 @@ class _AllClaimsModalState extends State<AllClaimsModal> {
     final colors = Theme.of(context).colorScheme;
 
     return ModalContentWrapper(
-      title: 'Claimed discounts',
+      title: context.l10n.textClaimedDiscountsTitle,
       onClose: () {
         closeModal(context);
       },
@@ -53,7 +49,7 @@ class _AllClaimsModalState extends State<AllClaimsModal> {
           if (claims.isEmpty) {
             return Center(
               child: Text(
-                'No claimed discounts yet.',
+                context.l10n.textNoClaimedDiscounts,
                 style: TextStyle(
                   color: colors.tertiaryContainer,
                   fontSize: 14,
@@ -148,8 +144,9 @@ class _ClaimCard extends StatelessWidget {
                         Row(
                           children: [
                             PositionWithBackground(
-                              name:
-                                  'Claimed: ${parseDate(DateTime.parse(entry.createdAt))}',
+                              name: context.l10n.textClaimedDate(parseDate(
+                                  DateTime.parse(entry.createdAt),
+                                  context.l10n)),
                               image: 'assets/svg/calendar.svg',
                               imageSize: 16,
                               textStyle: TextStyle(
@@ -167,7 +164,11 @@ class _ClaimCard extends StatelessWidget {
                   Row(
                     spacing: 8,
                     children: [
-                      Expanded(child: CopyText(textToCopy: entry.code)),
+                      Expanded(
+                          child: CopyText(
+                        textToCopy: entry.code,
+                        fontSize: 16,
+                      )),
                       entry.offer.partner.link != null
                           ? GestureDetector(
                               onTap: () {
@@ -187,7 +188,7 @@ class _ClaimCard extends StatelessWidget {
                     children: [
                       PositionWithBackground(
                         name:
-                            '${isNearlyExpired ? 'Almost expired.' : ''} Expires: ${parseDate(DateTime.parse(entry.validUntil))}',
+                            '${isNearlyExpired ? '${context.l10n.textAlmostExpired} ' : ''}${context.l10n.textExpiresDate(parseDate(DateTime.parse(entry.validUntil), context.l10n))}',
                         image: 'assets/svg/forbid.svg',
                         textStyle: TextStyle(
                             color: isNearlyExpired

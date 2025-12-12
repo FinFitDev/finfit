@@ -14,6 +14,7 @@ import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class RegularMainHeaderContent extends StatelessWidget {
   const RegularMainHeaderContent({super.key});
@@ -22,15 +23,18 @@ class RegularMainHeaderContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
+    final l10n = context.l10n;
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         StreamBuilder<double?>(
             stream: userController.userBalanceStream,
             builder: (context, snapshot) {
+              final formattedBalance =
+                  formatNumber((snapshot.data ?? 0).round());
               return Text(
                   dashboardController.balanceHidden
-                      ? '****** points'
-                      : '${formatNumber((snapshot.data ?? 0).round())} points',
+                      ? l10n.textHiddenPoints
+                      : l10n.textPointsValue(formattedBalance),
                   style: texts.headlineMedium
                       ?.copyWith(color: colors.primaryFixedDim));
             }),

@@ -1,3 +1,42 @@
+import 'dart:ui';
+
+enum LANGUAGE {
+  ENGLISH(
+    languageCode: 'en',
+    displayTitle: 'English',
+    icon: 'assets/svg/english.svg',
+  ),
+  SPANISH(
+    languageCode: 'es',
+    displayTitle: 'Español',
+    icon: 'assets/svg/spanish.svg',
+  ),
+  POLISH(
+    languageCode: 'pl',
+    displayTitle: 'Polski',
+    icon: 'assets/svg/polish.svg',
+  );
+
+  final String languageCode;
+  final String displayTitle;
+  final String icon;
+
+  const LANGUAGE({
+    required this.languageCode,
+    required this.displayTitle,
+    required this.icon,
+  });
+
+  Locale get locale => Locale(languageCode);
+
+  static LANGUAGE fromCode(String code) {
+    return LANGUAGE.values.firstWhere(
+      (lang) => lang.languageCode == code,
+      orElse: () => LANGUAGE.ENGLISH,
+    );
+  }
+}
+
 enum RECENT_DATA_CATEGORY { TRANSACTIONS, WORKOUTS }
 
 enum STEPS_AGGREGATION_TYPE { HOURLY, DAILY, MONTHLY }

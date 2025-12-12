@@ -3,6 +3,7 @@ import 'package:excerbuys/components/shared/buttons/main_button.dart';
 import 'package:excerbuys/store/controllers/auth_controller/auth_controller.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 enum RESET_PASSWORD_FIELD_TYPE { PASSWORD, PASSWORD_REPEAT }
 
@@ -28,6 +29,7 @@ class _ResetPasswordContainerState extends State<ResetPasswordContainer> {
   bool _loading = false;
 
   void setErrors() {
+    final l10n = context.l10n;
     setState(() {
       final String password =
           _formFieldsState[RESET_PASSWORD_FIELD_TYPE.PASSWORD]!;
@@ -36,13 +38,13 @@ class _ResetPasswordContainerState extends State<ResetPasswordContainer> {
 
       _formErrorsState = {
         RESET_PASSWORD_FIELD_TYPE.PASSWORD: password.isEmpty
-            ? 'Password is required'
+            ? l10n.textValidationPasswordRequired
             : password.length < 5
-                ? 'Has to have at least 5 characters'
+                ? l10n.textValidationMinChars
                 : null,
         RESET_PASSWORD_FIELD_TYPE.PASSWORD_REPEAT:
             password.length >= 5 && password != passwordRepeat
-                ? 'Passwords do not match'
+                ? l10n.textValidationPasswordsMismatch
                 : null
       };
     });
@@ -86,6 +88,7 @@ class _ResetPasswordContainerState extends State<ResetPasswordContainer> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     final bool isButtonDisabled = _formErrorsState.values
             .any((value) => value != null && value.isNotEmpty) ||
@@ -98,7 +101,7 @@ class _ResetPasswordContainerState extends State<ResetPasswordContainer> {
           Column(children: [
             InputWithIcon(
               leftIcon: 'assets/svg/padlock.svg',
-              placeholder: 'Password',
+              placeholder: l10n.textAuthInputPassword,
               onChange: (String val) {
                 setState(() {
                   _formFieldsState[RESET_PASSWORD_FIELD_TYPE.PASSWORD] = val;
@@ -115,7 +118,7 @@ class _ResetPasswordContainerState extends State<ResetPasswordContainer> {
             ),
             InputWithIcon(
               leftIcon: 'assets/svg/padlock.svg',
-              placeholder: 'Repeat Password',
+              placeholder: l10n.textAuthInputRepeatPassword,
               onChange: (String val) {
                 setState(() {
                   _formFieldsState[RESET_PASSWORD_FIELD_TYPE.PASSWORD_REPEAT] =
@@ -138,7 +141,7 @@ class _ResetPasswordContainerState extends State<ResetPasswordContainer> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               MainButton(
-                label: 'Set new password',
+                label: l10n.textSetNewPasswordButton,
                 backgroundColor: colors.secondary,
                 textColor: colors.primary,
                 onPressed: () {

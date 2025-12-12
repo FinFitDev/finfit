@@ -23,6 +23,7 @@ import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class ProductInfoModal extends StatefulWidget {
   final String productId;
@@ -99,6 +100,7 @@ class _ProductInfoModalState extends State<ProductInfoModal> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
+    final l10n = context.l10n;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -110,7 +112,7 @@ class _ProductInfoModalState extends State<ProductInfoModal> {
             bottom: layoutController.bottomPadding + HORIZOTAL_PADDING),
         child: _error
             ? EmptyDataModal(
-                message: "Couldn't find product data",
+                message: l10n.textProductDataError,
               )
             : Stack(
                 children: [
@@ -167,21 +169,20 @@ class _ProductInfoModalState extends State<ProductInfoModal> {
                                       horizontal: HORIZOTAL_PADDING),
                                   child: ListComponent(
                                     data: {
-                                      'Pierwotna cena':
+                                      l10n.textProductOriginalPrice:
                                           '${padPriceDecimals(getPrice())} PLN',
-                                      'Przecena':
-                                          "${padPriceDecimals(getDiscount())} %",
-                                      'Cena finpoints': _product
-                                                  ?.finpointsPrice !=
-                                              null
-                                          ? '${formatNumber(_product!.finpointsPrice.round())} finpoints'
-                                          : 'Unknown',
-                                      'Pozostało w sklepie':
+                                      l10n.textDiscountLabel:
+                                          '${padPriceDecimals(getDiscount())} %',
+                                      l10n.textProductFinpointsPrice:
+                                          _product?.finpointsPrice != null
+                                              ? '${formatNumber(_product!.finpointsPrice.round())} ${l10n.labelFinpoints}'
+                                              : l10n.textUnknown,
+                                      l10n.textProductStockLeft:
                                           (_selectedProductVariant?.inStock ??
                                                   _product?.inStock ??
                                                   0)
                                               .toString(),
-                                      'Ilość zakupionych':
+                                      l10n.textProductPurchasedCount:
                                           (_product?.totalTransactions ?? 0)
                                               .toString()
                                     },

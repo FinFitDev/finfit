@@ -10,6 +10,7 @@ import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/v4.dart';
 import 'package:uuid/uuid.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class RegenerateImageModal extends StatefulWidget {
   const RegenerateImageModal({super.key});
@@ -42,9 +43,10 @@ class _RegenerateImageModalState extends State<RegenerateImageModal> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return ModalContentWrapper(
-        title: 'Change image',
+        title: l10n.textChangeImageTitle,
         onClose: () {
           closeModal(context);
         },
@@ -101,7 +103,7 @@ class _RegenerateImageModalState extends State<RegenerateImageModal> {
                   height: 16,
                 ),
                 MainButton(
-                    label: 'Regenerate image',
+                    label: l10n.actionRegenerateImage,
                     icon: 'assets/svg/reload.svg',
                     backgroundColor: colors.primaryContainer,
                     textColor: colors.primaryFixedDim,
@@ -115,7 +117,7 @@ class _RegenerateImageModalState extends State<RegenerateImageModal> {
                 ),
                 MainButton(
                     isDisabled: _seed == userController.currentUser?.image,
-                    label: 'Save image',
+                    label: l10n.actionSaveImage,
                     backgroundColor: colors.secondary,
                     textColor: colors.primary,
                     onPressed: () async {

@@ -5,6 +5,7 @@ import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class OffersTopContainer extends StatefulWidget {
   OffersTopContainer({super.key});
@@ -23,6 +24,7 @@ class _OffersTopContainerState extends State<OffersTopContainer>
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
     super.build(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -30,13 +32,13 @@ class _OffersTopContainerState extends State<OffersTopContainer>
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'Rewards & offers',
+            l10n.textRewardsOffersTitle,
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
             textAlign: TextAlign.left,
           ),
           SizedBox(height: 4),
           Text(
-            "Discover exclusive rewards just for you!",
+            l10n.textRewardsOffersSubtitle,
             style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
@@ -45,7 +47,7 @@ class _OffersTopContainerState extends State<OffersTopContainer>
           ),
           SizedBox(height: 16),
           InputWithIcon(
-              placeholder: 'Search offers',
+              placeholder: l10n.textSearchOffersPlaceholder,
               borderRadius: 10,
               verticalPadding: 12,
               rightIcon: 'assets/svg/search.svg',
@@ -88,7 +90,7 @@ class _OffersTopContainerState extends State<OffersTopContainer>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Available points',
+                          l10n.textAvailablePoints,
                           style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,

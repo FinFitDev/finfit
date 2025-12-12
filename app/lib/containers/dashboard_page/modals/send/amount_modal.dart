@@ -15,6 +15,7 @@ import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/modal/modal_content_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class AmountModal extends StatefulWidget {
   final void Function() previousPage;
@@ -50,9 +51,10 @@ class _AmountModalState extends State<AmountModal> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return ModalContentWrapper(
-      title: 'Send points',
+      title: l10n.textSendPointsTitle,
       onClickBack: widget.previousPage,
       onClose: () {
         closeModal(context);
@@ -70,7 +72,7 @@ class _AmountModalState extends State<AmountModal> {
                   height: 16,
                 ),
                 InputWithIcon(
-                  placeholder: 'Amount',
+                  placeholder: l10n.textAmountPlaceholder,
                   onChange: (val) {
                     if (val.isEmpty) {
                       sendController.setAmount(null);
@@ -81,7 +83,7 @@ class _AmountModalState extends State<AmountModal> {
                   borderRadius: 10,
                   verticalPadding: 12,
                   inputType: TextInputType.number,
-                  error: _balanceError ? 'Not enough balance' : null,
+                  error: _balanceError ? l10n.textNotEnoughBalance : null,
                   initialValue: (sendController.amount)?.toString(),
                 ),
               ],
@@ -141,28 +143,29 @@ class _AmountModalState extends State<AmountModal> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           PositionWithTitle(
-                              title: 'Input amount',
+                              title: l10n.textInputAmountTitle,
                               icon: 'assets/svg/dollar.svg',
                               value:
-                                  '${formatNumber(snapshot.data ?? 0)} points'),
+                                  l10n.textPointsValue(
+                                      formatNumber(snapshot.data ?? 0))),
                           PositionWithTitle(
-                              title: 'Number of recipients',
+                              title: l10n.textRecipientsCount,
                               icon: 'assets/svg/people.svg',
                               value:
-                                  '${sendController.chosenUsersIds.length} recipeints'),
+                                  '${sendController.chosenUsersIds.length}'),
                           PositionWithTitle(
-                              title: 'Current balance',
+                              title: l10n.textCurrentBalance,
                               icon: 'assets/svg/trend_up.svg',
-                              value:
-                                  '${formatNumber((userController.userBalance ?? 0).round())} points'),
+                              value: l10n.textPointsValue(formatNumber(
+                                  (userController.userBalance ?? 0).round()))),
                           SizedBox(
                             height: 32,
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
+                              children: [
                               Text(
-                                'Summary',
+                                l10n.textSummaryLabel,
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: colors.tertiaryContainer,
@@ -173,7 +176,10 @@ class _AmountModalState extends State<AmountModal> {
                                 height: 8,
                               ),
                               Text(
-                                '${formatNumber((snapshot.data ?? 0) * sendController.chosenUsersIds.length)} points',
+                                l10n.textPointsValue(formatNumber(
+                                    (snapshot.data ?? 0) *
+                                        sendController
+                                            .chosenUsersIds.length)),
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w500,
@@ -204,7 +210,7 @@ class _AmountModalState extends State<AmountModal> {
                       isDisabled: !snapshot.hasData ||
                           snapshot.data == 0 ||
                           _balanceError,
-                      label: 'Hold to confirm',
+                      label: l10n.actionHoldToConfirm,
                       backgroundColor: colors.secondary,
                       textColor: colors.primary,
                       loading: isLoading,

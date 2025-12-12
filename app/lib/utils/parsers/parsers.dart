@@ -1,101 +1,53 @@
 import 'package:intl/intl.dart';
-
-String weekDayToName(int weekday) {
-  switch (weekday) {
-    case 1:
-      return 'Monday';
-    case 2:
-      return 'Tuesday';
-    case 3:
-      return 'Wednesday';
-    case 4:
-      return 'Thursday';
-    case 5:
-      return 'Friday';
-    case 6:
-      return 'Saturday';
-    case 7:
-      return 'Sunday';
-    default:
-      return 'Unknown';
-  }
-}
-
-String monthToName(int month) {
-  switch (month) {
-    case 1:
-      return 'January';
-    case 2:
-      return 'February';
-    case 3:
-      return 'March';
-    case 4:
-      return 'April';
-    case 5:
-      return 'May';
-    case 6:
-      return 'June';
-    case 7:
-      return 'July';
-    case 8:
-      return 'August';
-    case 9:
-      return 'September';
-    case 10:
-      return 'October';
-    case 11:
-      return 'November';
-    case 12:
-      return 'December';
-
-    default:
-      return 'Unknown';
-  }
-}
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 String padTimeString(String value) {
   return value.padLeft(2, '0');
 }
 
-String parseDate(DateTime date) {
+String parseDate(DateTime date, AppLocalizations l10n) {
   final DateTime now = DateTime.now();
   if (date.year != now.year) {
-    return parseDateYear(date);
+    return parseDateYear(date, l10n);
   } else {
-    return parseDateHour(date);
+    return parseDateHour(date, l10n);
   }
 }
 
-String parseDateHour(DateTime date) {
+String parseDateHour(DateTime date, AppLocalizations l10n) {
+  final DateTime now = DateTime.now();
+  final String time =
+      DateFormat.Hm(Intl.getCurrentLocale()).format(date.toLocal());
+
+  if (date.year == now.year && date.month == now.month) {
+    if (date.day == now.day) {
+      return "${l10n.textTodayLabel} $time";
+    }
+
+    if (date.day == now.day - 1) {
+      return "${l10n.textYesterdayLabel} $time";
+    }
+  }
+
+  return DateFormat('dd MMM HH:mm', Intl.getCurrentLocale())
+      .format(date.toLocal());
+}
+
+String parseDateYear(DateTime date, AppLocalizations l10n) {
   final DateTime now = DateTime.now();
 
   if (date.year == now.year && date.month == now.month) {
     if (date.day == now.day) {
-      return "Today ${padTimeString(date.hour.toString())}:${padTimeString(date.minute.toString())}";
+      return "${l10n.textTodayLabel} ${date.year}";
     }
 
     if (date.day == now.day - 1) {
-      return "Yesterday ${padTimeString(date.hour.toString())}:${padTimeString(date.minute.toString())}";
+      return "${l10n.textYesterdayLabel} ${date.year}";
     }
   }
 
-  return "${padTimeString(date.day.toString())} ${DateFormat('MMM').format(date)} ${padTimeString(date.hour.toString())}:${padTimeString(date.minute.toString())}";
-}
-
-String parseDateYear(DateTime date) {
-  final DateTime now = DateTime.now();
-
-  if (date.year == now.year && date.month == now.month) {
-    if (date.day == now.day) {
-      return "Today ${date.year}";
-    }
-
-    if (date.day == now.day - 1) {
-      return "Yesterday ${date.year}";
-    }
-  }
-
-  return "${padTimeString(date.day.toString())} ${DateFormat('MMM').format(date)} ${date.year}";
+  return DateFormat('dd MMM yyyy', Intl.getCurrentLocale())
+      .format(date.toLocal());
 }
 
 String padPriceDecimals(double price) {
@@ -128,7 +80,7 @@ double? safeParseDouble(dynamic value) {
 String getDayName(int daysAgo) {
   final DateTime now = DateTime.now();
   final DateTime nDaysAgo = now.subtract(Duration(days: daysAgo));
-  return weekDayToName(nDaysAgo.weekday);
+  return DateFormat('EEEE', Intl.getCurrentLocale()).format(nDaysAgo);
 }
 
 String getDayNumber(int daysAgo) {
@@ -140,23 +92,13 @@ String getDayNumber(int daysAgo) {
 String getDayMonth(int daysAgo) {
   final DateTime now = DateTime.now();
   final DateTime nDaysAgo = now.subtract(Duration(days: daysAgo));
-  return monthToName(nDaysAgo.month);
+  return DateFormat('MMMM', Intl.getCurrentLocale()).format(nDaysAgo);
 }
 
 String getDayYear(int daysAgo) {
   final DateTime now = DateTime.now();
   final DateTime nDaysAgo = now.subtract(Duration(days: daysAgo));
   return nDaysAgo.year.toString();
-}
-
-String convertHourAmPm(int hour) {
-  if (hour < 12) {
-    return '${padTimeString(hour.toString())}:00 am';
-  } else if (hour == 12) {
-    return '$hour:00 pm';
-  } else {
-    return '${padTimeString((hour - 12).toString())}:00 pm';
-  }
 }
 
 double convertMillisecondsToMinutes(int milliseconds) {

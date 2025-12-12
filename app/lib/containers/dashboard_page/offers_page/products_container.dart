@@ -4,6 +4,8 @@ import 'package:excerbuys/containers/dashboard_page/modals/info/product_info_mod
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class ProductsContainer extends StatefulWidget {
   const ProductsContainer({super.key});
@@ -21,7 +23,8 @@ class _ProductsContainerState extends State<ProductsContainer> {
   }
 }
 
-Widget emptyProducts(ColorScheme colors, TextTheme texts) {
+Widget emptyProducts(
+    ColorScheme colors, TextTheme texts, AppLocalizations l10n) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -29,13 +32,13 @@ Widget emptyProducts(ColorScheme colors, TextTheme texts) {
       Container(
         margin: EdgeInsets.only(bottom: 12),
         child: Text(
-          'No products found.',
+          l10n.textNoProductsFound,
           style: texts.headlineMedium,
         ),
       ),
       Text(
         textAlign: TextAlign.start,
-        'Modify your filters, check the internet connection and try again!',
+        l10n.textModifyFiltersSuggestion,
         style: TextStyle(
           color: colors.primaryFixedDim,
         ),

@@ -1,0 +1,317 @@
+{
+  "@@locale": "pl",
+  "appTitle": "FinFit",
+  "loading": "Ładowanie...",
+  "navHome": "Główna",
+  "navTrack": "Śledź",
+  "navOffers": "Oferty",
+  "navRecent": "Historia",
+  "navProfile": "Profil",
+  "actionSeeAll": "Zobacz wszystko",
+  "actionResendEmail": "Wyślij ponownie",
+  "actionContinue": "Kontynuuj",
+  "actionLogIn": "Zaloguj się",
+  "actionSignUp": "Zarejestruj się",
+  "actionReset": "Resetuj",
+  "actionConfirm": "Potwierdź",
+  "actionClose": "Zamknij",
+  "actionShare": "Udostępnij",
+  "actionSend": "Wyślij",
+  "actionReceive": "Otrzymaj",
+  "actionClaim": "Odbierz",
+  "actionCheckout": "Do kasy",
+  "labelPoints": "punkty",
+  "labelPointsShort": "pkt",
+  "labelFinpoints": "finpunkty",
+  "textHiddenPoints": "****** punkty",
+  "textPointsValue": "{value} punktów",
+  "@textPointsValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "textFinpointsValue": "{value} finpunktów",
+  "@textFinpointsValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "textPointsToGo": "Zostało tylko {value} finpunktów!",
+  "@textPointsToGo": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "textPointsToGoHidden": "Zostało tylko ***** finpunktów!",
+  "textNoWorkouts": "Brak treningów",
+  "textNoWorkoutsSubtitle": "Zacznij trenować, aby zdobywać punkty i odbierać zniżki w sklepie!",
+  "textNoTransactions": "Brak transakcji",
+  "textNoTransactionsSubtitle": "Nie wykonałeś jeszcze żadnych transakcji.",
+  "textFeaturedRewards": "Polecane nagrody",
+  "textLastWorkouts": "Ostatnie treningi",
+  "textLastTransactions": "Ostatnie transakcje",
+  "textStravaConnect": "Połącz ze STRAVĄ",
+  "textStravaSync": "Synchronizuj treningi automatycznie",
+  "textWelcomeTitle": "Witamy w {appName}",
+  "@textWelcomeTitle": {
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
+  },
+  "textWelcomeSubtitle": "Fitness, który się opłaca",
+  "textLogoTagline": "Fitness to twoja waluta",
+  "textAuthLoginTitle": "Zaloguj się poniżej",
+  "textAuthSignupTitle": "Zarejestruj się poniżej",
+  "textAuthLoginSubtitle": "I kontynuuj swoją podróż z {appName}",
+  "@textAuthLoginSubtitle": {
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
+  },
+  "textAuthSignupSubtitle": "I rozpocznij swoją podróż z {appName}",
+  "@textAuthSignupSubtitle": {
+    "placeholders": {
+      "appName": {
+        "type": "String"
+      }
+    }
+  },
+  "textAuthOrUse": "Lub użyj",
+  "textAuthForgotPassword": "Zapomniałeś hasła?",
+  "textAuthInputLogin": "Login",
+  "textAuthInputPassword": "Hasło",
+  "textAuthInputEmail": "E-mail",
+  "textAuthInputUsername": "Nazwa użytkownika",
+  "textAuthInputRepeatPassword": "Powtórz hasło",
+  "textForgotPasswordTitle": "Reset hasła",
+  "textForgotPasswordInstruction": "Wpisz e-mail powiązany z kontem i skopiuj kod, który tam otrzymasz.",
+  "textForgotPasswordPlaceholder": "Wpisz e-mail",
+  "textForgotPasswordWrongEmail": "Nieprawidłowy e-mail",
+  "textForgotPasswordServerError": "Błąd serwera",
+  "textForgotPasswordSend": "Wyślij wiadomość",
+  "textResetPasswordTitle": "Reset hasła",
+  "textResetPasswordInstruction": "Wiadomość z kodem została wysłana na adres {email}. Wpisz kod powyżej, aby ustawić nowe hasło.",
+  "@textResetPasswordInstruction": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "textResetPasswordConfirm": "Potwierdź kod",
+  "textResetPasswordInvalidCode": "Nieprawidłowy kod",
+  "textSetNewPasswordTitle": "Ustaw nowe hasło",
+  "textSetNewPasswordSubtitle": "Następnie zaloguj się ponownie i korzystaj!",
+  "textSetNewPasswordButton": "Ustaw nowe hasło",
+  "textCheckInboxTitle": "Sprawdź skrzynkę odbiorczą",
+  "textCheckInboxDescription": "Wysłaliśmy wiadomość weryfikacyjną. Wróć tutaj po pomyślnej weryfikacji, aby zalogować się i rozpocząć podróż z FinFit!",
+  "textCheckInboxSpam": "Sprawdź folder spam, jeśli nie widzisz wiadomości.",
+  "textContinueToApp": "Przejdź do aplikacji",
+  "textStravaIntegration": "Integracja STRAVA",
+  "textImportedBadge": "Zaimportowano",
+  "textReceivePointsTitle": "Otrzymaj punkty",
+  "textScannerDescription": "Użyj opcji skanera w oknie wysyłania na innym urządzeniu, aby zeskanować ten kod.",
+  "textShareIdMessage": "Podziel się punktami ze mną. To mój identyfikator - {id}",
+  "@textShareIdMessage": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "textPointsPrice": "Cena w punktach",
+  "textDiscounts": "Zniżki",
+  "textCartTitle": "Twój koszyk",
+  "textCartEmpty": "Brak produktów w koszyku",
+  "textCartPriceNote": "Cena nie zawiera kosztów wysyłki",
+  "textNoAdditionalData": "Brak dodatkowych danych",
+  "textUnknown": "Nieznany",
+  "textMultipleUsers": "Wielu użytkowników",
+  "textTransactionRedeemed": "Zrealizowano",
+  "textTransactionSent": "Wysłano do",
+  "textTransactionReceived": "Otrzymano od",
+  "textTransactionRewardTitle": "Nagroda odebrana",
+  "textTransactionSentTitle": "Wysłane punkty",
+  "textTransactionReceivedTitle": "Otrzymane punkty",
+  "textTransactionTimestamp": "Czas transakcji",
+  "textNoOffersFound": "Nie znaleziono ofert.",
+  "textModifyFiltersSuggestion": "Zmień filtry, sprawdź połączenie z internetem i spróbuj ponownie!",
+  "textNoProductsFound": "Nie znaleziono produktów.",
+  "textPartnersTitle": "Partnerzy",
+  "textAllRewardsTitle": "Wszystkie nagrody",
+  "textAvailablePoints": "Dostępne punkty",
+  "textRewardsOffersTitle": "Nagrody i oferty",
+  "textRewardsOffersSubtitle": "Odkrywaj ekskluzywne nagrody przygotowane dla Ciebie!",
+  "textAvailableForever": "Dostępne na zawsze",
+  "textProgressOffers": "Jesteś prawie u celu, tak trzymaj",
+  "textSearchOffersPlaceholder": "Szukaj nagród",
+  "textSearchShopPlaceholder": "Szukaj w sklepie",
+  "textProfileTotalPoints": "Łącznie zdobyte punkty",
+  "textProfileContactUs": "Skontaktuj się z nami",
+  "textProfileLogOut": "Wyloguj się",
+  "textMovesAndPointsTitle": "Ruchy i punkty",
+  "textMovesAndPointsSubtitle": "Śledź swoje treningi i każdy zdobyty punkt.",
+  "textHistoryWorkoutsTab": "Treningi",
+  "textHistoryTransactionsTab": "Transakcje",
+  "textCopied": "Skopiowano!",
+  "textClaimedDiscountsTitle": "Odebrane zniżki",
+  "textNoClaimedDiscounts": "Brak odebranych zniżek.",
+  "textClaimedDate": "Odebrano: {date}",
+  "@textClaimedDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "textExpiresDate": "Wygasa: {date}",
+  "@textExpiresDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "textAlmostExpired": "Prawie wygasło.",
+  "textStepsCount": "{count} kroków",
+  "@textStepsCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "textStepsCountToday": "{count} kroków dzisiaj",
+  "@textStepsCountToday": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "textUntilDate": "Do {date}",
+  "@textUntilDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "textLocationPermissionTitle": "Brak uprawnień",
+  "textLocationPermissionBody": "Aby śledzić treningi nawet po zamknięciu aplikacji, zezwól w ustawieniach systemu na dostęp do lokalizacji w tle. Po kliknięciu przycisku poniżej wykonaj te kroki.",
+  "textLocationPermissionSteps": "Lokalizacja > Zezwól",
+  "textViewTransactionDetails": "Zobacz szczegóły transakcji",
+  "textViewTrainingDetails": "Zobacz szczegóły treningu",
+  "textTimesValue": "{count} razy",
+  "@textTimesValue": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "textNotEnoughPoints": "Za mało punktów",
+  "textCost": "Koszt",
+  "textValidUntil": "Ważne do",
+  "textClaimedByOthers": "Odebrane przez innych",
+  "textTodayLabel": "Dziś",
+  "textYesterdayLabel": "Wczoraj",
+  "textPartnerSince": "Partner od",
+  "textTotalPurchases": "Łączna liczba zakupów",
+  "textTotalProducts": "Łączna liczba produktów",
+  "textWorkoutDetailsTitle": "Szczegóły treningu",
+  "textWorkoutNotFound": "Nie znaleziono treningu.",
+  "textNoRouteData": "Brak danych o trasie",
+  "actionGoToSettings": "Przejdź do ustawień",
+  "actionFinish": "Zakończ",
+  "actionHoldToConfirm": "Przytrzymaj, aby potwierdzić",
+  "actionRegenerateImage": "Wygeneruj obraz ponownie",
+  "actionSaveImage": "Zapisz obraz",
+  "textAverageSpeed": "Śr. prędkość",
+  "textCalories": "Kalorie",
+  "textDailyGoals": "Dzienne cele",
+  "textDistance": "Dystans",
+  "textDuration": "Czas trwania",
+  "textElevation": "Przewyższenie",
+  "textGoalsProgressSample": "Zrealizowano 3/5 celów",
+  "textGoodDay": "Miłego dnia!",
+  "textLoadMoreData": "Wczytaj więcej danych",
+  "textNewsArrivals": "Nowości",
+  "textNewsBlog": "Wpisy na blogu",
+  "textNewsCollabs": "Współprace",
+  "textNewsUpdates": "Aktualizacje produktu",
+  "textNoRecentUsers": "Brak ostatnich odbiorców.",
+  "textNotEnough": "Za mało",
+  "textNotEnoughBalance": "Za mało środków",
+  "textNotEligible": "Niekwalifikowalne",
+  "textPointsEarned": "Zdobyte pkt.",
+  "textUseDiscountTitle": "Wykorzystaj zniżkę",
+  "textValidationEmailInvalid": "Podaj poprawny email",
+  "textValidationEmailRequired": "Email jest wymagany",
+  "textValidationLoginRequired": "Login jest wymagany",
+  "textValidationMinChars": "Użyj co najmniej 5 znaków",
+  "textValidationPasswordRequired": "Hasło jest wymagane",
+  "textValidationPasswordsMismatch": "Hasła nie są takie same",
+  "textValidationUsernameRequired": "Nazwa użytkownika jest wymagana",
+  "textViewInStrava": "Zobacz w Stravie",
+  "textSendPointsTitle": "Wyślij punkty",
+  "textAmountPlaceholder": "Kwota",
+  "textInputAmountTitle": "Wprowadzona kwota",
+  "textRecipientsCount": "Liczba odbiorców",
+  "textCurrentBalance": "Aktualne saldo",
+  "textSummaryLabel": "Podsumowanie",
+  "textConfirmRecipients": "Potwierdź odbiorców",
+  "textFindUsersPlaceholder": "Wyszukaj użytkowników",
+  "textChangeImageTitle": "Zmień obraz",
+  "textShopFiltersTitle": "Filtry sklepu",
+  "textPriceLabel": "Cena",
+  "textFinpointsCostLabel": "Koszt w finpointach",
+  "textSortByLabel": "Sortuj według",
+  "textAscendingLabel": "Rosnąco",
+  "textDescendingLabel": "Malejąco",
+  "textTransactionsCount": "Liczba transakcji",
+  "textDateOfIssue": "Data wydania",
+  "textDiscountLabel": "Zniżka",
+  "textProductDataError": "Nie udało się znaleźć danych produktu",
+  "textProductOriginalPrice": "Cena pierwotna",
+  "textProductFinpointsPrice": "Cena w finpointach",
+  "textProductStockLeft": "Pozostało w sklepie",
+  "textProductPurchasedCount": "Liczba zakupionych",
+  "textEmptyStateTitle": "Brak danych",
+  "textEmptyStateDescription": "Zamknij okno i spróbuj ponownie",
+  "textNoUsersFound": "Nie znaleziono użytkowników dla \"{query}\"",
+  "@textNoUsersFound": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "textWorkoutTrackingChannelName": "Śledzenie treningu",
+  "textWorkoutTrackingChannelDescription": "Używane do śledzenia treningu w tle",
+  "textWorkoutTrackingNotificationTitle": "Trening w toku",
+  "textWorkoutTrackingNotificationContent": "Śledzimy Twój trening...",
+  "textWorkoutTrackingGpsContent": "GPS: {lat}, {lng}",
+  "@textWorkoutTrackingGpsContent": {
+    "placeholders": {
+      "lat": {
+        "type": "String"
+      },
+      "lng": {
+        "type": "String"
+      }
+    }
+  },
+    "textLanguageChange":"Zmień język"
+
+}

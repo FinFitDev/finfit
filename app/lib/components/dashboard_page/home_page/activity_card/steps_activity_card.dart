@@ -11,6 +11,7 @@ import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class StepsActivityCard extends StatefulWidget {
   final IStoreStepsData stepsData;
@@ -83,6 +84,8 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
     final bool isToday = (widget.daysAgo ?? 0) == 0;
+    final l10n = context.l10n;
+    final materialLocalizations = MaterialLocalizations.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -105,7 +108,11 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
                     isRepeatingAnimation: false,
                     animatedTexts: [
                       TyperAnimatedText(
-                        '$_totalSteps steps ${isToday ? 'today' : ''}',
+                        isToday
+                            ? l10n.textStepsCountToday(
+                                _totalSteps.toString())
+                            : l10n.textStepsCount(
+                                _totalSteps.toString()),
                         textStyle: texts.headlineLarge,
                       )
                     ],
@@ -121,8 +128,10 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
                           animatedTexts: [
                             TyperAnimatedText(
                               isHidden
-                                  ? '***** finpoints'
-                                  : '${calculatePointsFromSteps(_totalSteps)} finpoints',
+                                  ? l10n.textFinpointsValue('*****')
+                                  : l10n.textFinpointsValue(
+                                      calculatePointsFromSteps(_totalSteps)
+                                          .toString()),
                               textStyle: texts.headlineMedium
                                   ?.copyWith(fontWeight: FontWeight.w300),
                             )
@@ -142,14 +151,16 @@ class _StepsActivityCardState extends State<StepsActivityCard> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                '${value['y'].toString()} steps',
+                                l10n.textStepsCount(
+                                    (value['y'] ?? 0).toString()),
                                 style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
                                     color: colors.secondary),
                               ),
                               Text(
-                                convertHourAmPm(value['x']!),
+                                materialLocalizations.formatTimeOfDay(
+                                    TimeOfDay(hour: value['x']!, minute: 0)),
                                 style: TextStyle(
                                   color:
                                       colors.tertiaryContainer.withAlpha(150),

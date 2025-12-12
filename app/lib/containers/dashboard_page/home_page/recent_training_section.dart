@@ -11,6 +11,8 @@ import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RecentTrainingSection extends StatefulWidget {
   final Map<int, ITrainingEntry> recentTraining;
@@ -35,9 +37,10 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
+    final l10n = context.l10n;
 
     if (widget.recentTraining.isEmpty && widget.isLoading != true) {
-      return emptyActivity(colors, texts, widget.hideTitle == true);
+      return emptyActivity(colors, texts, widget.hideTitle == true, l10n);
     }
 
     return Container(
@@ -55,7 +58,10 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('Last workouts', style: texts.headlineLarge),
+                Expanded(
+                    child: Text(l10n.textLastWorkouts,
+                        style: texts.headlineLarge
+                            ?.copyWith(overflow: TextOverflow.ellipsis))),
                 RippleWrapper(
                   onPressed: () {
                     historyController
@@ -65,7 +71,7 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
                   child: Row(
                     spacing: 4,
                     children: [
-                      Text('See all',
+                      Text(l10n.actionSeeAll,
                           style:
                               TextStyle(color: colors.secondary, fontSize: 14)),
                       SvgPicture.asset(
@@ -94,7 +100,7 @@ class _RecentTrainingSectionState extends State<RecentTrainingSection> {
                   child: ActivityCard(
                     activityType: entry.type,
                     points: entry.points,
-                    date: parseDate(entry.createdAt),
+                    date: parseDate(entry.createdAt, l10n),
                     duration: entry.duration,
                     calories: entry.calories,
                     distance: entry.distance,
@@ -119,6 +125,7 @@ Widget emptyActivity(
   ColorScheme colors,
   TextTheme texts,
   bool hideTitle,
+  AppLocalizations l10n,
 ) {
   return Container(
     margin: EdgeInsets.symmetric(
@@ -131,12 +138,12 @@ Widget emptyActivity(
         Container(
           margin: const EdgeInsets.only(bottom: 12),
           child: Text(
-            'No workouts yet',
+            l10n.textNoWorkouts,
             style: texts.headlineLarge,
           ),
         ),
         Text(
-          'Start working out to earn points and claim your discounts in the shop!',
+          l10n.textNoWorkoutsSubtitle,
           style: TextStyle(color: colors.primaryFixedDim),
         ),
       ],

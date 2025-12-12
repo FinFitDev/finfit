@@ -7,6 +7,7 @@ import 'package:excerbuys/utils/home/utils.dart';
 import 'package:excerbuys/utils/parsers/parsers.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class ActivityCard extends StatefulWidget {
   final void Function() onPressed;
@@ -38,6 +39,7 @@ class _ActivityCardState extends State<ActivityCard> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
+    final l10n = context.l10n;
 
     final ActivityMetadata activityMetadata =
         getActivityMetadata(widget.activityType, colors);
@@ -145,7 +147,7 @@ class _ActivityCardState extends State<ActivityCard> {
                                     color: activityMetadata.color)),
                             Container(
                               margin: EdgeInsets.only(top: 0),
-                              child: Text('points',
+                              child: Text(l10n.labelPoints,
                                   style: texts.bodyMedium?.copyWith(
                                       color: colors.tertiaryContainer)),
                             ),

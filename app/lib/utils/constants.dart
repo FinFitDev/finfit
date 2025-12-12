@@ -1,8 +1,9 @@
+import 'package:excerbuys/types/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:health/health.dart';
 
 const String APP_TITLE = 'FinFit';
-// const String BACKEND_BASE_URL = 'http://192.168.1.13:3000/';
+// const String BACKEND_BASE_URL = 'http://192.168.1.17:3000/';
 const String BACKEND_BASE_URL =
     'https://finfit-server-214505318022.europe-west1.run.app/';
 GlobalKey<NavigatorState> NAVIGATOR_KEY = GlobalKey<NavigatorState>();
@@ -34,6 +35,13 @@ const String MAX_PRICE_RANGES_KEY = 'max_price_ranges';
 const String AVAILABLE_SHOP_CATEGORIES_KEY = 'available_shop_categories';
 const String STRAVA_AUTHORIZED_KEY = 'strava_authorized';
 const String STRAVA_ENABLED_KEY = 'strava_enabled';
+const String APP_LANGUAGE_KEY = 'app_language';
 
 // one hour
 const int ONE_HOUR_CACHE_VALIDITY_PERIOD = 1000 * 60 * 60;
+
+const List<LANGUAGE> LANGUAGES = [
+  LANGUAGE.ENGLISH,
+  LANGUAGE.POLISH,
+  LANGUAGE.SPANISH,
+];

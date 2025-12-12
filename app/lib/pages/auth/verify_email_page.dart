@@ -8,6 +8,7 @@ import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class VerifyEmailPage extends StatefulWidget {
   const VerifyEmailPage({super.key});
@@ -55,6 +56,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return Scaffold(
       body: Stack(
@@ -95,56 +97,53 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                       height: 32,
                     ),
                     Text(
-                      'Check your inbox',
+                      l10n.textCheckInboxTitle,
                       style:
                           TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
                     ),
                     SizedBox(
                       height: 16,
                     ),
-                    RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(children: [
-                          TextSpan(
-                            text:
-                                'Verification email has been sent to your email. Come back here after successful verification to log into the app and start your journey with finfit! ',
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w400,
-                                color: colors.primaryFixedDim),
-                          ),
-                          TextSpan(
-                            text:
-                                "Make sure to check the spam folder if you don't see the message.",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: colors.error,
-                              fontFamily: 'Poppins',
-                            ),
-                          ),
-                        ])),
+                    Text(
+                      l10n.textCheckInboxDescription,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w400,
+                          color: colors.primaryFixedDim),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      l10n.textCheckInboxSpam,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: colors.error,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
                   ],
                 )),
                 RippleWrapper(
-                    child: Container(
-                      margin: EdgeInsets.only(left: 10),
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: Text(
-                        'Resend email',
-                        style: TextStyle(
-                            color: colors.tertiaryContainer, fontSize: 16),
-                      ),
-                    ),
+                        child: Container(
+                          margin: EdgeInsets.only(left: 10),
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          child: Text(
+                            l10n.actionResendEmail,
+                            style: TextStyle(
+                                color: colors.tertiaryContainer, fontSize: 16),
+                          ),
+                        ),
                     onPressed: () {
                       if (authController.userToVerify != null) {
                         authController.resendVerificationEmail(
                             authController.userToVerify!.userId);
                       }
                     }),
-                MainButton(
-                    label: 'Continue to app',
+                    MainButton(
+                        label: l10n.textContinueToApp,
                     backgroundColor: colors.secondary,
                     textColor: colors.primary,
                     isDisabled: authController.userToVerify == null,

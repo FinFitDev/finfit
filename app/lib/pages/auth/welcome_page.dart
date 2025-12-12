@@ -8,6 +8,7 @@ import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -20,6 +21,9 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
+    final welcomeTitle = l10n.textWelcomeTitle(l10n.appTitle);
+    final titleParts = welcomeTitle.split(l10n.appTitle);
 
     return Scaffold(
       body: Stack(
@@ -59,27 +63,32 @@ class _WelcomePageState extends State<WelcomePage> {
                       height: 24,
                     ),
                     RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                            style: TextStyle(
-                                fontSize: 32, fontWeight: FontWeight.w600),
-                            children: [
-                              TextSpan(
-                                text: 'Welcome to ',
-                                style: TextStyle(color: colors.tertiary),
-                              ),
-                              TextSpan(
-                                text: "FinFit",
-                                style: TextStyle(
-                                  color: colors.secondary,
-                                ),
-                              ),
-                            ])),
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        style: TextStyle(
+                            fontSize: 32, fontWeight: FontWeight.w600),
+                        children: [
+                          TextSpan(
+                            text: titleParts.isNotEmpty ? titleParts.first : '',
+                            style: TextStyle(color: colors.tertiary),
+                          ),
+                          TextSpan(
+                            text: l10n.appTitle,
+                            style: TextStyle(color: colors.secondary),
+                          ),
+                          if (titleParts.length > 1)
+                            TextSpan(
+                              text: titleParts.sublist(1).join(l10n.appTitle),
+                              style: TextStyle(color: colors.tertiary),
+                            ),
+                        ],
+                      ),
+                    ),
                     SizedBox(
                       height: 8,
                     ),
                     Text(
-                      "Fitness that pays off",
+                      l10n.textWelcomeSubtitle,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 16,
@@ -91,7 +100,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   ],
                 )),
                 MainButton(
-                    label: 'Sign up',
+                    label: l10n.actionSignUp,
                     backgroundColor: colors.tertiaryContainer.withAlpha(50),
                     textColor: colors.primaryFixedDim,
                     onPressed: () {
@@ -102,7 +111,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   height: 16,
                 ),
                 MainButton(
-                    label: 'Log in',
+                    label: l10n.actionLogIn,
                     backgroundColor: colors.secondary,
                     textColor: colors.primary,
                     onPressed: () {

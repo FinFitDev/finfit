@@ -13,6 +13,7 @@ import 'package:excerbuys/utils/utils.dart';
 import 'package:excerbuys/wrappers/modal/modal_content_wrapper.dart';
 import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class ChooseRecipientsModal extends StatefulWidget {
   final void Function() nextPage;
@@ -36,6 +37,7 @@ class _ChooseRecipientsModalState extends State<ChooseRecipientsModal> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return ModalContentWrapper(
       padding: EdgeInsets.only(
@@ -44,7 +46,7 @@ class _ChooseRecipientsModalState extends State<ChooseRecipientsModal> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           ModalHeader(
-            title: 'Send points',
+            title: l10n.textSendPointsTitle,
             onClose: () {
               closeModal(context);
             },
@@ -55,7 +57,7 @@ class _ChooseRecipientsModalState extends State<ChooseRecipientsModal> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING),
             child: InputWithIcon(
-              placeholder: 'Find users',
+              placeholder: l10n.textFindUsersPlaceholder,
               onChange: (val) {
                 _debouncer.run(() {
                   sendController.setSearchValue(val);
@@ -112,7 +114,7 @@ class _ChooseRecipientsModalState extends State<ChooseRecipientsModal> {
                       const EdgeInsets.symmetric(horizontal: HORIZOTAL_PADDING),
                   child: MainButton(
                       isDisabled: !snapshot.hasData || snapshot.data!.isEmpty,
-                      label: 'Confirm recipients',
+                      label: l10n.textConfirmRecipients,
                       backgroundColor: colors.secondary,
                       textColor: colors.primary,
                       onPressed: () {

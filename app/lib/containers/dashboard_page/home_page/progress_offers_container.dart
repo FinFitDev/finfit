@@ -8,6 +8,7 @@ import 'package:excerbuys/types/product.dart';
 import 'package:excerbuys/utils/constants.dart';
 import 'package:excerbuys/wrappers/modal/modal_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class ProgressOffersContainer extends StatefulWidget {
   final bool? isLoading;
@@ -61,6 +62,7 @@ class _ProgressOffersContainerState extends State<ProgressOffersContainer> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final texts = Theme.of(context).textTheme;
+    final l10n = context.l10n;
 
     return Container(
       padding: const EdgeInsets.only(bottom: 2 * HORIZOTAL_PADDING),
@@ -72,7 +74,7 @@ class _ProgressOffersContainerState extends State<ProgressOffersContainer> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Nearly there, keep going', style: texts.headlineLarge),
+                Text(l10n.textProgressOffers, style: texts.headlineLarge),
               ],
             ),
           ),

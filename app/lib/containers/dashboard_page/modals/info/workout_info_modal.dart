@@ -14,6 +14,7 @@ import 'package:excerbuys/wrappers/ripple_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class WorkoutInfoModal extends StatefulWidget {
   final int workoutId;
@@ -75,9 +76,10 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
     final colors = Theme.of(context).colorScheme;
     final activityMetadata =
         _workout != null ? getActivityMetadata(_workout!.type, colors) : null;
+    final l10n = context.l10n;
 
     return ModalContentWrapper(
-      title: 'Workout details',
+      title: l10n.textWorkoutDetailsTitle,
       onClose: () {
         closeModal(context);
       },
@@ -85,7 +87,7 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
         child: _workout == null || _error || activityMetadata == null
             ? Center(
                 child: Text(
-                  'Workout not found.',
+                  l10n.textWorkoutNotFound,
                   style: TextStyle(
                     color: colors.tertiaryContainer,
                     fontSize: 14,
@@ -117,8 +119,8 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
                                   color: activityMetadata.color),
                             ),
                             SizedBox(height: 8),
-                            Text(
-                              parseDate(_workout!.createdAt),
+                              Text(
+                                parseDate(_workout!.createdAt, l10n),
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -150,7 +152,7 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
                             ),
                             SizedBox(width: 10),
                             Text(
-                              'View in STRAVA',
+                              l10n.textViewInStrava,
                               style: TextStyle(
                                   fontSize: 14,
                                   color: const Color.fromARGB(255, 255, 110, 7),
@@ -167,7 +169,7 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
                       Expanded(
                         child: PositionWithTitle(
                             icon: 'assets/svg/clock.svg',
-                            title: 'Duration',
+                            title: l10n.textDuration,
                             value: parseDuration(_workout!.duration)),
                       ),
                       SizedBox(width: 8),
@@ -175,7 +177,7 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
                           ? Expanded(
                               child: PositionWithTitle(
                                   icon: 'assets/svg/trend_up.svg',
-                                  title: 'Distance',
+                                  title: l10n.textDistance,
                                   value: parseDistance(
                                       (_workout!.distance ?? 0).toDouble())),
                             )
@@ -188,7 +190,7 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
                           ? Expanded(
                               child: PositionWithTitle(
                                   icon: 'assets/svg/fire.svg',
-                                  title: 'Calories',
+                                  title: l10n.textCalories,
                                   value: '${_workout!.calories} kcal'),
                             )
                           : SizedBox.shrink(),
@@ -196,8 +198,9 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
                       Expanded(
                         child: PositionWithTitle(
                             icon: 'assets/svg/tick.svg',
-                            title: 'Points earned',
-                            value: '${_workout!.points} points'),
+                            title: l10n.textPointsEarned,
+                            value:
+                                l10n.textPointsValue(_workout!.points.toString())),
                       )
                     ],
                   ),
@@ -207,7 +210,7 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
                           ? Expanded(
                               child: PositionWithTitle(
                                   icon: 'assets/svg/elevation.svg',
-                                  title: 'Elevation',
+                                  title: l10n.textElevation,
                                   value:
                                       '${_workout!.elevationChange?.toStringAsFixed(1)} m'),
                             )
@@ -217,7 +220,7 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
                           ? Expanded(
                               child: PositionWithTitle(
                                   icon: 'assets/svg/speed.svg',
-                                  title: 'Avg. speed',
+                                  title: l10n.textAverageSpeed,
                                   value:
                                       '${_workout!.averageSpeed?.toStringAsFixed(1)} km/h'),
                             )
@@ -256,7 +259,7 @@ class _WorkoutInfoModalState extends State<WorkoutInfoModal> {
                       height: 100,
                       child: Center(
                         child: Text(
-                          'No route data available',
+                          l10n.textNoRouteData,
                           style: TextStyle(
                             color: colors.tertiaryContainer,
                           ),

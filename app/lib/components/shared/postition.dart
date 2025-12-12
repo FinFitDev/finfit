@@ -8,13 +8,15 @@ class Postition extends StatefulWidget {
   final String? iconRight;
   final void Function() onPressed;
   final Color? color;
+  final bool? disableleftIconColorFilter;
   const Postition(
       {super.key,
       required this.label,
       this.iconLeft,
       this.iconRight,
       required this.onPressed,
-      this.color});
+      this.color,
+      this.disableleftIconColorFilter});
 
   @override
   State<Postition> createState() => _PostitionState();
@@ -41,9 +43,11 @@ class _PostitionState extends State<Postition> {
                     child: SvgPicture.asset(widget.iconLeft!,
                         width: 24,
                         height: 24,
-                        colorFilter: ColorFilter.mode(
-                            widget.color ?? colors.primaryFixedDim,
-                            BlendMode.srcIn)),
+                        colorFilter: widget.disableleftIconColorFilter == true
+                            ? null
+                            : ColorFilter.mode(
+                                widget.color ?? colors.primaryFixedDim,
+                                BlendMode.srcIn)),
                   )
                 : SizedBox.shrink(),
             Expanded(

@@ -1,5 +1,6 @@
 import 'package:excerbuys/components/shared/indicators/circle_progress/circle_progress_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:excerbuys/utils/extensions/context_extensions.dart';
 
 class LoadMoreIndicator extends StatelessWidget {
   final double? scrollLoadMoreProgress;
@@ -12,6 +13,7 @@ class LoadMoreIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
+    final l10n = context.l10n;
 
     return Opacity(
       opacity: (scrollLoadMoreProgress ?? 0) / 100,
@@ -27,7 +29,7 @@ class LoadMoreIndicator extends StatelessWidget {
           ),
           disableText != true
               ? Text(
-                  text ?? 'Load more data',
+                  text ?? l10n.textLoadMoreData,
                   style: TextStyle(fontSize: 13, color: colors.secondary),
                 )
               : SizedBox.shrink()
