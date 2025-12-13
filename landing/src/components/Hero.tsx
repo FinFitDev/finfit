@@ -11,7 +11,7 @@ const Hero = () => {
           loop
           muted
           playsInline
-          className="w-3/4 h-full object-cover sm:block hidden"
+          className="lg:w-3/4 h-full object-cover sm:block hidden"
           src={videoSrc}
         />
 

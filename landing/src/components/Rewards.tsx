@@ -1,4 +1,4 @@
-import { Coffee, Pizza, ShoppingBag, Shirt, Store, Truck } from "lucide-react";
+import { ShoppingBag, Store, Hand } from "lucide-react";
 import appScreenshotAllOffers from "@/assets/app_all_offers.png";
 import appScreenshotOfferModal from "@/assets/app_offer_modal.png";
 import appScreenshotClaims from "@/assets/app_claims.png";
@@ -6,17 +6,8 @@ import appScreenshotClaims from "@/assets/app_claims.png";
 const Rewards = () => {
   const categories = [
     { icon: ShoppingBag, label: "Sklepy online", count: "—" },
-    { icon: Truck, label: "Za dostawą", count: "—" },
+    { icon: Hand, label: "Przy odbiorze", count: "—" },
     { icon: Store, label: "Punkty stacjon.", count: "—" },
-  ];
-
-  const partnerLogos = [
-    { icon: Coffee, name: "Cafes" },
-    { icon: Pizza, name: "Food" },
-    { icon: Shirt, name: "Fashion" },
-    { icon: ShoppingBag, name: "Retail" },
-    { icon: Truck, name: "Delivery" },
-    { icon: Store, name: "More" },
   ];
 
   return (

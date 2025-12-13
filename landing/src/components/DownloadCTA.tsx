@@ -49,13 +49,13 @@ const DownloadCTA = () => {
             </div>
 
             {/* Phone mockup */}
-            <div className="hidden sm:block flex-shrink-0">
-              <div className="phone-mockup w-56 md:w-64 bg-white animate-float">
+            <div className="hidden lg:block flex-shrink-0">
+              <div className="phone-mockup w-[220px] bg-white animate-float">
                 <div className="phone-screen aspect-[9/19] flex items-center justify-center !bg-gradient-to-tr from-finfit-blue/50 to-white">
                   <img
                     src={logo}
                     alt="FinFit"
-                    className="w-[120px] h-[120px] mx-auto mb-4 rounded-[40px] shadow-lg"
+                    className="w-[120px] h-[120px] mx-auto mb-4 rounded-[30px] shadow-lg"
                   />
                 </div>
               </div>

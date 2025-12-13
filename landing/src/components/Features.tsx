@@ -80,9 +80,8 @@ const Features = () => {
           {mainFeatures.map((feature) => (
             <div
               key={feature.title}
-              className={`feature-card relative ${
-                feature.isHighlighted ? "border-2 border-strava bg-strava" : ""
-              }`}
+              className={`feature-card relative
+            `}
             >
               <div
                 className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${
@@ -107,7 +106,7 @@ const Features = () => {
               <h3
                 className={clsx(
                   "text-xl md:text-2xl font-semibold mb-3",
-                  feature.isHighlighted ? "text-primary-foreground" : ""
+                  feature.isHighlighted ? "text-strava" : ""
                 )}
               >
                 {feature.title}
@@ -115,7 +114,7 @@ const Features = () => {
               <p
                 className={clsx(
                   "text-muted-foreground leading-relaxed",
-                  feature.isHighlighted ? "text-white/90" : ""
+                  feature.isHighlighted ? "text-strava/80" : ""
                 )}
               >
                 {feature.description}
