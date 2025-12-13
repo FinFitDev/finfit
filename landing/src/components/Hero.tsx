@@ -25,7 +25,7 @@ const Hero = () => {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
           <div className="text-center lg:text-left space-y-6 md:space-y-8 text-white">
             <h1
-              className="text-5xl md:text-6xl lg:text-7xl font-bold !leading-[1.2] animate-fade-up text-black"
+              className="text-5xl md:text-6xl lg:text-7xl font-bold !leading-[1.2] text-black"
               style={{ animationDelay: "0.1s" }}
             >
               Trenuj. <span className="text-gradient">Zarabiaj.</span>{" "}
@@ -33,7 +33,7 @@ const Hero = () => {
             </h1>
 
             <p
-              className="text-lg md:text-xl text-gray-600 max-w-xl mx-auto lg:mx-0 animate-fade-up"
+              className="text-lg md:text-xl text-gray-600 max-w-xl mx-auto lg:mx-0"
               style={{ animationDelay: "0.2s" }}
             >
               Śledź swoje treningi i aktywności. Zdobywaj punkty za każdą
@@ -42,7 +42,7 @@ const Hero = () => {
             </p>
 
             <div
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-up"
+              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
               style={{ animationDelay: "0.3s" }}
             >
               <a href="#download" className="btn-primary group">

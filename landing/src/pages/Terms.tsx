@@ -3,6 +3,12 @@ import { ArrowLeft } from "lucide-react";
 import logo from "@/assets/logo.png";
 
 const Terms = () => {
+  const currentDate = new Date().toLocaleDateString("pl-PL", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -21,7 +27,7 @@ const Terms = () => {
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Home
+            Powrót / Back
           </Link>
         </div>
       </header>
@@ -29,198 +35,164 @@ const Terms = () => {
       {/* Content */}
       <main className="container py-12 md:py-20">
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Terms of Use</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">
+            Regulamin Użytkowania (Terms of Use)
+          </h1>
           <p className="text-muted-foreground mb-8">
-            Last updated:{" "}
-            {new Date().toLocaleDateString("en-US", {
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-            })}
+            Ostatnia aktualizacja: {currentDate}
           </p>
 
           <div className="prose prose-lg max-w-none space-y-8">
             <section>
               <h2 className="text-2xl font-semibold mb-4">
-                1. Acceptance of Terms
+                1. Akceptacja Warunków (Acceptance of Terms)
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                By accessing or using the FinFit mobile application ("App"), you
-                agree to be bound by these Terms of Use. If you do not agree to
-                these terms, please do not use the App.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold mb-4">2. Eligibility</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                You must be at least 13 years of age to use the App. By using
-                the App, you represent and warrant that you meet this
-                eligibility requirement and have the legal capacity to enter
-                into these Terms.
+                Pobierając lub używając aplikacji FinFit ("Aplikacja"), zgadzasz
+                się na przestrzeganie niniejszego Regulaminu. Aplikacja służy do
+                śledzenia aktywności fizycznej i nagradzania użytkowników
+                punktami wymiennymi na zniżki.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold mb-4">
-                3. Account Registration
+                2. Kwalifikowalność (Eligibility)
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Korzystając z Aplikacji, oświadczasz, że posiadasz pełną
+                zdolność do czynności prawnych niezbędną do zaakceptowania
+                niniejszego Regulaminu zgodnie z prawem obowiązującym w Twoim
+                kraju zamieszkania.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold mb-4">
+                3. System Punktów i Nagród (Points & Rewards System)
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                To use certain features of the App, you must create an account.
-                You agree to:
+                Zasady działania programu lojalnościowego FinFit:
               </p>
               <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
-                <li>Provide accurate and complete registration information</li>
-                <li>Maintain the security of your password</li>
-                <li>Notify us immediately of any unauthorized access</li>
                 <li>
-                  Accept responsibility for all activities under your account
+                  <b>Zdobywanie Punktów:</b> Punkty są przyznawane wyłącznie za
+                  rzeczywistą, zweryfikowaną aktywność fizyczną (treningi)
+                  zarejestrowaną przez Aplikację lub zaimportowaną z połączonego
+                  konta Strava.
+                </li>
+                <li>
+                  <b>Brak Wartości Pieniężnej:</b> Punkty zgromadzone w
+                  Aplikacji nie posiadają wartości pieniężnej, nie są walutą i
+                  nie mogą być wymienione na gotówkę. Służą wyłącznie do
+                  uzyskania kodów rabatowych.
+                </li>
+                <li>
+                  <b>Wymiana (Redemption):</b> Punkty można wymieniać na zniżki
+                  w sklepach partnerskich widocznych w Aplikacji. Dostępność
+                  nagród może ulegać zmianie.
                 </li>
               </ul>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold mb-4">
-                4. Points and Rewards System
+                4. Integracja ze Stravą (Strava Integration)
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                The FinFit points and rewards system operates under the
-                following conditions:
+                FinFit oferuje funkcję synchronizacji z platformą Strava.
+                Korzystając z tej funkcji, przyjmujesz do wiadomości, że:
               </p>
               <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
-                <li>Points are earned through tracked physical activities</li>
                 <li>
-                  Points have no cash value and cannot be exchanged for money
+                  Integracja służy jedynie ułatwieniu importu treningów w celu
+                  zaliczenia ich do puli punktów FinFit.
                 </li>
                 <li>
-                  We reserve the right to modify point values and earning rates
-                </li>
-                <li>Points may expire according to our current policies</li>
-                <li>
-                  Fraudulent activity will result in account termination and
-                  point forfeiture
+                  W Aplikacji FinFit treningi pochodzące ze Stravy są{" "}
+                  <b>wyraźnie oznaczone</b> logotypem lub informacją tekstową,
+                  aby odróżnić je od treningów rejestrowanych natywnie.
                 </li>
                 <li>
-                  Rewards are subject to availability and partner participation
+                  FinFit nie ponosi odpowiedzialności za dostępność usług Strava
+                  ani za ewentualne błędy w danych dostarczanych przez API
+                  Strava.
                 </li>
               </ul>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold mb-4">
-                5. Point Transfers
+                5. Zasady Uczciwego Korzystania (Fair Play & Anti-Fraud)
               </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                Users may transfer points to other FinFit users. Point transfers
-                are final and cannot be reversed. We are not responsible for
-                transfers made in error. We reserve the right to limit or
-                suspend point transfer functionality at any time.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold mb-4">
-                6. Third-Party Integrations
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                The App may integrate with third-party services such as Strava.
-                Your use of these integrations is subject to the third party's
-                terms of service. We are not responsible for the availability,
-                accuracy, or functionality of third-party services.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold mb-4">7. Acceptable Use</h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                You agree not to:
+                Aby zapewnić uczciwość systemu nagród, surowo zabrania się:
               </p>
               <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
-                <li>Use the App for any unlawful purpose</li>
-                <li>Manipulate or falsify activity data</li>
-                <li>Use automated systems to earn points</li>
-                <li>Share your account credentials with others</li>
-                <li>Attempt to circumvent any security features</li>
-                <li>Harass or harm other users</li>
-                <li>Violate any applicable laws or regulations</li>
+                <li>
+                  Manipulowania danymi GPS lub używania symulatorów lokalizacji
+                  w celu sztucznego generowania dystansu.
+                </li>
+                <li>
+                  Wgrywania fałszywych plików treningowych (.gpx, .tcx) do
+                  Stravy w celu ich synchronizacji z FinFit.
+                </li>
+                <li>
+                  Używania botów lub zautomatyzowanych skryptów do obsługi
+                  Aplikacji.
+                </li>
               </ul>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold mb-4">
-                8. Intellectual Property
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                The App and its content, features, and functionality are owned
-                by FinFit and are protected by intellectual property laws. You
-                may not copy, modify, distribute, or create derivative works
-                without our prior written consent.
+              <p className="text-muted-foreground mt-2">
+                Naruszenie tych zasad skutkuje{" "}
+                <b>natychmiastową blokadą konta</b> i przepadkiem wszystkich
+                zgromadzonych punktów.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold mb-4">
-                9. Disclaimer of Warranties
+                6. Zbieranie Danych (Data Collection & Usage)
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                THE APP IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND. WE
-                DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING
-                MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND
-                NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE APP WILL BE
-                UNINTERRUPTED OR ERROR-FREE.
+                Akceptując Regulamin, zgadzasz się na zbieranie danych
+                niezbędnych do świadczenia usługi (takich jak lokalizacja
+                podczas treningu). Szczegóły dotyczące zakresu i celu
+                przetwarzania danych znajdują się w naszej{" "}
+                <Link className="text-finfit-blue" to={"/privacy"}>
+                  <b>Polityce Prywatności</b>
+                </Link>
+                . Przypominamy, że zbieramy dane wyłącznie w celu umożliwienia
+                Ci zakładania konta, monitorowania postępów i korzystania z
+                benefitów (zniżek).
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold mb-4">
-                10. Limitation of Liability
+                7. Wyłączenie Odpowiedzialności (Disclaimer)
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                TO THE MAXIMUM EXTENT PERMITTED BY LAW, FINFIT SHALL NOT BE
-                LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR
-                PUNITIVE DAMAGES ARISING FROM YOUR USE OF THE APP.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold mb-4">11. Termination</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                We may terminate or suspend your account at any time for any
-                reason, including violation of these Terms. Upon termination,
-                your right to use the App ceases immediately, and any
-                accumulated points may be forfeited.
+                Aplikacja jest dostarczana w stanie "tak jak jest". FinFit nie
+                gwarantuje, że Aplikacja będzie wolna od błędów, ani że
+                integracja z partnerami zewnętrznymi (Strava, sklepy) będzie
+                działać nieprzerwanie. Podejmujesz aktywność fizyczną na własną
+                odpowiedzialność; zalecamy konsultację z lekarzem przed
+                rozpoczęciem intensywnych treningów.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold mb-4">
-                12. Changes to Terms
+                8. Kontakt (Contact)
               </h2>
               <p className="text-muted-foreground leading-relaxed">
-                We reserve the right to modify these Terms at any time. We will
-                notify you of material changes through the App or via email.
-                Your continued use of the App after changes constitutes
-                acceptance of the modified Terms.
+                W sprawach dotyczących Regulaminu prosimy o kontakt:
               </p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold mb-4">13. Governing Law</h2>
-              <p className="text-muted-foreground leading-relaxed">
-                These Terms shall be governed by and construed in accordance
-                with applicable laws, without regard to conflict of law
-                principles.
+              <p className="text-finfit-blue mt-2">
+                <a href="mailto:finfit.app.contact@gmail.com">
+                  <b>finfit.app.contact@gmail.com</b>
+                </a>
               </p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold mb-4">
-                14. Contact Information
-              </h2>
-              <p className="text-muted-foreground leading-relaxed">
-                For questions about these Terms, please contact us at:
-              </p>
-              <p className="text-primary font-medium mt-2">legal@finfit.app</p>
             </section>
           </div>
         </div>
@@ -229,7 +201,7 @@ const Terms = () => {
       {/* Footer */}
       <footer className="border-t border-border py-8">
         <div className="container text-center text-muted-foreground text-sm">
-          © {new Date().getFullYear()} FinFit. All rights reserved.
+          © {new Date().getFullYear()} FinFit. Wszelkie prawa zastrzeżone.
         </div>
       </footer>
     </div>
